@@ -1,0 +1,28 @@
+buildscript {
+    apply from: project(":CodeAPI").file('gradle/versions.gradle')
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:$license_version"
+        classpath "com.github.jengelman.gradle.plugins:shadow:$shadow_version"
+    }
+
+}
+
+group 'com.github.jonathanxd'
+version '1.0-SNAPSHOT'
+
+apply from: project(":CodeAPI").file("gradle/common.gradle")
+
+dependencies {
+    compile project(":CodeAPI")
+    testCompile project(path: ':CodeAPI', configuration: 'tests')
+}

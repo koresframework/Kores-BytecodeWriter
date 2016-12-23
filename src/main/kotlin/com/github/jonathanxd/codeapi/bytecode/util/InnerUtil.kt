@@ -1,0 +1,153 @@
+/*
+ *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *
+ *         The MIT License (MIT)
+ *
+ *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) contributors
+ *
+ *
+ *      Permission is hereby granted, free of charge, to any person obtaining a copy
+ *      of this software and associated documentation files (the "Software"), to deal
+ *      in the Software without restriction, including without limitation the rights
+ *      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *      copies of the Software, and to permit persons to whom the Software is
+ *      furnished to do so, subject to the following conditions:
+ *
+ *      The above copyright notice and this permission notice shall be included in
+ *      all copies or substantial portions of the Software.
+ *
+ *      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *      THE SOFTWARE.
+ */
+package com.github.jonathanxd.codeapi.bytecode.util
+
+import com.github.jonathanxd.codeapi.CodeAPI
+import com.github.jonathanxd.codeapi.CodePart
+import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.gen.visitor.TypeVisitor
+import com.github.jonathanxd.codeapi.common.*
+import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
+import com.github.jonathanxd.codeapi.helper.Helper
+import com.github.jonathanxd.codeapi.helper.PredefinedTypes
+import com.github.jonathanxd.codeapi.impl.MethodSpecImpl
+import com.github.jonathanxd.codeapi.interfaces.*
+import com.github.jonathanxd.codeapi.util.source.CodeArgumentUtil
+import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
+import com.github.jonathanxd.iutils.data.MapData
+import java.util.*
+
+object InnerUtil {
+    fun genOuterAccessor(outer: TypeDeclaration,
+                         inner: InnerType?,
+                         memberInfo: MemberInfo,
+                         extraData: MapData,
+                         visitorGenerator: VisitorGenerator<BytecodeClass>,
+                         isConstructor: Boolean) {
+
+        if (!memberInfo.hasAccessibleMember() || isConstructor) {
+            val memberInstance = memberInfo.memberInstance
+
+            val gen = InnerUtil.generatePackagePrivateAccess(outer, extraData, memberInstance)
+
+            if (inner == null) {
+                visitorGenerator.generateTo(MethodDeclaration::class.java, gen, requireNotNull(extraData.parent), null)
+            } else {
+                val source = outer.body.orElse(CodeSource.empty()).toMutable()
+
+                source.add(gen)
+
+                inner.adaptedDeclaration = outer.setBody(source)
+            }
+
+            memberInfo.accessibleMember = gen
+        }
+    }
+
+    private fun generatePackagePrivateAccess(outer: TypeDeclaration, extraData: MapData, element: CodePart): MethodDeclaration {
+
+        if (element !is Modifierable || element !is Typed)
+            throw IllegalArgumentException("Element doesn't match requirements: extends Modifierable & Typed.")
+
+
+        val type = element.type.orElseThrow(::NullPointerException)
+
+        var isConstructor = false
+        val isStatic = element.modifiers.contains(CodeModifier.STATIC)
+
+        val modifiers = CodeModifier.newModifierSet()
+
+        modifiers.add(CodeModifier.SYNTHETIC)
+        if (isStatic) modifiers.add(CodeModifier.STATIC)
+
+        val invk: CodePart
+        val parameters = ArrayList<CodeParameter>()
+
+        if (element is FieldDeclaration) {
+
+            if (!isStatic) {
+                invk = CodeAPI.accessField(outer, CodeAPI.accessThis(), element.variableType, element.name)
+            } else {
+                invk = CodeAPI.accessStaticField(outer, element.variableType, element.name)
+            }
+        } else if (element is MethodDeclaration) {
+
+            parameters.addAll(element.parameters)
+
+            isConstructor = element.name == "<init>"
+
+            val invokeType = if (isStatic)
+                InvokeType.INVOKE_STATIC
+            else
+                if (isConstructor)
+                    InvokeType.INVOKE_SPECIAL
+                else
+                    if (outer.isInterface)
+                        InvokeType.INVOKE_INTERFACE
+                    else
+                        InvokeType.INVOKE_VIRTUAL
+
+            val arguments = CodeArgumentUtil.argumentsFromParameters(parameters)
+
+            if (isConstructor) {
+                val current = extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION)
+                val parameter = CodeAPI.parameter(current, CodeSourceUtil.getNewName("\$inner", parameters))
+
+                parameters.add(parameter)
+                //arguments.add(CodeAPI.argument(CodeAPI.accessThis(), current));
+            }
+
+            invk = Helper.invoke(invokeType, outer, if (isStatic) outer else CodeAPI.accessThis(),
+                    MethodSpecImpl(element.name, element.returnType.orElse(PredefinedTypes.VOID),
+                            arguments, if (isConstructor) MethodType.SUPER_CONSTRUCTOR else MethodType.METHOD))
+        } else {
+            throw IllegalArgumentException("Cannot process: $element!")
+        }
+
+        if (!isConstructor) {
+            return CodeAPI.methodBuilder()
+                    .withName(CodeSourceUtil.getNewMethodName("invoke$000", outer.body.orElse(CodeSource.empty())))
+                    .withModifiers(modifiers)
+                    .withParameters(parameters)
+                    .withReturnType(type)
+                    .withBody(CodeAPI.sourceOfParts(
+                            CodeAPI.returnValue(type, invk)
+                    ))
+                    .build()
+        } else {
+            return CodeAPI.constructorBuilder()
+                    .withModifiers(modifiers)
+                    .withParameters(parameters)
+                    .withBody(CodeAPI.sourceOfParts(
+                            invk
+                    ))
+                    .build()
+        }
+    }
+}
