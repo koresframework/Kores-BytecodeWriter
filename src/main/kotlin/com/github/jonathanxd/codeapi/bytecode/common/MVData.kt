@@ -31,7 +31,6 @@ import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.interfaces.TagLine
 import com.github.jonathanxd.codeapi.types.CodeType
 import com.github.jonathanxd.codeapi.types.GenericType
-import com.github.jonathanxd.codeapi.util.Variable
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import java.util.*
@@ -39,7 +38,7 @@ import java.util.*
 /**
  * Internal class that holds a [MethodVisitor] and data about current stored variables (stack)
  * and tag lines.
-
+ *
  * This class doesn't generate bytecode instructions, this class only hold information
  * about variables.
  *

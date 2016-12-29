@@ -131,7 +131,7 @@ class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
 
             mv.visitLabel(label)
 
-            val field = catchBlock.field
+            val field = catchBlock.variable
             val fieldValue = field.value
 
             additional.redefineVar(stackPos, field.name, field.variableType, label, endLabel)

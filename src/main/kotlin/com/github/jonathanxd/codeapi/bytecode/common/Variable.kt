@@ -25,39 +25,41 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.test.asm;
+package com.github.jonathanxd.codeapi.bytecode.common
 
-import com.github.jonathanxd.codeapi.CodeSource;
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration;
-import com.github.jonathanxd.codeapi.test.EnumTest_;
-import com.github.jonathanxd.iutils.annotation.Named;
-import com.github.jonathanxd.iutils.object.Pair;
+import com.github.jonathanxd.codeapi.types.CodeType
+import com.github.jonathanxd.codeapi.util.ToStringBuilder
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.objectweb.asm.Label
+import java.util.*
 
-public class EnumTest {
+/**
+ * Internal class undocumented.
+ */
+class Variable @JvmOverloads constructor(val name: String, val type: CodeType, val startLabel: Label?, val endLabel: Label?, val isTemp: Boolean = false) {
 
-    public static void main(String[] args) {
-        new EnumTest().test();
+    override fun hashCode(): Int {
+        return Objects.hash(this.name, this.type)
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void test() {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = EnumTest_.$();
+    override fun equals(obj: Any?): Boolean {
+        if (obj == null)
+            return false
 
-        @Named("Instance") Class<Enum> test = (Class<Enum>) CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> aClass);
+        if (obj !is Variable)
+            return false
 
-        Enum a = Enum.valueOf(test, "A");
+        return obj.name == this.name && obj.type.compareTo(this.type) == 0
 
-        Assert.assertEquals(0, a.ordinal());
-        Assert.assertEquals("A", a.name());
-
-        EnumTest_.MyItf myItf = (EnumTest_.MyItf) a;
-
-        myItf.v();
     }
 
+    override fun toString(): String {
+        return ToStringBuilder.builder(this.javaClass)
+                .add("name", this.name)
+                .add("type", this.type)
+                .add("isTemp", this.isTemp)
+                .add("startLabel", this.startLabel)
+                .add("endLabel", this.endLabel)
+                .toString()
+    }
 }
-

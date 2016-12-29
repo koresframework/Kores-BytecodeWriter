@@ -39,7 +39,7 @@ import com.github.jonathanxd.codeapi.helper.PredefinedTypes
 import com.github.jonathanxd.codeapi.inspect.SourceInspect
 import com.github.jonathanxd.codeapi.interfaces.*
 import com.github.jonathanxd.codeapi.options.CodeOptions
-import com.github.jonathanxd.codeapi.util.Variable
+import com.github.jonathanxd.codeapi.bytecode.common.Variable
 import com.github.jonathanxd.codeapi.util.element.ElementUtil
 import com.github.jonathanxd.codeapi.util.source.BridgeUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil

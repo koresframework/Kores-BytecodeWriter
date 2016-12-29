@@ -51,6 +51,10 @@ public final class ResultSaver {
     }
 
     public static void save(Class<?> ofClass, String tag, byte[] result) {
+
+    }
+    // Temporary disabled
+    private static void save0(Class<?> ofClass, String tag, byte[] result) {
         if (IS_GRADLE_ENVIRONMENT)
             return;
 
@@ -78,31 +82,39 @@ public final class ResultSaver {
                 pathJavap.createNewFile();
             }
 
-            Process pb = new ProcessBuilder("javap", "-c", "-v", "-p", simpleName)
-                    .directory(new File(path))
-                    .redirectOutput(pathJavap)
-                    .redirectErrorStream(true)
-                    .redirectError(ProcessBuilder.Redirect.INHERIT)
-                    .start();
-
-            pb.waitFor();
-
-            int exit = pb.exitValue();
-            if (exit != 0) {
-                System.err.println("Ext: "+ exit);
+            new Thread(() -> {
                 try {
-                    pb.destroy();
-                } catch (Exception ignored) {
+                    Process pb = new ProcessBuilder("javap", "-c", "-v", "-p", simpleName)
+                            .directory(new File(path))
+                            .redirectOutput(pathJavap)
+                            .redirectErrorStream(true)
+                            .redirectError(ProcessBuilder.Redirect.INHERIT)
+                            .start();
 
+                    pb.waitFor();
+
+                    int exit = pb.exitValue();
+                    if (exit != 0) {
+                        System.err.println("Ext: "+ exit);
+                        try {
+                            pb.destroy();
+                        } catch (Exception ignored) {
+
+                        }
+                        pathJavap.delete();
+                    } else {
+                        new ProcessBuilder("git", "add", savedPath)
+                                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                                .redirectErrorStream(true)
+                                .start();
+                    }
+
+                }catch (Exception e) {
+                    e.printStackTrace();
                 }
-                pathJavap.delete();
-            } else {
-                new ProcessBuilder("git", "add", savedPath)
-                        .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                        .redirectError(ProcessBuilder.Redirect.INHERIT)
-                        .redirectErrorStream(true)
-                        .start();
-            }
+            }).start();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

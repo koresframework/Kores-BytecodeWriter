@@ -1,5 +1,5 @@
 Classfile /home/jonathan/workspace/CodeAPI-BytecodeWriter/src/test/resources/EnumTest_MyEnum$B$Inner_Result.class
-  Last modified 23/12/2016; size 679 bytes
+  Last modified 29/12/2016; size 679 bytes
   MD5 checksum a0f8998930a2848a8ef0b616885adcf4
   Compiled from "MyEnum$B$Inner.cai"
 class com.MyEnum$B$Inner extends com.MyEnum

@@ -27,9 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.bytecode.common.Variable
 import com.github.jonathanxd.codeapi.common.CodeParameter
-import com.github.jonathanxd.codeapi.util.Variable
-import java.util.stream.Collectors
 
 object ParameterUtil {
 
