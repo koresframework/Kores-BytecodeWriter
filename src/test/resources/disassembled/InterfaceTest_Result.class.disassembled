@@ -1,63 +1,37 @@
-Classfile /home/jonathan/workspace/CodeAPI-BytecodeWriter/src/test/resources/InterfaceTest_Result.class
-  Last modified 23/12/2016; size 386 bytes
-  MD5 checksum 6d124f25fe016701fd9cfd68bb231f41
-  Compiled from "Impl.cai"
-public interface test.Impl
-  minor version: 0
-  major version: 52
-  flags: ACC_PUBLIC, ACC_INTERFACE, ACC_ABSTRACT
-Constant pool:
-   #1 = Utf8               Impl.cai
-   #2 = Utf8               test/Impl
-   #3 = Class              #2             // test/Impl
-   #4 = Utf8               java/lang/Object
-   #5 = Class              #4             // java/lang/Object
-   #6 = Utf8               parse
-   #7 = Utf8               (Ljava/lang/String;)V
-   #8 = Utf8               this
-   #9 = Utf8               Ltest/Impl;
-  #10 = Utf8               string
-  #11 = Utf8               Ljava/lang/String;
-  #12 = Utf8               getI
-  #13 = Utf8               (I)I
-  #14 = Utf8               num
-  #15 = Utf8               I
-  #16 = Utf8               <clinit>
-  #17 = Utf8               ()V
-  #18 = Utf8               Code
-  #19 = Utf8               LocalVariableTable
-  #20 = Utf8               SourceFile
-{
-  public void parse(java.lang.String);
-    descriptor: (Ljava/lang/String;)V
-    flags: ACC_PUBLIC
-    Code:
-      stack=0, locals=2, args_size=2
-         0: return
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       1     0  this   Ltest/Impl;
-            0       1     1 string   Ljava/lang/String;
+md5: 6d124f25fe016701fd9cfd68bb231f41
 
-  public int getI(int);
-    descriptor: (I)I
-    flags: ACC_PUBLIC
-    Code:
-      stack=2, locals=2, args_size=2
-         0: iload_1
-         1: bipush        9
-         3: imul
-         4: ireturn
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       5     0  this   Ltest/Impl;
-            0       5     1   num   I
+version: 52 (Java 8)
+access: 1537 (ACC_PUBLIC, ACC_ABSTRACT)
 
-  static {};
-    descriptor: ()V
-    flags: ACC_STATIC
-    Code:
-      stack=0, locals=0, args_size=0
-         0: return
+source: Impl.cai, debug: null
+public abstract class test.Impl extends java.lang.Object {
+
+    !access: 1 (ACC_PUBLIC)
+    public void parse(java.lang.String) {
+      Label_0:
+        return
+      Label_1:
+        !localVariable[index: 0, name: this, desc: Ltest/Impl;, signature: null, start: Label_0, end: Label_1]
+        !localVariable[index: 1, name: string, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
+        MAX_STACK: 0, MAX_LOCALS: 2
+    }
+
+    !access: 1 (ACC_PUBLIC)
+    public int getI(int) {
+      Label_0:
+        iload 1
+        bipush lconst_0
+        imul
+        ireturn
+      Label_1:
+        !localVariable[index: 0, name: this, desc: Ltest/Impl;, signature: null, start: Label_0, end: Label_1]
+        !localVariable[index: 1, name: num, desc: I, signature: null, start: Label_0, end: Label_1]
+        MAX_STACK: 2, MAX_LOCALS: 2
+    }
+
+    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    static void <clinit>() {
+        return
+        MAX_STACK: 0, MAX_LOCALS: 0
+    }
 }
-SourceFile: "Impl.cai"

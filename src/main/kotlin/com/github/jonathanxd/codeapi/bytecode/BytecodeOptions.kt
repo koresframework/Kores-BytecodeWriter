@@ -25,20 +25,18 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
+@file:JvmName("BytecodeOptions")
+
 package com.github.jonathanxd.codeapi.bytecode
 
-import com.github.jonathanxd.bytecodedisassembler.Disassembler
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
-import com.github.jonathanxd.iutils.data.MapData
+import com.github.jonathanxd.iutils.option.Option
+import com.github.jonathanxd.iutils.type.TypeInfo
 
-class BytecodeClass(val type: TypeDeclaration, private val bytecode_: ByteArray, private val mapData_: MapData) {
+@JvmField
+val LINE: TypeInfo<Int> = TypeInfo.aEnd(Int::class.java)
 
-    val disassembledCode: String by lazy {
-        Disassembler.disassemble(bytes = this.bytecode, hash = true)
-    }
-
-    val bytecode get() = bytecode_.clone()
-
-    val mapData get() = mapData_.clone() as MapData
-
-}
+/**
+ * Calls MethodVisitor.visitLine for each expression
+ */
+@JvmField
+val VISIT_LINES = Option(false)

@@ -27,9 +27,11 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.bytecodedisassembler.Disassembler;
 import com.github.jonathanxd.iutils.array.PrimitiveArrayConverter;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
@@ -50,11 +52,11 @@ public final class ResultSaver {
         }
     }
 
-    public static void save(Class<?> ofClass, String tag, byte[] result) {
+    /*public static void save(Class<?> ofClass, String tag, byte[] result) {
 
-    }
+    }*/
     // Temporary disabled
-    private static void save0(Class<?> ofClass, String tag, byte[] result) {
+    public static void save(Class<?> ofClass, String tag, byte[] result) {
         if (IS_GRADLE_ENVIRONMENT)
             return;
 
@@ -65,55 +67,30 @@ public final class ResultSaver {
 
             File file = new File(path + simpleName);
 
+            Files.deleteIfExists(file.toPath());
+
             Files.write(file.toPath(), result, StandardOpenOption.CREATE);
 
             String savedPath = path+"/disassembled/" + simpleName + ".disassembled";
 
             File pathJavap = new File(savedPath);
 
-            if(pathJavap.getParentFile() != null && !pathJavap.getParentFile().exists()) {
-                pathJavap.getParentFile().mkdirs();
+            Files.deleteIfExists(pathJavap.toPath());
+
+            try {
+                String disassemble = Disassembler.disassemble(file.toPath(), false, true);
+
+                Files.write(pathJavap.toPath(), disassemble.getBytes(Charset.forName("UTF-8")), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+
+                new ProcessBuilder("git", "add", savedPath)
+                        .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                        .redirectError(ProcessBuilder.Redirect.INHERIT)
+                        .redirectErrorStream(true)
+                        .start();
+
+            }catch (Exception e) {
+                e.printStackTrace();
             }
-
-            if(pathJavap.exists()) {
-                pathJavap.delete();
-                pathJavap.createNewFile();
-            } else {
-                pathJavap.createNewFile();
-            }
-
-            new Thread(() -> {
-                try {
-                    Process pb = new ProcessBuilder("javap", "-c", "-v", "-p", simpleName)
-                            .directory(new File(path))
-                            .redirectOutput(pathJavap)
-                            .redirectErrorStream(true)
-                            .redirectError(ProcessBuilder.Redirect.INHERIT)
-                            .start();
-
-                    pb.waitFor();
-
-                    int exit = pb.exitValue();
-                    if (exit != 0) {
-                        System.err.println("Ext: "+ exit);
-                        try {
-                            pb.destroy();
-                        } catch (Exception ignored) {
-
-                        }
-                        pathJavap.delete();
-                    } else {
-                        new ProcessBuilder("git", "add", savedPath)
-                                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                                .redirectError(ProcessBuilder.Redirect.INHERIT)
-                                .redirectErrorStream(true)
-                                .start();
-                    }
-
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

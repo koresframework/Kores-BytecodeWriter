@@ -1,139 +1,88 @@
-Classfile /home/jonathan/workspace/CodeAPI-BytecodeWriter/src/test/resources/PrimitiveCast_Result.class
-  Last modified 23/12/2016; size 976 bytes
-  MD5 checksum a0c58f557a02967ad623e96997e51371
-  Compiled from "PrimitiveCast_Generated.cai"
-public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated
-  minor version: 0
-  major version: 52
-  flags: ACC_PUBLIC, ACC_SUPER
-Constant pool:
-   #1 = Utf8               PrimitiveCast_Generated.cai
-   #2 = Utf8               com/github/jonathanxd/codeapi/test/asm/PrimitiveCast_Generated
-   #3 = Class              #2             // com/github/jonathanxd/codeapi/test/asm/PrimitiveCast_Generated
-   #4 = Utf8               java/lang/Object
-   #5 = Class              #4             // java/lang/Object
-   #6 = Utf8               printString
-   #7 = Utf8               (Ljava/lang/String;)I
-   #8 = Utf8               java/lang/System
-   #9 = Class              #8             // java/lang/System
-  #10 = Utf8               out
-  #11 = Utf8               Ljava/io/PrintStream;
-  #12 = NameAndType        #10:#11        // out:Ljava/io/PrintStream;
-  #13 = Fieldref           #9.#12         // java/lang/System.out:Ljava/io/PrintStream;
-  #14 = Utf8               java/io/PrintStream
-  #15 = Class              #14            // java/io/PrintStream
-  #16 = Utf8               println
-  #17 = Utf8               (Ljava/lang/String;)V
-  #18 = NameAndType        #16:#17        // println:(Ljava/lang/String;)V
-  #19 = Methodref          #15.#18        // java/io/PrintStream.println:(Ljava/lang/String;)V
-  #20 = Utf8               java/lang/Integer
-  #21 = Class              #20            // java/lang/Integer
-  #22 = Utf8               <init>
-  #23 = Utf8               (I)V
-  #24 = NameAndType        #22:#23        // "<init>":(I)V
-  #25 = Methodref          #21.#24        // java/lang/Integer."<init>":(I)V
-  #26 = Utf8               intValue
-  #27 = Utf8               ()I
-  #28 = NameAndType        #26:#27        // intValue:()I
-  #29 = Methodref          #21.#28        // java/lang/Integer.intValue:()I
-  #30 = Long               59855246879798l
-  #32 = Utf8               string
-  #33 = Utf8               Ljava/lang/String;
-  #34 = Utf8               objectF
-  #35 = Utf8               Ljava/lang/Object;
-  #36 = Utf8               iF
-  #37 = Utf8               IntegerBoxed
-  #38 = Utf8               I
-  #39 = Utf8               IntegerBoxed2
-  #40 = Utf8               int
-  #41 = Utf8               IntToInt
-  #42 = Utf8               Long
-  #43 = Utf8               J
-  #44 = Utf8               LongToByte
-  #45 = Utf8               B
-  #46 = Utf8               ()V
-  #47 = NameAndType        #22:#46        // "<init>":()V
-  #48 = Methodref          #5.#47         // java/lang/Object."<init>":()V
-  #49 = Utf8               this
-  #50 = Utf8               Lcom/github/jonathanxd/codeapi/test/asm/PrimitiveCast_Generated;
-  #51 = Utf8               <clinit>
-  #52 = Utf8               Code
-  #53 = Utf8               LocalVariableTable
-  #54 = Utf8               SourceFile
-{
-  public static int printString(java.lang.String);
-    descriptor: (Ljava/lang/String;)I
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack=3, locals=9, args_size=1
-         0: getstatic     #13                 // Field java/lang/System.out:Ljava/io/PrintStream;
-         3: aload_0
-         4: invokevirtual #19                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-         7: new           #21                 // class java/lang/Integer
-        10: dup
-        11: bipush        9
-        13: invokespecial #25                 // Method java/lang/Integer."<init>":(I)V
-        16: checkcast     #5                  // class java/lang/Object
-        19: astore_1
-        20: new           #21                 // class java/lang/Integer
-        23: dup
-        24: bipush        9
-        26: invokespecial #25                 // Method java/lang/Integer."<init>":(I)V
-        29: checkcast     #5                  // class java/lang/Object
-        32: astore_2
-        33: aload_2
-        34: checkcast     #21                 // class java/lang/Integer
-        37: invokevirtual #29                 // Method java/lang/Integer.intValue:()I
-        40: istore_3
-        41: aload_2
-        42: checkcast     #21                 // class java/lang/Integer
-        45: invokevirtual #29                 // Method java/lang/Integer.intValue:()I
-        48: istore        4
-        50: bipush        9
-        52: istore        5
-        54: iload         5
-        56: istore        6
-        58: ldc2_w        #30                 // long 59855246879798l
-        61: lstore        7
-        63: lload         7
-        65: l2i
-        66: i2b
-        67: istore        8
-        69: new           #21                 // class java/lang/Integer
-        72: dup
-        73: bipush        9
-        75: invokespecial #25                 // Method java/lang/Integer."<init>":(I)V
-        78: invokevirtual #29                 // Method java/lang/Integer.intValue:()I
-        81: ireturn
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0      82     0 string   Ljava/lang/String;
-           19      63     1 objectF   Ljava/lang/Object;
-           32      50     2    iF   Ljava/lang/Object;
-           40      42     3 IntegerBoxed   I
-           48      34     4 IntegerBoxed2   I
-           52      30     5   int   I
-           56      26     6 IntToInt   I
-           61      21     7  Long   J
-           67      15     8 LongToByte   B
+md5: a0c58f557a02967ad623e96997e51371
 
-  public com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated();
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack=1, locals=1, args_size=1
-         0: aload_0
-         1: invokespecial #48                 // Method java/lang/Object."<init>":()V
-         4: return
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       5     0  this   Lcom/github/jonathanxd/codeapi/test/asm/PrimitiveCast_Generated;
+version: 52 (Java 8)
+access: 33 (ACC_PUBLIC)
 
-  static {};
-    descriptor: ()V
-    flags: ACC_STATIC
-    Code:
-      stack=0, locals=0, args_size=0
-         0: return
+source: PrimitiveCast_Generated.cai, debug: null
+public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated extends java.lang.Object {
+
+    !access: 9 (ACC_PUBLIC, ACC_STATIC)
+    public static int printString(java.lang.String) {
+      Label_0:
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 0
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        new java.lang.Integer
+        dup
+        bipush lconst_0
+        invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
+        checkcast java.lang.Object
+      Label_1:
+        astore 1
+        new java.lang.Integer
+        dup
+        bipush lconst_0
+        invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
+        checkcast java.lang.Object
+      Label_2:
+        astore 2
+        aload 2
+        checkcast java.lang.Integer
+        invokevirtual java.lang.Integer.intValue()int (ownerIsInterface: false)
+      Label_3:
+        istore 3
+        aload 2
+        checkcast java.lang.Integer
+        invokevirtual java.lang.Integer.intValue()int (ownerIsInterface: false)
+      Label_4:
+        istore 4
+        bipush lconst_0
+      Label_5:
+        istore 5
+        iload 5
+      Label_6:
+        istore 6
+        ldc 59855246879798
+      Label_7:
+        lstore 7
+        lload 7
+        l2i
+        i2b
+      Label_8:
+        istore 8
+        new java.lang.Integer
+        dup
+        bipush lconst_0
+        invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
+        invokevirtual java.lang.Integer.intValue()int (ownerIsInterface: false)
+        ireturn
+      Label_9:
+        !localVariable[index: 0, name: string, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_9]
+        !localVariable[index: 1, name: objectF, desc: Ljava/lang/Object;, signature: null, start: Label_1, end: Label_9]
+        !localVariable[index: 2, name: iF, desc: Ljava/lang/Object;, signature: null, start: Label_2, end: Label_9]
+        !localVariable[index: 3, name: IntegerBoxed, desc: I, signature: null, start: Label_3, end: Label_9]
+        !localVariable[index: 4, name: IntegerBoxed2, desc: I, signature: null, start: Label_4, end: Label_9]
+        !localVariable[index: 5, name: int, desc: I, signature: null, start: Label_5, end: Label_9]
+        !localVariable[index: 6, name: IntToInt, desc: I, signature: null, start: Label_6, end: Label_9]
+        !localVariable[index: 7, name: Long, desc: J, signature: null, start: Label_7, end: Label_9]
+        !localVariable[index: 8, name: LongToByte, desc: B, signature: null, start: Label_8, end: Label_9]
+        MAX_STACK: 3, MAX_LOCALS: 9
+    }
+
+    !access: 1 (ACC_PUBLIC)
+    public void <init>() {
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+        !localVariable[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/PrimitiveCast_Generated;, signature: null, start: Label_0, end: Label_1]
+        MAX_STACK: 1, MAX_LOCALS: 1
+    }
+
+    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    static void <clinit>() {
+        return
+        MAX_STACK: 0, MAX_LOCALS: 0
+    }
 }
-SourceFile: "PrimitiveCast_Generated.cai"

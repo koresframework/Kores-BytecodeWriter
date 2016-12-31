@@ -1,90 +1,44 @@
-Classfile /home/jonathan/workspace/CodeAPI-BytecodeWriter/src/test/resources/EnumTest_MyEnum$A$Inner_Result.class
-  Last modified 29/12/2016; size 679 bytes
-  MD5 checksum 3dd01b90ec8790e8f4f0e92cb96dd2a1
-  Compiled from "MyEnum$A$Inner.cai"
-class com.MyEnum$A$Inner extends com.MyEnum
-  minor version: 0
-  major version: 52
-  flags: ACC_SUPER, ACC_ENUM
-Constant pool:
-   #1 = Utf8               MyEnum$A$Inner.cai
-   #2 = Utf8               com/MyEnum$A$Inner
-   #3 = Class              #2             // com/MyEnum$A$Inner
-   #4 = Utf8               com/MyEnum
-   #5 = Class              #4             // com/MyEnum
-   #6 = Utf8               com.MyEnum$A$Inner
-   #7 = Utf8               v
-   #8 = Utf8               ()V
-   #9 = Utf8               Ljava/lang/Override;
-  #10 = Utf8               java/lang/System
-  #11 = Class              #10            // java/lang/System
-  #12 = Utf8               out
-  #13 = Utf8               Ljava/io/PrintStream;
-  #14 = NameAndType        #12:#13        // out:Ljava/io/PrintStream;
-  #15 = Fieldref           #11.#14        // java/lang/System.out:Ljava/io/PrintStream;
-  #16 = Utf8               A
-  #17 = String             #16            // A
-  #18 = Utf8               java/io/PrintStream
-  #19 = Class              #18            // java/io/PrintStream
-  #20 = Utf8               println
-  #21 = Utf8               (Ljava/lang/String;)V
-  #22 = NameAndType        #20:#21        // println:(Ljava/lang/String;)V
-  #23 = Methodref          #19.#22        // java/io/PrintStream.println:(Ljava/lang/String;)V
-  #24 = Utf8               this
-  #25 = Utf8               Lcom/MyEnum$A$Inner;
-  #26 = Utf8               <init>
-  #27 = Utf8               (Ljava/lang/String;I)V
-  #28 = NameAndType        #26:#27        // "<init>":(Ljava/lang/String;I)V
-  #29 = Methodref          #5.#28         // com/MyEnum."<init>":(Ljava/lang/String;I)V
-  #30 = Utf8               $name
-  #31 = Utf8               Ljava/lang/String;
-  #32 = Utf8               $ordinal
-  #33 = Utf8               I
-  #34 = Utf8               <clinit>
-  #35 = Utf8               Code
-  #36 = Utf8               LocalVariableTable
-  #37 = Utf8               RuntimeInvisibleAnnotations
-  #38 = Utf8               SourceFile
-  #39 = Utf8               InnerClasses
-{
-  public void v();
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack=2, locals=1, args_size=1
-         0: getstatic     #15                 // Field java/lang/System.out:Ljava/io/PrintStream;
-         3: ldc           #17                 // String A
-         5: invokevirtual #23                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-         8: return
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       9     0  this   Lcom/MyEnum$A$Inner;
-    RuntimeInvisibleAnnotations:
-      0: #9()
+md5: 3dd01b90ec8790e8f4f0e92cb96dd2a1
 
-  com.MyEnum$A$Inner(java.lang.String, int);
-    descriptor: (Ljava/lang/String;I)V
-    flags:
-    Code:
-      stack=3, locals=3, args_size=3
-         0: aload_0
-         1: aload_1
-         2: iload_2
-         3: invokespecial #29                 // Method com/MyEnum."<init>":(Ljava/lang/String;I)V
-         6: return
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       7     0  this   Lcom/MyEnum$A$Inner;
-            0       7     1 $name   Ljava/lang/String;
-            0       7     2 $ordinal   I
+version: 52 (Java 8)
+access: 16416 (PACKAGE_PRIVATE)
 
-  static {};
-    descriptor: ()V
-    flags: ACC_STATIC
-    Code:
-      stack=0, locals=0, args_size=0
-         0: return
+source: MyEnum$A$Inner.cai, debug: null
+innerClass: com/MyEnum.com/MyEnum$A$Inner -> com.MyEnum$A$Inner (access: 16424 (PACKAGE_PRIVATE))
+ class com.MyEnum$A$Inner extends com.MyEnum {
+
+    
+    @java.lang.Override()
+    !access: 1 (ACC_PUBLIC)
+    public void v() {
+      Label_0:
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "A"
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        return
+      Label_1:
+        !localVariable[index: 0, name: this, desc: Lcom/MyEnum$A$Inner;, signature: null, start: Label_0, end: Label_1]
+        MAX_STACK: 2, MAX_LOCALS: 1
+    }
+
+    !access: 0 (PACKAGE_PRIVATE)
+     void <init>(java.lang.String, int) {
+      Label_0:
+        aload 0
+        aload 1
+        iload 2
+        invokespecial com.MyEnum.<init>(java.lang.String, int)void (ownerIsInterface: false)
+        return
+      Label_1:
+        !localVariable[index: 0, name: this, desc: Lcom/MyEnum$A$Inner;, signature: null, start: Label_0, end: Label_1]
+        !localVariable[index: 1, name: $name, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
+        !localVariable[index: 2, name: $ordinal, desc: I, signature: null, start: Label_0, end: Label_1]
+        MAX_STACK: 3, MAX_LOCALS: 3
+    }
+
+    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    static void <clinit>() {
+        return
+        MAX_STACK: 0, MAX_LOCALS: 0
+    }
 }
-SourceFile: "MyEnum$A$Inner.cai"
-InnerClasses:
-     static #6= #3 of #5; //com.MyEnum$A$Inner=class com/MyEnum$A$Inner of class com/MyEnum

@@ -1,198 +1,114 @@
-Classfile /home/jonathan/workspace/CodeAPI-BytecodeWriter/src/test/resources/CodeAPITestBytecode_Result.class
-  Last modified 23/12/2016; size 1343 bytes
-  MD5 checksum 19c92ff67cb613f1f927b8c441a97b37
-  Compiled from "CodeAPITestBytecode.cai"
-public class github.com.CodeAPITestBytecode
-  minor version: 0
-  major version: 52
-  flags: ACC_PUBLIC, ACC_SUPER
-Constant pool:
-   #1 = Utf8               CodeAPITestBytecode.cai
-   #2 = Utf8               github/com/CodeAPITestBytecode
-   #3 = Class              #2             // github/com/CodeAPITestBytecode
-   #4 = Utf8               java/lang/Object
-   #5 = Class              #4             // java/lang/Object
-   #6 = Utf8               println
-   #7 = Utf8               (Ljava/lang/Object;)V
-   #8 = Utf8               com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode
-   #9 = Class              #8             // com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode
-  #10 = Utf8               <init>
-  #11 = Utf8               ()V
-  #12 = NameAndType        #10:#11        // "<init>":()V
-  #13 = Methodref          #9.#12         // com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode."<init>":()V
-  #14 = Utf8               java/lang/System
-  #15 = Class              #14            // java/lang/System
-  #16 = Utf8               out
-  #17 = Utf8               Ljava/io/PrintStream;
-  #18 = NameAndType        #16:#17        // out:Ljava/io/PrintStream;
-  #19 = Fieldref           #15.#18        // java/lang/System.out:Ljava/io/PrintStream;
-  #20 = Utf8               b
-  #21 = Utf8               Ljava/lang/String;
-  #22 = NameAndType        #20:#21        // b:Ljava/lang/String;
-  #23 = Fieldref           #9.#22         // com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode.b:Ljava/lang/String;
-  #24 = Utf8               java/io/PrintStream
-  #25 = Class              #24            // java/io/PrintStream
-  #26 = Utf8               (Ljava/lang/String;)V
-  #27 = NameAndType        #6:#26         // println:(Ljava/lang/String;)V
-  #28 = Methodref          #25.#27        // java/io/PrintStream.println:(Ljava/lang/String;)V
-  #29 = Utf8               java/lang/IllegalArgumentException
-  #30 = Class              #29            // java/lang/IllegalArgumentException
-  #31 = Utf8               java/lang/IllegalStateException
-  #32 = Class              #31            // java/lang/IllegalStateException
-  #33 = Utf8               java/io/IOException
-  #34 = Class              #33            // java/io/IOException
-  #35 = Utf8               java/lang/ClassNotFoundException
-  #36 = Class              #35            // java/lang/ClassNotFoundException
-  #37 = NameAndType        #6:#7          // println:(Ljava/lang/Object;)V
-  #38 = Methodref          #25.#37        // java/io/PrintStream.println:(Ljava/lang/Object;)V
-  #39 = Utf8               Error
-  #40 = String             #39            // Error
-  #41 = NameAndType        #10:#26        // "<init>":(Ljava/lang/String;)V
-  #42 = Methodref          #32.#41        // java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
-  #43 = Utf8               Finally!
-  #44 = String             #43            // Finally!
-  #45 = Utf8               Rethrow from var 'tlr'!
-  #46 = String             #45            // Rethrow from var 'tlr'!
-  #47 = Utf8               java/lang/Throwable
-  #48 = Class              #47            // java/lang/Throwable
-  #49 = Utf8               printStackTrace
-  #50 = NameAndType        #49:#11        // printStackTrace:()V
-  #51 = Methodref          #48.#50        // java/lang/Throwable.printStackTrace:()V
-  #52 = Utf8               Rethrow from var 'thr'!
-  #53 = String             #52            // Rethrow from var 'thr'!
-  #54 = Utf8               java/lang/Exception
-  #55 = Class              #54            // java/lang/Exception
-  #56 = Utf8               java/lang/RuntimeException
-  #57 = Class              #56            // java/lang/RuntimeException
-  #58 = Utf8               msg
-  #59 = Utf8               Ljava/lang/Object;
-  #60 = Utf8               test
-  #61 = Utf8               Lcom/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode;
-  #62 = Utf8               ref
-  #63 = Utf8               thr
-  #64 = Utf8               Ljava/lang/Throwable;
-  #65 = Methodref          #5.#12         // java/lang/Object."<init>":()V
-  #66 = Utf8               this
-  #67 = Utf8               Lgithub/com/CodeAPITestBytecode;
-  #68 = Utf8               <clinit>
-  #69 = Utf8               Code
-  #70 = Utf8               LocalVariableTable
-  #71 = Utf8               StackMapTable
-  #72 = Utf8               SourceFile
-{
-  public static void println(java.lang.Object);
-    descriptor: (Ljava/lang/Object;)V
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack=3, locals=4, args_size=1
-         0: new           #9                  // class com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode
-         3: dup
-         4: invokespecial #13                 // Method com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode."<init>":()V
-         7: astore_1
-         8: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        11: aload_1
-        12: getfield      #23                 // Field com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode.b:Ljava/lang/String;
-        15: invokevirtual #28                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-        18: aload_0
-        19: ifnull        29
-        22: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        25: aload_0
-        26: invokevirtual #38                 // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
-        29: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        32: astore_2
-        33: new           #32                 // class java/lang/IllegalStateException
-        36: dup
-        37: ldc           #40                 // String Error
-        39: invokespecial #42                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
-        42: athrow
-        43: nop
-        44: nop
-        45: nop
-        46: nop
-        47: nop
-        48: nop
-        49: athrow
-        50: nop
-        51: nop
-        52: nop
-        53: nop
-        54: nop
-        55: nop
-        56: nop
-        57: nop
-        58: nop
-        59: nop
-        60: athrow
-        61: astore_3
-        62: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        65: ldc           #46                 // String Rethrow from var 'tlr'!
-        67: invokevirtual #28                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-        70: aload_3
-        71: invokevirtual #51                 // Method java/lang/Throwable.printStackTrace:()V
-        74: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        77: ldc           #44                 // String Finally!
-        79: invokevirtual #28                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-        82: goto          109
-        85: astore_3
-        86: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
-        89: ldc           #53                 // String Rethrow from var 'thr'!
-        91: invokevirtual #28                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-        94: aload_3
-        95: invokevirtual #51                 // Method java/lang/Throwable.printStackTrace:()V
-        98: getstatic     #19                 // Field java/lang/System.out:Ljava/io/PrintStream;
-       101: ldc           #44                 // String Finally!
-       103: invokevirtual #28                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
-       106: goto          109
-       109: return
-      Exception table:
-         from    to  target type
-            18    43    85   Class java/lang/IllegalArgumentException
-            18    43    85   Class java/lang/IllegalStateException
-            18    43    61   Class java/io/IOException
-            18    43    61   Class java/lang/ClassNotFoundException
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0     110     0   msg   Ljava/lang/Object;
-            7     103     1  test   Lcom/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode;
-           32      78     2   ref   Ljava/lang/Object;
-           85      24     3   thr   Ljava/lang/Throwable;
-      StackMapTable: number_of_entries = 6
-        frame_type = 252 /* append */
-          offset_delta = 29
-          locals = [ class com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode ]
-        frame_type = 255 /* full_frame */
-          offset_delta = 13
-          locals = []
-          stack = [ class java/lang/Throwable ]
-        frame_type = 70 /* same_locals_1_stack_item */
-          stack = [ class java/lang/Throwable ]
-        frame_type = 255 /* full_frame */
-          offset_delta = 10
-          locals = [ class java/lang/Object, class com/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode ]
-          stack = [ class java/lang/Exception ]
-        frame_type = 87 /* same_locals_1_stack_item */
-          stack = [ class java/lang/RuntimeException ]
-        frame_type = 253 /* append */
-          offset_delta = 23
-          locals = [ top, class java/lang/Exception ]
+md5: 19c92ff67cb613f1f927b8c441a97b37
 
-  public github.com.CodeAPITestBytecode();
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack=1, locals=1, args_size=1
-         0: aload_0
-         1: invokespecial #65                 // Method java/lang/Object."<init>":()V
-         4: return
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       5     0  this   Lgithub/com/CodeAPITestBytecode;
+version: 52 (Java 8)
+access: 33 (ACC_PUBLIC)
 
-  static {};
-    descriptor: ()V
-    flags: ACC_STATIC
-    Code:
-      stack=0, locals=0, args_size=0
-         0: return
+source: CodeAPITestBytecode.cai, debug: null
+public class github.com.CodeAPITestBytecode extends java.lang.Object {
+
+    !access: 9 (ACC_PUBLIC, ACC_STATIC)
+    public static void println(java.lang.Object) {
+        !tryCatchBlock[type: java/lang/IllegalArgumentException, start: Label_0, end: Label_1, handler: Label_2]
+        !tryCatchBlock[type: java/lang/IllegalStateException, start: Label_0, end: Label_1, handler: Label_2]
+        !tryCatchBlock[type: java/io/IOException, start: Label_0, end: Label_1, handler: Label_3]
+        !tryCatchBlock[type: java/lang/ClassNotFoundException, start: Label_0, end: Label_1, handler: Label_3]
+      Label_4:
+        new com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode
+        dup
+        invokespecial com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode.<init>()void (ownerIsInterface: false)
+      Label_5:
+        astore 1
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 1
+        getfield com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode.b (type: java.lang.String)
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_0:
+        aload 0
+        ifnull Label_6
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 0
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_6:
+       FRAME[type: F_APPEND, locals: 1, local: {com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null, null}, stacks: 0, stack: {}]
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+      Label_7:
+        astore 2
+        new java.lang.IllegalStateException
+        dup
+        ldc "Error"
+        invokespecial java.lang.IllegalStateException.<init>(java.lang.String)void (ownerIsInterface: false)
+        athrow
+      Label_1:
+       FRAME[type: F_FULL, locals: 0, local: {com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null, null}, stacks: 1, stack: {java.lang.Throwable, null, null}]
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        athrow
+      Label_8:
+       FRAME[type: F_SAME1, locals: 0, local: {com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null, null}, stacks: 1, stack: {java.lang.Throwable, null, null}]
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        athrow
+      Label_3:
+       FRAME[type: F_FULL, locals: 2, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.Exception, null, null}]
+        astore 3
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Rethrow from var 'tlr'!"
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        aload 3
+        invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Finally!"
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        goto Label_9
+      Label_2:
+       FRAME[type: F_SAME1, locals: 0, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.RuntimeException, null, null}]
+        astore 3
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Rethrow from var 'thr'!"
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        aload 3
+        invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Finally!"
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        goto Label_9
+      Label_9:
+       FRAME[type: F_APPEND, locals: 2, local: {top, java.lang.Exception, null, null}, stacks: 0, stack: {java.lang.RuntimeException, null, null}]
+        return
+      Label_10:
+        !localVariable[index: 0, name: msg, desc: Ljava/lang/Object;, signature: null, start: Label_4, end: Label_10]
+        !localVariable[index: 1, name: test, desc: Lcom/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode;, signature: null, start: Label_5, end: Label_10]
+        !localVariable[index: 2, name: ref, desc: Ljava/lang/Object;, signature: null, start: Label_7, end: Label_10]
+        !localVariable[index: 3, name: thr, desc: Ljava/lang/Throwable;, signature: null, start: Label_2, end: Label_9]
+        MAX_STACK: 3, MAX_LOCALS: 4
+    }
+
+    !access: 1 (ACC_PUBLIC)
+    public void <init>() {
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+        !localVariable[index: 0, name: this, desc: Lgithub/com/CodeAPITestBytecode;, signature: null, start: Label_0, end: Label_1]
+        MAX_STACK: 1, MAX_LOCALS: 1
+    }
+
+    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    static void <clinit>() {
+        return
+        MAX_STACK: 0, MAX_LOCALS: 0
+    }
 }
-SourceFile: "CodeAPITestBytecode.cai"

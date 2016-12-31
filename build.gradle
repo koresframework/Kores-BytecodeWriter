@@ -24,5 +24,7 @@ apply from: project(":CodeAPI").file("gradle/common.gradle")
 
 dependencies {
     compile project(":CodeAPI")
+    compile 'com.github.JonathanxD:BytecodeDisassembler:1.0-r2'
+    compile group: 'org.ow2.asm', name: 'asm-all', version: '5.1'
     testCompile project(path: ':CodeAPI', configuration: 'tests')
 }

@@ -45,7 +45,7 @@ import java.util.*
  * @param methodVisitor ASM Method visitor
  * @param variables Variables in stack (including `this`).
  */
-class MVData(
+class MVData constructor(
         val methodVisitor: MethodVisitor,
         private val variables: MutableList<Variable>) {
 

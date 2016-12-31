@@ -31,6 +31,8 @@ import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodePart;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.builder.CodeConstructorBuilder;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
@@ -231,7 +233,11 @@ public class TestBytecode_Invocations {
 
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator((cl) -> cl.getSimpleName()+".cai");
 
-        byte[] bytes = bytecodeGenerator.gen(codeSource)[0].getBytecode();
+        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, Boolean.TRUE);
+
+        BytecodeClass bytecodeClass = bytecodeGenerator.gen(codeSource)[0];
+
+        byte[] bytes = bytecodeClass.getBytecode();
 
         return bytes;
 

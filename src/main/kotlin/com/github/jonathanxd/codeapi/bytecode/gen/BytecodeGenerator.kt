@@ -27,8 +27,12 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen
 
+import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
+import com.github.jonathanxd.codeapi.bytecode.LINE
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.gen.visitor.*
 import com.github.jonathanxd.codeapi.gen.ArrayAppender
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
@@ -38,6 +42,8 @@ import com.github.jonathanxd.codeapi.literals.Literal
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.option.Options
 import com.github.jonathanxd.iutils.type.AbstractTypeInfo
+import org.objectweb.asm.Label
+import java.util.function.Consumer
 
 class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclaration) -> String = { "${it.simpleName}.cai" }) //CodeAPI Instructions
     : VisitorGenerator<BytecodeClass>() {
@@ -106,6 +112,34 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
     }
 
     override fun createAppender(): ArrayAppender<BytecodeClass> = ByteAppender()
+
+    override fun generateTo(partClass: Class<out CodePart>?, codePart: CodePart?, extraData: MapData?, consumer: Consumer<Array<BytecodeClass>>?, additional: Any?): Array<BytecodeClass>? {
+
+        if(extraData != null
+                && this.options.getOrElse(VISIT_LINES, false)
+                && additional != null
+                && additional is MVData) {
+            val line = extraData.getOptional(LINE).let {
+                if(!it.isPresent) {
+                    extraData.registerData(LINE, 1)
+                    0
+                } else {
+                    val get = it.get()
+                    extraData.registerData(LINE, get + 1)
+                    get
+                }
+            }
+
+            val lbl = Label()
+
+            additional.methodVisitor.visitLabel(lbl)
+
+            additional.methodVisitor.visitLineNumber(line, lbl)
+
+        }
+
+        return super.generateTo(partClass, codePart, extraData, consumer, additional)
+    }
 
     companion object {
         @JvmStatic
