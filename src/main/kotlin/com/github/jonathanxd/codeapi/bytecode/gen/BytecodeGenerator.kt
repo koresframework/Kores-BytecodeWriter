@@ -32,6 +32,7 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.LINE
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.gen.visitor.*
 import com.github.jonathanxd.codeapi.gen.ArrayAppender
@@ -116,7 +117,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
     override fun generateTo(partClass: Class<out CodePart>?, codePart: CodePart?, extraData: MapData?, consumer: Consumer<Array<BytecodeClass>>?, additional: Any?): Array<BytecodeClass>? {
 
         if(extraData != null
-                && this.options.getOrElse(VISIT_LINES, false)
+                && this.options.get(VISIT_LINES).get() == VisitLineType.INCREMENTAL
                 && additional != null
                 && additional is MVData) {
             val line = extraData.getOptional(LINE).let {

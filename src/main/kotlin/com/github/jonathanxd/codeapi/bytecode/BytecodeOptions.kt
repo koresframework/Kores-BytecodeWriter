@@ -33,10 +33,27 @@ import com.github.jonathanxd.iutils.option.Option
 import com.github.jonathanxd.iutils.type.TypeInfo
 
 @JvmField
-val LINE: TypeInfo<Int> = TypeInfo.aEnd(Int::class.java)
+val LINE: TypeInfo<Int> = TypeInfo.aUnique(Int::class.java)
 
 /**
  * Calls MethodVisitor.visitLine for each expression
  */
 @JvmField
-val VISIT_LINES = Option(false)
+val VISIT_LINES = Option(VisitLineType.DISABLED)
+
+enum class VisitLineType {
+    /**
+     * Disable line visit
+     */
+    DISABLED,
+
+    /**
+     * Incremental line visit
+     */
+    INCREMENTAL,
+
+    /**
+     * Follow Code Source indexes
+     */
+    FOLLOW_CODE_SOURCE
+}

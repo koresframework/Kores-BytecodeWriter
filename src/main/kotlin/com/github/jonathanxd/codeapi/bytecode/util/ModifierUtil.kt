@@ -48,11 +48,11 @@ object ModifierUtil {
     }
 
     fun modifiersToAsm(codeModifiers: Collection<CodeModifier>): Int {
-        return CodeModifier.toAsmAccess(codeModifiers)
+        return ModifierUtil.toAsmAccess(codeModifiers)
     }
 
     fun modifiersToAsm(codeModifiers: Collection<CodeModifier>, isInterface: Boolean): Int {
-        return (if (isInterface) Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE else 0) + CodeModifier.toAsmAccess(codeModifiers)
+        return (if (isInterface) Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE else 0) + ModifierUtil.toAsmAccess(codeModifiers)
     }
 
     fun innerModifiersToAsm(typeDeclaration: TypeDeclaration): Int {
@@ -74,5 +74,55 @@ object ModifierUtil {
     fun isClassFieldMethodOrParameter(elementType: Int): Boolean {
         return elementType == CLASS || elementType == METHOD || elementType == FIELD || elementType == PARAMETER
     }
+
+    /**
+     * Convert a [CodeModifier] to asm modifiers
+     *
+     * @param codeModifier Modifier to convert
+     * @return ASM modifiers flags
+     */
+    fun toAsmAccess(codeModifier: CodeModifier): Int {
+        return when (codeModifier) {
+            CodeModifier.ABSTRACT -> Opcodes.ACC_ABSTRACT
+            CodeModifier.FINAL -> Opcodes.ACC_FINAL
+            CodeModifier.NATIVE -> Opcodes.ACC_NATIVE
+            CodeModifier.PRIVATE -> Opcodes.ACC_PRIVATE
+            CodeModifier.PROTECTED -> Opcodes.ACC_PROTECTED
+            CodeModifier.PUBLIC -> Opcodes.ACC_PUBLIC
+            CodeModifier.STATIC -> Opcodes.ACC_STATIC
+            CodeModifier.STRICTFP -> Opcodes.ACC_STRICT
+            CodeModifier.SYNCHRONIZED -> Opcodes.ACC_SYNCHRONIZED
+            CodeModifier.TRANSIENT -> Opcodes.ACC_TRANSIENT
+            CodeModifier.VOLATILE -> Opcodes.ACC_VOLATILE
+            CodeModifier.BRIDGE -> Opcodes.ACC_BRIDGE
+            CodeModifier.VARARGS -> Opcodes.ACC_VARARGS
+            CodeModifier.SYNTHETIC -> Opcodes.ACC_SYNTHETIC
+            CodeModifier.ANNOTATION -> Opcodes.ACC_ANNOTATION
+            CodeModifier.ENUM -> Opcodes.ACC_ENUM
+            CodeModifier.MANDATED -> Opcodes.ACC_MANDATED
+            else -> 0
+        }
+    }
+
+    /**
+     * Convert [CodeModifier]s to asm modifiers
+     *
+     * @param modifiers Modifiers to convert
+     * @return ASM modifiers flags
+     */
+    fun toAsmAccess(modifiers: Collection<CodeModifier>): Int {
+        var end = 0
+
+        for (modifier in modifiers) {
+            val toAsmAccess = toAsmAccess(modifier)
+
+            if (toAsmAccess != 0) {
+                end += toAsmAccess
+            }
+        }
+
+        return end
+    }
+
 
 }

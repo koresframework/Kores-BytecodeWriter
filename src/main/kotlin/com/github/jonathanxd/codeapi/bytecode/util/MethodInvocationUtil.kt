@@ -61,7 +61,7 @@ object MethodInvocationUtil {
 
         val objects = arrayOf(
                 Type.getType(CodeTypeUtil.fullSpecToFullAsm(methodSpec)),
-                Handle(/*Opcodes.H_INVOKEINTERFACE*/InvokeType.toAsm_H(invokeType),
+                Handle(/*Opcodes.H_INVOKEINTERFACE*/InvokeTypeUtil.toAsm_H(invokeType),
                         CodeTypeUtil.codeTypeToSimpleAsm(localization),
                         spec.methodName,
                         TypeSpecUtil.typeSpecToAsm(spec.methodDescription),
@@ -95,7 +95,7 @@ object MethodInvocationUtil {
                 converted = Type.getType(arg.javaSpecName)
             } else if (arg is FullInvokeSpec) {
 
-                converted = Handle(InvokeType.toAsm_H(arg.invokeType),
+                converted = Handle(InvokeTypeUtil.toAsm_H(arg.invokeType),
                         CodeTypeUtil.codeTypeToSimpleAsm(arg.localization),
                         arg.methodName,
                         TypeSpecUtil.typeSpecToAsm(arg),
@@ -123,7 +123,7 @@ object MethodInvocationUtil {
         val methodName = bootstrapMethodSpec.methodName
         val bsmLocalization = bootstrapMethodSpec.localization
 
-        return Handle(InvokeType.toAsm_H(btpInvokeType),
+        return Handle(InvokeTypeUtil.toAsm_H(btpInvokeType),
                 CodeTypeUtil.codeTypeToSimpleAsm(bsmLocalization),
                 methodName,
                 CodeTypeUtil.fullSpecToFullAsm(bootstrapMethodSpec),
@@ -131,7 +131,7 @@ object MethodInvocationUtil {
     }
 
     fun specFromHandle(handle: Handle, typeResolver: TypeResolver): FullInvokeSpec {
-        val invokeType = InvokeType.fromAsm_H(handle.tag)
+        val invokeType = InvokeTypeUtil.fromAsm_H(handle.tag)
 
         val owner = typeResolver.resolveUnknown(handle.owner)
         val desc = owner.javaSpecName + ":" + handle.name + handle.desc
@@ -146,7 +146,7 @@ object MethodInvocationUtil {
     }
 
     fun fromHandle(handle: Handle, args: Array<Any>, typeResolver: TypeResolver): InvokeDynamic {
-        val invokeType = InvokeType.fromAsm_H(handle.tag)
+        val invokeType = InvokeTypeUtil.fromAsm_H(handle.tag)
         val fullMethodSpec = MethodInvocationUtil.specFromHandle(handle, typeResolver)
 
         return InvokeDynamic.invokeDynamicBootstrap(invokeType, fullMethodSpec, *MethodInvocationUtil.bsmArgsFromAsm(args, typeResolver))

@@ -29,17 +29,39 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.ArrayAppender
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.iutils.data.MapData
+import com.github.jonathanxd.iutils.type.TypeInfo
+import org.objectweb.asm.Label
 
 object CodeSourceVisitor : Visitor<CodeSource, BytecodeClass, Any?> {
+
+    val OFFSET = TypeInfo.aUnique(Int::class.java)
 
     override fun visit(t: CodeSource, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
         val appender = visitorGenerator.createAppender()
 
-        for (i in 0..t.size() - 1) {
+        val max = t.size() - 1
+
+        val visit = visitorGenerator.options.get(VISIT_LINES).get()
+
+        val offset = extraData.getOptional(OFFSET).orElse(0)
+
+        for (i in 0..max) {
+
+            if(additional is MVData && visit == VisitLineType.FOLLOW_CODE_SOURCE) {
+                val line = i + offset
+                val label = Label()
+
+                additional.methodVisitor.visitLabel(label)
+                additional.methodVisitor.visitLineNumber(line, label)
+            }
+
             val codePart = t.get(i)
 
             val aClass = codePart.javaClass

@@ -32,6 +32,7 @@ import com.github.jonathanxd.codeapi.common.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.MethodInvocationUtil
 import com.github.jonathanxd.codeapi.bytecode.util.TypeSpecUtil
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
@@ -164,7 +165,7 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
         } else {
 
             mv.visitMethodInsn(
-                    /*Type like invokestatic*/InvokeType.toAsm(invokeType),
+                    /*Type like invokestatic*/InvokeTypeUtil.toAsm(invokeType),
                     /*Localization*/CodeTypeUtil.codeTypeToSimpleAsm(localization),
                     /*Method name*/specification.methodName,
                     /*(ARGUMENT)RETURN*/TypeSpecUtil.typeSpecToAsm(specification.methodDescription),
