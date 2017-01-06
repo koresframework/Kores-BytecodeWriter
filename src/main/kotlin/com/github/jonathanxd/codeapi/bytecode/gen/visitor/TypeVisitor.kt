@@ -221,7 +221,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
         cw.visitEnd()
 
-        bytecodeClassList.add(0, BytecodeClass(typeDeclaration, cw.toByteArray(), extraData.clone() as MapData))
+        bytecodeClassList.add(0, BytecodeClass(typeDeclaration, cw.toByteArray()))
 
         return bytecodeClassList.toTypedArray()
     }

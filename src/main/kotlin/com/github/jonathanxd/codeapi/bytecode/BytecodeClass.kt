@@ -31,14 +31,12 @@ import com.github.jonathanxd.bytecodedisassembler.Disassembler
 import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
 import com.github.jonathanxd.iutils.data.MapData
 
-class BytecodeClass(val type: TypeDeclaration, private val bytecode_: ByteArray, private val mapData_: MapData) {
+class BytecodeClass(val type: TypeDeclaration, private val bytecode_: ByteArray) {
 
     val disassembledCode: String by lazy {
         Disassembler.disassemble(bytes = this.bytecode, hash = true)
     }
 
     val bytecode get() = bytecode_.clone()
-
-    val mapData get() = mapData_.clone() as MapData
 
 }
