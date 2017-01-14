@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,41 +27,27 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.MutableCodeSource
-import com.github.jonathanxd.codeapi.builder.InterfaceBuilder
-import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.interfaces.AnnotationDeclaration
+import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
+import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.iutils.data.MapData
+import org.objectweb.asm.Label
 
-object TypeAnnotationVisitor : Visitor<AnnotationDeclaration, BytecodeClass, Any?> {
+object IfStatementVisitor : VoidVisitor<IfStatement, BytecodeClass, MVData> {
 
-    override fun visit(annotationDeclaration: AnnotationDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
-        val modifiers = ArrayList(annotationDeclaration.modifiers)
+    override fun voidVisit(t: IfStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val startIfLabel = Label()
+        val endIfLabel = Label()
 
-        modifiers.add(CodeModifier.ANNOTATION)
+        val methodVisitor = additional.methodVisitor
 
-        val source = MutableCodeSource()
+        methodVisitor.visitLabel(startIfLabel)
 
-        source.addAll(annotationDeclaration.properties)
+        visit(t, startIfLabel, endIfLabel, false, false, extraData, visitorGenerator, additional)
 
-        val body = annotationDeclaration.body
-
-        if(body.isPresent) {
-            source.addAll(body.get())
-        }
-
-        val typeDeclaration = InterfaceBuilder.builder()
-                .withModifiers(modifiers)
-                .withQualifiedName(annotationDeclaration.qualifiedName)
-                .withImplementations(PredefinedTypes.ANNOTATION)
-                .withBody(source)
-                .build()
-
-        return visitorGenerator.generateTo(typeDeclaration.javaClass, typeDeclaration, extraData, additional)
+        methodVisitor.visitLabel(endIfLabel)
     }
 
 }

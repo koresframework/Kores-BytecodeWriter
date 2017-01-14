@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,30 +27,31 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.common.CodeModifier
 import com.github.jonathanxd.codeapi.common.InvokeType
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.common.MethodType
-import com.github.jonathanxd.codeapi.helper.Helper
-import com.github.jonathanxd.codeapi.impl.CodeField
-import com.github.jonathanxd.codeapi.interfaces.*
+import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
-import java.util.function.Predicate
 
 object ConstructorUtil {
 
     fun isInitForThat(methodInvocation: MethodInvocation): Boolean {
         val any = methodInvocation.spec.methodType == MethodType.SUPER_CONSTRUCTOR
 
-        val accept = methodInvocation.target.orElse(null) is AccessThis || methodInvocation.target.orElse(null) is AccessSuper
+        val access = methodInvocation.target as? Access
+
+        val accept = access != null
+                && (access.type == Access.Type.THIS || access.type == Access.Type.SUPER)
 
         return any
                 && accept
@@ -59,17 +60,17 @@ object ConstructorUtil {
 
     }
 
-    fun searchForInitTo(typeDeclaration: TypeDeclaration, codeParts: CodeSource, targetAccessPredicate: (CodePart) -> Boolean): SearchResult {
+    fun searchForInitTo(typeDeclaration: TypeDeclaration, codeParts: CodeSource, targetAccessPredicate: (CodePart?) -> Boolean): SearchResult {
         return ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, true, targetAccessPredicate, false)
     }
 
-    fun searchForInitTo(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, includeChild: Boolean, targetAccessPredicate: (CodePart) -> Boolean, isSub: Boolean): SearchResult {
+    fun searchForInitTo(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, includeChild: Boolean, targetAccessPredicate: (CodePart?) -> Boolean, isSub: Boolean): SearchResult {
         if (codeParts == null)
             return SearchResult.FALSE
 
         for (codePart in codeParts) {
-            if (codePart is Bodied && includeChild) {
-                val searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codePart.body.orElse(null), includeChild, targetAccessPredicate, true)
+            if (codePart is BodyHolder && includeChild) {
+                val searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codePart.body, includeChild, targetAccessPredicate, true)
 
                 if (searchResult.found)
                     return searchResult
@@ -86,7 +87,7 @@ object ConstructorUtil {
             if (codePart is MethodInvocation) {
 
                 if (codePart.spec.methodType == MethodType.SUPER_CONSTRUCTOR
-                        && targetAccessPredicate(codePart.target.orElse(null))
+                        && targetAccessPredicate(codePart.target)
                         && codePart.invokeType == InvokeType.INVOKE_SPECIAL
                         && codePart.spec.methodName == "<init>") {
                     return SearchResult(true, isSub)
@@ -99,7 +100,9 @@ object ConstructorUtil {
     }
 
     fun searchInitThis(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, validate: Boolean): Boolean {
-        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart -> codePart is AccessThis }, false)
+        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
+            codePart != null && codePart is Access && codePart.type == Access.Type.THIS
+        }, false)
 
         if (validate)
             searchResult = ConstructorUtil.validateConstructor(searchResult)
@@ -108,7 +111,9 @@ object ConstructorUtil {
     }
 
     fun searchForSuper(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, validate: Boolean): Boolean {
-        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart -> codePart is AccessSuper }, false)
+        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
+            codePart != null && codePart is Access && codePart.type == Access.Type.SUPER
+        }, false)
 
         if (validate)
             searchResult = ConstructorUtil.validateConstructor(searchResult)
@@ -123,7 +128,7 @@ object ConstructorUtil {
         return searchResult
     }
 
-    fun declareFinalFields(visitorGenerator: VisitorGenerator<*>, methodBody: CodeSource?, typeDeclaration: TypeDeclaration, mv: MethodVisitor, extraData: MapData, mvData: MVData, validate: Boolean) {
+    fun <T> declareFinalFields(visitorGenerator: VisitorGenerator<T>, methodBody: CodeSource?, typeDeclaration: TypeDeclaration, mv: MethodVisitor, extraData: MapData, mvData: MVData, validate: Boolean) {
 
         if (ConstructorUtil.searchInitThis(typeDeclaration, methodBody, validate)) {
             return
@@ -133,31 +138,30 @@ object ConstructorUtil {
          * Declare variables
          */
         val all = CodeSourceUtil.find<FieldDeclaration>(
-                typeDeclaration.body.orElseThrow(::NullPointerException),
+                typeDeclaration.body!!,
                 { codePart ->
-                    codePart is CodeField
+                    codePart is FieldDeclaration
                             && !codePart.modifiers.contains(CodeModifier.STATIC)
-                            && codePart.value.isPresent
+                            && codePart.value != null
                 }
-        ) { codePart -> codePart as CodeField }
+        ) { codePart -> codePart as FieldDeclaration }
 
 
         val label = Label()
         mv.visitLabel(label)
 
-        for (codeField in all) {
+        for (fieldDeclaration in all) {
 
-            val valueOpt = codeField.value
+            val value = fieldDeclaration.value
 
-            if (valueOpt.isPresent) {
-                val value = valueOpt.get()
+            if (value != null) {
                 // No visitor overhead.
                 mv.visitVarInsn(Opcodes.ALOAD, 0)
 
                 visitorGenerator.generateTo(value.javaClass, value, extraData, null, mvData)
 
                 // No visitor overhead.
-                mv.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToSimpleAsm(typeDeclaration), codeField.name, CodeTypeUtil.codeTypeToFullAsm(codeField.type.get()))
+                mv.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), fieldDeclaration.name, CodeTypeUtil.toTypeDesc(fieldDeclaration.type))
             }
 
         }
@@ -166,14 +170,14 @@ object ConstructorUtil {
     fun generateSuperInvoke(typeDeclaration: TypeDeclaration, mv: MethodVisitor) {
         mv.visitVarInsn(Opcodes.ALOAD, 0)
 
-        val superType = (typeDeclaration as Extender).superType.orElse(null)
+        val superType = (typeDeclaration as SuperClassHolder).superClass
 
         if (superType == null) {
             // No visitor overhead.
             mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
         } else {
             // No visitor overhead.
-            mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CodeTypeUtil.codeTypeToSimpleAsm(superType), "<init>", "()V", false)
+            mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CodeTypeUtil.codeTypeToBinaryName(superType), "<init>", "()V", false)
         }
     }
 
@@ -186,20 +190,20 @@ object ConstructorUtil {
         val all = CodeSourceUtil.find<FieldDeclaration>(
                 classSource,
                 { codePart ->
-                    codePart is CodeField
+                    codePart is FieldDeclaration
                             && !codePart.modifiers.contains(CodeModifier.STATIC)
-                            && codePart.value.isPresent
+                            && codePart.value != null
                 }
-        ) { codePart -> codePart as CodeField }
+        ) { codePart -> codePart as FieldDeclaration }
 
-        for (codeField in all) {
+        for (fieldDeclaration in all) {
 
-            val type = codeField.variableType
-            val name = codeField.name
-            val value = codeField.value
+            val type = fieldDeclaration.type
+            val name = fieldDeclaration.name
+            val value = fieldDeclaration.value
 
-            if (value.isPresent) {
-                codeSource.add(Helper.setThisVariable(name, type, value.get()))
+            if (value != null) {
+                codeSource.add(CodeAPI.setThisField(type, name, value))
             }
         }
 

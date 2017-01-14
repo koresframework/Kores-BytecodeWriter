@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,107 +29,97 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.base.CatchStatement
+import com.github.jonathanxd.codeapi.base.TryStatement
+import com.github.jonathanxd.codeapi.base.TryWithResources
+import com.github.jonathanxd.codeapi.base.VariableDeclaration
+import com.github.jonathanxd.codeapi.base.impl.VariableDeclarationImpl
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.common.TypeSpec
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.factory.variable
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.helper.Helper
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.impl.CodeField
-import com.github.jonathanxd.codeapi.impl.TryBlockImpl
-import com.github.jonathanxd.codeapi.interfaces.CatchBlock
-import com.github.jonathanxd.codeapi.interfaces.TryWithResources
-import com.github.jonathanxd.codeapi.literals.Literals
+import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.iutils.data.MapData
 
-class TryWithResourcesVisitor : VoidVisitor<TryWithResources, BytecodeClass, MVData> {
+object TryWithResourcesVisitor : VoidVisitor<TryWithResources, BytecodeClass, MVData> {
 
-    private var TRY_WITH_RESOURCES_VARIABLES = 0
-
-    private fun getAndIncrementTryWithRes(): Int {
-        val i = TRY_WITH_RESOURCES_VARIABLES
-
-        ++TRY_WITH_RESOURCES_VARIABLES
-
-        return i
-    }
-
-    override fun voidVisit(tryWithResources: TryWithResources, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val variable = tryWithResources.variable
+    override fun voidVisit(t: TryWithResources, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val vari = t.variable
 
         // Generate try-catch initialize field
-        visitorGenerator.generateTo(CodeField::class.java, variable, extraData, null, additional)
+        visitorGenerator.generateTo(VariableDeclaration::class.java, vari, extraData, null, additional)
 
-        val num = this.getAndIncrementTryWithRes()
-
-        val throwableFieldName = "\$throwable#" + num
+        val throwableFieldName = additional.getUniqueVariableName("\$throwable_")
 
         // Generate exception field
-        val throwableField = CodeField(
-                throwableFieldName,
-                PredefinedTypes.THROWABLE,
-                Literals.NULL)
+        val throwableVariable = VariableDeclarationImpl(
+                name = throwableFieldName,
+                variableType = Types.THROWABLE,
+                value = Literals.NULL)
 
-        visitorGenerator.generateTo(CodeField::class.java, throwableField, extraData, null, additional)
+        visitorGenerator.generateTo(VariableDeclaration::class.java, throwableVariable, extraData, null, additional)
 
         // Generate try block
-        val catch_ = "\$catch#" + num
-        val catchBlock = Helper.catchBlock(listOf(PredefinedTypes.THROWABLE),
-                catch_,
-                Helper.sourceOf(
-                        Helper.setLocalVariable(throwableFieldName, PredefinedTypes.THROWABLE, Helper.accessLocalVariable(catch_, PredefinedTypes.THROWABLE)),
-                        Helper.throwException(Helper.accessLocalVariable(catch_, PredefinedTypes.THROWABLE))))
+        val catch_ = additional.getUniqueVariableName("\$catch_")
+        val catchStatement = CodeAPI.catchStatement(listOf(Types.THROWABLE),
+                variable(Types.THROWABLE, catch_),
+                CodeAPI.source(
+                        CodeAPI.setLocalVariable(Types.THROWABLE, throwableFieldName, CodeAPI.accessLocalVariable(Types.THROWABLE, catch_)),
+                        CodeAPI.throwException(CodeAPI.accessLocalVariable(Types.THROWABLE, catch_))))
 
-        val catch2_name = "\$catch_2#" + num
+        val catch2_name = additional.getUniqueVariableName("\$catch_2_")
 
         //AutoCloseable#close();
         val closeInvocation = CodeAPI.invokeInterface(
                 AutoCloseable::class.java,
-                Helper.accessLocalVariable(variable),
+                CodeAPI.accessLocalVariable(vari.variableType, vari.name),
                 "close",
-                TypeSpec(PredefinedTypes.VOID))
+                TypeSpec(Types.VOID),
+                emptyList())
 
         //Throwable#addSuppressed(Throwable)
-        val addSuppressedInvocation = CodeAPI.invokeVirtual(PredefinedTypes.THROWABLE,
-                Helper.accessLocalVariable(throwableField),
+        val addSuppressedInvocation = CodeAPI.invokeVirtual(Types.THROWABLE,
+                CodeAPI.accessLocalVariable(throwableVariable.variableType, throwableVariable.name),
                 "addSuppressed",
-                TypeSpec(PredefinedTypes.VOID, PredefinedTypes.THROWABLE),
-                CodeAPI.argument(Helper.accessLocalVariable(catch2_name)))
+                TypeSpec(Types.VOID, listOf(Types.THROWABLE)),
+                listOf(CodeAPI.argument(CodeAPI.accessLocalVariable(Types.THROWABLE, catch2_name))))
 
-        val surroundedCloseInvocation = Helper.surround(Helper.sourceOf(closeInvocation),
-                listOf(Helper.catchBlock(listOf(PredefinedTypes.THROWABLE),
-                        catch2_name,
-                        Helper.sourceOf(
+        val surroundedCloseInvocation = CodeAPI.tryStatement(CodeAPI.source(closeInvocation),
+                listOf(CodeAPI.catchStatement(listOf(Types.THROWABLE),
+                        variable(Types.THROWABLE, catch2_name),
+                        CodeAPI.source(
                                 addSuppressedInvocation
                         )
                 ))
         )
 
-        val catchBlocks = java.util.ArrayList<CatchBlock>()
+        val catchStatements = java.util.ArrayList<CatchStatement>()
 
-        catchBlocks.add(catchBlock)
-        catchBlocks.addAll(tryWithResources.catchBlocks)
+        catchStatements.add(catchStatement)
+        catchStatements.addAll(t.catchStatements)
 
-        val tryCatchBlock = Helper.surround(tryWithResources.requiredBody, catchBlocks,
-                Helper.sourceOf(
-                        Helper.ifExpression(Helper.createIfVal()
-                                .add1(Helper.checkNotNull(Helper.accessLocalVariable(variable)))
-                                .make(),
-                                Helper.sourceOf(
-                                        Helper.ifExpression(Helper.createIfVal()
-                                                .add1(Helper.checkNotNull(Helper.accessLocalVariable(throwableField))).make(),
-                                                Helper.sourceOf(
+        val tryCatchStatement = CodeAPI.tryStatement(t.body!!,
+                catchStatements,
+                CodeAPI.source(
+                        CodeAPI.ifStatement(
+                                CodeAPI.checkNotNull(CodeAPI.accessLocalVariable(vari.type, vari.name)),
+                                CodeAPI.source(
+                                        CodeAPI.ifStatement(
+                                                CodeAPI.checkNotNull(CodeAPI.accessLocalVariable(throwableVariable.type, throwableVariable.name)),
+                                                CodeAPI.source(
                                                         surroundedCloseInvocation
                                                 ),
-                                                Helper.elseExpression(Helper.sourceOf(
+                                                CodeAPI.source(
                                                         closeInvocation
-                                                )))
+                                                ))
                                 )),
-                        tryWithResources.finallyBlock.orElse(CodeSource.empty())
+                        t.finallyStatement ?: CodeSource.empty()
                 ))
 
-        visitorGenerator.generateTo(TryBlockImpl::class.java, tryCatchBlock, extraData, null, additional)
+        visitorGenerator.generateTo(TryStatement::class.java, tryCatchStatement, extraData, null, additional)
     }
 
 }

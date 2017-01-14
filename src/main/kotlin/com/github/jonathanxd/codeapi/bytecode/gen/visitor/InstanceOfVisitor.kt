@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,18 +27,18 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.InstanceOfCheck
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.InstanceOf
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
-object InstanceOfVisitor : VoidVisitor<InstanceOf, BytecodeClass, MVData> {
+object InstanceOfVisitor : VoidVisitor<InstanceOfCheck, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: InstanceOf, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: InstanceOfCheck, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val visitor = additional.methodVisitor
 
         val part = t.part
@@ -46,7 +46,7 @@ object InstanceOfVisitor : VoidVisitor<InstanceOf, BytecodeClass, MVData> {
 
         visitorGenerator.generateTo(part.javaClass, part, extraData, null, additional)
 
-        visitor.visitTypeInsn(Opcodes.INSTANCEOF, CodeTypeUtil.codeTypeToSimpleAsm(codeType))
+        visitor.visitTypeInsn(Opcodes.INSTANCEOF, CodeTypeUtil.codeTypeToBinaryName(codeType))
     }
 
 }

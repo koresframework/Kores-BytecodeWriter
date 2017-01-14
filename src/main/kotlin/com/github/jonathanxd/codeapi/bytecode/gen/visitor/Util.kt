@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,26 +27,50 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.*
-import com.github.jonathanxd.codeapi.common.*
+import com.github.jonathanxd.codeapi.CodeAPI
+import com.github.jonathanxd.codeapi.CodePart
+import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.MutableCodeSource
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.inspect.SourceInspect
-import com.github.jonathanxd.codeapi.interfaces.*
-import com.github.jonathanxd.codeapi.types.CodeType
-import com.github.jonathanxd.codeapi.util.Lazy
-import com.github.jonathanxd.codeapi.util.element.ElementUtil
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.InnerUtil
 import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
+import com.github.jonathanxd.codeapi.common.*
+import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
+import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.util.Alias
+import com.github.jonathanxd.codeapi.util.element.ElementUtil
 import com.github.jonathanxd.iutils.container.MutableContainer
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.type.TypeInfo
 import org.objectweb.asm.ClassWriter
 import java.util.*
-import java.util.function.BiConsumer
 
 object Util {
+
+    fun resolveType(codeType: CodeType, data: MapData, additional: Any?): CodeType {
+
+        val type by lazy {
+            this.find(TypeVisitor.CODE_TYPE_REPRESENTATION, data, additional)
+        }
+
+        return if (codeType is Alias.THIS) {
+            type
+        } else if (codeType is Alias.SUPER) {
+            (type as? SuperClassHolder)?.superClass ?:
+                    throw IllegalStateException("Type '$type' as no super types.")
+        } else if (codeType is Alias.INTERFACE) {
+            val n = codeType.n
+
+            (type as? ImplementationHolder)?.implementations?.getOrNull(n) ?:
+                    throw IllegalStateException("Type '$type' as no implementation or the index '$n' exceed the amount of implementations in the type.")
+
+        } else {
+            codeType
+        }
+
+    }
 
     @Suppress("UNCHECKED_CAST")
     fun <T> find(typeInfo: TypeInfo<T>, data: MapData, additional: Any?): T {
@@ -93,23 +117,23 @@ object Util {
     fun visitInner(cw: ClassWriter, outer: TypeDeclaration, innerClasses: List<TypeDeclaration>): List<TypeDeclaration> {
 
         val visited = java.util.ArrayList<TypeDeclaration>()
-        val name = CodeTypeUtil.codeTypeToSimpleAsm(outer)
+        val name = CodeTypeUtil.codeTypeToBinaryName(outer)
 
         for (innerClass in innerClasses) {
             val modifiers = ModifierUtil.innerModifiersToAsm(innerClass)
-            cw.visitInnerClass(CodeTypeUtil.codeTypeToSimpleAsm(innerClass), name, innerClass.qualifiedName, modifiers)
+            cw.visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.qualifiedName, modifiers)
 
 
-            val source = MutableCodeSource(innerClass.body.orElse(CodeSource.empty()))
+            val source = MutableCodeSource(innerClass.body ?: CodeSource.empty())
 
             val instructionCodePart = InstructionCodePart.create { _, extraData, _, _ ->
                 extraData.getRequired(TypeVisitor.CLASS_WRITER_REPRESENTATION)
-                        .visitInnerClass(CodeTypeUtil.codeTypeToSimpleAsm(innerClass), name, innerClass.qualifiedName, modifiers)
+                        .visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.qualifiedName, modifiers)
             }
 
             source.add(0, instructionCodePart)
 
-            visited.add(innerClass.setBody(source))
+            visited.add(innerClass.builder().withBody(source).build())
         }
 
         return visited
@@ -145,7 +169,7 @@ object Util {
             if (originalDeclaration.`is`(localization.get())) {
                 localization.set(innerType.adaptedDeclaration)
 
-                accessor = accessor.setLocalization(localization.get()) as T
+                accessor = accessor.builder().withLocalization(localization.get()).build() as T
 
                 if (consumer != null) {
                     val container = MutableContainer.of(accessor)
@@ -172,14 +196,14 @@ object Util {
     fun accessEnclosingClass(extraData: MapData,
                              target: CodePart,
                              localization: CodeType?): CodePart? {
-        val enclosingType = Lazy<CodeType> { extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!") }
+        val enclosingType by lazy { extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!") }
 
-        if (target is AccessThis && localization != null && !localization.`is`(enclosingType.get())) {
+        if ((target is Access && target.type == Access.Type.THIS) && localization != null && !localization.`is`(enclosingType)) {
             val allAsList = extraData.getAllAsList(TypeVisitor.OUTER_FIELD_REPRESENTATION)
 
             for (fieldDeclaration in allAsList) {
-                if (fieldDeclaration.variableType.`is`(localization)) {
-                    return CodeAPI.accessThisField(fieldDeclaration.variableType, fieldDeclaration.name)
+                if (fieldDeclaration.type.`is`(localization)) {
+                    return CodeAPI.accessThisField(fieldDeclaration.type, fieldDeclaration.name)
                 }
             }
 
@@ -198,14 +222,14 @@ object Util {
                              type: CodeType): CodePart? {
         val allAsList = extraData.getAllAsList(TypeVisitor.OUTER_FIELD_REPRESENTATION)
 
-        allAsList.filter { it.variableType.`is`(type) }
-                .forEach { return CodeAPI.accessThisField(it.variableType, it.name) }
+        allAsList.filter { it.type.`is`(type) }
+                .forEach { return CodeAPI.accessThisField(it.type, it.name) }
 
 
         return null
     }
 
-    fun access(part: CodePart, localization: CodeType?, visitorGenerator: VisitorGenerator<BytecodeClass>, extraData: MapData, additional: Any): Array<BytecodeClass>? {
+    fun access(part: CodePart, localization: CodeType?, visitorGenerator: VisitorGenerator<BytecodeClass>, extraData: MapData, additional: Any): Array<out BytecodeClass>? {
         if (localization != null) {
             var declaringOpt = extraData.getOptional(TypeVisitor.OUTER_TYPE_REPRESENTATION)
 
@@ -244,15 +268,18 @@ object Util {
 
                     val codeArguments = ArrayList<CodeArgument>()
 
-                    var target: CodePart? = (part as Accessor).target.orElse(null)
+                    var target: CodePart = (part as Accessor).target
 
                     if (part is VariableAccess) {
                         memberInfo = infos.find(part)
                     } else {
-                        val spec = (part as MethodInvocation).spec
+                        val invocation = part as MethodInvocation
+                        val spec = invocation.spec
                         memberInfo = infos.find(spec)
-                        codeArguments.addAll(spec.arguments)
+                        codeArguments.addAll(invocation.arguments)
                         isConstructor = spec.methodName == "<init>"
+                        // NEW
+                        target = invocation.localization
                     }
 
                     if (memberInfo != null && !memberInfo.isAccessible) {
@@ -264,7 +291,7 @@ object Util {
 
                         if (isConstructor) {
                             codeArguments.add(CodeAPI.argument(CodeAPI.accessThis()))
-                            target = null
+                            //target = null
                         }
 
                         val invoke = ElementUtil.invoke(accessibleMember, target, codeArguments, declaringOpt.get())

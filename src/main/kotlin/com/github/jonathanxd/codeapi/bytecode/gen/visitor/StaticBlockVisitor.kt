@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,19 +28,17 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.FieldDeclaration
+import com.github.jonathanxd.codeapi.base.StaticBlock
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.common.CodeModifier
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.impl.CodeField
-import com.github.jonathanxd.codeapi.interfaces.FieldDeclaration
-import com.github.jonathanxd.codeapi.interfaces.StaticBlock
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.optional.Require
 import com.github.jonathanxd.iutils.type.TypeInfo
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Label
@@ -61,31 +59,29 @@ object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
         // Variable Initialize
 
         val all = CodeSourceUtil.find<FieldDeclaration>(
-                typeDeclaration.body.orElseThrow(::NullPointerException),
+                typeDeclaration.body!!,
                 { codePart ->
-                    codePart is CodeField
+                    codePart is FieldDeclaration
                             && codePart.modifiers.contains(CodeModifier.STATIC)
-                            && codePart.value.isPresent
+                            && codePart.value != null
                 }
-        ) { codePart -> codePart as CodeField }
+        ) { codePart -> codePart as FieldDeclaration }
 
         for (codeField in all) {
 
-            val valueOpt = codeField.value
+            val value = codeField.value
 
-            if (valueOpt.isPresent) {
-
-                val value = valueOpt.get()
+            if (value != null) {
 
                 val labeln = Label()
 
                 mv.visitLabel(labeln)
 
-                visitorGenerator.generateTo(value.javaClass, value, extraData, null, mvData)
+                visitorGenerator.generateTo(value.javaClass, value, extraData, mvData)
 
                 val type = codeField.type
 
-                mv.visitFieldInsn(Opcodes.PUTSTATIC, CodeTypeUtil.codeTypeToSimpleAsm(typeDeclaration), codeField.name, CodeTypeUtil.codeTypeToFullAsm(Require.require(type, "Field type required!")))
+                mv.visitFieldInsn(Opcodes.PUTSTATIC, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), codeField.name, CodeTypeUtil.toTypeDesc(type))
             }
         }
 
@@ -95,7 +91,7 @@ object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
         val staticBlocks = extraData.getAll(STATIC_BLOCKS)
 
         for (staticBlock in staticBlocks) {
-            staticBlock.body.ifPresent { codeSource -> visitorGenerator.generateTo(CodeSource::class.java, codeSource, extraData, null, mvData) }
+            staticBlock.body?.let { codeSource -> visitorGenerator.generateTo(CodeSource::class.java, codeSource, extraData, mvData) }
         }
 
 

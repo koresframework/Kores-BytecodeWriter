@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -30,41 +30,42 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.annotation.GenerateTo
+import com.github.jonathanxd.codeapi.base.Case
+import com.github.jonathanxd.codeapi.base.IfStatement
+import com.github.jonathanxd.codeapi.base.SwitchStatement
+import com.github.jonathanxd.codeapi.base.Typed
+import com.github.jonathanxd.codeapi.builder.CaseBuilder
+import com.github.jonathanxd.codeapi.builder.SwitchStatementBuilder
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.common.SwitchTypes
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
+import com.github.jonathanxd.codeapi.common.SwitchTypes
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.impl.CaseImpl
-import com.github.jonathanxd.codeapi.impl.IfBlockImpl
-import com.github.jonathanxd.codeapi.interfaces.*
-import com.github.jonathanxd.codeapi.literals.Literals
-import com.github.jonathanxd.codeapi.operators.Operator
-import com.github.jonathanxd.codeapi.util.BiMultiVal
+import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 
-object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
+object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: Switch, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: SwitchStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val switchType = t.switchType
-        var aSwitch: Switch = t
+        var aSwitch: SwitchStatement = t
 
         if (switchType !== SwitchTypes.NUMERIC) {
             if (!switchType.isUnique) {
                 aSwitch = this.insertEqualityCheck(aSwitch)
             }
 
-            val generate = aSwitch.switchType.generator.generate(aSwitch)
+            val generate = aSwitch.switchType.createGenerator().generate(aSwitch, this)
 
-            visitorGenerator.generateTo(Switch::class.java, generate, extraData, additional)
+            visitorGenerator.generateTo(SwitchStatement::class.java, generate, extraData, additional)
         } else {
             val mv = additional.methodVisitor
-            val value = aSwitch.value.orElseThrow(::NullPointerException)
+            val value = aSwitch.value
 
             visitorGenerator.generateTo(value.javaClass, value, extraData, additional)
 
@@ -82,7 +83,7 @@ object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
 
             val defaultLabel = Label()
 
-            val flow = Flow(outsideStart, insideStart, defaultLabel, outsideEnd)
+            val flow = Flow(null, outsideStart, insideStart, defaultLabel, outsideEnd)
 
             extraData.registerData(ConstantDatas.FLOW_TYPE_INFO, flow)
 
@@ -121,7 +122,7 @@ object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
                 if (aCase !is EmptyCase) {
                     mv.visitLabel(label)
 
-                    visitorGenerator.generateTo(CodeSource::class.java, aCase.body.orElseThrow(::NullPointerException), extraData, additional)
+                    visitorGenerator.generateTo(CodeSource::class.java, aCase.body!!, extraData, additional)
                 }
             }
 
@@ -133,7 +134,7 @@ object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
 
             val aDefault = this.getDefault(originCaseList)
 
-            val codeSource = aDefault.getBody().orElse(CodeSource.empty())
+            val codeSource = aDefault.body ?: CodeSource.empty()
 
             visitorGenerator.generateTo(CodeSource::class.java, codeSource, extraData, additional)
 
@@ -164,7 +165,7 @@ object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
             if (aCase != null) {
                 filledCases.add(aCase)
             } else {
-                filledCases.add(EmptyCase(Literals.INT(i), null))
+                filledCases.add(EmptyCase(Literals.INT(i), CodeSource.empty()))
             }
         }
 
@@ -182,8 +183,8 @@ object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
 
     private fun getMin(caseList: List<Case>): Int {
         val last = caseList
-                .filterNot { it.isDefault }
-                .map { it.value.map { codePart -> codePart as Literals.IntLiteral }.orElseThrow(::NullPointerException) }
+                .filterNot(Case::isDefault)
+                .map { it.value as Literals.IntLiteral }
                 .map { Integer.parseInt(it.name) }
                 .min()
                 ?: Integer.MAX_VALUE
@@ -193,8 +194,8 @@ object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
 
     private fun getMax(caseList: List<Case>): Int {
         val last = caseList
-                .filterNot { it.isDefault }
-                .map { it.value.map { codePart -> codePart as Literals.IntLiteral }.orElseThrow(::NullPointerException) }
+                .filterNot(Case::isDefault)
+                .map { it.value as Literals.IntLiteral }
                 .map { Integer.parseInt(it.name) }
                 .max()
                 ?: 0
@@ -227,56 +228,52 @@ object SwitchVisitor : VoidVisitor<Switch, BytecodeClass, MVData> {
         return lookupSpaceCost + 3 * labels < tableSpaceCost + 3 * tableTimeCost
     }
 
-    private fun insertEqualityCheck(aSwitch: Switch): Switch {
-        val switchValue = aSwitch.value.orElseThrow(::NullPointerException)
+    private fun insertEqualityCheck(aSwitch: SwitchStatement): SwitchStatement {
+        val switchValue = aSwitch.value
 
-        if ((switchValue as Typed).type.orElseThrow(::NullPointerException).`is`(PredefinedTypes.INT))
+        if (switchValue.type!!.`is`(Types.INT))
             return aSwitch
 
-        return aSwitch.setCases(aSwitch.cases.map { aCase ->
+        return SwitchStatementBuilder(aSwitch).withCases(aSwitch.cases.map { aCase ->
 
             if (aCase.isDefault)
                 return@map aCase
 
-            val codeSource = aCase.body.orElse(null)
+            val codeSource = aCase.body
 
-            if (codeSource != null) {
-                val caseValue = aCase.value.orElseThrow(::NullPointerException)
+            if (codeSource.isNotEmpty) {
+                val caseValue = aCase.value!!
 
                 val type = CodePartUtil.getType(caseValue)
 
-                if (type.`is`(PredefinedTypes.INT))
+                if (type.`is`(Types.INT))
                     return@map aCase
 
-                return@map aCase.setBody(CodeAPI.sourceOfParts(
-                        SwitchIfBlock(codeSource,
+                return@map CaseBuilder(aCase).withBody(CodeAPI.sourceOfParts(
+                        SwitchIfStatement(codeSource,
+                                CodeSource.empty(),
                                 listOf(CodeAPI.checkTrue(
                                         CodeAPI.invokeVirtual(Any::class.java, switchValue, "equals",
-                                                CodeAPI.typeSpec(PredefinedTypes.BOOLEAN, PredefinedTypes.OBJECT),
-                                                CodeAPI.argument(caseValue)
+                                                CodeAPI.typeSpec(Types.BOOLEAN, Types.OBJECT),
+                                                listOf(CodeAPI.argument(caseValue))
                                         )
                                 )))
-                ))
+                )).build()
             }
 
             return@map aCase
-        })
+        }).build()
     }
 
     private fun getInt(aCase: Case): Int {
         if (aCase.isDefault)
             return -1
 
-        return Integer.parseInt(aCase.value.map { codePart -> codePart as Literals.IntLiteral }.orElseThrow(::NullPointerException).name)
+        return Integer.parseInt((aCase.value!! as Literals.IntLiteral).name)
     }
 
-    @GenerateTo(IfBlock::class)
-    internal class SwitchIfBlock : IfBlockImpl {
+    @GenerateTo(IfStatement::class)
+    internal class SwitchIfStatement(override val body: CodeSource, override val elseStatement: CodeSource, override val expressions: List<CodePart>) : IfStatement
 
-        constructor(body: CodeSource, ifExprs: List<CodePart>) : super(body, ifExprs, null)
-
-        constructor(body: CodeSource, ifExpressions: BiMultiVal<CodePart, IfExpr, Operator>) : super(body, ifExpressions, null)
-    }
-
-    private class EmptyCase(value: Typed, body: CodeSource?) : CaseImpl(value, body)
+    private class EmptyCase(override val value: Typed, override val body: CodeSource) : Case
 }

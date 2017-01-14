@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,33 +28,36 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration;
 
 import org.junit.Test;
 
 import java.io.PrintStream;
+import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.aClass;
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
 import static com.github.jonathanxd.codeapi.CodeAPI.accessStaticField;
 import static com.github.jonathanxd.codeapi.CodeAPI.argument;
-import static com.github.jonathanxd.codeapi.CodeAPI.field;
 import static com.github.jonathanxd.codeapi.CodeAPI.invokeVirtual;
-import static com.github.jonathanxd.codeapi.CodeAPI.method;
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
-import static com.github.jonathanxd.codeapi.CodeAPI.parameters;
 import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
 import static com.github.jonathanxd.codeapi.CodeAPI.typeSpec;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.VOID;
-import static com.github.jonathanxd.codeapi.literals.Literals.STRING;
-import static java.lang.reflect.Modifier.FINAL;
-import static java.lang.reflect.Modifier.PRIVATE;
-import static java.lang.reflect.Modifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.Types.VOID;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.FINAL;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PRIVATE;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.factory.ClassFactory.aClass;
+import static com.github.jonathanxd.codeapi.factory.FieldFactory.field;
+import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
+import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
+import static com.github.jonathanxd.codeapi.literal.Literals.STRING;
+import static kotlin.collections.CollectionsKt.listOf;
 
 public class Wiki {
 
@@ -62,10 +65,10 @@ public class Wiki {
     @Test
     public void wiki() throws Throwable {
         CodeSource source = sourceOfParts(
-                field(PRIVATE | FINAL, PredefinedTypes.STRING, "myField", STRING("Hello")),
-                method(PUBLIC, "test", VOID, parameters(parameter(String.class, "name")), method ->
+                field(EnumSet.of(PRIVATE, FINAL), Types.STRING, "myField", STRING("Hello")),
+                method(EnumSet.of(PUBLIC), "test", VOID, new CodeParameter[]{parameter(String.class, "name")},
                         sourceOfParts(
-                                field(String.class, "variable"),
+                                variable(Types.STRING, "variable"),
                                 Predefined.invokePrintlnStr(STRING("Hello world")),
                                 Predefined.invokePrintlnStr(accessLocalVariable(String.class, "name")),
                                 accessStaticField(System.class, PrintStream.class, "out"),
@@ -73,13 +76,13 @@ public class Wiki {
                                         PrintStream.class,
                                         accessStaticField(System.class, PrintStream.class, "out"),
                                         "println",
-                                        typeSpec(VOID, PredefinedTypes.STRING),
-                                        argument(STRING("Hello")))
+                                        typeSpec(VOID, Types.STRING),
+                                        listOf(argument(STRING("Hello"))))
                         )
                 )
         );
 
-        TypeDeclaration decl = aClass(PUBLIC, "com.MyClass", aClass -> source);
+        TypeDeclaration decl = aClass(EnumSet.of(PUBLIC), "com.MyClass", source);
 
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 

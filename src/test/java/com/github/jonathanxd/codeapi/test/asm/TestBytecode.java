@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,24 +27,27 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodePart;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
-import com.github.jonathanxd.codeapi.builder.CodeConstructorBuilder;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
+import com.github.jonathanxd.codeapi.base.FieldDeclaration;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
+import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
+import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
+import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
+import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.common.InvokeType;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
+import com.github.jonathanxd.codeapi.factory.FieldFactory;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.impl.CodeConstructor;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.impl.CodeMethod;
-import com.github.jonathanxd.codeapi.impl.MethodSpecImpl;
-import com.github.jonathanxd.codeapi.literals.Literals;
-import com.github.jonathanxd.codeapi.operators.Operators;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.operator.Operators;
 
 import org.junit.Test;
 
@@ -55,20 +58,21 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.helper.Helper.accessStaticVariable;
-import static com.github.jonathanxd.codeapi.helper.Helper.invoke;
 import static java.util.Collections.singletonList;
 
 /**
  * Created by jonathan on 03/06/16.
  */
+@SuppressWarnings("Duplicates")
 public class TestBytecode {
     public static CodePart invokePrintln(CodeArgument toPrint) {
-        MethodSpecImpl spec = new MethodSpecImpl("println", Helper.getJavaType(Void.TYPE), Collections.singletonList(toPrint));
-
-        return Helper.invoke(InvokeType.INVOKE_VIRTUAL, Helper.getJavaType(PrintStream.class),
-                Helper.accessVariable(Helper.getJavaType(System.class), "out", Helper.getJavaType(PrintStream.class)), spec);
+        return CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, CodeAPI.getJavaType(PrintStream.class),
+                CodeAPI.accessStaticField(CodeAPI.getJavaType(System.class), CodeAPI.getJavaType(PrintStream.class), "out"),
+                "println",
+                CodeAPI.typeSpec(Types.VOID, Types.OBJECT),
+                singletonList(toPrint));
     }
 
     @Test
@@ -76,40 +80,48 @@ public class TestBytecode {
 
         MutableCodeSource codeSource = new MutableCodeSource();
 
-
         MutableCodeSource clSource = new MutableCodeSource();
 
-        CodeClass codeClass = new CodeClass(null, "fullName."+this.getClass().getSimpleName(),
-                Collections.singletonList(CodeModifier.PUBLIC),
-                null, null, clSource);
-
-        CodeField codeField = new CodeField("FIELD",
-                Helper.getJavaType(String.class),
-                Literals.QUOTED_STRING("AVD"), java.util.Arrays.asList(CodeModifier.PUBLIC, CodeModifier.FINAL)
+        ClassDeclaration codeClass = ClassDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withQualifiedName("fullName." + this.getClass().getSimpleName())
+                .withSuperClass(Types.OBJECT)
+                .withBody(clSource)
+                .build();
+        // TODO
+        FieldDeclaration codeField = FieldFactory.field(
+                EnumSet.of(CodeModifier.PUBLIC, CodeModifier.FINAL),
+                Types.STRING,
+                "FIELD",
+                Literals.STRING("AVD")
         );
 
-        CodeField codeField2 = new CodeField("n",
-                Helper.getJavaType(Integer.TYPE),
-                Literals.INT(15), java.util.Arrays.asList(CodeModifier.PUBLIC, CodeModifier.FINAL)
+        FieldDeclaration codeField2 = FieldFactory.field(
+                EnumSet.of(CodeModifier.PUBLIC, CodeModifier.FINAL),
+                Types.INT,
+                "n",
+                Literals.INT(15)
         );
 
         clSource.add(codeField);
         clSource.add(codeField2);
 
-        MethodSpecImpl spec = new MethodSpecImpl("println", Helper.getJavaType(Void.TYPE), Collections.singletonList(new CodeArgument(Literals.QUOTED_STRING("Hello"), false, Helper.getJavaType(String.class))));
+        CodePart invokeTest = CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, CodeAPI.getJavaType(PrintStream.class),
+                CodeAPI.accessStaticField(CodeAPI.getJavaType(System.class), CodeAPI.getJavaType(PrintStream.class), "out"),
+                "println",
+                CodeAPI.typeSpec(Types.VOID, Types.OBJECT),
+                Collections.singletonList(new CodeArgument(Literals.STRING("Hello"))));
 
-        CodePart invokeTest = Helper.invoke(InvokeType.INVOKE_VIRTUAL, Helper.getJavaType(PrintStream.class),
-                Helper.accessVariable(Helper.getJavaType(System.class), "out", Helper.getJavaType(PrintStream.class)), spec);
+        CodePart invokeTest2 = CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, codeClass,
+                CodeAPI.accessThis(),
+                "printIt",
+                CodeAPI.typeSpec(Types.VOID, Types.OBJECT),
 
-        CodePart invokeTest2 = Helper.invoke(InvokeType.INVOKE_VIRTUAL, codeClass,
-                Helper.accessThis(), new MethodSpecImpl("printIt", Helper.getJavaType(Void.TYPE),
-                        Collections.singletonList(
-                                new CodeArgument(Literals.STRING("Oi"), false, Helper.getJavaType(Object.class)))));
+                Collections.singletonList(new CodeArgument(Literals.STRING("Oi"))));
 
-        CodeConstructor codeConstructor = CodeConstructorBuilder.builder()
-                .withDeclaringClass(codeClass)
-                .withModifiers(Collections.singletonList(CodeModifier.PUBLIC))
-                .withBody(Helper.sourceOf(invokeTest, invokeTest2))
+        ConstructorDeclaration codeConstructor = ConstructorDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withBody(CodeAPI.source(invokeTest, invokeTest2))
                 .build();
 
         clSource.add(codeConstructor);
@@ -123,9 +135,11 @@ public class TestBytecode {
 
         byte[] gen = bytecodeGenerator.gen(codeSource)[0].getBytecode();
 
+        ResultSaver.save(this.getClass(), gen);
+
         BCLoader bcLoader = new BCLoader();
 
-        Class<?> define = bcLoader.define("fullName."+this.getClass().getSimpleName(), gen);
+        Class<?> define = bcLoader.define("fullName." + this.getClass().getSimpleName(), gen);
 
         System.out.println("Class -> " + Modifier.toString(define.getModifiers()) + " " + define);
 
@@ -149,7 +163,7 @@ public class TestBytecode {
                 System.out.println("CHECK NINE");
                 boolean invoke = (boolean) check.invoke(9);
 
-                System.out.println("Invoke = "+invoke);
+                System.out.println("Invoke = " + invoke);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
@@ -169,57 +183,63 @@ public class TestBytecode {
 
     }
 
-    public CodeMethod makeCM() {
+    public static MethodDeclaration makeCM() {
         MutableCodeSource methodSource = new MutableCodeSource();
 
-        CodeMethod codeMethod = new CodeMethod("printIt", Collections.singletonList(CodeModifier.PUBLIC),
-                Collections.singletonList(new CodeParameter("n", Helper.getJavaType(Object.class))),
-                Helper.getJavaType(Void.TYPE), methodSource);
+        MethodDeclaration codeMethod = MethodDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withName("printIt")
+                .withParameters(new CodeParameter(Types.OBJECT, "n"))
+                .withReturnType(Types.VOID)
+                .withBody(methodSource)
+                .build();
 
-        methodSource.add(Helper.ifExpression(Helper.createIfVal().add1(
-                Helper.checkNotNull(Helper.accessLocalVariable("n", Object.class))
-                ).make(),
-                Helper.sourceOf(
-                        invokePrintln(new CodeArgument(Literals.STRING("Hello :D"), false, Helper.getJavaType(String.class)))
-                )));
+        methodSource.add(CodeAPI.ifStatement(
+                CodeAPI.checkNotNull(CodeAPI.accessLocalVariable(Object.class, "n")),
+                CodeAPI.source(invokePrintln(new CodeArgument(Literals.STRING("Hello :D"))))
+                )
+        );
 
-        methodSource.add(new CodeField("dingdong", Helper.getJavaType(String.class), Literals.STRING("DingDong")));
+        methodSource.add(VariableFactory.variable(Types.STRING, "dingdong", Literals.STRING("DingDong")));
 
-        methodSource.add(Predefined.invokePrintln(new CodeArgument(Helper.accessLocalVariable("dingdong", String.class), false, String.class)));
+        methodSource.add(Predefined.invokePrintln(new CodeArgument(CodeAPI.accessLocalVariable(String.class, "dingdong"))));
 
-        methodSource.add(invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
-                accessStaticVariable(System.class, "out", PrintStream.class),
-                new MethodSpecImpl("println", Helper.getJavaType(Void.TYPE),
-                        singletonList(new CodeArgument(Helper.accessVariable(null, Helper.accessLocal(), "n", Helper.getJavaType(Object.class)), Object.class)))));
+        methodSource.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
+                CodeAPI.accessStaticField(System.class, PrintStream.class, "out"),
+                "println",
+                CodeAPI.typeSpec(Types.VOID, Types.OBJECT),
+                singletonList(new CodeArgument(CodeAPI.accessLocalVariable(Types.OBJECT, "n")))));
 
 
         return codeMethod;
     }
 
-    public CodeMethod makeCM2() {
+    public MethodDeclaration makeCM2() {
         MutableCodeSource methodSource = new MutableCodeSource();
 
-        CodeMethod codeMethod = new CodeMethod("check",
-                Collections.singletonList(CodeModifier.PUBLIC),
-                Collections.singletonList(new CodeParameter("x", Helper.getJavaType(Integer.TYPE))),
-                Helper.getJavaType(Boolean.TYPE),
-                methodSource);
+        MethodDeclaration codeMethod = MethodDeclarationBuilder.builder()
+                .withName("check")
+                .withModifiers(CodeModifier.PUBLIC)
+                .withParameters(new CodeParameter(Types.INT, "x"))
+                .withReturnType(Types.BOOLEAN)
+                .withBody(methodSource)
+                .build();
 
-        methodSource.add(Helper.ifExpression(
-                Helper.createIfVal()
-                        .add1(Helper.check(Helper.accessLocalVariable("x", PredefinedTypes.INT), Operators.EQUAL_TO, Literals.INT(9)))
-                        .add2(Operators.OR)
-                        .add1(Helper.check(Helper.accessLocalVariable("x", PredefinedTypes.INT), Operators.EQUAL_TO, Literals.INT(7)))
-                        .make(),
-                Helper.sourceOf(
-                        Helper.returnValue(PredefinedTypes.INT, Literals.INT(0))
+        methodSource.add(CodeAPI.ifStatement(
+                CodeAPI.ifExprs(
+                        CodeAPI.check(CodeAPI.accessLocalVariable(Types.INT, "x"), Operators.EQUAL_TO, Literals.INT(9)),
+                        Operators.OR,
+                        CodeAPI.check(CodeAPI.accessLocalVariable(Types.INT, "x"), Operators.EQUAL_TO, Literals.INT(7))
+                ),
+                CodeAPI.source(
+                        CodeAPI.returnValue(Types.INT, Literals.INT(0))
                 )));
 
         methodSource.add(Predefined.invokePrintln(
-                new CodeArgument(Helper.accessLocalVariable("x", PredefinedTypes.INT), false, PredefinedTypes.INT)
+                new CodeArgument(CodeAPI.accessLocalVariable(Types.INT, "x"))
         ));
 
-        methodSource.add(Helper.returnValue(PredefinedTypes.INT, Literals.INT(1)));
+        methodSource.add(CodeAPI.returnValue(Types.INT, Literals.INT(1)));
 
         return codeMethod;
     }

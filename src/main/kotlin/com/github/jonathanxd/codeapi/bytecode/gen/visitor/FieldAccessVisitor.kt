@@ -27,38 +27,54 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.base.ArrayAccess
-import com.github.jonathanxd.codeapi.base.ArrayLoad
+import com.github.jonathanxd.codeapi.base.Access
+import com.github.jonathanxd.codeapi.base.FieldAccess
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
+import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.iutils.container.MutableContainer
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
-object ArrayLoadVisitor : VoidVisitor<ArrayLoad, BytecodeClass, MVData> {
+object FieldAccessVisitor : VoidVisitor<FieldAccess, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ArrayLoad, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        visitorGenerator.generateTo(ArrayAccess::class.java, t, extraData, null, additional)
+    override fun voidVisit(t: FieldAccess, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val mv = additional.methodVisitor
+        var fieldAccess = t
 
-        val index = t.index
-
-        visitorGenerator.generateTo(index.javaClass, index, extraData, null, additional)
-
-        val valueType = t.valueType
-
-        val arrayComponentType = t.arrayType.arrayComponent
-
-        val opcode = CodeTypeUtil.getOpcodeForType(valueType, Opcodes.IALOAD)
-
-        additional.methodVisitor.visitInsn(opcode)
-
-        if (!arrayComponentType.`is`(valueType)) {
-            val cast = CodeAPI.cast(valueType, arrayComponentType, null)
-            visitorGenerator.generateTo(cast.javaClass, cast, extraData, additional)
+        val typeDeclaration by lazy {
+            Util.find(TypeVisitor.CODE_TYPE_REPRESENTATION, extraData, null)
         }
+
+        var localization: CodeType = Util.resolveType(fieldAccess.localization, extraData, additional)
+
+        val at = fieldAccess.target
+
+        val access = Util.access(fieldAccess, localization, visitorGenerator, extraData, additional)
+
+        if (access != null)
+            return
+
+        val of = MutableContainer.of(localization)
+
+        fieldAccess = Util.fixAccessor(fieldAccess, extraData, of, null)
+
+        localization = of.get()
+
+        if (at !is Access || at.type != Access.Type.STATIC) {
+            visitorGenerator.generateTo(at.javaClass, at, extraData, null, additional)
+        }
+
+        if (at is Access && at.type == Access.Type.STATIC) {
+            mv.visitFieldInsn(Opcodes.GETSTATIC, CodeTypeUtil.codeTypeToBinaryName(localization), fieldAccess.name, CodeTypeUtil.toTypeDesc(fieldAccess.type))
+        } else {
+            // THIS
+            mv.visitFieldInsn(Opcodes.GETFIELD, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), fieldAccess.name, CodeTypeUtil.toTypeDesc(fieldAccess.type))
+        }
+
     }
 
 }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,8 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
 import org.objectweb.asm.Opcodes
 
 object ModifierUtil {
@@ -83,6 +83,7 @@ object ModifierUtil {
      */
     fun toAsmAccess(codeModifier: CodeModifier): Int {
         return when (codeModifier) {
+            CodeModifier.DEFAULT -> Opcodes.ACC_ABSTRACT
             CodeModifier.ABSTRACT -> Opcodes.ACC_ABSTRACT
             CodeModifier.FINAL -> Opcodes.ACC_FINAL
             CodeModifier.NATIVE -> Opcodes.ACC_NATIVE
@@ -123,6 +124,5 @@ object ModifierUtil {
 
         return end
     }
-
 
 }

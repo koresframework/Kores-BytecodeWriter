@@ -5,25 +5,25 @@ access: 33 (ACC_PUBLIC)
 
 source: AnnotatedTestClass.cai, debug: null
 
-@com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.C})
+@com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {, , com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.C
 public class test.AnnotatedTestClass extends java.lang.Object {
 
     
-    @com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A})
+    @com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {, , com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A
     !access: 9 (ACC_PUBLIC, ACC_STATIC)
     public static java.lang.String field
 
     
-    @java.lang.invoke.MethodHandle.PolymorphicSignature()
-    !parameterAnnotation(parameter: 0) [@java.lang.Deprecated()]
+    @java.lang.invoke.MethodHandle.PolymorphicSignature(
+    !parameterAnnotation(parameter: 0) [@java.lang.Deprecated(
     !access: 9 (ACC_PUBLIC, ACC_STATIC)
     public static java.lang.Object polymorphic(java.lang.Object) {
       Label_0:
         aconst_null
         areturn
       Label_1:
-        !localVariable[index: 0, name: first, desc: Ljava/lang/Object;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 1, MAX_LOCALS: 1
+      LOCAL_VARIABLE[index: 0, name: first, desc: Ljava/lang/Object;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 1, MAX_LOCALS: 1
     }
 
     !access: 1 (ACC_PUBLIC)
@@ -33,8 +33,8 @@ public class test.AnnotatedTestClass extends java.lang.Object {
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
-        !localVariable[index: 0, name: this, desc: Ltest/AnnotatedTestClass;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 1, MAX_LOCALS: 1
+      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/AnnotatedTestClass;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 1, MAX_LOCALS: 1
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
@@ -42,6 +42,6 @@ public class test.AnnotatedTestClass extends java.lang.Object {
         aconst_null
         putstatic test.AnnotatedTestClass.field (type: java.lang.String)
         return
-        MAX_STACK: 1, MAX_LOCALS: 0
+      MAX_STACK: 1, MAX_LOCALS: 0
     }
 }

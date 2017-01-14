@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,24 +27,29 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.ControlFlow
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.Continue
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
-object ContinueVisitor : VoidVisitor<Continue, BytecodeClass, MVData> {
+object ControlFlowVisitor : VoidVisitor<ControlFlow, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: Continue, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val visitor = additional.methodVisitor
+    override fun voidVisit(t: ControlFlow, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val flows = extraData.getAll(ConstantDatas.FLOW_TYPE_INFO)
 
-        val optional = extraData.getOptional(ConstantDatas.FLOW_TYPE_INFO)
+        if (flows.isEmpty())
+            throw IllegalArgumentException("Cannot handle ControlFlow outside a label or a control-flow statement!")
 
-        val flow = optional.orElseThrow { IllegalArgumentException("Cannot 'continue' outside a flow!") }
+        val flow = if (t.at == null) flows.last() else flows.findLast { it.label != null && t.at!!.name == it.label.name }!!
 
-        visitor.visitJumpInsn(Opcodes.GOTO, flow.insideEnd)
+        if(t.type == ControlFlow.Type.BREAK) {
+            additional.methodVisitor.visitJumpInsn(Opcodes.GOTO, flow.outsideEnd)
+        } else if(t.type == ControlFlow.Type.CONTINUE) {
+            additional.methodVisitor.visitJumpInsn(Opcodes.GOTO, flow.insideEnd)
+        }
     }
 
 }

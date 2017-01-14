@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,37 +27,25 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.CatchStatement
+import com.github.jonathanxd.codeapi.base.ThrowException
+import com.github.jonathanxd.codeapi.base.TryStatement
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.helper.Helper
-import com.github.jonathanxd.codeapi.interfaces.CatchBlock
-import com.github.jonathanxd.codeapi.interfaces.ThrowException
-import com.github.jonathanxd.codeapi.interfaces.TryBlock
-import com.github.jonathanxd.codeapi.options.CodeOptions
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.container.primitivecontainers.BooleanContainer
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
-import java.util.logging.Logger
 
-class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
+object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
-    private var unknownException = 0
-
-    private fun getAndIncrementUnkEx(): Int {
-        val i = unknownException
-        ++unknownException
-        return i
-    }
-
-    override fun voidVisit(t: TryBlock, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val INLINE_FINALLY = visitorGenerator.options.getOrElse(CodeOptions.INLINE_FINALLY, java.lang.Boolean.TRUE)
-
+    override fun voidVisit(t: TryStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val mv = additional.methodVisitor
 
 
@@ -66,26 +54,26 @@ class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
         //Label lCatch = new Label(); // Catch block
 
 
-        val finallySource = t.finallyBlock.orElse(null)
+        val finallySource = t.finallyStatement
 
-        val finallyBlock = if (finallySource != null) {
+        val finallyLabel = if (finallySource != null) {
             Label()
         } else {
             null
         }
 
-        val catches = java.util.HashMap<CatchBlock, Label>()
+        val catches = java.util.HashMap<CatchStatement, Label>()
 
         val outOfIf = Label() // Out of if
 
-        for (catchBlock in t.catchBlocks) {
+        for (catchBlock in t.catchStatements) {
 
             val lCatch = Label()
 
             val exceptionTypes = catchBlock.exceptionTypes
 
             for (exceptionType in exceptionTypes) {
-                mv.visitTryCatchBlock(l0, l1, lCatch, CodeTypeUtil.codeTypeToSimpleAsm(exceptionType))
+                mv.visitTryCatchBlock(l0, l1, lCatch, CodeTypeUtil.codeTypeToBinaryName(exceptionType))
             }
 
             catches.put(catchBlock, lCatch)
@@ -95,17 +83,15 @@ class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
 
         val body = t.body
 
-        if (body.isPresent) {
-            visitorGenerator.generateTo(CodeSource::class.java, body.get(), extraData, null, additional)
+        if (body != null) {
+            visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, additional)
         }
 
         mv.visitLabel(l1)
 
-        if (INLINE_FINALLY) {
-            if (finallyBlock != null) {
-                mv.visitLabel(finallyBlock)
-                visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
-            }
+        if (finallyLabel != null) {
+            mv.visitLabel(finallyLabel)
+            visitorGenerator.generateTo(CodeSource::class.java, finallySource!!, extraData, null, additional)
         }
 
 
@@ -119,15 +105,11 @@ class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
 
         val endLabel = Label()
 
-        val unkExceptionName = "unknownException$$" + getAndIncrementUnkEx()
-        val stackPos = additional.storeVar(unkExceptionName, Helper.getJavaType(Throwable::class.java), i_label, null)
+        val unkExceptionName = additional.getUniqueVariableName("unknownException$$")
+        val stackPos = additional.storeVar(unkExceptionName, CodeAPI.getJavaType(Throwable::class.java), i_label, null)
                 .orElseThrow({ additional.failStore(unkExceptionName) })
 
         catches.forEach { catchBlock, label ->
-
-            //IMPLEMENTATION REQUIRED:
-
-            // Catch
 
             mv.visitLabel(label)
 
@@ -138,30 +120,18 @@ class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
 
             mv.visitVarInsn(Opcodes.ASTORE, stackPos)
 
-            if (fieldValue.isPresent) {
-                val valuePart = fieldValue.get()
-
-                visitorGenerator.generateTo(valuePart.javaClass, valuePart, extraData, null, additional)
+            if (fieldValue != null) {
+                visitorGenerator.generateTo(fieldValue.javaClass, fieldValue, extraData, null, additional)
 
                 mv.visitVarInsn(Opcodes.ASTORE, stackPos)
             }
 
-            val codeSource = catchBlock.body.orElse(null)
+            val codeSource = catchBlock.body
 
-            var toAdd = Helper.sourceOf()
+            var toAdd = CodeSource.empty()
 
-            if (INLINE_FINALLY) {
-                if (finallyBlock != null) {
-                    toAdd = finallySource
-                }
-            } else if (finallyBlock != null) {
-
-                Logger.getLogger("Inliner").warning("Is not recommended to use non-inlined finally in Bytecode generation because the behavior is inconsistent.")
-
-                toAdd = Helper.sourceOf(InstructionCodePart.create {
-                    _, _, _, _ ->
-                    mv.visitJumpInsn(Opcodes.GOTO, finallyBlock)
-                })
+            if (finallyLabel != null) {
+                toAdd = finallySource!!
             }
 
             val booleanContainer = BooleanContainer(false)
@@ -184,12 +154,8 @@ class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
 
 
             if (!booleanContainer.get()) {
-                if (INLINE_FINALLY) {
-                    if (finallyBlock != null) {
-                        visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
-                    }
-                } else if (!INLINE_FINALLY && finallyBlock != null) {
-                    mv.visitJumpInsn(Opcodes.GOTO, finallyBlock)
+                if (finallyLabel != null) {
+                    visitorGenerator.generateTo(CodeSource::class.java, finallySource!!, extraData, null, additional)
                 }
             }
 
@@ -198,11 +164,6 @@ class TryBlockVisitor : VoidVisitor<TryBlock, BytecodeClass, MVData> {
         }
 
         mv.visitLabel(endLabel)
-
-        if (!INLINE_FINALLY && finallyBlock != null) {
-            mv.visitLabel(finallyBlock)
-            visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
-        }
 
         mv.visitLabel(outOfIf)
 

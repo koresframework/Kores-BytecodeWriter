@@ -21,16 +21,16 @@ public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated
         astore 3
         return
       Label_3:
-        !localVariable[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest_Generated;, signature: null, start: Label_0, end: Label_3]
-        !localVariable[index: 1, name: par, desc: [Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;, signature: null, start: Label_0, end: Label_3]
-        !localVariable[index: 2, name: cf, desc: Ljava/lang/Object;, signature: null, start: Label_1, end: Label_3]
-        !localVariable[index: 3, name: lt, desc: [Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;, signature: null, start: Label_2, end: Label_3]
-        MAX_STACK: 1, MAX_LOCALS: 4
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest_Generated;, signature: null, start: Label_0, end: Label_3]
+      LOCAL_VARIABLE[index: 1, name: par, desc: [Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;, signature: null, start: Label_0, end: Label_3]
+      LOCAL_VARIABLE[index: 2, name: cf, desc: Ljava/lang/Object;, signature: null, start: Label_1, end: Label_3]
+      LOCAL_VARIABLE[index: 3, name: lt, desc: [Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;, signature: null, start: Label_2, end: Label_3]
+      MAX_STACK: 1, MAX_LOCALS: 4
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -49,8 +49,8 @@ internal interface InstructionCodePart : CodePart {
 
     object InstructionCodePartVisitor : VoidVisitor<InstructionCodePart, BytecodeClass, Any?> {
 
-        override fun voidVisit(instructionCodePart: InstructionCodePart, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
-            instructionCodePart.apply(instructionCodePart, extraData, visitorGenerator, additional)
+        override fun voidVisit(part: InstructionCodePart, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+            part.apply(part, extraData, visitorGenerator, additional)
         }
 
     }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,27 +27,46 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.Operate
+import com.github.jonathanxd.codeapi.base.VariableDefinition
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.IfBlock
 import com.github.jonathanxd.iutils.data.MapData
-import org.objectweb.asm.Label
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Type
 
-object IfBlockVisitor : VoidVisitor<IfBlock, BytecodeClass, MVData> {
+object VariableDefinitionVisitor : VoidVisitor<VariableDefinition, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: IfBlock, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val startIfLabel = Label()
-        val endIfLabel = Label()
+    override fun voidVisit(t: VariableDefinition, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val visitor = additional.methodVisitor
 
-        val methodVisitor = additional.methodVisitor
+        val variableName = t.name
+        val variableType = t.type
 
-        methodVisitor.visitLabel(startIfLabel)
+        val value = t.value
 
-        BytecodeIfBlockVisitor.visit(t, startIfLabel, endIfLabel, false, false, extraData, visitorGenerator, additional)
+        val variable = additional.getVar(variableName, variableType)
 
-        methodVisitor.visitLabel(endIfLabel)
+        if (!variable.isPresent)
+            throw IllegalArgumentException("Could not find variable (name: $variableName, type: $variableType)")
+
+        val varPos = additional.getVarPos(variable.get()).asInt
+
+        // Try to optimize the VariableDefinition of a operation
+        if (value is Operate && VariableOperateVisitor.visit(t, value, varPos, additional))
+            return
+
+        visitorGenerator.generateTo(value.javaClass, value, extraData, additional)
+
+        val type = Type.getType(variableType.javaSpecName)
+
+        val opcode = type.getOpcode(Opcodes.ISTORE) // ASTORE
+
+
+        additional.methodVisitor.visitVarInsn(opcode, varPos)
+
     }
 
 }

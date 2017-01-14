@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,16 +27,15 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.interfaces.Annotation
-import com.github.jonathanxd.codeapi.interfaces.EnumValue
-import com.github.jonathanxd.codeapi.types.CodeType
-import com.github.jonathanxd.codeapi.util.ArrayUtility
+import com.github.jonathanxd.codeapi.base.Annotation
+import com.github.jonathanxd.codeapi.base.EnumValue
+import com.github.jonathanxd.codeapi.type.CodeType
 import org.objectweb.asm.Type
 
 object AnnotationUtil {
     fun visitAnnotation(annotation: Annotation, annotationVisitorCapable: AnnotationVisitorCapable) {
-        val annotationTypeAsm = CodeTypeUtil.codeTypeToFullAsm(annotation.type.orElseThrow(::NullPointerException))
-        val annotationVisitor = annotationVisitorCapable.visitAnnotation(annotationTypeAsm, annotation.isVisible)
+        val annotationTypeAsm = CodeTypeUtil.toTypeDesc(annotation.type)
+        val annotationVisitor = annotationVisitorCapable.visitAnnotation(annotationTypeAsm, annotation.visible)
 
         val values = annotation.values
 
@@ -51,7 +50,7 @@ object AnnotationUtil {
         var value = value
 
         if (value.javaClass.isArray) {
-            val values = ArrayUtility.toObjectArray(value)
+            val values = ArrayUtil.toObjectArray(value)
 
             val annotationVisitor1 = annotationVisitor.visitArray(key)
 
@@ -65,13 +64,13 @@ object AnnotationUtil {
         }
 
         if (value is EnumValue) {
-            annotationVisitor.visitEnum(value.name, CodeTypeUtil.codeTypeToFullAsm(value.enumType), value.enumValue)
+            annotationVisitor.visitEnum(value.name, CodeTypeUtil.toTypeDesc(value.enumType), value.enumEntry)
 
             return
         }
 
         if (value is Annotation) {
-            val asmType = CodeTypeUtil.codeTypeToFullAsm(value.type.orElseThrow(::NullPointerException))
+            val asmType = CodeTypeUtil.toTypeDesc(value.type)
 
             val visitor2 = annotationVisitor.visitAnnotation(key, asmType)
 
@@ -83,7 +82,7 @@ object AnnotationUtil {
         }
 
         if (value is CodeType) {
-            value = Type.getType(CodeTypeUtil.codeTypeToFullAsm(value))
+            value = Type.getType(CodeTypeUtil.toTypeDesc(value))
         }
 
         annotationVisitor.visit(key, value)

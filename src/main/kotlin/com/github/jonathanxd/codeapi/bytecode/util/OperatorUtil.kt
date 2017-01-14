@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,8 +27,13 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.operators.Operator
-import com.github.jonathanxd.codeapi.operators.Operators.*
+import com.github.jonathanxd.codeapi.operator.Operator
+import com.github.jonathanxd.codeapi.operator.Operators.EQUAL_TO
+import com.github.jonathanxd.codeapi.operator.Operators.GREATER_THAN
+import com.github.jonathanxd.codeapi.operator.Operators.GREATER_THAN_OR_EQUAL_TO
+import com.github.jonathanxd.codeapi.operator.Operators.LESS_THAN
+import com.github.jonathanxd.codeapi.operator.Operators.LESS_THAN_OR_EQUAL_TO
+import com.github.jonathanxd.codeapi.operator.Operators.NOT_EQUAL_TO
 import org.objectweb.asm.Opcodes
 
 /**

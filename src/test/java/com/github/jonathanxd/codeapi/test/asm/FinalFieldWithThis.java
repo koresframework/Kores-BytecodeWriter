@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,14 +29,24 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
-import com.github.jonathanxd.codeapi.helper.Helper;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.literals.Literals;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.common.CodeModifier;
+import com.github.jonathanxd.codeapi.factory.ClassFactory;
+import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
+import com.github.jonathanxd.codeapi.factory.FieldFactory;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.type.CodeType;
+import com.github.jonathanxd.codeapi.type.LoadedCodeType;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
+import java.util.EnumSet;
+
+import static com.github.jonathanxd.codeapi.common.CodeModifier.*;
+import static kotlin.collections.CollectionsKt.listOf;
 
 /**
  * Created by jonathan on 25/07/16.
@@ -48,12 +58,14 @@ public class FinalFieldWithThis {
     public void finalFieldWithThis() {
         MutableCodeSource codeSource = new MutableCodeSource();
 
-        CodeClass testField = CodeAPI.aClass(Modifier.PUBLIC, "finalfieldwiththis.Test", TestBox.class, new Class[0], codeClass ->
+        LoadedCodeType<TestBox> testBoxJavaType = CodeAPI.getJavaType(TestBox.class);
+
+        ClassDeclaration testField = ClassFactory.aClass(EnumSet.of(PUBLIC), "finalfieldwiththis.Test", testBoxJavaType, new CodeType[0],
                 CodeAPI.sourceOfParts(
-                        CodeAPI.field(Modifier.PRIVATE | Modifier.FINAL, TestBox.class, "testField",
-                                CodeAPI.invokeConstructor(TestBox.class, CodeAPI.argument(Helper.accessThis(), Object.class))),
-                        CodeAPI.constructor(Modifier.PUBLIC, codeConstructor -> CodeAPI.sourceOfParts(
-                                Helper.invokeSuperInit(Helper.getJavaType(TestBox.class), CodeAPI.argument(Literals.NULL, Object.class))
+                        FieldFactory.field(EnumSet.of(PRIVATE, FINAL), testBoxJavaType, "testField",
+                                CodeAPI.invokeConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(CodeAPI.argument(CodeAPI.accessThis())))),
+                        ConstructorFactory.constructor(EnumSet.of(PUBLIC), CodeAPI.sourceOfParts(
+                                CodeAPI.invokeSuperConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(CodeAPI.argument(Literals.NULL)))
                         ))
                 ));
 

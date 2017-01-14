@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,16 +29,17 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.common.CodeModifier;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.generic.GenericSignature;
-import com.github.jonathanxd.codeapi.helper.Helper;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeMethod;
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration;
-import com.github.jonathanxd.codeapi.literals.Literals;
-import com.github.jonathanxd.codeapi.options.CodeOptions;
-import com.github.jonathanxd.codeapi.types.Generic;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.type.Generic;
 
 import org.junit.Test;
 
@@ -46,6 +47,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import kotlin.collections.CollectionsKt;
 
 public class BridgeMethodsTest {
 
@@ -55,18 +58,18 @@ public class BridgeMethodsTest {
         BCLoader bcLoader = new BCLoader();
 
         TypeDeclaration itfDeclaration = CodeAPI.anInterfaceBuilder()
-                .withModifiers(Modifier.PUBLIC)
+                .withModifiers(CodeModifier.PUBLIC)
                 .withQualifiedName("com.AB")
                 .withGenericSignature(GenericSignature.create(Generic.type("T").extends$(
-                        Generic.type(Helper.getJavaType(Iterable.class)).of(Generic.wildcard())
+                        Generic.type(CodeAPI.getJavaType(Iterable.class)).of(Generic.wildcard())
                 )))
                 .withBody(CodeAPI.sourceOfParts(
                         CodeAPI.methodBuilder()
-                                .withModifiers(Modifier.PUBLIC)
+                                .withModifiers(CodeModifier.PUBLIC, CodeModifier.ABSTRACT)
                                 .withName("iterate")
-                                .withReturnType(PredefinedTypes.VOID)
+                                .withReturnType(Types.VOID)
                                 .withParameters(CodeAPI.parameter(Generic.type("T"), "iter"))
-                                .withBody(null)
+                                .withBody(CodeSource.empty())
                                 .build()
                 ))
                 .build();
@@ -77,17 +80,17 @@ public class BridgeMethodsTest {
 
         bcLoader.define(itfDeclaration, bts);
 
-        CodeMethod method;
+        MethodDeclaration method;
 
         TypeDeclaration typeDeclaration = CodeAPI.aClassBuilder()
-                .withModifiers(Modifier.PUBLIC)
+                .withModifiers(CodeModifier.PUBLIC)
                 .withQualifiedName("com.bridgeTest")
                 //.withImplementations(Generic.type(Helper.getJavaType(Iterate.class)).of(PredefinedTypes.LIST))
-                .withImplementations(Generic.type(itfDeclaration).of(PredefinedTypes.LIST))
+                .withImplementations(Generic.type(itfDeclaration).of(Types.LIST))
                 .withBody(CodeAPI.sourceOfParts(
                         method = CodeAPI.methodBuilder()
-                                .withModifiers(Modifier.PUBLIC)
-                                .withReturnType(PredefinedTypes.VOID)
+                                .withModifiers(CodeModifier.PUBLIC)
+                                .withReturnType(Types.VOID)
                                 .withName("iterate")
                                 .withParameters(CodeAPI.parameter(List.class, "iter"))
                                 .withBody(CodeAPI.sourceOfParts(
@@ -95,11 +98,11 @@ public class BridgeMethodsTest {
                                                 CodeAPI.accessLocalVariable(List.class, "iter"),
                                                 "get",
                                                 CodeAPI.typeSpec(Object.class, Integer.TYPE),
-                                                CodeAPI.argument(Literals.INT(0))),
-                                        CodeAPI.forEachIterable(CodeAPI.field(Object.class, "obj"), CodeAPI.accessLocalVariable(List.class, "iter"),
+                                                CollectionsKt.listOf(CodeAPI.argument(Literals.INT(0)))),
+                                        CodeAPI.forEachIterable(VariableFactory.variable(Types.OBJECT, "obj"), CodeAPI.accessLocalVariable(List.class, "iter"),
                                                 CodeAPI.sourceOfParts(
                                                         Predefined.invokePrintln(
-                                                                CodeAPI.argument(Predefined.toString(CodeAPI.accessLocalVariable(Object.class, "obj")), String.class)
+                                                                CodeAPI.argument(Predefined.toString(CodeAPI.accessLocalVariable(Object.class, "obj")))
                                                         )
                                                 ))
                                 ))
@@ -113,7 +116,7 @@ public class BridgeMethodsTest {
 
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        bytecodeGenerator.getOptions().set(CodeOptions.GENERATE_BRIDGE_METHODS, true);
+        bytecodeGenerator.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
 
         byte[] gen = bytecodeGenerator.gen(codeSource)[0].getBytecode();
 

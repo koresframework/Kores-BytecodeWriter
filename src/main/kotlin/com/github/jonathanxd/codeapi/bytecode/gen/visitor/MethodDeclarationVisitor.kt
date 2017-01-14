@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,31 +28,33 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.GENERATE_BRIDGE_METHODS
+import com.github.jonathanxd.codeapi.bytecode.VALIDATE_SUPER
+import com.github.jonathanxd.codeapi.bytecode.VALIDATE_THIS
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.bytecode.common.Variable
 import com.github.jonathanxd.codeapi.bytecode.util.*
 import com.github.jonathanxd.codeapi.bytecode.util.asm.ParameterVisitor
+import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.gen.visit.SugarSyntaxVisitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
 import com.github.jonathanxd.codeapi.inspect.SourceInspect
-import com.github.jonathanxd.codeapi.interfaces.*
-import com.github.jonathanxd.codeapi.options.CodeOptions
-import com.github.jonathanxd.codeapi.bytecode.common.Variable
 import com.github.jonathanxd.codeapi.util.element.ElementUtil
-import com.github.jonathanxd.codeapi.util.source.BridgeUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
-object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
+object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
 
     override fun voidVisit(t: MethodDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
-        val validateSuper = visitorGenerator.options.getOrElse(CodeOptions.VALIDATE_SUPER, true)
-        val validateThis = visitorGenerator.options.getOrElse(CodeOptions.VALIDATE_THIS, true)
-        val genBridge = visitorGenerator.options.getOrElse(CodeOptions.GENERATE_BRIDGE_METHODS, false)
+
+        val validateSuper = visitorGenerator.options.getOrElse(VALIDATE_SUPER, true)
+        val validateThis = visitorGenerator.options.getOrElse(VALIDATE_THIS, true)
+        val genBridge = visitorGenerator.options.getOrElse(GENERATE_BRIDGE_METHODS, false)
 
         val isConstructor = t is ConstructorDeclaration
 
@@ -69,7 +71,7 @@ object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
                 val any = !SourceInspect
                         .find { codePart -> codePart is MethodDeclaration && ElementUtil.getMethodSpec(typeDeclaration, codePart).compareTo(methodSpec) == 0 }
                         .include { bodied -> bodied is CodeSource }
-                        .inspect(typeDeclaration.body.orElse(CodeSource.empty())).isEmpty()
+                        .inspect(typeDeclaration.body ?: CodeSource.empty()).isEmpty()
 
                 if (!any) {
                     visitorGenerator.generateTo(bridgeMethod.javaClass, bridgeMethod, extraData, additional)
@@ -79,19 +81,19 @@ object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
 
         val cw = Util.find(TypeVisitor.CLASS_WRITER_REPRESENTATION, extraData, additional)
 
-        val bodyOpt = t.body
+        val body = t.body
 
         val modifiers = ArrayList(t.modifiers)
 
-        if (!isConstructor && !t.hasBody() && !modifiers.contains(CodeModifier.ABSTRACT)) {
+        if (!isConstructor && typeDeclaration.isInterface && !modifiers.contains(CodeModifier.ABSTRACT) && !modifiers.contains(CodeModifier.DEFAULT)) {
             modifiers.add(CodeModifier.ABSTRACT)
         }
+
+        val isAbstract = modifiers.contains(CodeModifier.ABSTRACT)
 
         val asmModifiers = ModifierUtil.modifiersToAsm(modifiers)
 
         val parameters = t.parameters
-        val asmParameters = CodeTypeUtil.parametersToAsm(parameters)
-
 
         val signature = GenericUtil.methodGenericSignature(t)
 
@@ -101,7 +103,9 @@ object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
             methodName = "<init>"
         }
 
-        val mv = cw.visitMethod(asmModifiers, methodName, "(" + asmParameters + ")" + t.returnType.orElse(PredefinedTypes.VOID).javaSpecName, signature, null)
+        val desc = CodeTypeUtil.parametersAndReturnToDesc(parameters, t.returnType)
+
+        val mv = cw.visitMethod(asmModifiers, methodName, desc, signature, null)
 
         val vars = java.util.ArrayList<Variable>()
 
@@ -114,6 +118,10 @@ object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
 
         val mvData = MVData(mv, vars)
 
+        // Register Sugar Env
+        val sugarEnv = MVDataSugarEnvironment(mvData)
+        extraData.addData(SugarSyntaxVisitor.ENVIRONMENT, sugarEnv)
+
         visitorGenerator.generateTo(Annotable::class.java, t, extraData, null, mvData)
 
         for (i in parameters.indices) {
@@ -122,14 +130,14 @@ object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
             visitorGenerator.generateTo(Annotable::class.java, codeParameter, extraData, null, ParameterVisitor(mvData, i))
         }
 
-        if (t.hasBody() || isConstructor) {
+        if (!isAbstract || isConstructor) {
             mv.visitCode()
             val l0 = Label()
             mv.visitLabel(l0)
 
-            val bodySource = bodyOpt.orElse(null)
+            val bodySource = body
 
-            var methodSource: CodeSource? = if (bodySource == null) null else CodeSource.fromIterable(bodySource)
+            var methodSource: CodeSource = CodeSource.fromIterable(bodySource)
 
             var isGenerated = false
 
@@ -148,23 +156,23 @@ object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
                     ConstructorUtil.declareFinalFields(visitorGenerator, methodSource, typeDeclaration, mv, extraData, mvData, validateThis)
                 } else {
                     if (!initThis) {
+                        val declarationBody = typeDeclaration.body
+
                         methodSource = CodeSourceUtil.insertAfter(
                                 { part -> part is MethodInvocation && ConstructorUtil.isInitForThat(part) },
-                                ConstructorUtil.generateFinalFields(typeDeclaration.body.orElseThrow(::NullPointerException)),
+                                ConstructorUtil.generateFinalFields(declarationBody),
                                 methodSource)
                     }
                 }
             }
 
-            if (methodSource != null) {
-                visitorGenerator.generateTo(CodeSource::class.java, methodSource, extraData, null, mvData)
-            }
+            visitorGenerator.generateTo(CodeSource::class.java, methodSource, extraData, null, mvData)
 
             /**
              * Instructions here
              */
 
-            val returnType = t.returnType.orElse(PredefinedTypes.VOID).javaSpecName
+            val returnType = CodeTypeUtil.toTypeDesc(t.returnType)
             if (returnType == "V") {
                 mv.visitInsn(Opcodes.RETURN)
             }
@@ -181,6 +189,9 @@ object CodeMethodVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
 
             mvData.visitVars(l0, end)
         }
+
+        // Unregister sugar env
+        extraData.unregisterData(SugarSyntaxVisitor.ENVIRONMENT, sugarEnv)
 
         mv.visitEnd()
     }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,51 +27,30 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.base.Access
+import com.github.jonathanxd.codeapi.base.FieldDefinition
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
-import com.github.jonathanxd.codeapi.bytecode.util.InsnUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.Argumenterizable
 import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.optional.Require
 import org.objectweb.asm.Opcodes
 
-object ArgumenterizabeVisitor : VoidVisitor<Argumenterizable, BytecodeClass, MVData> {
+object FieldDefinitionVisitor : VoidVisitor<FieldDefinition, BytecodeClass, MVData> {
 
-    override fun voidVisit(argumenterizable: Argumenterizable, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val mv = additional.methodVisitor
+    override fun voidVisit(t: FieldDefinition, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val localization = Util.resolveType(t.localization, extraData, additional)
+        val target = t.target
 
-        val arguments = argumenterizable.arguments
+        val variableName = t.name
+        val variableType = t.type
+        val opcode = if (target is Access && target.type == Access.Type.STATIC) Opcodes.PUTSTATIC else Opcodes.PUTFIELD
 
-        if (!argumenterizable.isArray) {
+        visitorGenerator.generateTo(target.javaClass, target, extraData, additional)
 
-            for (argument in arguments) {
-                val value = Require.require(argument.value)
+        additional.methodVisitor.visitFieldInsn(opcode, CodeTypeUtil.codeTypeToBinaryName(localization), variableName, CodeTypeUtil.toTypeDesc(variableType))
 
-                visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
-
-                if (argument.isCasted) {
-                    mv.visitTypeInsn(Opcodes.CHECKCAST, CodeTypeUtil.codeTypeToSimpleAsm(Require.require(argument.type)))
-                }
-            }
-        } else {
-            for (i in arguments.indices) {
-
-                InsnUtil.visitInt(i, mv) // Visit index
-
-                val argument = arguments[i]
-
-                val value = Require.require(argument.value)
-
-                visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
-
-                if (argument.isCasted) {
-                    mv.visitTypeInsn(Opcodes.CHECKCAST, CodeTypeUtil.codeTypeToSimpleAsm(Require.require(argument.type)))
-                }
-            }
-        }
     }
 
 }

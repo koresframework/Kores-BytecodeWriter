@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -36,14 +36,14 @@ object ParameterUtil {
         if (parameters.isEmpty())
             return emptyList()
 
-        return parameters.map { d -> Variable(d.name, d.requiredType, null, null) }
+        return parameters.map { d -> Variable(d.name, d.type, null, null) }
     }
 
     fun parametersToVars(parameters: Collection<CodeParameter>, target: MutableCollection<Variable>) {
         if (parameters.isEmpty())
             return
 
-        parameters.map { d -> Variable(d.name, d.requiredType, null, null) }.forEach { target.add(it) }
+        parameters.map { d -> Variable(d.name, d.type, null, null) }.forEach { target.add(it) }
     }
 
     fun parametersToMap(parameters: Collection<CodeParameter>, startAt: Int): Map<String, Int> {

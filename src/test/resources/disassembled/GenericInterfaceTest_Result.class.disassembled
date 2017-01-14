@@ -1,26 +1,15 @@
-md5: fc67d659dbc79a971321c15f784fe390
+md5: 36febcdec1dab5c5ee99d1a37bd93b89
 
 version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+access: 1537 (ACC_PUBLIC, ACC_ABSTRACT)
 signature: Ljava/lang/Object;Ljava/util/ArrayList<Ljava/lang/String;>;
 
 source: clv.cai, debug: null
-public class clv extends java.lang.Object implements java.util.ArrayList {
-
-    !access: 1 (ACC_PUBLIC)
-    public void <init>() {
-      Label_0:
-        aload 0
-        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-        return
-      Label_1:
-        !localVariable[index: 0, name: this, desc: Lclv;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 1, MAX_LOCALS: 1
-    }
+public abstract class clv extends java.lang.Object implements java.util.ArrayList {
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

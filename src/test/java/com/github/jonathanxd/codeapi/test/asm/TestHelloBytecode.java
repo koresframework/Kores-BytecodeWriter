@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,28 +27,26 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
-import com.github.jonathanxd.codeapi.builder.CodeConstructorBuilder;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
+import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
+import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
+import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.InvokeType;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.impl.CodeConstructor;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.impl.MethodSpecImpl;
-import com.github.jonathanxd.codeapi.literals.Literals;
+import com.github.jonathanxd.codeapi.factory.FieldFactory;
+import com.github.jonathanxd.codeapi.literal.Literals;
 
 import org.junit.Test;
 
 import java.io.PrintStream;
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
+import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.helper.Helper.accessStaticVariable;
-import static com.github.jonathanxd.codeapi.helper.Helper.invoke;
-import static com.github.jonathanxd.codeapi.helper.Helper.sourceOf;
 import static java.util.Collections.singletonList;
 
 /**
@@ -62,26 +60,30 @@ public class TestHelloBytecode {
 
         MutableCodeSource clSource = new MutableCodeSource();
 
-        CodeClass codeClass = new CodeClass(null, "fullName." + this.getClass().getSimpleName(),
-                singletonList(CodeModifier.PUBLIC),
-                null, null, clSource);
+        ClassDeclaration codeClass = ClassDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withQualifiedName("fullName." + this.getClass().getSimpleName())
+                .withSuperClass(Types.OBJECT)
+                .withBody(clSource)
+                .build();
 
-        clSource.add(new CodeField("DEFAULT_VALUE", PredefinedTypes.INT, Literals.INT(17), Arrays.asList(CodeModifier.PUBLIC, CodeModifier.STATIC, CodeModifier.FINAL)));
+        clSource.add(FieldFactory.field(EnumSet.of(CodeModifier.PUBLIC, CodeModifier.STATIC, CodeModifier.FINAL),
+                Types.INT,
+                "DEFAULT_VALUE",
+                Literals.INT(17)));
 
-        CodeConstructor codeConstructor = CodeConstructorBuilder.builder()
-                .withDeclaringClass(codeClass)
-                .withModifiers(singletonList(CodeModifier.PUBLIC))
-                .withBody(sourceOf(
+        ConstructorDeclaration codeConstructor = ConstructorDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withBody(CodeAPI.source(
                         // Chama um metodo Virtual (metodos de instancia) na Classe PrintStream
-                        invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
-                                // Acessa uma variavel estatica 'out' com tipo PrintStream na classe System
-                                accessStaticVariable(System.class, "out", PrintStream.class),
+                        CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
+                                // Acessa uma field estatica 'out' com tipo PrintStream na classe System
+                                CodeAPI.accessStaticField(System.class, PrintStream.class, "out"),
                                 // Especificação do metodo
                                 // Informa que o metodo é println, e retorna um void
-                                new MethodSpecImpl("println", Void.TYPE,
-                                        // Adiciona um argumento String
-                                        // Informa qual o tipo de argumento esperado no metodo, nao necessariamente o que foi passado
-                                        singletonList(new CodeArgument(Literals.STRING("Hello World"), String.class))))
+                                "println",
+                                CodeAPI.typeSpec(Types.VOID, Types.STRING),
+                                singletonList(new CodeArgument(Literals.STRING("Hello World"))))
                 ))
                 .build();
 

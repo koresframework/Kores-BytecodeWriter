@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,20 +28,29 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.ForEachStatement
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.bytecode.util.MVDataSugarEnvironment
+import com.github.jonathanxd.codeapi.bytecode.util.ObjectCache
+import com.github.jonathanxd.codeapi.gen.visit.SugarSyntaxVisitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.ForEachBlock
 import com.github.jonathanxd.iutils.data.MapData
 
-object ForEachVisitor : VoidVisitor<ForEachBlock, BytecodeClass, MVData> {
+/**
+ * This visitor requires a [SugarSyntaxVisitor.ENVIRONMENT] data.
+ */
+object ForEachVisitor : VoidVisitor<ForEachStatement, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ForEachBlock, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: ForEachStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+
+        val env = extraData.getOptional(SugarSyntaxVisitor.ENVIRONMENT).orElse(MVDataSugarEnvironment(additional))
+
         val iterationType = t.iterationType
-        val start = iterationType.generator
+        val start = iterationType.createGenerator(env)
 
-        val generated = start.generate(t)
+        val generated = start.generate(t, this)
 
         visitorGenerator.generateTo(CodeSource::class.java, generated, extraData, null, additional)
     }

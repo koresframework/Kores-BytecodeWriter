@@ -17,7 +17,7 @@ public abstract class com.MyAnnotation extends java.lang.Object implements java.
 
     !access: 1025 (ACC_PUBLIC, ACC_ABSTRACT)
     public abstract java.lang.String[] names() {
-      default: {A, B}
+      default: {, , A, B
     }
 
     !access: 1025 (ACC_PUBLIC, ACC_ABSTRACT)
@@ -28,6 +28,6 @@ public abstract class com.MyAnnotation extends java.lang.Object implements java.
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

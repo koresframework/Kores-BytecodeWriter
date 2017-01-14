@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,23 +29,33 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.Annotation;
+import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.types.CodeType;
-import com.github.jonathanxd.codeapi.types.Generic;
+import com.github.jonathanxd.codeapi.common.CodeModifier;
+import com.github.jonathanxd.codeapi.factory.ClassFactory;
+import com.github.jonathanxd.codeapi.generic.GenericSignature;
+import com.github.jonathanxd.codeapi.type.CodeType;
+import com.github.jonathanxd.codeapi.type.Generic;
 
 import org.junit.Test;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 public class GenericInterfaceTest {
 
     @Test
     public void genericInterface() {
-        CodeClass codeClass = CodeAPI.aClass(Modifier.PUBLIC, "clv", (CodeType[]) new CodeType[]{Generic.type(Helper.getJavaType(ArrayList.class)).of(PredefinedTypes.STRING)});
+        InterfaceDeclaration codeClass = ClassFactory.anInterface(null,
+                new Annotation[0],
+                EnumSet.of(CodeModifier.PUBLIC),
+                "clv",
+                GenericSignature.empty(),
+                new CodeType[]{Generic.type(CodeAPI.getJavaType(ArrayList.class)).of(Types.STRING)}
+        );
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
         CodeSource codeSource = CodeAPI.sourceOfParts(codeClass);

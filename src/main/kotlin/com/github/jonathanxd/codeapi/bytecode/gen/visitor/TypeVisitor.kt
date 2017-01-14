@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,22 +27,22 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.common.InnerType
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator
-import com.github.jonathanxd.codeapi.gen.visit.Visitor
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.impl.CodeConstructor
-import com.github.jonathanxd.codeapi.interfaces.*
-import com.github.jonathanxd.codeapi.types.CodeType
-import com.github.jonathanxd.codeapi.types.GenericType
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.GenericUtil
 import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
 import com.github.jonathanxd.codeapi.bytecode.util.TypeDeclarationUtil
+import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.common.InnerType
+import com.github.jonathanxd.codeapi.factory.constructor
+import com.github.jonathanxd.codeapi.factory.field
+import com.github.jonathanxd.codeapi.gen.visit.Visitor
+import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
+import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.type.GenericType
 import com.github.jonathanxd.codeapi.util.MemberInfosUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
@@ -63,83 +63,80 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
     val OUTER_FIELD_REPRESENTATION = TypeInfo.aUnique(FieldDeclaration::class.java)
 
-    override fun visit(typeDeclaration: TypeDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
+    override fun visit(t: TypeDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS or ClassWriter.COMPUTE_FRAMES)
 
         val sourceFile = extraData
                 .getOptional(BytecodeGenerator.SOURCE_FILE_FUNCTION)
-                .map { func -> func(typeDeclaration) }
-                .orElse("${typeDeclaration.simpleName}.cai") //CodeAPI Instructions
+                .map { func -> func(t) }
+                .orElse("${t.simpleName}.cai") //CodeAPI Instructions
 
         cw.visitSource(sourceFile, null)
 
-        extraData.registerData(CODE_TYPE_REPRESENTATION, typeDeclaration)
+        extraData.registerData(CODE_TYPE_REPRESENTATION, t)
         extraData.registerData(CLASS_WRITER_REPRESENTATION, cw)
 
         var any = false
 
         for (innerType in extraData.getAllAsList(INNER_TYPE_REPRESENTATION)) {
-            if (innerType.adaptedDeclaration.`is`(typeDeclaration)) {
+            if (innerType.adaptedDeclaration.`is`(t)) {
                 extraData.registerData(ConstantDatas.MEMBER_INFOS, innerType.memberInfos)
                 any = true
             }
         }
 
         if (!any)
-            extraData.registerData(ConstantDatas.MEMBER_INFOS, MemberInfosUtil.createMemberInfos(typeDeclaration))
+            extraData.registerData(ConstantDatas.MEMBER_INFOS, MemberInfosUtil.createMemberInfos(t))
 
-        val implementations = if (typeDeclaration is Implementer)
-            typeDeclaration.implementations
+        val implementations = if (t is ImplementationHolder)
+            t.implementations
         else
             emptyList<CodeType>()
 
         // ASM Class name
-        val className = TypeDeclarationUtil.getClassName(typeDeclaration)
+        val className = TypeDeclarationUtil.getClassName(t)
         // ASM Class modifiers
-        val modifiers = ModifierUtil.modifiersToAsm(typeDeclaration)
+        val modifiers = ModifierUtil.modifiersToAsm(t)
         // ASM Super Class implementation
-        val superClass = TypeDeclarationUtil.getSuperClass(typeDeclaration)
+        val superClass = TypeDeclarationUtil.getSuperClass(t)
         // ASM Implementations
-        val asmImplementations = implementations.map({ CodeTypeUtil.codeTypeToSimpleAsm(it) }).toTypedArray()
+        val asmImplementations = implementations.map { CodeTypeUtil.codeTypeToBinaryName(it) }.toTypedArray()
 
         val superClassIsGeneric = superClass is GenericType
         val anyInterfaceIsGeneric = implementations.stream().anyMatch { codeType -> codeType is GenericType }
 
         // Generic Types
-        val genericRepresentation = GenericUtil.genericTypesToAsmString(typeDeclaration, superClass, implementations, superClassIsGeneric, anyInterfaceIsGeneric)
+        val genericRepresentation = GenericUtil.genericTypesToAsmString(t, superClass, implementations, superClassIsGeneric, anyInterfaceIsGeneric)
 
         // Visit class
-        cw.visit(52, modifiers, className, genericRepresentation, CodeTypeUtil.codeTypeToSimpleAsm(superClass), asmImplementations)
+        cw.visit(52, modifiers, className, genericRepresentation, CodeTypeUtil.codeTypeToBinaryName(superClass), asmImplementations)
 
         // Visit Annotations
-        visitorGenerator.generateTo(Annotable::class.java, typeDeclaration, extraData, null, null)
+        visitorGenerator.generateTo(Annotable::class.java, t, extraData, null, null)
 
-        val bodyOpt = typeDeclaration.body
+        val body = t.body
 
-        val pair = Util.grabAndRemoveInnerDecl(bodyOpt.orElse(null))
+        val pair = Util.grabAndRemoveInnerDecl(body)
 
         var typeDeclarationList: List<TypeDeclaration>
 
-        if (bodyOpt.isPresent) {
+        if (body != null) {
 
             typeDeclarationList = pair!!.first
 
             for (declaration in typeDeclarationList) {
-                val outerClassOpt = declaration.outerClass
+                val outerClass = declaration.outerClass ?: throw IllegalArgumentException("No outer class defined to type: '$declaration'!")
 
-                if (!outerClassOpt.isPresent)
-                    throw IllegalArgumentException("No outer class defined to type: '$declaration'!")
-
-                if (!outerClassOpt.get().`is`(typeDeclaration))
+                if (!outerClass.`is`(t))
 
                     throw IllegalArgumentException("Outer class specified to '" + declaration + "' don't matches the real outer class. " +
-                            "Specified: '" + outerClassOpt.get() + "'," +
-                            "Real: '" + typeDeclaration + "'!")
+                            "Specified: '" + outerClass + "'," +
+                            "Real: '" + t + "'!")
             }
 
             val originalDeclList = ArrayList(typeDeclarationList)
 
-            typeDeclarationList = Util.visitInner(cw, typeDeclaration, typeDeclarationList)
+            typeDeclarationList = Util.visitInner(cw, t, typeDeclarationList)
 
             for (i in originalDeclList.indices) {
                 // Register inner types.
@@ -152,7 +149,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
             val allAsList = extraData.getAllAsList(OUTER_TYPE_REPRESENTATION)
 
-            if (!typeDeclaration.modifiers.contains(CodeModifier.STATIC)) {
+            if (!t.modifiers.contains(CodeModifier.STATIC)) {
 
                 if (!allAsList.isEmpty()) {
 
@@ -164,7 +161,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
                         val newName = CodeSourceUtil.getNewFieldName(name + "\$outer", body)
 
-                        val field = CodeAPI.field(Modifier.PRIVATE or Modifier.FINAL, declaration, newName)
+                        val field = field(EnumSet.of(CodeModifier.PRIVATE, CodeModifier.FINAL), declaration, newName)
 
                         extraData.registerData(OUTER_FIELD_REPRESENTATION, field)
 
@@ -177,14 +174,14 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
             // /Create outer fields
 
-            if (body.size() > 0) {
+            if (body.size > 0) {
                 visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, null)
             }
 
-            val constructor = body.stream().filter { c -> c is ConstructorDeclaration }.findAny().isPresent
+            val hasConstructor = body.stream().filter { c -> c is ConstructorDeclaration }.findAny().isPresent
 
-            if (!constructor && typeDeclaration.classType.isClass) { // Interfaces has no super call.
-                val codeConstructor = CodeConstructor(typeDeclaration, setOf(CodeModifier.PUBLIC), emptyList(), null)
+            if (!hasConstructor && t.classType.isClass) { // Interfaces has no super call.
+                val codeConstructor = constructor(EnumSet.of(CodeModifier.PUBLIC), arrayOf(), CodeSource.empty())
                 visitorGenerator.generateTo(ConstructorDeclaration::class.java, codeConstructor, extraData, null, null)
             }
 
@@ -192,7 +189,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
         MethodFragmentVisitor.visitFragmentsGeneration(visitorGenerator, extraData)
 
-        StaticBlockVisitor.generate(extraData, visitorGenerator, cw, typeDeclaration)
+        StaticBlockVisitor.generate(extraData, visitorGenerator, cw, t)
 
         val bytecodeClassList = ArrayList<BytecodeClass>()
 
@@ -207,7 +204,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
             data0.getAllAsList(ConstantDatas.MEMBER_INFOS)
                     .forEach { memberInfos -> data0.registerData(ConstantDatas.MEMBER_INFOS, memberInfos) }
 
-            data0.registerData(OUTER_TYPE_REPRESENTATION, typeDeclaration)
+            data0.registerData(OUTER_TYPE_REPRESENTATION, t)
 
             extraData.getAllAsList(INNER_TYPE_REPRESENTATION).map { it.adaptedDeclaration }
                     .forEach { declaration ->
@@ -221,7 +218,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
         cw.visitEnd()
 
-        bytecodeClassList.add(0, BytecodeClass(typeDeclaration, cw.toByteArray()))
+        bytecodeClassList.add(0, BytecodeClass(t, cw.toByteArray()))
 
         return bytecodeClassList.toTypedArray()
     }

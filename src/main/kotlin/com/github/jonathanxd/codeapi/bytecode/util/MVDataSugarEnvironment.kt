@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -25,24 +25,11 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.gen.visitor
+package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.Break
-import com.github.jonathanxd.iutils.data.MapData
-import org.objectweb.asm.Opcodes
+import com.github.jonathanxd.codeapi.sugar.SugarEnvironment
 
-object BreakVisitor : VoidVisitor<Break, BytecodeClass, MVData> {
-
-    override fun voidVisit(t: Break, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val optional = extraData.getOptional(ConstantDatas.FLOW_TYPE_INFO)
-
-        val flow = optional.orElseThrow { IllegalArgumentException("Cannot 'break' outside a flow!") }
-
-        additional.methodVisitor.visitJumpInsn(Opcodes.GOTO, flow.outsideEnd)
-    }
-
+class MVDataSugarEnvironment(val mvData: MVData) : SugarEnvironment {
+    override fun getVariableName(base: String): String = mvData.getUniqueVariableName(base)
 }

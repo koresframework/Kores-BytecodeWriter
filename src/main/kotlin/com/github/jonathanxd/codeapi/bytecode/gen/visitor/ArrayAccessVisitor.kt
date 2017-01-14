@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,23 +27,19 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.base.ArrayAccess
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.ArrayAccess
 import com.github.jonathanxd.iutils.data.MapData
 
-object ArrayAccessVisitor : VoidVisitor<ArrayAccess, BytecodeClass, MVData> {
+object ArrayAccessVisitor : VoidVisitor<ArrayAccess, BytecodeClass, Any?> {
 
-    override fun voidVisit(t: ArrayAccess, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData?) {
-        val targetOpt = t.target
+    override fun voidVisit(t: ArrayAccess, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+        val target = t.target
 
-        if(targetOpt.isPresent) {
-            val target = targetOpt.get()
-
-            visitorGenerator.generateTo(target.javaClass, target, extraData, null, additional)
-        }
+        visitorGenerator.generateTo(target.javaClass, target, extraData, null, additional)
     }
 
 }

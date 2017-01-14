@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -33,10 +33,10 @@ import java.util.*
 object TypeSpecUtil {
 
     fun typeSpecToAsm(typeSpec: TypeSpec): String {
-        val s = CodeTypeUtil.codeTypeToFullAsm(Objects.requireNonNull(typeSpec.returnType, "Null return type in Spec '$typeSpec'"))
+        val s = CodeTypeUtil.toTypeDesc(typeSpec.returnType)
 
         return "(" +
-                CodeTypeUtil.codeTypesToFullAsm(Objects.requireNonNull(typeSpec.parameterTypes, "Null method spec '$typeSpec' arguments!").toTypedArray()) +
+                CodeTypeUtil.codeTypesToTypeDesc(typeSpec.parameterTypes) +
                 ")" + s
     }
 

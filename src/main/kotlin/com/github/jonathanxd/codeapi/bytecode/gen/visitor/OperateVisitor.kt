@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,35 +27,32 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.CodePart
-import com.github.jonathanxd.codeapi.builder.OperateHelper
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.Operate
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.Operate
-import com.github.jonathanxd.codeapi.literals.Literals
-import com.github.jonathanxd.codeapi.operators.Operator
-import com.github.jonathanxd.codeapi.operators.Operators
-import com.github.jonathanxd.codeapi.types.CodeType
+import com.github.jonathanxd.codeapi.helper.OperateHelper
+import com.github.jonathanxd.codeapi.literal.Literals
+import com.github.jonathanxd.codeapi.operator.Operator
+import com.github.jonathanxd.codeapi.operator.Operators
+import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.optional.Require
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
-import java.util.*
 
 object OperateVisitor : VoidVisitor<Operate, BytecodeClass, MVData> {
 
     override fun voidVisit(t: Operate, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val target = t.target.orElse(null)
+        val target = t.target
 
-        val operation = Require.require(t.operation, "Operation is required.")
+        val operation = t.operation
 
-        val value = t.value.orElse(null)
+        val value = t.value
 
         if (operation === Operators.UNARY_BITWISE_COMPLEMENT) { // ~
-            Objects.requireNonNull<CodePart>(value, "Value cannot be null if operation is '$operation'!")
+            value ?: throw IllegalArgumentException("Value cannot be null if operation is '$operation'!")
             // Desugar
             val desugar = OperateHelper.builder(target)
                     .subtract(

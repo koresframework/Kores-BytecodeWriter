@@ -1,0 +1,100 @@
+md5: 243b382c113a8c6982b24f1d26b89d8e
+
+version: 52 (Java 8)
+access: 33 (ACC_PUBLIC)
+
+source: TestBytecode.cai, debug: null
+public class fullName.TestBytecode extends java.lang.Object {
+
+    !access: 17 (ACC_PUBLIC, ACC_FINAL)
+    public final java.lang.String FIELD
+
+    !access: 17 (ACC_PUBLIC, ACC_FINAL)
+    public final int n
+
+    !access: 1 (ACC_PUBLIC)
+    public void <init>() {
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        aload 0
+        ldc "AVD"
+        putfield fullName.TestBytecode.FIELD (type: java.lang.String)
+        aload 0
+        bipush 15
+        putfield fullName.TestBytecode.n (type: int)
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Hello"
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        aload 0
+        ldc "Oi"
+        invokevirtual fullName.TestBytecode.printIt(java.lang.Object)void (ownerIsInterface: false)
+        return
+      Label_1:
+      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestBytecode;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 2, MAX_LOCALS: 1
+    }
+
+    !access: 1 (ACC_PUBLIC)
+    public void printIt(java.lang.Object) {
+      Label_0:
+        aload 1
+        ifnull Label_1
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Hello :D"
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_1:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        ldc "DingDong"
+      Label_2:
+        astore 2
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 2
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 1
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        return
+      Label_3:
+      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestBytecode;, signature: null, start: Label_0, end: Label_3]
+      LOCAL_VARIABLE[index: 1, name: n, desc: Ljava/lang/Object;, signature: null, start: Label_0, end: Label_3]
+      LOCAL_VARIABLE[index: 2, name: dingdong, desc: Ljava/lang/String;, signature: null, start: Label_2, end: Label_3]
+      MAX_STACK: 2, MAX_LOCALS: 3
+    }
+
+    !access: 1 (ACC_PUBLIC)
+    public boolean check(int) {
+      Label_0:
+        iload 1
+        bipush 9
+        if_icmpeq Label_1
+        iload 1
+        bipush 7
+        if_icmpne Label_2
+      Label_1:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        iconst_0
+        ireturn
+      Label_2:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        new java.lang.Integer
+        dup
+        iload 1
+        invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
+        checkcast java.lang.Object
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        iconst_1
+        ireturn
+      Label_3:
+      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestBytecode;, signature: null, start: Label_0, end: Label_3]
+      LOCAL_VARIABLE[index: 1, name: x, desc: I, signature: null, start: Label_0, end: Label_3]
+      MAX_STACK: 4, MAX_LOCALS: 2
+    }
+
+    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    static void <clinit>() {
+        return
+      MAX_STACK: 0, MAX_LOCALS: 0
+    }
+}

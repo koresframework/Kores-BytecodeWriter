@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,35 +29,36 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
+import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.literals.Literals;
+import com.github.jonathanxd.codeapi.literal.Literals;
 
 import org.junit.Test;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.util.Collections;
+import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.aClass;
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
 import static com.github.jonathanxd.codeapi.CodeAPI.argument;
 import static com.github.jonathanxd.codeapi.CodeAPI.invokeConstructor;
-import static com.github.jonathanxd.codeapi.CodeAPI.method;
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.returnValue;
 import static com.github.jonathanxd.codeapi.CodeAPI.source;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.BYTE;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.INT;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.LONG;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.OBJECT;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.STRING;
-import static java.lang.reflect.Modifier.PUBLIC;
-import static java.lang.reflect.Modifier.STATIC;
+import static com.github.jonathanxd.codeapi.Types.BYTE;
+import static com.github.jonathanxd.codeapi.Types.INT;
+import static com.github.jonathanxd.codeapi.Types.LONG;
+import static com.github.jonathanxd.codeapi.Types.OBJECT;
+import static com.github.jonathanxd.codeapi.Types.STRING;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.STATIC;
+import static com.github.jonathanxd.codeapi.factory.ClassFactory.aClass;
+import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
+import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
 
 
 /**
@@ -70,38 +71,39 @@ public class PrimitiveCast {
     public void codeAPITest() {
 
 
+        String name = this.getClass().getCanonicalName() + "_Generated";
 
-        String name = this.getClass().getCanonicalName()+"_Generated";
-
-        CodeClass codeClass = aClass(PUBLIC, name, source(
-                method(PUBLIC | STATIC, "printString", INT, new CodeParameter[]{parameter(STRING, "string")},
+        ClassDeclaration codeClass = aClass(EnumSet.of(PUBLIC), name, source(
+                method(EnumSet.of(PUBLIC, STATIC), "printString", INT, new CodeParameter[]{parameter(STRING, "string")},
                         source(
-                                Predefined.invokePrintln(argument(accessLocalVariable(STRING, "string"), STRING)),
+                                Predefined.invokePrintln(argument(accessLocalVariable(STRING, "string"))),
 
-                                new CodeField("objectF", OBJECT, Helper.cast(INT, OBJECT, Literals.INT(9))),
+                                variable(OBJECT, "objectF", CodeAPI.cast(INT, OBJECT, Literals.INT(9))),
 
-                                new CodeField("iF", OBJECT, Helper.cast(INT, OBJECT, Literals.INT(9))),
+                                variable(OBJECT, "iF", CodeAPI.cast(INT, OBJECT, Literals.INT(9))),
 
-                                new CodeField("IntegerBoxed", INT, Helper.cast(OBJECT, INT, Helper.accessLocalVariable("iF", OBJECT))),
+                                variable(INT, "IntegerBoxed", CodeAPI.cast(OBJECT, INT, CodeAPI.accessLocalVariable(OBJECT, "iF"))),
 
-                                new CodeField("IntegerBoxed2", INT, Helper.cast(OBJECT, INT, Helper.accessLocalVariable("iF", OBJECT))),
+                                variable(INT, "IntegerBoxed2", CodeAPI.cast(OBJECT, INT, CodeAPI.accessLocalVariable(OBJECT, "iF"))),
 
-                                new CodeField("int", INT, Literals.INT(9)),
+                                variable(INT, "int", Literals.INT(9)),
 
-                                new CodeField("IntToInt", INT, Helper.cast(INT, INT, Helper.accessLocalVariable("int", INT))),
+                                variable(INT, "IntToInt", CodeAPI.cast(INT, INT, CodeAPI.accessLocalVariable(INT, "int"))),
 
-                                new CodeField("Long", LONG, Literals.LONG(59855246879798L)),
-                                new CodeField("LongToByte", BYTE, Helper.cast(LONG, BYTE, Helper.accessLocalVariable("Long", LONG))),
+                                variable(LONG, "Long", Literals.LONG(59855246879798L)),
+                                variable(BYTE, "LongToByte", CodeAPI.cast(LONG, BYTE, CodeAPI.accessLocalVariable(LONG, "Long"))),
 
 
                                 // Cast Integer to Int
-                                returnValue(int.class, Helper.cast(PredefinedTypes.INTEGER_TYPE, PredefinedTypes.INT, invokeConstructor(Integer.class, argument(Literals.INT(9), int.class))))
+                                returnValue(int.class, CodeAPI.cast(Types.INTEGER_WRAPPER, Types.INT,
+                                        invokeConstructor(
+                                                Types.INTEGER_WRAPPER,
+                                                CodeAPI.constructorTypeSpec(int.class),
+                                                Collections.singletonList(argument(Literals.INT(9))))))
                         ))
         ));
 
         CodeSource mySource = CodeAPI.sourceOfParts(codeClass);
-
-
 
 
         byte[] bytes = generate(mySource);
@@ -124,6 +126,7 @@ public class PrimitiveCast {
             throwable.printStackTrace();
         }
     }
+
 
     public byte[] generate(CodeSource source) {
         BytecodeGenerator generator = new BytecodeGenerator();

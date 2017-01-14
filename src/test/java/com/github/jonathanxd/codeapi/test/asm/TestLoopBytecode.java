@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,29 +29,27 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
-import com.github.jonathanxd.codeapi.builder.CodeConstructorBuilder;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
+import com.github.jonathanxd.codeapi.base.VariableAccess;
+import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
+import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
+import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.InvokeType;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.impl.CodeConstructor;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.impl.MethodSpecImpl;
-import com.github.jonathanxd.codeapi.interfaces.VariableAccess;
-import com.github.jonathanxd.codeapi.literals.Literals;
-import com.github.jonathanxd.codeapi.operators.Operators;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.operator.Operators;
 
 import org.junit.Test;
 
 import java.io.PrintStream;
 
-import static com.github.jonathanxd.codeapi.helper.Helper.accessStaticVariable;
-import static com.github.jonathanxd.codeapi.helper.Helper.invoke;
-import static com.github.jonathanxd.codeapi.helper.Helper.sourceOf;
+import static com.github.jonathanxd.codeapi.CodeAPI.accessStaticField;
+import static com.github.jonathanxd.codeapi.CodeAPI.source;
+import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
 import static java.util.Collections.singletonList;
 
 /**
@@ -65,59 +63,62 @@ public class TestLoopBytecode {
 
         MutableCodeSource clSource = new MutableCodeSource();
 
-        CodeClass codeClass = new CodeClass(null, "fullName." + this.getClass().getSimpleName(),
-                singletonList(CodeModifier.PUBLIC),
-                null, null, clSource);
+        ClassDeclaration codeClass = ClassDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withSuperClass(Types.OBJECT)
+                .withQualifiedName("fullName." + this.getClass().getSimpleName())
+                .withBody(clSource)
+                .build();
 
-        VariableAccess accessX = Helper.accessLocalVariable("x", PredefinedTypes.INT);
-        VariableAccess accessI = Helper.accessLocalVariable("i", PredefinedTypes.INT);
-        VariableAccess accessU = Helper.accessLocalVariable("u", PredefinedTypes.INT);
+        VariableAccess accessX = CodeAPI.accessLocalVariable(Types.INT, "x");
+        VariableAccess accessI = CodeAPI.accessLocalVariable(Types.INT, "i");
+        VariableAccess accessU = CodeAPI.accessLocalVariable(Types.INT, "u");
 
 
-        CodeConstructor codeConstructor = CodeConstructorBuilder.builder()
-                .withDeclaringClass(codeClass)
-                .withModifiers(singletonList(CodeModifier.PUBLIC))
-                .withBody(sourceOf(
+        ConstructorDeclaration codeConstructor = ConstructorDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withBody(source(
 
-                        new CodeField("x", PredefinedTypes.INT, Literals.INT(0)),
+                        variable(Types.INT, "x", Literals.INT(0)),
 
-                        Helper.createWhile(
-                                Helper.createIfVal().add1(Helper.check(accessX, Operators.LESS_THAN, Literals.INT(17))).make(),
-                                Helper.sourceOf(
-                                        Predefined.invokePrintln(new CodeArgument(accessX, int.class)),
-                                        Helper.operateLocalVariable("x", PredefinedTypes.INT, Operators.INCREMENT)
+                        CodeAPI.whileStatement(
+                                CodeAPI.ifExprs(CodeAPI.check(accessX, Operators.LESS_THAN, Literals.INT(17))),
+                                source(
+                                        Predefined.invokePrintln(new CodeArgument(accessX)),
+                                        CodeAPI.operateAndAssign(Types.INT, "x", Operators.ADD, Literals.INT(1))
                                 )
                         ),
 
-                        Helper.createFor(new CodeField("i", PredefinedTypes.INT, Literals.INT(0)),
-                                Helper.createIfVal().add1(Helper.check(accessI, Operators.LESS_THAN, Literals.INT(100))).make(),
-                                Helper.operateLocalVariable("i", PredefinedTypes.INT, Operators.INCREMENT),
-                                Helper.sourceOf(
-                                        CodeAPI.ifBlock(CodeAPI.check(accessI, Operators.EQUAL_TO, Literals.INT(5)),
+                        CodeAPI.forStatement(variable(Types.INT, "i", Literals.INT(0)),
+                                CodeAPI.ifExprs(CodeAPI.check(accessI, Operators.LESS_THAN, Literals.INT(100))),
+                                CodeAPI.operateAndAssign(Types.INT, "i", Operators.ADD, Literals.INT(1)),
+                                source(
+                                        CodeAPI.ifStatement(CodeAPI.check(accessI, Operators.EQUAL_TO, Literals.INT(5)),
                                                 CodeAPI.sourceOfParts(CodeAPI.aContinue())),
-                                        Predefined.invokePrintln(new CodeArgument(accessI, int.class))
+                                        Predefined.invokePrintln(new CodeArgument(accessI))
                                 )),
 
 
-                        new CodeField("u", PredefinedTypes.INT, Literals.INT(0)),
+                        variable(Types.INT, "u", Literals.INT(0)),
 
-                        Helper.createDoWhile(Helper.sourceOf(
-                                Predefined.invokePrintln(new CodeArgument(accessU, int.class)),
-                                Helper.operateLocalVariable("u", PredefinedTypes.INT, Operators.INCREMENT),
-                                CodeAPI.ifBlock(CodeAPI.ifExprs(CodeAPI.check(accessU, Operators.EQUAL_TO, Literals.INT(2))),
-                                        CodeAPI.sourceOfParts(CodeAPI.aBreak()))
-
-                        ), Helper.createIfVal().add1(Helper.check(accessU, Operators.LESS_THAN, Literals.INT(5))).make()),
+                        CodeAPI.doWhileStatement(
+                                CodeAPI.ifExprs(CodeAPI.check(accessU, Operators.LESS_THAN, Literals.INT(5))),
+                                source(
+                                        Predefined.invokePrintln(new CodeArgument(accessU)),
+                                        CodeAPI.operateAndAssign(Types.INT, "u", Operators.ADD, Literals.INT(1)),
+                                        CodeAPI.ifStatement(CodeAPI.ifExprs(CodeAPI.check(accessU, Operators.EQUAL_TO, Literals.INT(2))),
+                                                CodeAPI.sourceOfParts(CodeAPI.aBreak()))
+                                )),
                         // Chama um metodo Virtual (metodos de instancia) na Classe PrintStream
-                        invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
+                        CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
                                 // Acessa uma variavel estatica 'out' com tipo PrintStream na classe System
-                                accessStaticVariable(System.class, "out", PrintStream.class),
+                                accessStaticField(System.class, PrintStream.class, "out"),
                                 // Especificação do metodo
-                                // Informa que o metodo é println, e retorna um void
-                                new MethodSpecImpl("println", Void.TYPE,
-                                        // Adiciona um argumento String
-                                        // Informa qual o tipo de argumento esperado no metodo, nao necessariamente o que foi passado
-                                        singletonList(new CodeArgument(Literals.STRING("Hello World"), String.class))))
+                                "println",
+                                // Informa que o metodo é println, recebe String e retorna um void
+                                CodeAPI.typeSpec(Types.VOID, Types.STRING),
+                                // Adiciona um argumento String
+                                singletonList(new CodeArgument(Literals.STRING("Hello World"))))
                 ))
                 .build();
 

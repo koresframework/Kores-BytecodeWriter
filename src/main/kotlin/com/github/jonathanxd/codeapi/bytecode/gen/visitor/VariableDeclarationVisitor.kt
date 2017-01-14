@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,17 +27,14 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.FieldDeclaration
+import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.bytecode.util.VariableVariantUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.impl.AccessLocalImpl
-import com.github.jonathanxd.codeapi.interfaces.AccessThis
-import com.github.jonathanxd.codeapi.interfaces.FieldDeclaration
-import com.github.jonathanxd.codeapi.interfaces.VariableDeclaration
-import com.github.jonathanxd.codeapi.literals.Literals
-import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
-import com.github.jonathanxd.codeapi.util.HiddenField
+import com.github.jonathanxd.codeapi.util.HiddenVariable
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
@@ -45,71 +42,41 @@ import org.objectweb.asm.Type
 
 object VariableDeclarationVisitor : VoidVisitor<VariableDeclaration, BytecodeClass, MVData> {
 
-    override fun voidVisit(variableDeclaration: VariableDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: VariableDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val mv = additional.methodVisitor
 
-        val typeDeclaration = Util.find(TypeVisitor.CODE_TYPE_REPRESENTATION, extraData, null)
+        val value = t.value
 
-        val localization = variableDeclaration.localization.orElse(null)
-
-
-        val value = variableDeclaration.value.orElse(Literals.NULL)
-
-        val at = variableDeclaration.target.orElse(null)
-
-        if (at == null && localization == null) {
-            mv.visitVarInsn(Opcodes.ALOAD, 0) // Legacy
-        } else if (at != null) {
-            visitorGenerator.generateTo(at.javaClass, at, extraData, null, additional)
+        if (value != null) {
+            visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
         }
 
-        visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
+        val `var` = additional.getVar(t.name, t.variableType)
 
-        if (at == null) {
-            if (localization != null) {
-                mv.visitFieldInsn(Opcodes.PUTSTATIC, CodeTypeUtil.codeTypeToSimpleAsm(localization), variableDeclaration.name, CodeTypeUtil.codeTypeToFullAsm(variableDeclaration.variableType))
-            } else {
-                mv.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToSimpleAsm(typeDeclaration), variableDeclaration.name, CodeTypeUtil.codeTypeToFullAsm(variableDeclaration.variableType))
-            }
+        if (`var`.isPresent && t is FieldDeclaration && !VariableVariantUtil.isVariant(t))
+            throw RuntimeException("Variable '" + t.name + "' Type: '" + t.variableType.javaSpecName + "'. Already defined!")
+
+
+        val i_label = Label()
+
+        mv.visitLabel(i_label)
+
+        val i: Int
+
+        if (t is HiddenVariable) {
+            i = additional.storeInternalVar(t.name, t.variableType, i_label, null)
+                    .orElseThrow({ additional.failStore(t) })
         } else {
-            if (at is AccessLocalImpl) {
-
-                val `var` = additional.getVar(variableDeclaration.name, variableDeclaration.variableType)
-
-
-                if (!`var`.isPresent && variableDeclaration !is FieldDeclaration)
-                    throw RuntimeException("Missing Variable Definition. Variable: '" + variableDeclaration.name + "' Type: '" + variableDeclaration.variableType.javaSpecName + "'.")
-                else if (`var`.isPresent && variableDeclaration is FieldDeclaration && variableDeclaration !is HiddenField)
-                    throw RuntimeException("Variable '" + variableDeclaration.getName() + "' Type: '" + variableDeclaration.getVariableType().javaSpecName + "'. Already defined!")
-
-
-                val i_label = Label()
-
-                mv.visitLabel(i_label)
-
-                val i: Int
-
-                if (variableDeclaration is HiddenField) {
-                    i = additional.storeInternalVar(variableDeclaration.getName(), variableDeclaration.getVariableType(), i_label, null)
-                            .orElseThrow({ additional.failStore(variableDeclaration) })
-                } else {
-                    i = additional.storeVar(variableDeclaration.name, variableDeclaration.variableType, i_label, null)
-                            .orElseThrow({ additional.failStore(variableDeclaration) })
-                }
-
-                val type = Type.getType(variableDeclaration.variableType.javaSpecName)
-
-                val opcode = type.getOpcode(Opcodes.ISTORE) // ALOAD
-
-                mv.visitVarInsn(opcode, i)
-
-            } else if (at is AccessThis) {
-                // THIS
-                mv.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToSimpleAsm(typeDeclaration), variableDeclaration.name, CodeTypeUtil.codeTypeToFullAsm(variableDeclaration.variableType))
-            } else {
-                mv.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToSimpleAsm(localization), variableDeclaration.name, CodeTypeUtil.codeTypeToFullAsm(variableDeclaration.variableType))
-            }
+            i = additional.storeVar(t.name, t.variableType, i_label, null)
+                    .orElseThrow({ additional.failStore(t) })
         }
+
+        val type = Type.getType(t.variableType.javaSpecName)
+
+        val opcode = type.getOpcode(Opcodes.ISTORE) // ALOAD
+
+        mv.visitVarInsn(opcode, i)
+
     }
 
 }

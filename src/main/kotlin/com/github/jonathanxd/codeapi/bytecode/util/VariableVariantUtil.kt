@@ -25,40 +25,13 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.gen.visitor
+package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.base.ArrayAccess
-import com.github.jonathanxd.codeapi.base.ArrayLoad
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
-import org.objectweb.asm.Opcodes
+import com.github.jonathanxd.codeapi.base.VariableDeclaration
+import com.github.jonathanxd.codeapi.util.HiddenVariable
 
-object ArrayLoadVisitor : VoidVisitor<ArrayLoad, BytecodeClass, MVData> {
+object VariableVariantUtil {
 
-    override fun voidVisit(t: ArrayLoad, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        visitorGenerator.generateTo(ArrayAccess::class.java, t, extraData, null, additional)
-
-        val index = t.index
-
-        visitorGenerator.generateTo(index.javaClass, index, extraData, null, additional)
-
-        val valueType = t.valueType
-
-        val arrayComponentType = t.arrayType.arrayComponent
-
-        val opcode = CodeTypeUtil.getOpcodeForType(valueType, Opcodes.IALOAD)
-
-        additional.methodVisitor.visitInsn(opcode)
-
-        if (!arrayComponentType.`is`(valueType)) {
-            val cast = CodeAPI.cast(valueType, arrayComponentType, null)
-            visitorGenerator.generateTo(cast.javaClass, cast, extraData, additional)
-        }
-    }
+    fun isVariant(variableDeclaration: VariableDeclaration) = variableDeclaration is HiddenVariable
 
 }

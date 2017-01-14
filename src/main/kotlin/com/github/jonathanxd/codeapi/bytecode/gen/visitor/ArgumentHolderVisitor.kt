@@ -28,36 +28,61 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.base.ArrayAccess
-import com.github.jonathanxd.codeapi.base.ArrayLoad
+import com.github.jonathanxd.codeapi.base.ArgumentHolder
+import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
+import com.github.jonathanxd.codeapi.bytecode.util.InsnUtil
+import com.github.jonathanxd.codeapi.common.CodeArgument
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
+import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.iutils.data.MapData
-import org.objectweb.asm.Opcodes
 
-object ArrayLoadVisitor : VoidVisitor<ArrayLoad, BytecodeClass, MVData> {
+object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ArrayLoad, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        visitorGenerator.generateTo(ArrayAccess::class.java, t, extraData, null, additional)
+    override fun voidVisit(t: ArgumentHolder, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val mv = additional.methodVisitor
 
-        val index = t.index
+        val types = t.types
+        // Try to auto box and unbox
+        val arguments = t.arguments.mapIndexed { i, it ->
+            val value = it.value
+            val type = CodePartUtil.getTypeOrNull(value)
+            val argType = types[i]
 
-        visitorGenerator.generateTo(index.javaClass, index, extraData, null, additional)
+            if(type != null) {
+                if(type.isPrimitive && !argType.isPrimitive) {
+                    return@mapIndexed CodeArgument(CodeAPI.cast(type, argType, value))
+                } else if(!type.isPrimitive && argType.isPrimitive) {
+                    return@mapIndexed CodeArgument(CodeAPI.cast(type, argType, value))
+                }
+            }
 
-        val valueType = t.valueType
+            return@mapIndexed it
+        }
 
-        val arrayComponentType = t.arrayType.arrayComponent
+        if (!t.array) {
 
-        val opcode = CodeTypeUtil.getOpcodeForType(valueType, Opcodes.IALOAD)
+            for (argument in arguments) {
+                val value = argument.value
 
-        additional.methodVisitor.visitInsn(opcode)
+                visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
 
-        if (!arrayComponentType.`is`(valueType)) {
-            val cast = CodeAPI.cast(valueType, arrayComponentType, null)
-            visitorGenerator.generateTo(cast.javaClass, cast, extraData, additional)
+            }
+        } else {
+            for (i in arguments.indices) {
+
+                InsnUtil.visitInt(i, mv) // Visit index
+
+                val argument = arguments[i]
+
+                val value = argument.value
+
+                visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
+
+            }
         }
     }
 

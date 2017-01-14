@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,21 +29,26 @@ package com.github.jonathanxd.codeapi.bytecode.gen
 
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.base.Access
+import com.github.jonathanxd.codeapi.base.Annotable
+import com.github.jonathanxd.codeapi.base.AnnotationProperty
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.LINE
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.gen.visitor.*
+import com.github.jonathanxd.codeapi.common.IterationType
+import com.github.jonathanxd.codeapi.common.IterationTypes
 import com.github.jonathanxd.codeapi.gen.ArrayAppender
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.interfaces.*
-import com.github.jonathanxd.codeapi.interfaces.Annotation
-import com.github.jonathanxd.codeapi.literals.Literal
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.base.Annotation
+import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.option.Options
 import com.github.jonathanxd.iutils.type.AbstractTypeInfo
-import org.objectweb.asm.Label
 import java.util.function.Consumer
 
 class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclaration) -> String = { "${it.simpleName}.cai" }) //CodeAPI Instructions
@@ -52,57 +57,56 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
     private val options_ = Options()
 
     init {
-        addVisitor(PackageDeclaration::class.java, PackageVisitor)
-        addVisitor(TypeDeclaration::class.java, TypeVisitor)
-        addUncheckedVisitor(ClassDeclaration::class.java, TypeVisitor)
-        addVisitor(FieldDeclaration::class.java, FieldVisitor)
-        addVisitor(CodeSource::class.java, CodeSourceVisitor)
-        addVisitor(ConstructorDeclaration::class.java, ConstructorVisitor)
-        addVisitor(Literal::class.java, LiteralVisitor)
-        addVisitor(MethodInvocation::class.java, MethodInvocationVisitor)
-        addVisitor(VariableAccess::class.java, VariableAccessVisitor)
-        addVisitor(Argumenterizable::class.java, ArgumenterizabeVisitor)
-        addVisitor(MethodDeclaration::class.java, CodeMethodVisitor)
         addVisitor(Access::class.java, AccessVisitor)
-        addVisitor(TryBlock::class.java, TryBlockVisitor())
-        addVisitor(IfBlock::class.java, IfBlockVisitor)
-        addVisitor(Return::class.java, ReturnVisitor)
-        addVisitor(VariableDeclaration::class.java, VariableDeclarationVisitor)
-        addVisitor(ThrowException::class.java, ThrowExceptionVisitor)
-        addVisitor(Casted::class.java, CastedVisitor)
-        addVisitor(Operate::class.java, OperateVisitor)
-        addVisitor(VariableOperate::class.java, VariableOperateVisitor)
-        addVisitor(InstructionCodePart::class.java, InstructionCodePart.InstructionCodePartVisitor)
-        addVisitor(WhileBlock::class.java, WhileVisitor)
-        addVisitor(DoWhileBlock::class.java, DoWhileVisitor)
-        addVisitor(ForBlock::class.java, ForIVisitor)
-        addVisitor(StaticBlock::class.java, StaticBlockVisitor)
-        addVisitor(ArrayConstructor::class.java, ArrayConstructVisitor)
-        addVisitor(ArrayStore::class.java, ArrayStoreVisitor)
-        addVisitor(ArrayLoad::class.java, ArrayLoadVisitor)
-        addVisitor(ArrayAccess::class.java, ArrayAccessVisitor)
-        addVisitor(ArrayLength::class.java, ArrayLengthVisitor)
-        addVisitor(TagLine::class.java, TagLineVisitor)
-        addVisitor(ForEachBlock::class.java, ForEachVisitor)
-        addVisitor(MethodFragment::class.java, MethodFragmentVisitor)
         addVisitor(Annotable::class.java, AnnotableVisitor)
-        addVisitor(Annotation::class.java, AnnotationVisitor)
-        addVisitor(TryWithResources::class.java, TryWithResourcesVisitor())
-        addVisitor(InstanceOf::class.java, InstanceOfVisitor)
-        addVisitor(IfExpr::class.java, IfExprVisitor) /* Sugar Syntax to a IfBlock */
-        addVisitor(Break::class.java, BreakVisitor)
-        addVisitor(Continue::class.java, ContinueVisitor)
-        addVisitor(Switch::class.java, SwitchVisitor)
-
-        addVisitor(EnumDeclaration::class.java, EnumVisitor)
-
-        addVisitor(AnnotationDeclaration::class.java, TypeAnnotationVisitor)
+        addVisitor(AnnotationDeclaration::class.java, AnnotationDeclarationVisitor)
         addVisitor(AnnotationProperty::class.java, AnnotationPropertyVisitor)
-
+        addVisitor(Annotation::class.java, AnnotationVisitor)
+        addVisitor(ArgumentHolder::class.java, ArgumentHolderVisitor)
+        addVisitor(ArrayAccess::class.java, ArrayAccessVisitor)
+        addVisitor(ArrayConstructor::class.java, ArrayConstructVisitor)
+        addVisitor(ArrayLength::class.java, ArrayLengthVisitor)
+        addVisitor(ArrayLoad::class.java, ArrayLoadVisitor)
+        addVisitor(ArrayStore::class.java, ArrayStoreVisitor)
+        addVisitor(Cast::class.java, CastVisitor)
+        addVisitor(CodeSource::class.java, CodeSourceVisitor)
         addVisitor(Concat::class.java, ConcatVisitor)
+        addVisitor(ConstructorDeclaration::class.java, ConstructorVisitor)
+        addVisitor(ControlFlow::class.java, ControlFlowVisitor)
+        addVisitor(EnumDeclaration::class.java, EnumVisitor)
+        addVisitor(FieldAccess::class.java, FieldAccessVisitor)
+        addVisitor(FieldDefinition::class.java, FieldDefinitionVisitor)
+        addVisitor(FieldDeclaration::class.java, FieldVisitor)
+        addVisitor(ForEachStatement::class.java, ForEachVisitor)
+        addVisitor(ForStatement::class.java, ForIVisitor)
+        addVisitor(IfExpr::class.java, IfExprVisitor)
+        addVisitor(IfStatement::class.java, IfStatementVisitor)
+        addVisitor(InstanceOfCheck::class.java, InstanceOfVisitor)
+        addVisitor(InstructionCodePart::class.java, InstructionCodePart.InstructionCodePartVisitor)
+        addVisitor(Label::class.java, LabelVisitor)
+        addVisitor(Literal::class.java, LiteralVisitor)
+        addVisitor(MethodDeclaration::class.java, MethodDeclarationVisitor)
+        addVisitor(MethodFragment::class.java, MethodFragmentVisitor)
+        addVisitor(MethodInvocation::class.java, MethodInvocationVisitor)
+        addVisitor(Operate::class.java, OperateVisitor)
+        addVisitor(Return::class.java, ReturnVisitor)
+        addVisitor(StaticBlock::class.java, StaticBlockVisitor)
+        addVisitor(SwitchStatement::class.java, SwitchVisitor)
+        addVisitor(ThrowException::class.java, ThrowExceptionVisitor)
+        addVisitor(TryStatement::class.java, TryStatementVisitor)
+        addVisitor(TryWithResources::class.java, TryWithResourcesVisitor)
+        addVisitor(TypeDeclaration::class.java, TypeVisitor)
+        addVisitor(VariableAccess::class.java, VariableAccessVisitor)
+        addVisitor(VariableDeclaration::class.java, VariableDeclarationVisitor)
+        addVisitor(VariableDefinition::class.java, VariableDefinitionVisitor)
+        addVisitor(WhileStatement::class.java, WhileStatementVisitor)
+
+        addUncheckedVisitor(ClassDeclaration::class.java, TypeVisitor)
+        addUncheckedVisitor(InterfaceDeclaration::class.java, TypeVisitor)
+
     }
 
-    override fun getOptions(): Options = this.options_
+    override val options: Options = this.options_
 
     override fun makeData(): MapData {
         val data = MapData()
@@ -114,10 +118,10 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
 
     override fun createAppender(): ArrayAppender<BytecodeClass> = ByteAppender()
 
-    override fun generateTo(partClass: Class<out CodePart>?, codePart: CodePart?, extraData: MapData?, consumer: Consumer<Array<BytecodeClass>>?, additional: Any?): Array<BytecodeClass>? {
 
-        if(extraData != null
-                && this.options.get(VISIT_LINES).get() == VisitLineType.INCREMENTAL
+    override fun generateTo(partClass: Class<out CodePart>, codePart: CodePart, extraData: MapData, consumer: Consumer<Array<out BytecodeClass>>?, additional: Any?): Array<out BytecodeClass> {
+
+        if(this.options.get(VISIT_LINES).get() == VisitLineType.INCREMENTAL
                 && additional != null
                 && additional is MVData) {
             val line = extraData.getOptional(LINE).let {
@@ -131,7 +135,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
                 }
             }
 
-            val lbl = Label()
+            val lbl = org.objectweb.asm.Label()
 
             additional.methodVisitor.visitLabel(lbl)
 
@@ -151,10 +155,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
 
         private val bytecodeClassList = java.util.ArrayList<BytecodeClass>()
 
-        override fun add(elem: Array<BytecodeClass>?) {
-            if (elem == null)
-                return
-
+        override fun add(elem: Array<out BytecodeClass>) {
             for (bytecodeClass in elem) {
                 bytecodeClassList.add(bytecodeClass)
             }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,34 +27,41 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.MutableCodeSource
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.base.AnnotationDeclaration
+import com.github.jonathanxd.codeapi.builder.InterfaceDeclarationBuilder
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.TagLine
 import com.github.jonathanxd.iutils.data.MapData
-import org.objectweb.asm.Label
 
-object TagLineVisitor : VoidVisitor<TagLine<*, *>, BytecodeClass, MVData> {
+object AnnotationDeclarationVisitor : Visitor<AnnotationDeclaration, BytecodeClass, Any?> {
 
-    override fun voidVisit(t: TagLine<*, *>, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val mv = additional.methodVisitor
+    override fun visit(t: AnnotationDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
+        val modifiers = java.util.TreeSet(t.modifiers)
 
-        val value = t.value
+        modifiers.add(CodeModifier.ANNOTATION)
 
-        val label = Label()
+        val source = MutableCodeSource()
 
-        extraData.registerData(VisitorGenerator.LINES_REPRESENTATION, t)
+        source.addAll(t.properties)
 
-        val line = extraData.getAll(VisitorGenerator.LINES_REPRESENTATION).size - 1
+        val body = t.body
 
-        mv.visitLabel(label)
+        if (body != null) {
+            source.addAll(body)
+        }
 
-        mv.visitLineNumber(line, label)
+        val typeDeclaration = InterfaceDeclarationBuilder.builder()
+                .withModifiers(modifiers)
+                .withQualifiedName(t.qualifiedName)
+                .withImplementations(Types.ANNOTATION)
+                .withBody(source)
+                .build()
 
-        visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
-
-        mv.visitLabel(Label())
+        return visitorGenerator.generateTo(typeDeclaration.javaClass, typeDeclaration, extraData, additional)
     }
 
 }

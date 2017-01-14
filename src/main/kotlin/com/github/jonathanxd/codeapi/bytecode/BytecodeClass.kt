@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,8 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode
 
 import com.github.jonathanxd.bytecodedisassembler.Disassembler
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
-import com.github.jonathanxd.iutils.data.MapData
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 
 class BytecodeClass(val type: TypeDeclaration, private val bytecode_: ByteArray) {
 

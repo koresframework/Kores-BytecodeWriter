@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -40,6 +40,42 @@ val LINE: TypeInfo<Int> = TypeInfo.aUnique(Int::class.java)
  */
 @JvmField
 val VISIT_LINES = Option(VisitLineType.DISABLED)
+
+
+/**
+ * Validate constructor this() invocation.
+ *
+ * Default: true
+ */
+@JvmField
+val VALIDATE_THIS = Option(true)
+
+/**
+ * Validate constructor this() invocation.
+ *
+ * Known supported generators: `BytecodeGenerator`.
+ */
+@JvmField
+val VALIDATE_SUPER = Option(true)
+
+/**
+ * Automatically generate bridge methods.
+ *
+ * The generation of bridge methods will slow down the Generator, if you mind the performance
+ * don't change this option.
+ *
+ * The generation of bridge methods is very limited, the [Bridge Generator][com.github.jonathanxd.codeapi.bytecode.util.BridgeUtil]
+ * will inspect super-classes (and super-interfaces) and find the overridden method.
+ * The [Bridge Generator][com.github.jonathanxd.codeapi.bytecode.util.BridgeUtil] will only inspect
+ * [Java type][Class] and [CodeAPI Type][com.github.jonathanxd.codeapi.base.TypeDeclaration],
+ * if the super-class and/or super-interfaces is of another type, [Bridge Generator][com.github.jonathanxd.codeapi.bytecode.util.BridgeUtil]
+ * will ignore and the bridge method will not be generated.
+ *
+ * You could also bridge methods manually with [com.github.jonathanxd.codeapi.CodeAPI.bridgeMethod].
+ *
+ */
+@JvmField
+val GENERATE_BRIDGE_METHODS = Option(false)
 
 enum class VisitLineType {
     /**

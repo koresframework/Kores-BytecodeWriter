@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,27 +27,24 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.helper.Helper
-import com.github.jonathanxd.codeapi.interfaces.ClassDeclaration
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
-import com.github.jonathanxd.codeapi.types.CodeType
+import com.github.jonathanxd.codeapi.CodeAPI
+import com.github.jonathanxd.codeapi.base.ClassDeclaration
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.type.CodeType
 
 object TypeDeclarationUtil {
 
     fun getClassName(class_: TypeDeclaration): String {
-        return CodeTypeUtil.codeTypeToSimpleAsm(class_)
+        return CodeTypeUtil.codeTypeToBinaryName(class_)
     }
 
-    fun getSuperClass(codeInterface: TypeDeclaration): CodeType {
+    fun getSuperClass(typeDeclaration: TypeDeclaration): CodeType {
 
-        if (codeInterface is ClassDeclaration) {
-
-            return codeInterface
-                    .superType
-                    .orElse(Helper.getJavaType(Any::class.java))
+        if (typeDeclaration is ClassDeclaration) {
+            return typeDeclaration.superClass ?: CodeAPI.getJavaType(Any::class.java)
         }
 
-        return Helper.getJavaType(Any::class.java)
+        return CodeAPI.getJavaType(Any::class.java)
     }
 
 }

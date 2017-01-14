@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,6 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.common
 
 import org.objectweb.asm.Label
+import com.github.jonathanxd.codeapi.base.Label as CodeLabel
 
 /**
  * A class that hold information about the flow of the code.
@@ -58,4 +59,4 @@ import org.objectweb.asm.Label
  *
  * }</pre>
  */
-data class Flow(val outsideStart: Label, val insideStart: Label, val insideEnd: Label, val outsideEnd: Label)
+data class Flow(val label: CodeLabel?, val outsideStart: Label, val insideStart: Label, val insideEnd: Label, val outsideEnd: Label)

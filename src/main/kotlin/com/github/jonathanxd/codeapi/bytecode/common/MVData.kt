@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,9 +28,8 @@
 package com.github.jonathanxd.codeapi.bytecode.common
 
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
-import com.github.jonathanxd.codeapi.interfaces.TagLine
-import com.github.jonathanxd.codeapi.types.CodeType
-import com.github.jonathanxd.codeapi.types.GenericType
+import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.type.GenericType
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import java.util.*
@@ -52,17 +51,8 @@ class MVData constructor(
     /**
      * Unmodifiable variable list.
      */
-    private val unmod: List<Variable>
+    private val unmod: List<Variable> = Collections.unmodifiableList(variables)
 
-    /**
-     * Tag lines for debug.
-     */
-    private val tagLines: MutableList<TagLine<*, *>>
-
-    init {
-        this.unmod = Collections.unmodifiableList(variables)
-        this.tagLines = ArrayList<TagLine<*, *>>()
-    }
 
     /**
      * Get variable at stack pos `i`.
@@ -201,18 +191,6 @@ class MVData constructor(
     }
 
     /**
-     * Visit a tag line.
-     *
-     * @param line Tag line.
-     * @return Position of the tag line.
-     */
-    fun visitLine(line: TagLine<*, *>): Int {
-        this.tagLines.add(line)
-
-        return this.tagLines.size - 1
-    }
-
-    /**
      * Return last position in stack map.
      *
      * @return Last position in stack map.
@@ -231,6 +209,26 @@ class MVData constructor(
     }
 
     /**
+     * Create a unique name of variable based on [base] name.
+     */
+    fun getUniqueVariableName(base: String): String {
+        if (hasVar(base))
+            return base
+
+        var finalName = base
+        var i = 0
+
+        do {
+            finalName += i
+            ++i
+        } while (hasVar(finalName))
+
+        return finalName
+    }
+
+    fun hasVar(varName: String) = this.variables.any { it.name == varName }
+
+    /**
      * Generate LocalVariableTable
      *
      * @param start Start of the method.
@@ -246,15 +244,15 @@ class MVData constructor(
             // Internal variables
                 continue
 
-            val varStart = if (variable.startLabel != null) variable.startLabel else start
-            val varEnd = if (variable.endLabel != null) variable.endLabel else end
+            val varStart = variable.startLabel ?: start
+            val varEnd = variable.endLabel ?: end
 
-            val type = CodeTypeUtil.codeTypeToFullAsm(variable.type)
+            val type = CodeTypeUtil.toTypeDesc(variable.type)
 
             var signature: String? = null
 
             if (variable.type is GenericType) {
-                signature = CodeTypeUtil.toAsm(variable.type)
+                signature = CodeTypeUtil.toName(variable.type)
             }
 
             methodVisitor.visitLocalVariable(variable.name, type, signature, varStart, varEnd, i)

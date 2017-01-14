@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,28 +28,28 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.IfExpr
+import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.IfBlock
-import com.github.jonathanxd.codeapi.interfaces.IfExpr
-import com.github.jonathanxd.codeapi.literals.Literals
+import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.iutils.data.MapData
 
 object IfExprVisitor : VoidVisitor<IfExpr, BytecodeClass, MVData> {
 
     override fun voidVisit(t: IfExpr, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val ifBlock = CodeAPI.ifBlock(
+        val ifStatement = CodeAPI.ifStatement(
                 CodeAPI.ifExprs(t),
                 CodeAPI.sourceOfParts(
                         Literals.BOOLEAN(true)
                 ),
-                CodeAPI.elseBlock(
+                CodeAPI.sourceOfParts(
                         Literals.BOOLEAN(false)
                 ))
 
-        visitorGenerator.generateTo(IfBlock::class.java, ifBlock, extraData, additional)
+        visitorGenerator.generateTo(IfStatement::class.java, ifStatement, extraData, additional)
     }
 
 }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,26 +29,27 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.common.CodeModifier;
+import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.factory.ClassFactory;
+import com.github.jonathanxd.codeapi.factory.MethodFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
 
 import org.junit.Test;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.aClass;
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
 import static com.github.jonathanxd.codeapi.CodeAPI.argument;
-import static com.github.jonathanxd.codeapi.CodeAPI.method;
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.source;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.STRING;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.VOID;
-import static java.lang.reflect.Modifier.PUBLIC;
-import static java.lang.reflect.Modifier.STATIC;
+import static com.github.jonathanxd.codeapi.Types.STRING;
+import static com.github.jonathanxd.codeapi.Types.VOID;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.*;
 
 
 /**
@@ -62,18 +63,16 @@ public class CodeAPITest_API {
 
         MutableCodeSource mySource = new MutableCodeSource();
 
-        String name = this.getClass().getCanonicalName()+"_Generated";
+        String name = this.getClass().getCanonicalName() + "_Generated";
 
-        CodeClass codeClass = aClass(PUBLIC, name, source(
-                method(PUBLIC | STATIC, "printString", VOID, new CodeParameter[]{parameter(STRING, "string")},
+        ClassDeclaration codeClass = ClassFactory.aClass(EnumSet.of(PUBLIC), name, source(
+                MethodFactory.method(EnumSet.of(PUBLIC, STATIC), "printString", VOID, new CodeParameter[]{parameter(STRING, "string")},
                         source(
-                                Predefined.invokePrintln(argument(accessLocalVariable(STRING, "string"), STRING))
+                                Predefined.invokePrintln(argument(accessLocalVariable(STRING, "string")))
                         ))
         ));
 
         mySource.add(codeClass);
-
-
 
 
         byte[] bytes = generate(mySource);

@@ -37,14 +37,14 @@ public class com.ConcatTest extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
       Label_1:
-        !localVariable[index: 0, name: this, desc: Lcom/ConcatTest;, signature: null, start: Label_0, end: Label_1]
-        !localVariable[index: 1, name: av, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 4, MAX_LOCALS: 2
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/ConcatTest;, signature: null, start: Label_0, end: Label_1]
+      LOCAL_VARIABLE[index: 1, name: av, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 4, MAX_LOCALS: 2
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

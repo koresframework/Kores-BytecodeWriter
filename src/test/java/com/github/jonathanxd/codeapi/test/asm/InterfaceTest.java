@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,26 +27,29 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
-import com.github.jonathanxd.codeapi.impl.CodeInterface;
-import com.github.jonathanxd.codeapi.literals.Literals;
-import com.github.jonathanxd.codeapi.operators.Operators;
-import com.github.jonathanxd.codeapi.types.CodeType;
+import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.factory.ClassFactory;
+import com.github.jonathanxd.codeapi.factory.MethodFactory;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.operator.Operators;
 
 import org.junit.Test;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.anInterface;
-import static com.github.jonathanxd.codeapi.CodeAPI.method;
+import java.util.EnumSet;
+
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.returnValue;
 import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.INT;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.STRING;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.VOID;
-import static java.lang.reflect.Modifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.Types.INT;
+import static com.github.jonathanxd.codeapi.Types.STRING;
+import static com.github.jonathanxd.codeapi.Types.VOID;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
 
 /**
  * Created by jonathan on 26/06/16.
@@ -56,16 +59,15 @@ public class InterfaceTest {
     @Test
     public void test() {
 
-        CodeInterface codeInterface;
+        InterfaceDeclaration interfaceDeclaration;
 
 
+        CodeSource source = sourceOfParts(interfaceDeclaration = ClassFactory.anInterface(EnumSet.of(PUBLIC), "test.Impl", sourceOfParts(
 
-        CodeSource source = sourceOfParts(codeInterface = anInterface(PUBLIC, "test.Impl", new CodeType[0], codeClass0 -> sourceOfParts(
+                MethodFactory.method(EnumSet.of(PUBLIC), "parse", VOID, new CodeParameter[]{parameter(STRING, "string")}, null),
 
-                method(PUBLIC, "parse", VOID, parameter(STRING, "string")),
-
-                method(PUBLIC, "getI", INT, new CodeParameter[]{parameter(INT, "num")}, codeMethod -> sourceOfParts(
-                        returnValue(INT, Helper.operateLocalVariable("num", INT, Operators.MULTIPLY, Literals.INT(9)))
+                MethodFactory.method(EnumSet.of(PUBLIC), "getI", INT, new CodeParameter[]{parameter(INT, "num")}, sourceOfParts(
+                        returnValue(INT, CodeAPI.operateAndAssign(VariableFactory.variable(INT, "num"), Operators.MULTIPLY, Literals.INT(9)))
                 ))
 
         )));
@@ -78,7 +80,7 @@ public class InterfaceTest {
         ResultSaver.save(this.getClass(), gen);
 
 
-        Class<?> define = new BCLoader().define(codeInterface, gen);
+        Class<?> define = new BCLoader().define(interfaceDeclaration, gen);
 
         /*try {
             //My o = (My) define.newInstance();
@@ -105,8 +107,8 @@ public class InterfaceTest {
 
     private static final class BCLoader extends ClassLoader {
 
-        public Class<?> define(CodeInterface codeInterface, byte[] bytes) {
-            return super.defineClass(codeInterface.getQualifiedName(), bytes, 0, bytes.length);
+        public Class<?> define(TypeDeclaration typeDeclaration, byte[] bytes) {
+            return super.defineClass(typeDeclaration.getQualifiedName(), bytes, 0, bytes.length);
         }
     }
 

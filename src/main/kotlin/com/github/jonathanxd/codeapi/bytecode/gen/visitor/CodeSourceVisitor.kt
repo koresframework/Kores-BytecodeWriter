@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -32,21 +32,21 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.gen.ArrayAppender
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.type.TypeInfo
 import org.objectweb.asm.Label
+import java.util.function.Consumer
 
 object CodeSourceVisitor : Visitor<CodeSource, BytecodeClass, Any?> {
 
     val OFFSET = TypeInfo.aUnique(Int::class.java)
 
-    override fun visit(t: CodeSource, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
+    override fun visit(t: CodeSource, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
         val appender = visitorGenerator.createAppender()
 
-        val max = t.size() - 1
+        val max = t.size - 1
 
         val visit = visitorGenerator.options.get(VISIT_LINES).get()
 
@@ -54,7 +54,7 @@ object CodeSourceVisitor : Visitor<CodeSource, BytecodeClass, Any?> {
 
         for (i in 0..max) {
 
-            if(additional is MVData && visit == VisitLineType.FOLLOW_CODE_SOURCE) {
+            if (additional is MVData && visit == VisitLineType.FOLLOW_CODE_SOURCE) {
                 val line = i + offset
                 val label = Label()
 
@@ -62,14 +62,12 @@ object CodeSourceVisitor : Visitor<CodeSource, BytecodeClass, Any?> {
                 additional.methodVisitor.visitLineNumber(line, label)
             }
 
-            val codePart = t.get(i)
+            val codePart = t[i]
 
             val aClass = codePart.javaClass
 
-            visitorGenerator.generateTo(aClass, codePart, extraData, {
-                if(it != null) {
-                    appender.add(it)
-                }
+            visitorGenerator.generateTo(aClass, codePart, extraData, Consumer {
+                appender.add(it)
             }, additional)
         }
 

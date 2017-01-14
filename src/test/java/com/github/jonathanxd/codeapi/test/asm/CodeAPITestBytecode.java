@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -31,27 +31,27 @@ import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodePart;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
-import com.github.jonathanxd.codeapi.builder.ClassBuilder;
-import com.github.jonathanxd.codeapi.builder.CodeFieldBuilder;
-import com.github.jonathanxd.codeapi.builder.CodeMethodBuilder;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.CatchStatement;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.FieldDeclaration;
+import com.github.jonathanxd.codeapi.base.IfStatement;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
+import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
+import com.github.jonathanxd.codeapi.builder.FieldDeclarationBuilder;
+import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
+import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.common.InvokeType;
-import com.github.jonathanxd.codeapi.common.MethodType;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
+import com.github.jonathanxd.codeapi.common.TypeSpec;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.impl.CodeMethod;
-import com.github.jonathanxd.codeapi.impl.MethodSpecImpl;
-import com.github.jonathanxd.codeapi.interfaces.IfBlock;
-import com.github.jonathanxd.codeapi.literals.Literals;
-import com.github.jonathanxd.codeapi.operators.Operators;
-import com.github.jonathanxd.codeapi.types.CodeType;
-import com.github.jonathanxd.codeapi.types.LoadedCodeType;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.operator.Operators;
+import com.github.jonathanxd.codeapi.type.CodeType;
+import com.github.jonathanxd.codeapi.type.LoadedCodeType;
 
 import org.junit.Test;
 
@@ -63,12 +63,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import kotlin.collections.CollectionsKt;
+
 /**
  * Created by jonathan on 02/05/16.
  */
 // Will works only if Bytecode Generator is fully complete!
-    // No, i need to generate Try-Catch Blocks
-    // Generate for, while, do statements, switch, <clint> and improve if statements!
+// No, i need to generate Try-Catch Blocks
+// Generate for, while, do statements, switch, <clint> and improve if statements!
 @SuppressWarnings("Duplicates")
 public class CodeAPITestBytecode {
 
@@ -77,10 +79,12 @@ public class CodeAPITestBytecode {
     private static CodeSource rethrow(String variable) {
         MutableCodeSource source = new MutableCodeSource();
 
-        source.add(Predefined.invokePrintln(new CodeArgument(Literals.STRING("Rethrow from var '"+variable+"'!"), PredefinedTypes.STRING)));
+        source.add(Predefined.invokePrintln(new CodeArgument(Literals.STRING("Rethrow from var '" + variable + "'!"))));
 
-        source.add(Helper.invoke(InvokeType.INVOKE_VIRTUAL, Throwable.class, Helper.accessLocalVariable(variable, Throwable.class),
-                new MethodSpecImpl("printStackTrace", PredefinedTypes.VOID, Collections.emptyList())));
+        source.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, Throwable.class, CodeAPI.accessLocalVariable(Throwable.class, variable),
+                "printStackTrace",
+                new TypeSpec(Types.VOID),
+                Collections.emptyList()));
 
         /*source.add(Helper.throwException(Helper.getJavaType(RuntimeException.class), new CodeArgument[]{
                 new CodeArgument(Helper.accessLocalVariable(variable, Helper.getJavaType(Throwable.class)), false, Helper.getJavaType(Throwable.class))
@@ -92,93 +96,105 @@ public class CodeAPITestBytecode {
     }
 
     private static CodePart invokePrintlnMethod(CodePart varToPrint) {
-        MethodSpecImpl methodSpecImpl = new MethodSpecImpl("println", Void.TYPE, Collections.singletonList(new CodeArgument(varToPrint, false, Object.class)));
-
-        return Helper.invoke(InvokeType.INVOKE_VIRTUAL, Helper.getJavaType(PrintStream.class), Helper.accessVariable(Helper.getJavaType(System.class), "out", PrintStream.class), methodSpecImpl);
+        return CodeAPI.invoke(
+                InvokeType.INVOKE_VIRTUAL,
+                CodeAPI.getJavaType(PrintStream.class),
+                CodeAPI.accessField(CodeAPI.getJavaType(System.class), CodeAPI.accessStatic(), CodeAPI.getJavaType(PrintStream.class), "out"),
+                "println",
+                new TypeSpec(Types.VOID, CollectionsKt.listOf(Types.OBJECT)),
+                CollectionsKt.listOf(new CodeArgument(varToPrint)));
     }
 
-    private static CodeMethod createMethod() {
+    private static MethodDeclaration createMethod() {
 
         MutableCodeSource methodSource = new MutableCodeSource();
 
         // Declare 'println' method
-        CodeMethod codeMethod = CodeMethodBuilder.builder()
+        MethodDeclaration codeMethod = MethodDeclarationBuilder.builder()
                 .withName("println")
                 // Add parameter 'Object msg'
-                .withParameters(Collections.singletonList(new CodeParameter("msg", Helper.getJavaType(Object.class))))
+                .withParameters(Collections.singletonList(new CodeParameter(Types.OBJECT, "msg")))
                 // Add 'public static' modifier
-                .withModifiers(Arrays.asList(CodeModifier.PUBLIC, CodeModifier.STATIC))
+                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
                 // Set 'void' return type
-                .withReturnType(Helper.getJavaType(Void.TYPE))
+                .withReturnType(Types.VOID)
                 // Set method source
                 .withBody(methodSource)
                 .build();
 
-        LoadedCodeType<CodeAPITestBytecode> javaType = Helper.getJavaType(CodeAPITestBytecode.class);
+        LoadedCodeType<CodeAPITestBytecode> javaType = CodeAPI.getJavaType(CodeAPITestBytecode.class);
 
-        methodSource.add(new CodeField("test", javaType, Helper.invokeConstructor(javaType)));
+        methodSource.add(VariableFactory.variable(javaType, "test", CodeAPI.invokeConstructor(javaType)));
         methodSource.add(Predefined.invokePrintln(new CodeArgument(
-                Helper.accessVariable(javaType, Helper.accessLocalVariable("test", javaType), "b", PredefinedTypes.STRING),
-                String.class
+                CodeAPI.accessField(javaType, CodeAPI.accessLocalVariable(javaType, "test"), Types.STRING, "b")
         )));
 
         // Create method body source
         MutableCodeSource source = new MutableCodeSource();
 
-        IfBlock ifBlock = Helper.ifExpression(Helper.createIfVal()
-                .add1(Helper.check(Helper.accessLocalVariable("msg", PredefinedTypes.OBJECT), Operators.NOT_EQUAL_TO, Literals.NULL)).make(),
-                Helper.sourceOf(invokePrintlnMethod(Helper.accessLocalVariable("msg"))));
+        IfStatement ifBlock = CodeAPI.ifStatement(
+                CodeAPI.check(CodeAPI.accessLocalVariable(Types.OBJECT, "msg"), Operators.NOT_EQUAL_TO, Literals.NULL),
+                CodeAPI.source(invokePrintlnMethod(CodeAPI.accessLocalVariable(Types.OBJECT, "msg")))
+        );
 
         source.add(ifBlock);
 
-        // 'Localization' of a variable
-        CodeType localization = Helper.localizedAtType(Helper.getJavaType(System.class));
+        // 'Localization' of the field
+        CodeType localization = CodeAPI.getJavaType(System.class);
 
-        // Access variable in 'localization'
-        CodePart variable = Helper.accessVariable(localization, "out", Helper.getJavaType(PrintStream.class));
+        // Access field in 'localization'
+        CodePart variable = CodeAPI.accessField(localization, CodeAPI.accessStatic(), CodeAPI.getJavaType(PrintStream.class), "out");
 
         // ref local field
-        CodeField cf = CodeFieldBuilder.builder()
+        FieldDeclaration cf = FieldDeclarationBuilder.builder()
                 .withName("ref")
                 // Type is Object
-                .withType(Helper.getJavaType(Object.class))
+                .withType(Types.OBJECT)
                 // Set as final
-                .withModifiers(Collections.singleton(CodeModifier.FINAL))
+                .withModifiers(CodeModifier.FINAL)
                 // Value = variable (System.out)
                 .withValue(variable)
                 .build();
 
         source.add(cf);
 
-        source.add(Helper.throwException(
-                Helper.getJavaType(IllegalStateException.class), new CodeArgument[]{new CodeArgument(Literals.STRING("Error"), false, PredefinedTypes.STRING)}));
+        LoadedCodeType<IllegalStateException> exceptionType = CodeAPI.getJavaType(IllegalStateException.class);
+
+        source.add(CodeAPI.throwException(
+                CodeAPI.invokeConstructor(
+                        exceptionType,
+                        CodeAPI.constructorTypeSpec(Types.STRING),
+                        CollectionsKt.listOf(new CodeArgument(Literals.STRING("Error")))
+                )
+        ));
 
         // Access Local Variable 'msg'
-        CodePart msgVar = Helper.accessLocalVariable("msg", PredefinedTypes.OBJECT);
+        CodePart msgVar = CodeAPI.accessLocalVariable(Types.OBJECT, "msg");
 
         // Add Invocation of println method declared in 'System.out' ('variable')
-        source.add(Helper.invoke(InvokeType.INVOKE_VIRTUAL, Helper.getJavaType(PrintStream.class), variable,
-                new MethodSpecImpl("println", Collections.singletonList(
-                        // with argument 'msgVar' (Method msg parameter)
-                        new CodeArgument(msgVar,
-                                // Cast type? = false
-                                false,
-                                // Type to cast (if 'cast type' is set to true)
-                                Helper.getJavaType(Object.class))
-                ), Helper.getJavaType(Void.TYPE), MethodType.METHOD)));
+        source.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, CodeAPI.getJavaType(PrintStream.class), variable,
+                "println",
+                new TypeSpec(Types.VOID, CollectionsKt.listOf(Types.OBJECT)),
+                // with argument 'msgVar' (Method msg parameter)
+                CollectionsKt.listOf(new CodeArgument(msgVar)))
+        );
 
 
-        List<CodeType> catchExceptions = Arrays.asList(Helper.getJavaType(IllegalArgumentException.class), Helper.getJavaType(IllegalStateException.class));
+        List<CodeType> catchExceptions = Arrays.asList(CodeAPI.getJavaType(IllegalArgumentException.class), CodeAPI.getJavaType(IllegalStateException.class));
 
-        List<CodeType> catchExceptions2 = Arrays.asList(Helper.getJavaType(IOException.class), Helper.getJavaType(ClassNotFoundException.class));
+        List<CodeType> catchExceptions2 = Arrays.asList(CodeAPI.getJavaType(IOException.class), CodeAPI.getJavaType(ClassNotFoundException.class));
 
         // Finally block
 
-        CodeSource finallySource = Helper.sourceOf(Predefined.invokePrintln(new CodeArgument(Literals.STRING("Finally!"), String.class)));
+        CodeSource finallySource = CodeAPI.source(Predefined.invokePrintln(new CodeArgument(Literals.STRING("Finally!"))));
+
+        CatchStatement catchStatement = CodeAPI.catchStatement(catchExceptions, VariableFactory.variable(Types.EXCEPTION, "thr"), rethrow("thr"));
+
+        CatchStatement catchStatement2 = CodeAPI.catchStatement(catchExceptions2, VariableFactory.variable(Types.EXCEPTION, "tlr"), rethrow("tlr"));
 
         // Surround 'source' with 'try-catch'
-        CodePart surround = Helper.surround(source, Arrays.asList(Helper.catchBlock(catchExceptions, "thr", rethrow("thr")),
-                Helper.catchBlock(catchExceptions2, "tlr", rethrow("tlr"))),
+        CodePart surround = CodeAPI.tryStatement(source, Arrays.asList(catchStatement,
+                catchStatement2),
                 finallySource);
 
         // Add body to method source
@@ -195,10 +211,10 @@ public class CodeAPITestBytecode {
         MutableCodeSource codeClassSource = new MutableCodeSource();
 
         // Define a interface
-        CodeClass codeClass = ClassBuilder.builder()
-                .withQualifiedName("github.com."+this.getClass().getSimpleName())
+        ClassDeclaration codeClass = ClassDeclarationBuilder.builder()
+                .withQualifiedName("github.com." + this.getClass().getSimpleName())
                 // Add 'public' modifier
-                .withModifiers(Collections.singletonList(CodeModifier.PUBLIC))
+                .withModifiers(CodeModifier.PUBLIC)
                 // CodeClass Source
                 .withBody(codeClassSource)
                 .build();
@@ -206,7 +222,7 @@ public class CodeAPITestBytecode {
         // Create a list of CodePart (source)
         CodeSource mySource = CodeAPI.sourceOfParts(codeClass);
 
-        CodeMethod method = createMethod();
+        MethodDeclaration method = createMethod();
 
         // Add method to body
         codeClassSource.add(method);
@@ -217,7 +233,7 @@ public class CodeAPITestBytecode {
 
         ResultSaver.save(this.getClass(), bytes);
 
-        Class<?> define = new BCLoader().define("github.com."+this.getClass().getSimpleName(), bytes);
+        Class<?> define = new BCLoader().define("github.com." + this.getClass().getSimpleName(), bytes);
 
         try {
             define.newInstance();

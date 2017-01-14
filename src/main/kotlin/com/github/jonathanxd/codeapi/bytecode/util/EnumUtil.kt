@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,33 +27,30 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.CodePart
-import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.MutableCodeSource
+import com.github.jonathanxd.codeapi.*
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder
+import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.common.CodeArgument
 import com.github.jonathanxd.codeapi.common.CodeModifier
 import com.github.jonathanxd.codeapi.common.CodeParameter
 import com.github.jonathanxd.codeapi.common.TypeSpec
-import com.github.jonathanxd.codeapi.helper.Helper
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
+import com.github.jonathanxd.codeapi.factory.constructor
+import com.github.jonathanxd.codeapi.factory.field
 import com.github.jonathanxd.codeapi.inspect.SourceInspect
-import com.github.jonathanxd.codeapi.interfaces.*
-import com.github.jonathanxd.codeapi.literals.Literals
-import com.github.jonathanxd.codeapi.types.CodeType
+import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.util.source.CodeArgumentUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
-import java.lang.reflect.Modifier
 import java.util.*
 
 object EnumUtil {
 
-    fun getEnumModifiers(enumDeclaration: EnumDeclaration): Collection<CodeModifier> {
+    fun getEnumModifiers(enumDeclaration: EnumDeclaration): Set<CodeModifier> {
         val modifiers = TreeSet(enumDeclaration.modifiers)
 
         modifiers.add(CodeModifier.ENUM)
 
-        if (enumDeclaration.entries.any { it.hasBody() }) {
+        if (enumDeclaration.entries.any { it.body.isEmpty }) {
             modifiers.add(CodeModifier.ABSTRACT)
         } else {
             modifiers.add(CodeModifier.FINAL)
@@ -63,9 +60,9 @@ object EnumUtil {
     }
 
     fun generateEnumClassSource(enumDeclaration: EnumDeclaration): CodeSource {
-        val fields = ArrayList<FieldDeclaration>()
+        val fields = mutableListOf<FieldDeclaration>()
         val entries = enumDeclaration.entries
-        val innerClasses = ArrayList<TypeDeclaration>()
+        val innerClasses = mutableListOf<TypeDeclaration>()
 
         val codeSource = MutableCodeSource()
 
@@ -73,7 +70,7 @@ object EnumUtil {
             val enumEntry = entries[i]
             val value: CodePart
 
-            if (enumEntry.hasBody()) {
+            if (enumEntry.body.isNotEmpty) {
 
                 val typeDeclaration = EnumUtil.genEnumInnerClass(enumDeclaration, enumEntry)
 
@@ -84,8 +81,13 @@ object EnumUtil {
                 value = EnumUtil.callConstructor(enumDeclaration, enumEntry, i)
             }
 
-            fields.add(CodeAPI.field(Modifier.PUBLIC or Modifier.STATIC or Modifier.FINAL or CodeModifier.Internal.ENUM, enumDeclaration, enumEntry.name,
-                    value))
+            fields.add(field(
+                    modifiers = EnumSet.of(CodeModifier.PUBLIC, CodeModifier.STATIC, CodeModifier.FINAL, CodeModifier.ENUM),
+                    type = enumDeclaration,
+                    name = enumEntry.name,
+                    value = value
+
+            ))
         }
 
         codeSource.addAll(fields)
@@ -97,15 +99,19 @@ object EnumUtil {
         val arrayType = enumDeclaration.toArray(1)
 
         val arrayArguments = fields
-                .map { fieldDeclaration -> CodeAPI.argument(CodeAPI.accessStaticField(fieldDeclaration.variableType, fieldDeclaration.name), fieldDeclaration.variableType) }
-                .toTypedArray()
+                .map { fieldDeclaration ->
+                    CodeAPI.argument(CodeAPI.accessStaticField(fieldDeclaration.type, fieldDeclaration.name))
+                }
 
-        val valuesField = CodeAPI.field(Modifier.PRIVATE or Modifier.STATIC or Modifier.FINAL or CodeModifier.Internal.SYNTHETIC, arrayType, valuesFieldName,
-                CodeAPI.arrayConstruct(enumDeclaration, arrayOf<CodePart>(Literals.INT(fieldSize)), *arrayArguments))
+        val valuesField = field(
+                modifiers = EnumSet.of(CodeModifier.PRIVATE, CodeModifier.STATIC, CodeModifier.FINAL, CodeModifier.SYNTHETIC),
+                type = arrayType,
+                name = valuesFieldName,
+                value = CodeAPI.arrayConstruct(enumDeclaration, arrayOf(Literals.INT(fieldSize)), arrayArguments))
 
         codeSource.add(valuesField)
 
-        val source = enumDeclaration.body.map(::MutableCodeSource).orElse(MutableCodeSource())
+        val source = enumDeclaration.body.toMutable()
 
         // Gen methods
         fixConstructor(source)
@@ -114,30 +120,46 @@ object EnumUtil {
 
         // Enum.values() method.
         codeSource.add(CodeAPI.methodBuilder()
-                .withModifiers(Modifier.PUBLIC or Modifier.STATIC)
+                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
                 .withName("values")
                 .withReturnType(arrayType)
                 .withBody(CodeAPI.sourceOfParts(
-                        CodeAPI.returnValue(arrayType, CodeAPI.cast(PredefinedTypes.OBJECT, arrayType, CodeAPI.invokeVirtual(arrayType, CodeAPI.accessStaticField(valuesField.variableType, valuesField.name),
-                                "clone", CodeAPI.typeSpec(PredefinedTypes.OBJECT))))
+                        CodeAPI.returnValue(
+                                arrayType,
+                                CodeAPI.cast(
+                                        Types.OBJECT,
+                                        arrayType,
+                                        CodeAPI.invokeVirtual(
+                                                arrayType,
+                                                CodeAPI.accessStaticField(valuesField.type, valuesField.name),
+                                                "clone",
+                                                CodeAPI.typeSpec(Types.OBJECT),
+                                                emptyList()
+                                        )
+                                )
+                        )
 
                 ))
                 .build())
 
         // Enum.valueOf(String) method.
         codeSource.add(CodeAPI.methodBuilder()
-                .withModifiers(Modifier.PUBLIC or Modifier.STATIC)
+                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
                 .withName("valueOf")
-                .withParameters(CodeAPI.parameter(PredefinedTypes.STRING, "name"))
+                .withParameters(CodeAPI.parameter(Types.STRING, "name"))
                 .withReturnType(enumDeclaration)
                 .withBody(CodeAPI.sourceOfParts(
-                        CodeAPI.returnValue(PredefinedTypes.ENUM, CodeAPI.cast(PredefinedTypes.ENUM, enumDeclaration,
-                                CodeAPI.invokeStatic(PredefinedTypes.ENUM, "valueOf", CodeAPI.typeSpec(
-                                        PredefinedTypes.ENUM,
-                                        PredefinedTypes.CLASS,
-                                        PredefinedTypes.STRING),
-                                        CodeAPI.argument(Literals.CLASS(enumDeclaration)),
-                                        CodeAPI.argument(CodeAPI.accessLocalVariable(PredefinedTypes.STRING, "name")))))
+                        CodeAPI.returnValue(Types.ENUM, CodeAPI.cast(Types.ENUM, enumDeclaration,
+                                CodeAPI.invokeStatic(Types.ENUM, "valueOf", CodeAPI.typeSpec(
+                                        Types.ENUM,
+                                        Types.CLASS,
+                                        Types.STRING),
+                                        listOf(
+                                                CodeAPI.argument(Literals.CLASS(enumDeclaration)),
+                                                CodeAPI.argument(CodeAPI.accessLocalVariable(Types.STRING, "name"))
+                                        )
+                                ))
+                        )
 
                 ))
                 .build())
@@ -150,23 +172,22 @@ object EnumUtil {
     }
 
     private fun callConstructor(location: TypeDeclaration, enumEntry: EnumEntry, ordinal: Int): CodePart {
-        val constructorSpecOpt = enumEntry.constructorSpec
+        val constructorSpec = enumEntry.constructorSpec
 
         val arguments = ArrayList<CodeArgument>()
 
         arguments.add(CodeAPI.argument(Literals.STRING(enumEntry.name)))
         arguments.add(CodeAPI.argument(Literals.INT(ordinal)))
 
-        var spec = TypeSpec(PredefinedTypes.VOID, PredefinedTypes.STRING, PredefinedTypes.INT)
+        var spec = TypeSpec(Types.VOID, listOf(Types.STRING, Types.INT))
 
-        if (constructorSpecOpt.isPresent) {
-            val typeSpec = constructorSpecOpt.get()
+        if (constructorSpec != null) {
 
-            val parameterTypes = ArrayList(spec.parameterTypes)
+            val parameterTypes = spec.parameterTypes.toMutableList()
 
-            parameterTypes.addAll(typeSpec.parameterTypes)
+            parameterTypes.addAll(constructorSpec.parameterTypes)
 
-            spec = spec.setParameterTypes(parameterTypes)
+            spec = spec.copy(parameterTypes = parameterTypes)
 
             arguments.addAll(enumEntry.arguments)
         }
@@ -182,78 +203,88 @@ object EnumUtil {
                 .inspect(originalSource)
 
         if (inspect.isEmpty()) {
-            originalSource.add(CodeAPI.constructor(Modifier.PROTECTED or CodeModifier.Internal.SYNTHETIC, CodeAPI.parameters(CodeAPI.parameter(PredefinedTypes.STRING, "name"),
-                    CodeAPI.parameter(PredefinedTypes.INT, "ordinal"))
-            ) { _ ->
-                CodeAPI.sourceOfParts(
-                        CodeAPI.invokeSuperConstructor(CodeAPI.constructorTypeSpec(PredefinedTypes.STRING, PredefinedTypes.INT),
-                                CodeAPI.argument(CodeAPI.accessLocalVariable(PredefinedTypes.STRING, "name")),
-                                CodeAPI.argument(CodeAPI.accessLocalVariable(PredefinedTypes.INT, "ordinal")))
-                )
-            })
+
+            originalSource.add(
+                    constructor(
+                            EnumSet.of(CodeModifier.PROTECTED, CodeModifier.SYNTHETIC),
+                            arrayOf(CodeAPI.parameter(Types.STRING, "name"), CodeAPI.parameter(Types.INT, "ordinal")),
+                            CodeSource.fromPart(
+                                    CodeAPI.invokeSuperConstructor(CodeAPI.constructorTypeSpec(Types.STRING, Types.INT),
+                                            listOf(
+                                                    CodeAPI.argument(CodeAPI.accessLocalVariable(Types.STRING, "name")),
+                                                    CodeAPI.argument(CodeAPI.accessLocalVariable(Types.INT, "ordinal"))
+                                            ))
+                            )
+                    ))
             // generate
         } else {
             // modify
             for (constructorDeclaration in inspect) {
-                val parameters = ArrayList(constructorDeclaration.parameters)
+                val parameters = constructorDeclaration.parameters.toMutableList()
 
                 val name = CodeSourceUtil.getNewName("\$name", parameters)
                 val ordinal = CodeSourceUtil.getNewName("\$ordinal", parameters)
 
                 parameters.addAll(0, Arrays.asList(
-                        CodeAPI.parameter(PredefinedTypes.STRING, name),
-                        CodeAPI.parameter(PredefinedTypes.INT, ordinal)))
+                        CodeAPI.parameter(Types.STRING, name),
+                        CodeAPI.parameter(Types.INT, ordinal)))
 
-                val source = constructorDeclaration.body.map(::MutableCodeSource).orElse(MutableCodeSource())
+                val source = constructorDeclaration.body?.toMutable() ?: MutableCodeSource()
 
-                source.add(0, Helper.invokeSuperInit(PredefinedTypes.ENUM,
-                        CodeAPI.argument(CodeAPI.accessLocalVariable(PredefinedTypes.STRING, name), PredefinedTypes.STRING),
-                        CodeAPI.argument(CodeAPI.accessLocalVariable(PredefinedTypes.INT, ordinal), PredefinedTypes.INT)))
+                source.add(0, CodeAPI.invokeSuperConstructor(
+                        Types.ENUM,
+                        TypeSpec(Types.VOID, listOf(Types.STRING, Types.INT)),
+                        listOf(CodeAPI.argument(CodeAPI.accessLocalVariable(Types.STRING, name)),
+                                CodeAPI.argument(CodeAPI.accessLocalVariable(Types.INT, ordinal)))
+                ))
 
                 originalSource.remove(constructorDeclaration)
 
-                originalSource.add(constructorDeclaration.setBody(source).setParameters(parameters))
+
+                originalSource.add(ConstructorDeclarationBuilder(constructorDeclaration).build {
+                    this.body = source
+                    this.parameters = parameters
+                })
             }
         }
     }
 
     private fun genEnumInnerClass(enumDeclaration: EnumDeclaration, enumEntry: EnumEntry): TypeDeclaration {
-        val typeSpecOpt = enumEntry.constructorSpec
+        val ctrTypeSpec = enumEntry.constructorSpec
 
         val baseParameters = EnumUtil.getEnumBaseParameters("\$name", "\$ordinal")
-        val arguments: Array<CodeArgument>
 
-        if (typeSpecOpt.isPresent) {
-            val typeSpec = typeSpecOpt.get()
+        if (ctrTypeSpec != null) {
 
-            val parameterTypes = typeSpec.parameterTypes
+            val parameterTypes = ctrTypeSpec.parameterTypes
 
             for (i in parameterTypes.indices) {
                 baseParameters.add(CodeAPI.parameter(parameterTypes[i], "$" + i))
             }
         }
 
-        arguments = CodeArgumentUtil.argumentsFromParameters(baseParameters).toTypedArray()
+        val arguments = CodeArgumentUtil.argumentsFromParameters(baseParameters)
+
         val constructorSpec = CodeAPI.constructorTypeSpec(
                 *baseParameters
-                        .map { it.requiredType }
+                        .map { it.type }
                         .toTypedArray()
         )
 
         val enumEntryName = CodeSourceUtil.getNewInnerName(enumEntry.name + "\$Inner", enumDeclaration)
 
-        val body = enumEntry.body.orElseThrow(::NullPointerException).toMutable()
+        val body = enumEntry.body!!.toMutable()
 
         body.add(CodeAPI.constructorBuilder()
                 .withParameters(baseParameters)
                 .withBody(CodeAPI.sourceOfParts(
-                        CodeAPI.invokeSuperConstructor(constructorSpec, *arguments)
+                        CodeAPI.invokeSuperConstructor(constructorSpec, arguments)
                 ))
                 .build())
 
         return CodeAPI.aClassBuilder()
                 .withOuterClass(enumDeclaration)
-                .withModifiers(Modifier.STATIC or CodeModifier.Internal.ENUM)
+                .withModifiers(CodeModifier.STATIC, CodeModifier.ENUM)
                 .withQualifiedName(enumEntryName)
                 .withSuperClass(enumDeclaration)
                 .withBody(body)
@@ -262,8 +293,8 @@ object EnumUtil {
 
     private fun getEnumBaseParameters(name: String, ordinal: String): MutableList<CodeParameter> {
         return ArrayList(Arrays.asList(
-                CodeAPI.parameter(PredefinedTypes.STRING, name),
-                CodeAPI.parameter(PredefinedTypes.INT, ordinal)))
+                CodeAPI.parameter(Types.STRING, name),
+                CodeAPI.parameter(Types.INT, ordinal)))
     }
 
 }

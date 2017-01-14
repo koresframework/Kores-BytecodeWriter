@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,17 +29,21 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
-import com.github.jonathanxd.codeapi.common.CodeArgument;
-import com.github.jonathanxd.codeapi.helper.Helper;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.common.CodeModifier;
+import com.github.jonathanxd.codeapi.factory.ClassFactory;
+import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.literals.Literals;
+import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.iutils.annotation.Named;
 
 import org.junit.Test;
 
-import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 
 /**
  * Created by jonathan on 21/08/16.
@@ -50,25 +54,33 @@ public class FinallyTest {
     public void test() {
         MutableCodeSource codeSource = new MutableCodeSource();
 
-        CodeClass codeInterface;
+        TypeDeclaration codeInterface;
 
-        codeSource.add(codeInterface = CodeAPI.aClass(Modifier.PUBLIC, "test.Btc", codeClass -> CodeAPI.sourceOfParts(
-                CodeAPI.constructor(Modifier.PUBLIC, codeConstructor -> CodeAPI.sourceOfParts(
-                        Helper.surround(CodeAPI.sourceOfParts(
-                                Helper.throwException(Helper.getJavaType(RuntimeException.class), new CodeArgument[]{
-                                    CodeAPI.argument(Literals.STRING("EXCEPTION"), String.class)
-                                })
-                                ),
+        codeSource.add(codeInterface = ClassFactory.aClass(EnumSet.of(CodeModifier.PUBLIC), "test.Btc", CodeAPI.sourceOfParts(
+                ConstructorFactory.constructor(EnumSet.of(CodeModifier.PUBLIC), CodeAPI.sourceOfParts(
+                        CodeAPI.tryStatement(CodeAPI.sourceOfParts(
+                                CodeAPI.throwException(CodeAPI.invokeConstructor(CodeAPI.getJavaType(RuntimeException.class),
+                                        CodeAPI.constructorTypeSpec(String.class),
+                                        Collections.singletonList(CodeAPI.argument(Literals.STRING("EXCEPTION"))))
+                                )),
                                 Collections.singletonList(
-                                        Helper.catchBlock(Collections.singletonList(Helper.getJavaType(Exception.class)), "ex",
-                                                Helper.sourceOf(Helper.throwException(Helper.getJavaType(RuntimeException.class), new CodeArgument[]{
-                                                        CodeAPI.argument(Literals.STRING("Rethrow"), String.class),
-                                                        CodeAPI.argument(Helper.accessLocalVariable("ex", Throwable.class), Throwable.class)
-                                                }))
-                                        )
-                                ),
+                                        CodeAPI.catchStatement(Collections.singletonList(CodeAPI.getJavaType(Exception.class)),
+                                                VariableFactory.variable(Types.EXCEPTION, "ex"),
+                                                CodeAPI.source(
+                                                        CodeAPI.throwException(
+                                                                CodeAPI.invokeConstructor(
+                                                                        CodeAPI.getJavaType(RuntimeException.class),
+                                                                        CodeAPI.constructorTypeSpec(String.class, Throwable.class),
+
+                                                                        Arrays.asList(
+                                                                                CodeAPI.argument(Literals.STRING("Rethrow")),
+                                                                                CodeAPI.argument(CodeAPI.accessLocalVariable(Throwable.class, "ex"))
+                                                                        )
+                                                                ))
+                                                )
+                                        )),
                                 CodeAPI.sourceOfParts(
-                                        Predefined.invokePrintln(CodeAPI.argument(Literals.STRING("Finally"), String.class))
+                                        Predefined.invokePrintln(CodeAPI.argument(Literals.STRING("Finally")))
                                 ))
                 ))
         )));

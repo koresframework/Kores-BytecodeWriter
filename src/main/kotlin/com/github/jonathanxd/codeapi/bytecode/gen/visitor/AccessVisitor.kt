@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -31,7 +31,7 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.*
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
@@ -40,18 +40,19 @@ object AccessVisitor : VoidVisitor<Access, BytecodeClass, MVData> {
     override fun voidVisit(t: Access, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val visitor = additional.methodVisitor
 
-        when (t) {
-            is AccessThis, is AccessSuper -> visitor.visitVarInsn(Opcodes.ALOAD, 0)
-            is AccessLocal -> {
+        when(t.type) {
+            Access.Type.LOCAL, Access.Type.STATIC -> {}
+            Access.Type.THIS, Access.Type.SUPER -> {
+                visitor.visitVarInsn(Opcodes.ALOAD, 0)
             }
-            is AccessOuter -> {
-                val localization = t.getLocalization().orElseThrow(::NullPointerException)
+            Access.Type.OUTER -> {
+                val localization = t.localization ?: throw NullPointerException("Localization is required to OUTER Access.")
                 val part = Util.accessEnclosingClass(extraData, localization) ?: throw IllegalArgumentException("Cannot access \"outer class\" '$localization'.")
 
                 visitorGenerator.generateTo(part.javaClass, part, extraData, additional)
             }
             else -> {
-                throw IllegalArgumentException("Cannot handle access '$t'")
+                throw IllegalArgumentException("Cannot handle access of type '${t.type}'")
             }
         }
     }

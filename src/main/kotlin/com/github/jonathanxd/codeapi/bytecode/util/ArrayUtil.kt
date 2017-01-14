@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,22 +27,34 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.types.CodeType
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.type.CodeType
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
+import java.lang.reflect.Array as ReflectArray
+
 
 object ArrayUtil {
+    fun toObjectArray(array: Any): Array<Any> {
+
+        return Array(
+                ReflectArray.getLength(array),
+                {
+                    ReflectArray.get(array, it)
+                }
+        )
+    }
+
     fun getArrayType(opcode: Int): CodeType {
         when (opcode) {
-            Opcodes.T_BYTE -> return PredefinedTypes.CHAR
-            Opcodes.T_BOOLEAN -> return PredefinedTypes.BOOLEAN
-            Opcodes.T_CHAR -> return PredefinedTypes.CHAR
-            Opcodes.T_DOUBLE -> return PredefinedTypes.DOUBLE
-            Opcodes.T_FLOAT -> return PredefinedTypes.FLOAT
-            Opcodes.T_INT -> return PredefinedTypes.INT
-            Opcodes.T_LONG -> return PredefinedTypes.LONG
-            Opcodes.T_SHORT -> return PredefinedTypes.SHORT
+            Opcodes.T_BYTE -> return Types.CHAR
+            Opcodes.T_BOOLEAN -> return Types.BOOLEAN
+            Opcodes.T_CHAR -> return Types.CHAR
+            Opcodes.T_DOUBLE -> return Types.DOUBLE
+            Opcodes.T_FLOAT -> return Types.FLOAT
+            Opcodes.T_INT -> return Types.INT
+            Opcodes.T_LONG -> return Types.LONG
+            Opcodes.T_SHORT -> return Types.SHORT
             else -> throw IllegalArgumentException("Cannot get type of array type opcode '$opcode'!")
         }
     }
@@ -74,7 +86,7 @@ object ArrayUtil {
                 mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_LONG)
             }
             else -> {
-                mv.visitTypeInsn(Opcodes.ANEWARRAY, CodeTypeUtil.codeTypeToSimpleArray(arrayType, dimensions))
+                mv.visitTypeInsn(Opcodes.ANEWARRAY, CodeTypeUtil.arrayToTypeDesc(arrayType, dimensions))
             }
         }
     }

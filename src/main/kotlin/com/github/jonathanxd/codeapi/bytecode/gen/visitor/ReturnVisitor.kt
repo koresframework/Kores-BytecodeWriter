@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,12 +27,12 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.base.Return
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.interfaces.Return
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -44,22 +44,16 @@ object ReturnVisitor : VoidVisitor<Return, BytecodeClass, MVData> {
 
         val tValue = t.value
 
-        if (tValue.isPresent) {
-            visitorGenerator.generateTo(tValue.get().javaClass, tValue.get(), extraData, null, additional)
-        }
+        visitorGenerator.generateTo(tValue.javaClass, tValue, extraData, null, additional)
 
-        val toRet = t.type.orElse(null)
+        val toRet = t.type
 
         var opcode = Opcodes.RETURN
 
-        if (toRet != null) {
+        if (!toRet.`is`(Types.VOID)) {
+            val type = Type.getType(toRet.javaSpecName)
 
-            if (!toRet.`is`(PredefinedTypes.VOID)) {
-                val type = Type.getType(toRet.javaSpecName)
-
-                opcode = type.getOpcode(Opcodes.IRETURN) // ARETURN
-            }
-
+            opcode = type.getOpcode(Opcodes.IRETURN) // ARETURN
         }
 
         mv.visitInsn(opcode)

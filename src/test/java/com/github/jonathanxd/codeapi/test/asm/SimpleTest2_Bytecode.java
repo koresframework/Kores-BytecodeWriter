@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,29 +29,30 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
+import com.github.jonathanxd.codeapi.base.FieldDeclaration;
+import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
+import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.common.InvokeType;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
+import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
+import com.github.jonathanxd.codeapi.factory.FieldFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.impl.CodeConstructor;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.impl.MethodSpecImpl;
-import com.github.jonathanxd.codeapi.literals.Literals;
-import com.github.jonathanxd.codeapi.operators.Operators;
-import com.github.jonathanxd.codeapi.types.CodeType;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.operator.Operators;
+import com.github.jonathanxd.codeapi.type.CodeType;
 
 import org.junit.Test;
 
 import java.io.PrintStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 
 /**
  * Created by jonathan on 12/05/16.
@@ -68,27 +69,34 @@ public class SimpleTest2_Bytecode {
         MutableCodeSource classSource = new MutableCodeSource();
 
         // Crio uma classe com nome de SimpleTest2_bytecode
-        CodeClass codeClass = new CodeClass(null, "me.jonathanscripter.codeapi.test.SimpleTest2_bytecode",
+        ClassDeclaration codeClass = ClassDeclarationBuilder.builder()
                 // Adiciona o modifier publico
-                Collections.singletonList(CodeModifier.PUBLIC),
-                null,
-                Collections.emptyList(),
-                // Define qual é o código fonte da classe.
-                classSource);
+                .withModifiers(CodeModifier.PUBLIC)
+                // Defino o nome
+                .withName("me.jonathanscripter.codeapi.test.SimpleTest2_bytecode")
+                // Defino o super tipo
+                .withSuperClass(Types.OBJECT)
+                // Defino o corpo
+                .withBody(classSource)
+                // Construo uma instancia
+                .build();
+
 
         // Adiciono a classe ao codigo fonte
         source.add(codeClass);
 
 
         // Obtem um CodeType a partir de uma classe Java. Obs: Todas classes do CodeAPI são CodeType
-        CodeType stringType = Helper.getJavaType(String.class);
+        CodeType stringType = CodeAPI.getJavaType(String.class);
 
         // Cria uma field (campo)
-        CodeField codeField = new CodeField("myField",
+        FieldDeclaration codeField = FieldFactory.field(
+                // Adiciona os modificadores public final
+                EnumSet.of(CodeModifier.PUBLIC, CodeModifier.FINAL),
                 // Define o tipo da field como String
                 stringType,
-                // Adiciona os modificadores public final
-                Arrays.asList(CodeModifier.PUBLIC, CodeModifier.FINAL));
+                // Defino o nome
+                "myField");
 
 
         // Adiciona a field ao codigo fonte da classe
@@ -97,36 +105,40 @@ public class SimpleTest2_Bytecode {
 
         // Cria um construtor para a classe 'codeClass' que criamos. CodeConstructor recebe CodeType
         // como parametro
-        CodeConstructor codeConstructor = new CodeConstructor(codeClass,
-
+        ConstructorDeclaration codeConstructor = ConstructorFactory.constructor(
                 // Adiciona o modificador publico
-                Collections.singletonList(CodeModifier.PUBLIC),
+                EnumSet.of(CodeModifier.PUBLIC),
 
                 // Adiciona um parametro 'myField' do tipo String ao construtor
-                Collections.singletonList(new CodeParameter("myField", stringType)),
+                new CodeParameter[]{new CodeParameter(stringType, "myField")},
 
                 // Define o corpo (codigo fonte) do metodo
-                // Classe Helper é usada pelo menos em 70% do código, ela ajuda em tarefas comuns.
-                Helper.sourceOf(
-                        Helper.setVariable(null, Helper.accessThis(), "myField", stringType, Helper.accessLocalVariable("myField", stringType)),
-                        Helper.ifExpression(Helper.createIfVal().add1(Helper.check(
-                                Helper.accessLocalVariable("myField", stringType), Operators.NOT_EQUAL_TO, Literals.NULL
-                        )).make(), Helper.sourceOf(
-                                Helper.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
-                                        Helper.accessStaticVariable(Helper.localizedAtType(Helper.getJavaType(System.class)), "out", Helper.getJavaType(PrintStream.class)),
-                                        new MethodSpecImpl("println", PredefinedTypes.VOID, Collections.singletonList(new CodeArgument(Helper.accessLocalVariable("myField", stringType), stringType)))
-                                )
-                        ), Helper.elseExpression(Helper.sourceOf(
-                                Helper.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class, Helper.accessStaticVariable(Helper.localizedAtType(Helper.getJavaType(System.class)), "out", Helper.getJavaType(PrintStream.class)),
-                                        new MethodSpecImpl("println", PredefinedTypes.VOID, Collections.singletonList(new CodeArgument(
-                                                Helper.cast(stringType, stringType, Literals.QUOTED_STRING("NULL VALUE")), stringType
-                                        )))
-                                ))
-                        )),
-                        CodeAPI.ifBlock(
+                // Classe CodeAPI é usada pelo menos em 70% do código, ela ajuda em tarefas comuns.
+                CodeAPI.source(
+                        CodeAPI.setThisField(stringType, "myField", CodeAPI.accessLocalVariable(stringType, "myField")),
+                        CodeAPI.ifStatement(
+                                CodeAPI.check(CodeAPI.accessLocalVariable(stringType, "myField"), Operators.NOT_EQUAL_TO, Literals.NULL),
+                                CodeAPI.source(
+                                        CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
+                                                CodeAPI.accessStaticField(CodeAPI.getJavaType(System.class), CodeAPI.getJavaType(PrintStream.class), "out"),
+                                                "println",
+                                                CodeAPI.typeSpec(Types.VOID, Types.STRING),
+                                                Collections.singletonList(new CodeArgument(CodeAPI.accessLocalVariable(stringType, "myField")))
+                                        )), CodeAPI.source(
+                                        CodeAPI.invoke(
+                                                InvokeType.INVOKE_VIRTUAL,
+                                                PrintStream.class,
+                                                CodeAPI.accessStaticField(CodeAPI.getJavaType(System.class), CodeAPI.getJavaType(PrintStream.class), "out"),
+                                                "println",
+                                                CodeAPI.typeSpec(Types.VOID, Types.STRING),
+                                                Collections.singletonList(new CodeArgument(
+                                                        CodeAPI.cast(stringType, stringType, Literals.STRING("NULL VALUE"))
+                                                )))
+                                )),
+                        CodeAPI.ifStatement(
                                 CodeAPI.ifExprs(CodeAPI.check(Literals.LONG(5894567987L), Operators.LESS_THAN, Literals.LONG(89859845678798L))),
                                 CodeAPI.sourceOfParts(Predefined.invokePrintlnStr(Literals.STRING("First < Second"))),
-                                CodeAPI.elseBlock(CodeAPI.sourceOfParts(Predefined.invokePrintlnStr(Literals.STRING("First >= Second"))))
+                                CodeAPI.sourceOfParts(Predefined.invokePrintlnStr(Literals.STRING("First >= Second")))
                         )
                 ));
 

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -30,14 +30,15 @@ package com.github.jonathanxd.codeapi.bytecode.util
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.gen.visitor.TypeVisitor
 import com.github.jonathanxd.codeapi.common.*
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.helper.Helper
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.impl.MethodSpecImpl
-import com.github.jonathanxd.codeapi.interfaces.*
+import com.github.jonathanxd.codeapi.base.impl.MethodSpecificationImpl
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.builder.MethodInvocationBuilder
+import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.util.source.CodeArgumentUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
@@ -59,11 +60,11 @@ object InnerUtil {
             if (inner == null) {
                 visitorGenerator.generateTo(MethodDeclaration::class.java, gen, requireNotNull(extraData.parent), null)
             } else {
-                val source = outer.body.orElse(CodeSource.empty()).toMutable()
+                val source = outer.body?.toMutable() ?: MutableCodeSource()
 
                 source.add(gen)
 
-                inner.adaptedDeclaration = outer.setBody(source)
+                inner.adaptedDeclaration = outer
             }
 
             memberInfo.accessibleMember = gen
@@ -72,16 +73,16 @@ object InnerUtil {
 
     private fun generatePackagePrivateAccess(outer: TypeDeclaration, extraData: MapData, element: CodePart): MethodDeclaration {
 
-        if (element !is Modifierable || element !is Typed)
+        if (element !is ModifiersHolder || element !is Typed)
             throw IllegalArgumentException("Element doesn't match requirements: extends Modifierable & Typed.")
 
 
-        val type = element.type.orElseThrow(::NullPointerException)
+        val type = element.type!!
 
         var isConstructor = false
         val isStatic = element.modifiers.contains(CodeModifier.STATIC)
 
-        val modifiers = CodeModifier.newModifierSet()
+        val modifiers = TreeSet<CodeModifier>()
 
         modifiers.add(CodeModifier.SYNTHETIC)
         if (isStatic) modifiers.add(CodeModifier.STATIC)
@@ -92,9 +93,9 @@ object InnerUtil {
         if (element is FieldDeclaration) {
 
             if (!isStatic) {
-                invk = CodeAPI.accessField(outer, CodeAPI.accessThis(), element.variableType, element.name)
+                invk = CodeAPI.accessField(outer, CodeAPI.accessThis(), element.type, element.name)
             } else {
-                invk = CodeAPI.accessStaticField(outer, element.variableType, element.name)
+                invk = CodeAPI.accessStaticField(outer, element.type, element.name)
             }
         } else if (element is MethodDeclaration) {
 
@@ -123,16 +124,26 @@ object InnerUtil {
                 //arguments.add(CodeAPI.argument(CodeAPI.accessThis(), current));
             }
 
-            invk = Helper.invoke(invokeType, outer, if (isStatic) outer else CodeAPI.accessThis(),
-                    MethodSpecImpl(element.name, element.returnType.orElse(PredefinedTypes.VOID),
-                            arguments, if (isConstructor) MethodType.SUPER_CONSTRUCTOR else MethodType.METHOD))
+            invk = MethodInvocationBuilder()
+                    .build {
+                        this.invokeType = invokeType
+                        this.localization = outer
+                        this.target = if (isStatic) outer else CodeAPI.accessThis()
+                        this.spec = MethodSpecificationImpl(
+                                methodType = if (isConstructor) MethodType.SUPER_CONSTRUCTOR else MethodType.METHOD,
+                                methodName = element.name,
+                                description = TypeSpec(element.returnType, element.parameters.map {it.type})
+                        )
+                        this.arguments = arguments
+                    }
+
         } else {
             throw IllegalArgumentException("Cannot process: $element!")
         }
 
         if (!isConstructor) {
             return CodeAPI.methodBuilder()
-                    .withName(CodeSourceUtil.getNewMethodName("invoke$000", outer.body.orElse(CodeSource.empty())))
+                    .withName(CodeSourceUtil.getNewMethodName("invoke$000", outer.body ?: CodeSource.empty()))
                     .withModifiers(modifiers)
                     .withParameters(parameters)
                     .withReturnType(type)

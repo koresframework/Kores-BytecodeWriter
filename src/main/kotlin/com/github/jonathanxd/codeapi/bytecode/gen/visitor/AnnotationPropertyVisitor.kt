@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -32,8 +32,8 @@ import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.Annotable
-import com.github.jonathanxd.codeapi.interfaces.AnnotationProperty
+import com.github.jonathanxd.codeapi.base.Annotable
+import com.github.jonathanxd.codeapi.base.AnnotationProperty
 import com.github.jonathanxd.codeapi.util.CodeTypeUtil
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
@@ -45,14 +45,13 @@ object AnnotationPropertyVisitor : VoidVisitor<AnnotationProperty, BytecodeClass
 
         val asmModifiers = Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT
 
-        val type = CodeTypeUtil.codeTypeToFullAsm(t.type.orElseThrow(::NullPointerException))
+        val type = CodeTypeUtil.codeTypeToFullAsm(t.type)
         val name = t.name
-        val valueOpt = t.value
+        val value = t.value
 
         val mv = cw.visitMethod(asmModifiers, name, "()" + type, null, null)
 
-        if (valueOpt.isPresent) {
-            val value = valueOpt.get()
+        if (value != null) {
 
             val annotationVisitor = mv.visitAnnotationDefault()
 

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,24 +27,29 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.helper.Helper;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.impl.CodeInterface;
-import com.github.jonathanxd.codeapi.literals.Literals;
+import com.github.jonathanxd.codeapi.factory.ClassFactory;
+import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
+import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.type.CodeType;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
 import org.junit.Test;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.aClass;
+import java.util.EnumSet;
+
+import kotlin.collections.CollectionsKt;
+
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
 import static com.github.jonathanxd.codeapi.CodeAPI.argument;
-import static com.github.jonathanxd.codeapi.CodeAPI.constructor;
 import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
-import static com.github.jonathanxd.codeapi.helper.PredefinedTypes.STRING;
-import static java.lang.reflect.Modifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.Types.STRING;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
 
 /**
  * Created by jonathan on 26/06/16.
@@ -54,14 +59,17 @@ public class InvCall {
     @Test
     public void test() {
 
-        CodeClass codeClass;
+        ClassDeclaration codeClass;
 
-        CodeSource source = sourceOfParts(codeClass = aClass(PUBLIC, "test.Impl", My.class, new Class[0], codeClass0 -> sourceOfParts(
+        CodeSource source = sourceOfParts(codeClass = ClassFactory.aClass(EnumSet.of(PUBLIC), "test.Impl", CodeAPI.getJavaType(My.class), new CodeType[0], sourceOfParts(
 
-                constructor(PUBLIC, codeConstructor -> sourceOfParts(
-                        new CodeField("blc", STRING, Literals.STRING("099")),
+                ConstructorFactory.constructor(EnumSet.of(PUBLIC), sourceOfParts(
+                        VariableFactory.variable(STRING, "blc", Literals.STRING("099")),
 
-                        Helper.invokeSuperInit(Helper.getJavaType(My.class), argument(accessLocalVariable(STRING, "blc"), STRING))
+                        CodeAPI.invokeSuperConstructor(
+                                CodeAPI.getJavaType(My.class),
+                                CodeAPI.constructorTypeSpec(STRING),
+                                CollectionsKt.listOf(argument(accessLocalVariable(STRING, "blc"))))
 
                 ))
 
@@ -102,8 +110,8 @@ public class InvCall {
 
     private static final class BCLoader extends ClassLoader {
 
-        public Class<?> define(CodeInterface codeInterface, byte[] bytes) {
-            return super.defineClass(codeInterface.getQualifiedName(), bytes, 0, bytes.length);
+        public Class<?> define(TypeDeclaration typeDeclaration, byte[] bytes) {
+            return super.defineClass(typeDeclaration.getQualifiedName(), bytes, 0, bytes.length);
         }
     }
 

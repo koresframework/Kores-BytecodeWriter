@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,13 +27,13 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.MethodFragment
+import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.MethodDeclaration
-import com.github.jonathanxd.codeapi.interfaces.MethodFragment
-import com.github.jonathanxd.codeapi.interfaces.MethodInvocation
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.type.TypeInfo
 
@@ -43,7 +43,7 @@ object MethodFragmentVisitor : VoidVisitor<MethodFragment, BytecodeClass, Any?> 
     val FRAGMENT_TYPE_INFO = TypeInfo.aUnique(MethodFragment::class.java)
 
     @JvmStatic
-    fun visitFragmentsGeneration(visitorGenerator: VisitorGenerator<*>, extraData: MapData) {
+    fun <T: Any> visitFragmentsGeneration(visitorGenerator: VisitorGenerator<T>, extraData: MapData) {
         val all = extraData.getAll(MethodFragmentVisitor.FRAGMENT_TYPE_INFO)
 
         if (!all.isEmpty()) {
@@ -58,9 +58,8 @@ object MethodFragmentVisitor : VoidVisitor<MethodFragment, BytecodeClass, Any?> 
             extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, t)
             visitorGenerator.generateTo(MethodInvocation::class.java, t, extraData, null, additional)
         } else {
-            visitorGenerator.generateTo(MethodDeclaration::class.java, t.method, extraData, null, null)
+            visitorGenerator.generateTo(MethodDeclaration::class.java, t.declaration, extraData, null, null)
         }
     }
-
 
 }

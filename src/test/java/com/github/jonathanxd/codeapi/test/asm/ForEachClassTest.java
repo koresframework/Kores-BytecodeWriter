@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,7 +28,7 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
-import com.github.jonathanxd.codeapi.impl.CodeClass;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.ForEach_;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
@@ -47,7 +47,7 @@ public class ForEachClassTest {
 
     @Test
     public void test() {
-        Pair<@Named("Main class") CodeClass, @Named("Source") CodeSource> $ = ForEach_.$();
+        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = ForEach_.$();
         CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> {
             try {
                 return aClass.getConstructor(List.class).newInstance(Arrays.asList("A", "B", "C", "D"));

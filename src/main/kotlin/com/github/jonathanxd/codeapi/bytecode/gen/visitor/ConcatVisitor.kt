@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,17 +28,14 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.base.Concat
+import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.Concat
-import com.github.jonathanxd.codeapi.interfaces.MethodInvocation
 import com.github.jonathanxd.iutils.data.MapData
-
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes.OBJECT
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes.STRING
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes.STRING_BUILDER
 
 
 object ConcatVisitor : VoidVisitor<Concat, BytecodeClass, MVData> {
@@ -58,18 +55,24 @@ object ConcatVisitor : VoidVisitor<Concat, BytecodeClass, MVData> {
 
                 val stringConcat = CodeAPI.invokeVirtual(String::class.java, first, "concat",
                         CodeAPI.typeSpec(String::class.java, String::class.java),
-                        CodeAPI.argument(concatenations[1]))
+                        listOf(CodeAPI.argument(concatenations[1])))
 
                 visitorGenerator.generateTo(MethodInvocation::class.java, stringConcat, extraData, additional)
             } else {
 
-                var strBuilder = CodeAPI.invokeConstructor(StringBuilder::class.java, CodeAPI.argument(first, String::class.java))
+                var strBuilder = CodeAPI.invokeConstructor(
+                        Types.STRING_BUILDER,
+                        CodeAPI.constructorTypeSpec(String::class.java),
+                        listOf(CodeAPI.argument(first))
+                )
 
                 (1..concatenations.size - 1)
                         .map { concatenations[it] }
-                        .forEach { strBuilder = CodeAPI.invokeVirtual(STRING_BUILDER, strBuilder, "append", CodeAPI.typeSpec(STRING_BUILDER, STRING), CodeAPI.argument(it)) }
+                        .forEach {
+                            strBuilder = CodeAPI.invokeVirtual(Types.STRING_BUILDER, strBuilder, "append", CodeAPI.typeSpec(Types.STRING_BUILDER, Types.STRING), listOf(CodeAPI.argument(it)))
+                        }
 
-                strBuilder = CodeAPI.invokeVirtual(OBJECT, strBuilder, "toString", CodeAPI.typeSpec(STRING))
+                strBuilder = CodeAPI.invokeVirtual(Types.OBJECT, strBuilder, "toString", CodeAPI.typeSpec(Types.STRING), emptyList())
 
                 visitorGenerator.generateTo(MethodInvocation::class.java, strBuilder, extraData, additional)
             }

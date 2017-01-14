@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -25,25 +25,32 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.gen.visitor
+package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.gen.visit.Visitor
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.interfaces.PackageDeclaration
-import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.type.TypeInfo
+class ObjectCache {
 
-object PackageVisitor : Visitor<PackageDeclaration, BytecodeClass, Any?> {
+    private val map = mutableMapOf<Any, Any>()
 
-    val PACKAGE_REPRESENTATION = TypeInfo.a(PackageDeclaration::class.java).setUnique(true).build()
-
-    override fun visit(t: PackageDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
-
-        extraData.registerData(PACKAGE_REPRESENTATION, t)
-
-        return emptyArray()
-
+    /**
+     * Cache or get cached value.
+     *
+     * @param obj Object linked to cached value
+     * @param factory Factory of cached value.
+     * @return Cached value.
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> cache(obj: Any, factory: () -> T): T {
+        return if (map.containsKey(obj)) {
+            map[obj] as T
+        } else {
+            val t = factory()
+            map[obj] = t
+            t
+        }
     }
 
+
+    fun clear() {
+        this.map.clear()
+    }
 }

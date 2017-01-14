@@ -29,8 +29,8 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
-import com.github.jonathanxd.codeapi.base.ForStatement
 import com.github.jonathanxd.codeapi.base.IfStatement
+import com.github.jonathanxd.codeapi.base.WhileStatement
 import com.github.jonathanxd.codeapi.base.impl.IfStatementImpl
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
@@ -41,55 +41,67 @@ import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
-object ForIVisitor : VoidVisitor<ForStatement, BytecodeClass, MVData> {
+object WhileStatementVisitor : VoidVisitor<WhileStatement, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ForStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: WhileStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val mv = additional.methodVisitor
 
-        val outsideStart = Label()
+
         val whileStart = Label()
-        val whileEnd = Label()
+        val outOfIf = Label()
+        val insideStart = Label()
+        val insideEnd = Label()
         val outsideEnd = Label()
 
-        mv.visitLabel(outsideStart)
+        val ifStatement = IfStatementImpl(t.expressions, t.body ?: CodeSource.empty(), CodeSource.empty())
 
-        val init = t.forInit
-
-        if (init != null) {
-            visitorGenerator.generateTo(init.javaClass, init, extraData, null, additional)
-        }
-
-
-        val source = MutableCodeSource()
-
-        t.body?.let { source.addAll(it) }
-
-        val ifStatement = IfStatementImpl(t.forExpression, source, CodeSource.empty())
-
-        mv.visitLabel(whileStart)
-
-        val flow = Flow(null, outsideStart, whileStart, whileEnd, outsideEnd)
+        val flow = Flow(null, whileStart, insideStart, insideEnd, outsideEnd)
 
         extraData.registerData(ConstantDatas.FLOW_TYPE_INFO, flow)
 
-        val instructionCodePart = InstructionCodePart.create { _, _, _, additional ->
-            mv.visitLabel(whileEnd)
-            val update = t.forUpdate
+        if(t.type == WhileStatement.Type.DO_WHILE) {
 
-            if (update != null) {
-                visitorGenerator.generateTo(update.javaClass, update, extraData, null, additional)
+            mv.visitLabel(whileStart)
+
+            mv.visitLabel(insideStart)
+
+
+            visitorGenerator.generateTo(IfStatement::class.java, ifStatement, extraData, null, additional)
+
+            t.body?.let {
+                visitorGenerator.generateTo(CodeSource::class.java, it, extraData, null, additional)
             }
 
-            mv.visitJumpInsn(Opcodes.GOTO, whileStart)
+            mv.visitLabel(insideEnd)
+
+            visit(ifStatement, whileStart, outOfIf, true, true, extraData, visitorGenerator, additional)
+
+            mv.visitLabel(outsideEnd)
+        } else if(t.type == WhileStatement.Type.WHILE) {
+
+            val source = t.body?.toMutable() ?: MutableCodeSource()
+
+            mv.visitLabel(whileStart)
+
+            val instructionCodePart = InstructionCodePart.create { _, _, _, _ ->
+                mv.visitLabel(insideEnd) // Outside of while (continue;)
+                mv.visitJumpInsn(Opcodes.GOTO, whileStart)
+            }
+
+            source.add(instructionCodePart)
+
+            mv.visitLabel(insideStart)
+
+            visitorGenerator.generateTo(IfStatement::class.java, ifStatement, extraData, null, additional)
+
+
+            mv.visitLabel(outsideEnd) // break;
+        } else {
+            throw IllegalArgumentException("Cannot handle While of type ${t.type}")
         }
 
-        source.add(instructionCodePart)
-
-        visitorGenerator.generateTo(IfStatement::class.java, ifStatement, extraData, null, additional)
 
         extraData.unregisterData(ConstantDatas.FLOW_TYPE_INFO, flow)
-
-        mv.visitLabel(outsideEnd)
     }
 
 }

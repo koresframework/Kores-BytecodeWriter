@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,45 +27,40 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.common.CodeParameter
 import com.github.jonathanxd.codeapi.common.TypeSpec
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.types.CodeType
-import com.github.jonathanxd.codeapi.types.GenericType
+import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.type.GenericType
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 import java.lang.invoke.MethodHandles
-import java.util.*
 import com.github.jonathanxd.codeapi.util.CodeTypeUtil as BaseCodeTypeUtil
 
 object CodeTypeUtil {
 
-    private val lookup = MethodHandles.lookup()
-
     fun resolveRealQualified(qualifiedName: String, outer: CodeType?): String = BaseCodeTypeUtil.resolveRealQualified(qualifiedName, outer)
 
-    fun codeTypeToSimpleAsm(type: CodeType): String {
+    fun codeTypeToBinaryName(type: CodeType): String {
         return if (type.isPrimitive)
-            primitiveCodeTypeToAsm(type)
+            primitiveToTypeDesc(type)
         else if (!type.isArray)
             type.type.replace('.', '/')
         else
-            codeTypeToFullAsm(type)
+            toTypeDesc(type)
     }
 
-    fun codeTypeToFullAsm(type: CodeType): String = BaseCodeTypeUtil.codeTypeToFullAsm(type)
+    fun toTypeDesc(type: CodeType): String = BaseCodeTypeUtil.codeTypeToFullAsm(type)
 
-    fun primitiveCodeTypeToAsm(type: CodeType): String = BaseCodeTypeUtil.primitiveCodeTypeToAsm(type)
+    fun primitiveToTypeDesc(type: CodeType): String = BaseCodeTypeUtil.primitiveCodeTypeToAsm(type)
 
-    fun codeTypeToArray(codeType: CodeType, dimensions: Int): String = BaseCodeTypeUtil.codeTypeToArray(codeType, dimensions)
-
-    fun codeTypeToSimpleArray(codeType: CodeType, dimensions: Int): String {
+    fun arrayToTypeDesc(codeType: CodeType, dimensions: Int): String {
         if (dimensions <= 1) {
-            return codeTypeToSimpleAsm(codeType)
+            return codeTypeToBinaryName(codeType)
         }
 
-        val name = codeTypeToFullAsm(codeType)
+        val name = toTypeDesc(codeType)
 
         val sb = StringBuilder()
 
@@ -75,43 +70,42 @@ object CodeTypeUtil {
         return sb.toString() + name
     }
 
-    fun codeTypesToSimpleAsm(type: Array<CodeType>): String {
-
+    fun codeTypesToBinaryName(type: Iterable<CodeType>): String {
         val sb = StringBuilder()
 
         for (codeType in type) {
-            sb.append(codeTypeToSimpleAsm(codeType))
+            sb.append(codeTypeToBinaryName(codeType))
         }
 
         return sb.toString()
     }
 
-    fun codeTypesToFullAsm(type: Array<CodeType>): String {
+    fun codeTypesToTypeDesc(type: Iterable<CodeType>): String {
         val sb = StringBuilder()
 
         for (codeType in type) {
-            sb.append(codeTypeToFullAsm(Objects.requireNonNull(codeType, "Null type in array '" + Arrays.toString(type) + "'!")))
+            sb.append(toTypeDesc(codeType))
         }
 
         return sb.toString()
     }
 
-    fun fullSpecToFullAsm(typeSpec: TypeSpec): String {
-        return "(" + CodeTypeUtil.codeTypesToFullAsm(typeSpec.parameterTypes.toTypedArray()) + ")" +
-                CodeTypeUtil.codeTypeToFullAsm(typeSpec.returnType)
+    fun typeSpecToTypeDesc(typeSpec: TypeSpec): String {
+        return "(" + CodeTypeUtil.codeTypesToTypeDesc(typeSpec.parameterTypes) + ")" +
+                CodeTypeUtil.toTypeDesc(typeSpec.returnType)
     }
 
-    fun fullSpecToSimpleAsm(typeSpec: TypeSpec): String {
-        return "(" + CodeTypeUtil.codeTypesToSimpleAsm(typeSpec.parameterTypes.toTypedArray()) + ")" +
-                CodeTypeUtil.codeTypeToSimpleAsm(typeSpec.returnType)
+    fun typeSpecToBinaryName(typeSpec: TypeSpec): String {
+        return "(" + CodeTypeUtil.codeTypesToBinaryName(typeSpec.parameterTypes) + ")" +
+                CodeTypeUtil.codeTypeToBinaryName(typeSpec.returnType)
     }
 
-    fun toAsm(codeType: CodeType): String {
+    fun toName(codeType: CodeType): String {
         if (codeType is GenericType) {
 
-            val name = codeType.name()
+            val name = codeType.name
 
-            val bounds = codeType.bounds()
+            val bounds = codeType.bounds
 
             if (bounds.isEmpty()) {
                 if (!codeType.isType) {
@@ -127,12 +121,16 @@ object CodeTypeUtil {
             }
 
         } else {
-            return GenericUtil.fixResult(codeTypeToFullAsm(codeType))
+            return GenericUtil.fixResult(toTypeDesc(codeType))
         }
     }
 
-    fun parametersToAsm(codeParameters: Collection<CodeParameter>): String {
-        return codeTypesToFullAsm(codeParameters.map { it.requiredType }.toTypedArray())
+    fun parametersToTypeDesc(codeParameters: Collection<CodeParameter>): String {
+        return codeTypesToTypeDesc(codeParameters.map { it.type })
+    }
+
+    fun parametersAndReturnToDesc(codeParameters: Collection<CodeParameter>, returnType: CodeType): String {
+        return "(${codeTypesToTypeDesc(codeParameters.map { it.type })})${toTypeDesc(returnType)}"
     }
 
     fun arrayOpcodeFromType(codeType: CodeType): Int {
@@ -215,9 +213,9 @@ object CodeTypeUtil {
 
             opcode = this.getOpcode(fromTypeChar, toTypeChar)
 
-            if(opcode == -1) {
-                CodeTypeUtil.convertToPrimitive(from, PredefinedTypes.INT, mv)
-                CodeTypeUtil.convertToPrimitive(PredefinedTypes.INT, to, mv)
+            if (opcode == -1) {
+                CodeTypeUtil.convertToPrimitive(from, Types.INT, mv)
+                CodeTypeUtil.convertToPrimitive(Types.INT, to, mv)
                 return
             }
 

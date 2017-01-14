@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,14 +27,14 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.base.ArrayConstructor
+import com.github.jonathanxd.codeapi.base.ArrayStore
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.ArrayUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.ArrayConstructor
-import com.github.jonathanxd.codeapi.interfaces.ArrayStore
-import com.github.jonathanxd.codeapi.literals.Literals
+import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.util.CodeTypeUtil
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
@@ -49,12 +49,15 @@ object ArrayConstructVisitor : VoidVisitor<ArrayConstructor, BytecodeClass, MVDa
         val dimensions = t.dimensions
         val multi = dimensions.size > 1
 
-        if(multi && !initialize) {
+        if(t.arrayType.arrayDimension != dimensions.size)
+            throw IllegalArgumentException("Array dimension not equal to provided dimensions")
+
+        if (multi && !initialize) {
             dimensions.forEach {
                 visitorGenerator.generateTo(it.javaClass, it, extraData, null, additional)
             }
 
-            mv.visitMultiANewArrayInsn(CodeTypeUtil.codeTypeToArray(t.arrayType, dimensions.size), dimensions.size)
+            mv.visitMultiANewArrayInsn(CodeTypeUtil.codeTypeToTypeDesc(t.arrayType), dimensions.size)
         } else {
             val dimensionX = if (dimensions.isNotEmpty()) dimensions[0] else Literals.INT(0)
 

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,12 +27,11 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.generic.GenericSignature
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes
-import com.github.jonathanxd.codeapi.interfaces.MethodDeclaration
-import com.github.jonathanxd.codeapi.interfaces.TypeDeclaration
-import com.github.jonathanxd.codeapi.types.CodeType
-import com.github.jonathanxd.codeapi.types.GenericType
+import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.type.GenericType
 import java.util.*
 
 object GenericUtil {
@@ -51,13 +50,13 @@ object GenericUtil {
             if (genericRepresentation == null)
                 genericRepresentation = ""
 
-            genericRepresentation += CodeTypeUtil.toAsm(superClass)
+            genericRepresentation += CodeTypeUtil.toName(superClass)
         }
 
         if (types.isNotEmpty() || anyInterfaceIsGeneric) {
             val sb = StringBuilder()
 
-            implementations.forEach { codeType -> sb.append(CodeTypeUtil.toAsm(codeType)) }
+            implementations.forEach { codeType -> sb.append(CodeTypeUtil.toName(codeType)) }
 
             genericRepresentation += sb.toString()
         }
@@ -65,7 +64,7 @@ object GenericUtil {
         return genericRepresentation
     }
 
-    fun genericSignatureToAsmString(signature: GenericSignature<GenericType>): String {
+    fun genericSignatureToAsmString(signature: GenericSignature): String {
         val types = signature.types
 
         if (types.size == 1 && types[0].isType)
@@ -74,7 +73,7 @@ object GenericUtil {
             return GenericUtil.genericTypesToAsmString(types)
     }
 
-    fun genericTypesToAsmString(generics: Array<GenericType>): String {
+    fun genericTypesToAsmString(generics: Array<out GenericType>): String {
         val sj = StringJoiner(";")
 
         for (generic in generics) {
@@ -113,21 +112,21 @@ object GenericUtil {
     }
 
     private fun genericTypeToAsmString_plain(generic: GenericType): String {
-        val name = generic.name()
+        val name = generic.name
 
 
         var gen2 = false
-        if (generic.bounds().size != 0) {
-            val codeTypeBound = generic.bounds()[0]
+        if (generic.bounds.isNotEmpty()) {
+            val codeTypeBound = generic.bounds[0]
 
             val type = codeTypeBound.type
 
             if (type is GenericType) {
-                gen2 = type.bounds().size > 0
+                gen2 = type.bounds.isNotEmpty()
             }
         }
 
-        return name + (if (!generic.isType) ":" else "") + (if (gen2) ":" else "") + boundToMain(generic.isWildcard, generic.bounds())
+        return name + (if (!generic.isType) ":" else "") + (if (gen2) ":" else "") + boundToMain(generic.isWildcard, generic.bounds)
 
     }
 
@@ -140,9 +139,9 @@ object GenericUtil {
             val boundType = bound.type
 
             if (boundType is GenericType && !boundType.isType) {
-                sb.append(if (isWildcard) bound.sign() else "").append(CodeTypeUtil.toAsm(boundType))
+                sb.append(if (isWildcard) bound.sign else "").append(CodeTypeUtil.toName(boundType))
             } else {
-                sb.append(if (isWildcard) bound.sign() else "").append(CodeTypeUtil.toAsm(boundType))
+                sb.append(if (isWildcard) bound.sign else "").append(CodeTypeUtil.toName(boundType))
             }
 
         }
@@ -163,9 +162,9 @@ object GenericUtil {
             val boundType = bound.type
 
             if (boundType is GenericType && !boundType.isType) {
-                sb.append(if (isWildcard) bound.sign() else "").append(CodeTypeUtil.toAsm(boundType)).append(if (!isLast) ":" else "")
+                sb.append(if (isWildcard) bound.sign else "").append(CodeTypeUtil.toName(boundType)).append(if (!isLast) ":" else "")
             } else {
-                sb.append(if (isWildcard) bound.sign() else "").append(CodeTypeUtil.toAsm(boundType)).append(if (!isLast) ":" else "")
+                sb.append(if (isWildcard) bound.sign else "").append(CodeTypeUtil.toName(boundType)).append(if (!isLast) ":" else "")
             }
         }
 
@@ -181,17 +180,17 @@ object GenericUtil {
     }
 
     //"<T::Ljava/lang/CharSequence;>(Ljava/util/List<TT;>;Ljava/lang/String;)TT;
-    fun methodGenericSignature(codeMethod: MethodDeclaration): String? {
+    fun methodGenericSignature(methodDeclaration: MethodDeclaration): String? {
 
-        val returnType = codeMethod.returnType.orElse(PredefinedTypes.VOID)
+        val returnType = methodDeclaration.returnType
 
         val signatureBuilder = StringBuilder()
 
-        val methodSignature = codeMethod.genericSignature
+        val methodSignature = methodDeclaration.genericSignature
 
 
         val generateGenerics = methodSignature.isNotEmpty
-                || codeMethod.parameters.stream().anyMatch { parameter -> parameter.requiredType is GenericType }
+                || methodDeclaration.parameters.stream().anyMatch { parameter -> parameter.type is GenericType }
                 || returnType is GenericType
 
 
@@ -202,13 +201,13 @@ object GenericUtil {
         if (generateGenerics) {
             signatureBuilder.append('(')
 
-            codeMethod.parameters.stream().map { parameter -> CodeTypeUtil.toAsm(parameter.requiredType) }.forEach{ signatureBuilder.append(it) }
+            methodDeclaration.parameters.stream().map { parameter -> CodeTypeUtil.toName(parameter.type) }.forEach { signatureBuilder.append(it) }
 
             signatureBuilder.append(')')
         }
 
         if (generateGenerics) {
-            signatureBuilder.append(CodeTypeUtil.toAsm(returnType))
+            signatureBuilder.append(CodeTypeUtil.toName(returnType))
         }
 
         return if (signatureBuilder.isNotEmpty()) signatureBuilder.toString() else null

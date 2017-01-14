@@ -1,4 +1,3 @@
 [submodule "CodeAPI"]
 	path = CodeAPI
 	url = https://github.com/JonathanxD/CodeAPI.git
-	branch = version/3.0

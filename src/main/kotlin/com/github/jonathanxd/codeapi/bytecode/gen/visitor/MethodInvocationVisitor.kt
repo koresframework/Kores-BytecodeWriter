@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,43 +28,44 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.common.*
+import com.github.jonathanxd.codeapi.base.Access
+import com.github.jonathanxd.codeapi.base.ArgumentHolder
+import com.github.jonathanxd.codeapi.base.MethodInvocation
+import com.github.jonathanxd.codeapi.base.SuperClassHolder
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.MethodInvocationUtil
 import com.github.jonathanxd.codeapi.bytecode.util.TypeSpecUtil
+import com.github.jonathanxd.codeapi.common.InvokeDynamic
+import com.github.jonathanxd.codeapi.common.InvokeType
+import com.github.jonathanxd.codeapi.common.MethodType
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.helper.Helper
-import com.github.jonathanxd.codeapi.interfaces.AccessSuper
-import com.github.jonathanxd.codeapi.interfaces.Argumenterizable
-import com.github.jonathanxd.codeapi.interfaces.Extender
-import com.github.jonathanxd.codeapi.interfaces.MethodInvocation
-import com.github.jonathanxd.codeapi.types.CodeType
+import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.iutils.container.MutableContainer
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
 object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData> {
 
-    override fun visit(t: MethodInvocation, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData): Array<BytecodeClass> {
+    override fun visit(t: MethodInvocation, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData): Array<out BytecodeClass> {
         val mv = additional.methodVisitor
         var methodInvocation = t
 
-        var localization: CodeType? = methodInvocation.localization.orElse(null)
+        var localization: CodeType = Util.resolveType(methodInvocation.localization, extraData, additional)
 
         val enclosingType: CodeType by lazy {
             extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!")
         }
 
-        if (localization == null && methodInvocation.spec.methodType == MethodType.SUPER_CONSTRUCTOR) {
-            val part = methodInvocation.target.orElse(null)
+        if (methodInvocation.spec.methodType == MethodType.SUPER_CONSTRUCTOR) {
+            val part = methodInvocation.target
 
             val target = (
-                    if (part == null || part is AccessSuper)
-                        if (enclosingType is Extender) enclosingType.superType.orElse(null) else null
+                    if (part is Access && part.type == Access.Type.SUPER)
+                        if (enclosingType is SuperClassHolder) enclosingType.superClass else null
                     else
                         enclosingType
                     ) ?: throw IllegalArgumentException("Cannot invoke super constructor of type: '$enclosingType'. No Super class.")
@@ -77,36 +78,39 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
         if (access != null)
             return access
 
-        // If localization is not null
-        if (localization != null) {
-            // Create container with localization
-            val of = MutableContainer.of(localization)
+        // Create container with localization
+        val of = MutableContainer.of(localization)
 
-            // Fix the access to inner class member.
-            methodInvocation = Util.fixAccessor(methodInvocation, extraData, of) { mi, _ ->
-                // Add 'this' argument to Inner class Constructor methods.
-                if (mi.get().spec.methodName == "<init>") {
-                    val spec = mi.get().spec
-                    var methodDescription = spec.methodDescription
+        // Fix the access to inner class member.
+        methodInvocation = Util.fixAccessor(methodInvocation, extraData, of) { mi, _ ->
+            // Add 'this' argument to Inner class Constructor methods.
+            if (mi.get().spec.methodName == "<init>") {
+                val spec = mi.get().spec
+                var methodDescription = spec.description
 
-                    val parameterTypes = java.util.ArrayList(methodDescription.parameterTypes)
-                    val arguments = java.util.ArrayList(spec.arguments)
+                val parameterTypes = java.util.ArrayList(methodDescription.parameterTypes)
+                val arguments = java.util.ArrayList(mi.get().arguments)
 
-                    arguments.add(0, CodeAPI.argument(Helper.accessThis()))
-                    parameterTypes.add(0, enclosingType)
+                arguments.add(0, CodeAPI.argument(CodeAPI.accessThis()))
+                parameterTypes.add(0, enclosingType)
 
-                    methodDescription = methodDescription.setParameterTypes(parameterTypes)
+                methodDescription = methodDescription.builder().withParameterTypes(parameterTypes).build()
 
-                    mi.set(mi.get().setSpec(spec.setArguments(arguments).setMethodDescription(methodDescription)))
-                }
+                mi.set(mi.get().builder()
+                        .withArguments(arguments)
+                        .withSpec(
+                                spec.builder().withDescription(methodDescription).build()
+                        )
+                        .build()
+                )
             }
-
-
-            localization = of.get()
         }
 
+
+        localization = of.get()
+
         var invokeType: InvokeType? = methodInvocation.invokeType
-        val target = methodInvocation.target.orElse(null)
+        val target = methodInvocation.target
         val specification = methodInvocation.spec
 
         if (localization == null) {
@@ -131,45 +135,42 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
 
         if (specification.methodName == "<init>" && specification.methodType == MethodType.CONSTRUCTOR) {
             // Invoke constructor
-            mv.visitTypeInsn(Opcodes.NEW, CodeTypeUtil.codeTypeToSimpleAsm(localization))
+            mv.visitTypeInsn(Opcodes.NEW, CodeTypeUtil.codeTypeToBinaryName(localization))
             mv.visitInsn(Opcodes.DUP)
         }
 
-        if (target != null && target !is CodeType) {
+        if (target !is CodeType) {
             visitorGenerator.generateTo(target.javaClass, target, extraData, null, additional)
         }
 
-        visitorGenerator.generateTo(Argumenterizable::class.java, specification, extraData, null, additional)
+        visitorGenerator.generateTo(ArgumentHolder::class.java, t, extraData, null, additional)
 
-        val invokeDynamic = methodInvocation.invokeDynamic.orElse(null)
+        val invokeDynamic = methodInvocation.invokeDynamic
 
         if (invokeDynamic != null) {
 
             // Generate lambda 'invokeDynamic'
-            if (InvokeDynamic.isInvokeDynamicLambda(invokeDynamic)) {
+            if (invokeDynamic is InvokeDynamic.LambdaMethodReference) {
 
-                val lambdaDynamic = invokeDynamic as InvokeDynamic.LambdaMethodReference
-
-                MethodInvocationUtil.visitLambdaInvocation(lambdaDynamic, invokeType!!, localization, specification, mv)
+                MethodInvocationUtil.visitLambdaInvocation(invokeDynamic, invokeType, localization, specification, mv)
 
                 if (invokeDynamic is InvokeDynamic.LambdaFragment) {
                     // Register fragment to gen
                     extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, invokeDynamic.methodFragment)
                 }
-            } else if (InvokeDynamic.isInvokeDynamicBootstrap(invokeDynamic)) { // Generate bootstrap 'invokeDynamic'
-                val bootstrap = invokeDynamic as InvokeDynamic.Bootstrap
+            } else if (invokeDynamic is InvokeDynamic.Bootstrap) { // Generate bootstrap 'invokeDynamic'
                 // Visit bootstrap invoke dynamic
-                MethodInvocationUtil.visitBootstrapInvocation(bootstrap, specification, mv)
+                MethodInvocationUtil.visitBootstrapInvocation(invokeDynamic, specification, mv)
             }
 
         } else {
 
             mv.visitMethodInsn(
                     /*Type like invokestatic*/InvokeTypeUtil.toAsm(invokeType),
-                    /*Localization*/CodeTypeUtil.codeTypeToSimpleAsm(localization),
+                    /*Localization*/CodeTypeUtil.codeTypeToBinaryName(localization),
                     /*Method name*/specification.methodName,
-                    /*(ARGUMENT)RETURN*/TypeSpecUtil.typeSpecToAsm(specification.methodDescription),
-                    invokeType!!.isInterface)
+                    /*(ARGUMENT)RETURN*/TypeSpecUtil.typeSpecToAsm(specification.description),
+                    invokeType.isInterface())
         }
 
         return emptyArray()

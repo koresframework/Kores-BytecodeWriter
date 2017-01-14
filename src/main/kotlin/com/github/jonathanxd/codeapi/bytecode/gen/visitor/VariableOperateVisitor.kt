@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,90 +27,66 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.base.Operate
+import com.github.jonathanxd.codeapi.base.VariableAccess
+import com.github.jonathanxd.codeapi.base.VariableDefinition
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.interfaces.AccessLocal
-import com.github.jonathanxd.codeapi.interfaces.VariableAccess
-import com.github.jonathanxd.codeapi.interfaces.VariableOperate
-import com.github.jonathanxd.codeapi.literals.Literal
-import com.github.jonathanxd.codeapi.operators.Operators
-import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.optional.Require
+import com.github.jonathanxd.codeapi.literal.Literal
+import com.github.jonathanxd.codeapi.operator.Operators
 
-object VariableOperateVisitor : VoidVisitor<VariableOperate, BytecodeClass, MVData> {
+object VariableOperateVisitor {
 
-    override fun voidVisit(variableOperate: VariableOperate, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    /**
+     * Improve the operation and assign of a variable, returns true if this class improved
+     * the operation, false otherwise.
+     */
+    fun visit(t: VariableDefinition, operate: Operate, varPos: Int, additional: MVData): Boolean {
         val mv = additional.methodVisitor
 
-        val at = variableOperate.target.orElse(null)
+        val target = operate.target
 
-        val operation = Require.require(variableOperate.operation, "Operation is required.")
+        require(
+                target is VariableAccess
+                        && target.name == t.name
+                        && target.variableType.`is`(t.type),
+                { "The operate target must be variable access of variable definition '$t'!" }
+        )
 
-        val value = variableOperate.value.orElse(null)
+        val operation = operate.operation
+
+        val value = operate.value
 
         var constantVal = true
 
         var constant = 1
 
-        if (value != null && (value !is Literal || Require.require(value.type, "Literal Type required").javaSpecName != "I")) {
+        if (value !is Literal || value.type.javaSpecName != "I") {
             constantVal = false
-        } else if (value != null) {
-            constant = Integer.valueOf((value as Literal).name)!!
+        } else {
+            constant = Integer.valueOf(value.name)!!
         }
 
+        val isIncrementOne = constant == 1
 
-        val `var` = additional.getVar(variableOperate.name, variableOperate.variableType)
-
-
-        if (!`var`.isPresent)
-            throw RuntimeException("Variable '" + variableOperate.name + "' Type: '" + variableOperate.variableType.javaSpecName + "' Not found in local variables map")
-
-        val variable = `var`.get()
-
-        val varPosOpt = additional.getVarPos(variable)
-
-        if (!varPosOpt.isPresent)
-            throw IllegalStateException("Cannot find variable '" + variable + "' in stack table: " + additional.getVariables())
-
-        val i = varPosOpt.asInt
-
-        if (at is AccessLocal) {
-            if (operation === Operators.INCREMENT) {
-                mv.visitIincInsn(i, 1)
-                return
-            } else if (operation === Operators.DECREMENT) {
-                mv.visitIincInsn(i, -1)
-                return
-            } else if (constantVal) {
-                if (operation === Operators.ADD) {
-                    mv.visitIincInsn(i, constant)
-                    return
-                }
-                if (operation === Operators.SUBTRACT) {
-                    mv.visitIincInsn(i, -constant)
-                    return
-                }
+        return if (operation === Operators.ADD && isIncrementOne) {
+            mv.visitIincInsn(varPos, 1)
+            true
+        } else if (operation === Operators.SUBTRACT && isIncrementOne) {
+            mv.visitIincInsn(varPos, -1)
+            true
+        } else if (constantVal) {
+            if (operation === Operators.ADD) {
+                mv.visitIincInsn(varPos, constant)
+                true
+            } else if (operation === Operators.SUBTRACT) {
+                mv.visitIincInsn(varPos, -constant)
+                true
+            } else {
+                false
             }
-
-            requireNotNull(value, { "value is null, cannot operate without value using operator: '$operation'" })
-
-            visitorGenerator.generateTo(VariableAccess::class.java, variableOperate, extraData, null, additional)
-
-            visitorGenerator.generateTo(value!!.javaClass, value, extraData, null, additional)
-
-            OperateVisitor.operateVisit(variableOperate.variableType, operation, false, additional)
         } else {
-            requireNotNull(value, { "value is null, cannot operate without value using operator: '$operation'" })
-
-            visitorGenerator.generateTo(VariableAccess::class.java, variableOperate, extraData, null, additional)
-
-            visitorGenerator.generateTo(value!!.javaClass, value, extraData, null, additional)
-
-            OperateVisitor.operateVisit(variableOperate.variableType, operation, false, additional)
-
+            false
         }
     }
-
 }

@@ -1,4 +1,4 @@
-md5: 8c51d28fda78ed2120fb5f21cda846ae
+md5: 8f5ebddaee0f6c432bac8f1957de5f43
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -18,335 +18,191 @@ public class fullName.TestBytecode_Invocations_Generated extends java.lang.Objec
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         aload 0
-      Label_1:
-        !line 1 start Label_1
         ldc "AVD"
         putfield fullName.TestBytecode_Invocations_Generated.FIELD (type: java.lang.String)
         aload 0
-      Label_2:
-        !line 2 start Label_2
-        bipush dconst_1
+        bipush 15
         putfield fullName.TestBytecode_Invocations_Generated.n (type: int)
-      Label_3:
-        !line 3 start Label_3
-        !line 4 start Label_3
-        !line 5 start Label_3
+      Label_1:
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_4:
-        !line 6 start Label_4
-        !line 7 start Label_4
         ldc "Hello"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_5:
-        !line 8 start Label_5
-        !line 9 start Label_5
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_2:
+       LINE 1 -> Label_2
         aload 0
-      Label_6:
-        !line 10 start Label_6
-        !line 11 start Label_6
         ldc "Oi"
         invokevirtual fullName.TestBytecode_Invocations_Generated.printIt(java.lang.Object)void (ownerIsInterface: false)
         return
-      Label_7:
-        !localVariable[index: 0, name: this, desc: LfullName/TestBytecode_Invocations_Generated;, signature: null, start: Label_0, end: Label_7]
-        MAX_STACK: 2, MAX_LOCALS: 1
+      Label_3:
+      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestBytecode_Invocations_Generated;, signature: null, start: Label_0, end: Label_3]
+      MAX_STACK: 2, MAX_LOCALS: 1
     }
 
     !access: 1 (ACC_PUBLIC)
     public void printIt(java.lang.Object) {
       Label_0:
-        !line 12 start Label_0
-        !line 13 start Label_0
-        !line 14 start Label_0
-        !line 15 start Label_0
-        !line 16 start Label_0
         aload 1
         ifnull Label_1
       Label_2:
-        !line 17 start Label_2
-        !line 18 start Label_2
-        !line 19 start Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_3:
-        !line 20 start Label_3
-        !line 21 start Label_3
         ldc "Hello :D"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
-        !line 22 start Label_1
-        !line 23 start Label_1
-        !line 24 start Label_1
-        !line 25 start Label_1
+       LINE 1 -> Label_1
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         ldc "DingDong"
-      Label_4:
+      Label_3:
         astore 2
-      Label_5:
-        !line 26 start Label_5
-        !line 27 start Label_5
+      Label_4:
+       LINE 2 -> Label_4
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_6:
-        !line 28 start Label_6
-        !line 29 start Label_6
-        !line 30 start Label_6
         aload 2
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_7:
-        !line 31 start Label_7
-        !line 32 start Label_7
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_5:
+       LINE 3 -> Label_5
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_8:
-        !line 33 start Label_8
-        !line 34 start Label_8
-        !line 35 start Label_8
         aload 1
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
-      Label_9:
-        !localVariable[index: 0, name: this, desc: LfullName/TestBytecode_Invocations_Generated;, signature: null, start: Label_0, end: Label_9]
-        !localVariable[index: 1, name: n, desc: Ljava/lang/Object;, signature: null, start: Label_0, end: Label_9]
-        !localVariable[index: 2, name: dingdong, desc: Ljava/lang/String;, signature: null, start: Label_4, end: Label_9]
-        MAX_STACK: 2, MAX_LOCALS: 3
+      Label_6:
+      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestBytecode_Invocations_Generated;, signature: null, start: Label_0, end: Label_6]
+      LOCAL_VARIABLE[index: 1, name: n, desc: Ljava/lang/Object;, signature: null, start: Label_0, end: Label_6]
+      LOCAL_VARIABLE[index: 2, name: dingdong, desc: Ljava/lang/String;, signature: null, start: Label_3, end: Label_6]
+      MAX_STACK: 3, MAX_LOCALS: 3
     }
 
     !access: 1 (ACC_PUBLIC)
     public boolean check(int) {
       Label_0:
-        !line 36 start Label_0
-        !line 37 start Label_0
-        !line 38 start Label_0
-        !line 39 start Label_0
-        !line 40 start Label_0
         ldc "xy"
-      Label_1:
-        !line 41 start Label_1
         ldc "yz"
         invokestatic com.github.jonathanxd.codeapi.test.asm.TestBytecode_Invocations.bmp(java.lang.String, java.lang.String)void (ownerIsInterface: false)
-      Label_2:
-        !line 42 start Label_2
-        !line 43 start Label_2
+      Label_1:
+       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_3:
-        !line 44 start Label_3
-        !line 45 start Label_3
         ldc "Invoke Interface ->"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_4:
-        !line 46 start Label_4
-        !line 47 start Label_4
-        !line 48 start Label_4
-        !line 49 start Label_4
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_2:
+       LINE 2 -> Label_2
         new com.github.jonathanxd.codeapi.test.WorldGreeter
         dup
-      Label_5:
-        !line 50 start Label_5
         invokespecial com.github.jonathanxd.codeapi.test.WorldGreeter.<init>()void (ownerIsInterface: false)
-      Label_6:
+      Label_3:
         astore 2
-      Label_7:
-        !line 51 start Label_7
-        !line 52 start Label_7
-        !line 53 start Label_7
-        !line 54 start Label_7
-        !line 55 start Label_7
-        !line 56 start Label_7
+      Label_4:
+       LINE 3 -> Label_4
         aload 2
-      Label_8:
-        !line 57 start Label_8
         invokeinterface com.github.jonathanxd.codeapi.test.Greeter.hello()java.lang.String (ownerIsInterface: true)
-      Label_9:
+      Label_5:
         astore 3
-      Label_10:
-        !line 58 start Label_10
-        !line 59 start Label_10
+      Label_6:
+       LINE 4 -> Label_6
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_11:
-        !line 60 start Label_11
-        !line 61 start Label_11
-        !line 62 start Label_11
         aload 3
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_12:
-        !line 63 start Label_12
-        !line 64 start Label_12
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_7:
+       LINE 5 -> Label_7
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_13:
-        !line 65 start Label_13
-        !line 66 start Label_13
         ldc "Invoke Interface <-"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_14:
-        !line 67 start Label_14
-        !line 68 start Label_14
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_8:
+       LINE 6 -> Label_8
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_15:
-        !line 69 start Label_15
-        !line 70 start Label_15
         ldc "Invoke Dynamic ->"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_16:
-        !line 71 start Label_16
-        !line 72 start Label_16
-        !line 73 start Label_16
-        !line 74 start Label_16
-        !line 75 start Label_16
-        invokedynamic get()java.util.function.Supplier (bootstrap: java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [()Ljava/lang/Object;, fullName.TestBytecode_Invocations_Generated.TestBytecode_Invocations_Generated_fragment$929260223()java.lang.String (tag: h_invokestatic, itf: false), ()Ljava/lang/String;])
-      Label_17:
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_9:
+       LINE 7 -> Label_9
+        invokedynamic get(fullName.TestBytecode_Invocations_Generated)java.util.function.Supplier (bootstrap: java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [()Ljava/lang/Object;, fullName.TestBytecode_Invocations_Generated.fragment$$1350261333()java.lang.String (tag: h_invokevirtual, itf: false), ()Ljava/lang/String;])
+      Label_10:
         astore 4
-      Label_18:
-        !line 76 start Label_18
-        !line 77 start Label_18
+      Label_11:
+       LINE 8 -> Label_11
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_19:
-        !line 78 start Label_19
-        !line 79 start Label_19
-        !line 80 start Label_19
-        !line 81 start Label_19
-        !line 82 start Label_19
         aload 4
-      Label_20:
-        !line 83 start Label_20
         invokeinterface java.util.function.Supplier.get()java.lang.Object (ownerIsInterface: true)
         checkcast java.lang.String
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_21:
-        !line 84 start Label_21
-        !line 85 start Label_21
-        !line 86 start Label_21
-        !line 87 start Label_21
-        !line 88 start Label_21
-        !line 89 start Label_21
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_12:
+       LINE 9 -> Label_12
         aload 2
-      Label_22:
-        !line 90 start Label_22
         invokedynamic get(com.github.jonathanxd.codeapi.test.Greeter)java.util.function.Supplier (bootstrap: java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [()Ljava/lang/Object;, com.github.jonathanxd.codeapi.test.Greeter.hello()java.lang.String (tag: h_invokeinterface, itf: true), ()Ljava/lang/String;])
-      Label_23:
+      Label_13:
         astore 5
-      Label_24:
-        !line 91 start Label_24
-        !line 92 start Label_24
-        !line 93 start Label_24
-        !line 94 start Label_24
-        !line 95 start Label_24
-        !line 96 start Label_24
-        !line 97 start Label_24
+      Label_14:
+       LINE 10 -> Label_14
         aload 5
-      Label_25:
-        !line 98 start Label_25
         invokeinterface java.util.function.Supplier.get()java.lang.Object (ownerIsInterface: true)
         checkcast java.lang.String
-      Label_26:
+      Label_15:
         astore 6
-      Label_27:
-        !line 99 start Label_27
-        !line 100 start Label_27
+      Label_16:
+       LINE 11 -> Label_16
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_28:
-        !line 101 start Label_28
-        !line 102 start Label_28
-        !line 103 start Label_28
         aload 6
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_29:
-        !line 104 start Label_29
-        !line 105 start Label_29
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_17:
+       LINE 12 -> Label_17
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_30:
-        !line 106 start Label_30
-        !line 107 start Label_30
         ldc "Invoke Dynamic <-"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_31:
-        !line 108 start Label_31
-        !line 109 start Label_31
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_18:
+       LINE 13 -> Label_18
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_32:
-        !line 110 start Label_32
-        !line 111 start Label_32
         ldc "Invoke Dynamic Bootstrap ->"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_33:
-        !line 112 start Label_33
-        !line 113 start Label_33
-        !line 114 start Label_33
-        !line 115 start Label_33
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_19:
+       LINE 14 -> Label_19
         ldc "World"
         invokedynamic helloWorld(java.lang.String)void (bootstrap: com.github.jonathanxd.codeapi.test.asm.TestBytecode_Invocations.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [])
-      Label_34:
-        !line 116 start Label_34
-        !line 117 start Label_34
+      Label_20:
+       LINE 15 -> Label_20
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_35:
-        !line 118 start Label_35
-        !line 119 start Label_35
         ldc "Invoke Dynamic Bootstrap <-"
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_36:
-        !line 120 start Label_36
-        !line 121 start Label_36
-        !line 122 start Label_36
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_21:
+       LINE 16 -> Label_21
         iload 1
-      Label_37:
-        !line 123 start Label_37
-        bipush lconst_0
-        if_icmpeq Label_38
-      Label_39:
-        !line 124 start Label_39
-        !line 125 start Label_39
+        bipush 9
+        if_icmpeq Label_22
         iload 1
-      Label_40:
-        !line 126 start Label_40
-        bipush iconst_4
-        if_icmpne Label_41
-      Label_38:
-        !line 127 start Label_38
-        !line 128 start Label_38
-        !line 129 start Label_38
-       FRAME[type: F_FULL, locals: 7, local: {fullName.TestBytecode_Invocations_Generated, integer, com.github.jonathanxd.codeapi.test.WorldGreeter, java.lang.String, java.util.function.Supplier, java.util.function.Supplier, java.lang.String}, stacks: 0, stack: {}]
+        bipush 7
+        if_icmpne Label_23
+      Label_22:
+       FRAME[type: F_FULL, locals: 7, local: {fullName.TestBytecode_Invocations_Generated, integer, com.github.jonathanxd.codeapi.test.WorldGreeter, java.lang.String, java.util.function.Supplier, java.util.function.Supplier, java.lang.String}, stacks: 8, stack: {java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, null, null}]
         iconst_0
         ireturn
-      Label_41:
-        !line 130 start Label_41
-        !line 131 start Label_41
-       FRAME[type: F_SAME, locals: 0, local: {fullName.TestBytecode_Invocations_Generated, integer, com.github.jonathanxd.codeapi.test.WorldGreeter, java.lang.String, java.util.function.Supplier, java.util.function.Supplier, java.lang.String}, stacks: 0, stack: {}]
+      Label_23:
+       LINE 17 -> Label_23
+       FRAME[type: F_FULL, locals: 7, local: {fullName.TestBytecode_Invocations_Generated, integer, com.github.jonathanxd.codeapi.test.WorldGreeter, java.lang.String, java.util.function.Supplier, java.util.function.Supplier, java.lang.String}, stacks: 8, stack: {java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, java.io.PrintStream, null, null}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_42:
-        !line 132 start Label_42
-        !line 133 start Label_42
-        !line 134 start Label_42
         iload 1
-        invokevirtual java.io.PrintStream.println(int)void (ownerIsInterface: false)
-      Label_43:
-        !line 135 start Label_43
-        !line 136 start Label_43
+        invokevirtual java.io.PrintStream.println()void (ownerIsInterface: false)
+      Label_24:
+       LINE 18 -> Label_24
         iconst_1
         ireturn
-      Label_44:
-        !localVariable[index: 0, name: this, desc: LfullName/TestBytecode_Invocations_Generated;, signature: null, start: Label_0, end: Label_44]
-        !localVariable[index: 1, name: x, desc: I, signature: null, start: Label_0, end: Label_44]
-        !localVariable[index: 2, name: greeter, desc: Lcom/github/jonathanxd/codeapi/test/Greeter;, signature: null, start: Label_6, end: Label_44]
-        !localVariable[index: 3, name: greetingVar, desc: Ljava/lang/String;, signature: null, start: Label_9, end: Label_44]
-        !localVariable[index: 4, name: supplier2, desc: Ljava/util/function/Supplier;, signature: null, start: Label_17, end: Label_44]
-        !localVariable[index: 5, name: supplier, desc: Ljava/util/function/Supplier;, signature: null, start: Label_23, end: Label_44]
-        !localVariable[index: 6, name: str, desc: Ljava/lang/String;, signature: null, start: Label_26, end: Label_44]
-        MAX_STACK: 2, MAX_LOCALS: 7
+      Label_25:
+      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestBytecode_Invocations_Generated;, signature: null, start: Label_0, end: Label_25]
+      LOCAL_VARIABLE[index: 1, name: x, desc: I, signature: null, start: Label_0, end: Label_25]
+      LOCAL_VARIABLE[index: 2, name: greeter, desc: Lcom/github/jonathanxd/codeapi/test/Greeter;, signature: null, start: Label_3, end: Label_25]
+      LOCAL_VARIABLE[index: 3, name: greetingVar, desc: Ljava/lang/String;, signature: null, start: Label_5, end: Label_25]
+      LOCAL_VARIABLE[index: 4, name: supplier2, desc: Ljava/util/function/Supplier;, signature: null, start: Label_10, end: Label_25]
+      LOCAL_VARIABLE[index: 5, name: supplier, desc: Ljava/util/function/Supplier;, signature: null, start: Label_13, end: Label_25]
+      LOCAL_VARIABLE[index: 6, name: str, desc: Ljava/lang/String;, signature: null, start: Label_15, end: Label_25]
+      MAX_STACK: 10, MAX_LOCALS: 7
     }
 
     !access: 10 (ACC_PRIVATE, ACC_STATIC)
-    private static java.lang.String TestBytecode_Invocations_Generated_fragment$929260223() {
+    private static java.lang.String fragment$$1350261333() {
       Label_0:
-        !line 137 start Label_0
-        !line 138 start Label_0
-        !line 139 start Label_0
-        !line 140 start Label_0
         ldc "BRB"
         areturn
-        MAX_STACK: 1, MAX_LOCALS: 0
+      MAX_STACK: 1, MAX_LOCALS: 0
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,44 +29,51 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.common.CodeParameter
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration
+import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.MethodInvocation
+import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder
+import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.util.ConstructorUtil
+import com.github.jonathanxd.codeapi.common.CodeParameter
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.interfaces.*
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
 
 object ConstructorVisitor : Visitor<ConstructorDeclaration, BytecodeClass, Any?> {
 
     override fun visit(t: ConstructorDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
-        var constructorDeclaration: ConstructorDeclaration = t
+        var t = t
 
         val outerFields = extraData.getAllAsList(TypeVisitor.OUTER_FIELD_REPRESENTATION)
 
         if (!outerFields.isEmpty()) {
             val typeDeclaration = extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot find CodeClass. Register 'TypeVisitor.CODE_TYPE_REPRESENTATION'!")
 
-            val parameters = ArrayList<CodeParameter>(constructorDeclaration.parameters)
-            var source = CodeSource.fromIterable(constructorDeclaration.body.orElse(CodeSource.empty()))
+            val parameters = ArrayList<CodeParameter>(t.parameters)
+            var source = CodeSource.fromIterable(t.body ?: CodeSource.empty())
 
             for (outerField in outerFields) {
-                parameters.add(0, CodeParameter(outerField.name, outerField.variableType))
+                parameters.add(0, CodeParameter(outerField.type, outerField.name))
 
                 source = CodeSourceUtil.insertAfterOrEnd(
                         { part -> part is MethodInvocation && ConstructorUtil.isInitForThat(part) },
                         CodeAPI.sourceOfParts(
-                                CodeAPI.setThisField(outerField.variableType, outerField.name,
-                                        CodeAPI.accessLocalVariable(outerField.variableType, outerField.name))
+                                CodeAPI.setThisField(outerField.type, outerField.name,
+                                        CodeAPI.accessLocalVariable(outerField.type, outerField.name))
                         ),
                         source)
             }
 
-            constructorDeclaration = constructorDeclaration.setParameters(parameters).setBody(source)
+            t = ConstructorDeclarationBuilder(t).build {
+                this.parameters = parameters
+                this.body = source
+            }
         }
 
-        visitorGenerator.generateTo(MethodDeclaration::class.java, constructorDeclaration, extraData, null, null)
+        visitorGenerator.generateTo(MethodDeclaration::class.java, t, extraData, null, null)
 
         return emptyArray()
     }

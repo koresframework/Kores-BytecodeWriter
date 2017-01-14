@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,20 +27,22 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.codeapi.CodeAPI;
+import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
-import com.github.jonathanxd.codeapi.helper.Helper;
-import com.github.jonathanxd.codeapi.helper.PredefinedTypes;
-import com.github.jonathanxd.codeapi.impl.CodeField;
-import com.github.jonathanxd.codeapi.interfaces.ClassDeclaration;
+import com.github.jonathanxd.codeapi.factory.ClassFactory;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
 
 import org.junit.Test;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.aClass;
-import static com.github.jonathanxd.codeapi.CodeAPI.constructor;
+import java.util.EnumSet;
+
 import static com.github.jonathanxd.codeapi.CodeAPI.source;
 import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
-import static java.lang.reflect.Modifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.factory.ConstructorFactory.constructor;
 
 /**
  * Created by jonathan on 18/06/16.
@@ -52,10 +54,10 @@ public class ArrayParameterTest {
     public void arrayTest() {
 
 
-        ClassDeclaration codeClass = aClass(PUBLIC, name, source(
-                constructor(PUBLIC, new CodeParameter[]{new CodeParameter("par", Helper.getJavaType(Text[].class))}, source(
-                        new CodeField("cf", Helper.getJavaType(Object.class), Helper.cast(Helper.getJavaType(Text[].class), PredefinedTypes.OBJECT, Helper.accessLocalVariable("par", Text[].class))),
-                        new CodeField("lt", Helper.getJavaType(Text[].class), Helper.cast(PredefinedTypes.OBJECT, Helper.getJavaType(Text[].class), Helper.accessLocalVariable("cf", Object.class)))
+        ClassDeclaration codeClass = ClassFactory.aClass(EnumSet.of(PUBLIC), name, source(
+                constructor(EnumSet.of(PUBLIC), new CodeParameter[]{new CodeParameter(CodeAPI.getJavaType(Text[].class), "par")}, source(
+                        VariableFactory.variable(Types.OBJECT, "cf", CodeAPI.cast(CodeAPI.getJavaType(Text[].class), Types.OBJECT, CodeAPI.accessLocalVariable(Text[].class, "par"))),
+                        VariableFactory.variable(CodeAPI.getJavaType(Text[].class), "lt", CodeAPI.cast(Types.OBJECT, CodeAPI.getJavaType(Text[].class), CodeAPI.accessLocalVariable(Types.OBJECT, "cf")))
                 ))
         ));
 

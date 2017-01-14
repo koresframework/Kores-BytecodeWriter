@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2016 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,16 +27,16 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.base.Annotable
+import com.github.jonathanxd.codeapi.base.FieldDeclaration
+import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.interfaces.Annotable
-import com.github.jonathanxd.codeapi.interfaces.FieldDeclaration
-import com.github.jonathanxd.codeapi.interfaces.VariableDeclaration
-import com.github.jonathanxd.codeapi.types.GenericType
+import com.github.jonathanxd.codeapi.type.GenericType
 import com.github.jonathanxd.iutils.data.MapData
 
 object FieldVisitor : Visitor<FieldDeclaration, BytecodeClass, Any?> {
@@ -44,15 +44,12 @@ object FieldVisitor : Visitor<FieldDeclaration, BytecodeClass, Any?> {
     override fun visit(t: FieldDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
         if (additional == null) {
 
-            if (t.value.isPresent) { // Only initialize for fields with default value.
+            if (t.value != null) { // Only initialize for fields with default value.
                 // This fields will be inspected.
             }
         } else {
             if (additional is MVData) {
-
-                visitorGenerator.generateTo(VariableDeclaration::class.java, t, extraData, null, additional)
-
-                return emptyArray()
+                throw IllegalStateException("Cannot declare a field inside a method, please use variables instead of fields in method body.")
             }
         }
 
@@ -62,13 +59,13 @@ object FieldVisitor : Visitor<FieldDeclaration, BytecodeClass, Any?> {
 
         var signature: String? = null
 
-        val type = t.type.orElseThrow(::NullPointerException)
+        val type = t.type
 
         if (type is GenericType) {
-            signature = CodeTypeUtil.toAsm(type)
+            signature = CodeTypeUtil.toName(type)
         }
 
-        val fieldVisitor = required.visitField(asm, t.name, CodeTypeUtil.codeTypeToFullAsm(type), signature, null)
+        val fieldVisitor = required.visitField(asm, t.name, CodeTypeUtil.toTypeDesc(type), signature, null)
 
         visitorGenerator.generateTo(Annotable::class.java, t, extraData, null, fieldVisitor)
 

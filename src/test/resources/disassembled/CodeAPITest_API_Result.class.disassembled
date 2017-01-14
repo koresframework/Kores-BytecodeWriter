@@ -1,4 +1,4 @@
-md5: 549ccd1935db9a7658333da4da5abd8f
+md5: 24739e051cec52cfe92d6272f41478ed
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -11,11 +11,11 @@ public class com.github.jonathanxd.codeapi.test.asm.CodeAPITest_API_Generated ex
       Label_0:
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_1:
-        !localVariable[index: 0, name: string, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 2, MAX_LOCALS: 1
+      LOCAL_VARIABLE[index: 0, name: string, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 2, MAX_LOCALS: 1
     }
 
     !access: 1 (ACC_PUBLIC)
@@ -25,13 +25,13 @@ public class com.github.jonathanxd.codeapi.test.asm.CodeAPITest_API_Generated ex
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
-        !localVariable[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/CodeAPITest_API_Generated;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 1, MAX_LOCALS: 1
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/CodeAPITest_API_Generated;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 1, MAX_LOCALS: 1
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }
