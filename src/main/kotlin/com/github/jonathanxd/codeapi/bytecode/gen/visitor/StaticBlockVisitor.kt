@@ -27,7 +27,9 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.base.FieldDeclaration
 import com.github.jonathanxd.codeapi.base.StaticBlock
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
@@ -59,7 +61,7 @@ object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
         // Variable Initialize
 
         val all = CodeSourceUtil.find<FieldDeclaration>(
-                typeDeclaration.body!!,
+                typeDeclaration.body,
                 { codePart ->
                     codePart is FieldDeclaration
                             && codePart.modifiers.contains(CodeModifier.STATIC)
@@ -67,31 +69,30 @@ object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
                 }
         ) { codePart -> codePart as FieldDeclaration }
 
-        for (codeField in all) {
+        val body = MutableCodeSource()
 
-            val value = codeField.value
+        for (fieldDeclaration in all) {
+
+            val value = fieldDeclaration.value
 
             if (value != null) {
 
-                val labeln = Label()
+                val def = CodeAPI.setStaticField(typeDeclaration, fieldDeclaration.type, fieldDeclaration.name, fieldDeclaration.value)
 
-                mv.visitLabel(labeln)
-
-                visitorGenerator.generateTo(value.javaClass, value, extraData, mvData)
-
-                val type = codeField.type
-
-                mv.visitFieldInsn(Opcodes.PUTSTATIC, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), codeField.name, CodeTypeUtil.toTypeDesc(type))
+                body.add(def)
             }
         }
 
+
+        if(body.isNotEmpty)
+            visitorGenerator.generateTo(CodeSource::class.java, body, extraData, mvData)
 
         // Static Blocks
 
         val staticBlocks = extraData.getAll(STATIC_BLOCKS)
 
         for (staticBlock in staticBlocks) {
-            staticBlock.body?.let { codeSource -> visitorGenerator.generateTo(CodeSource::class.java, codeSource, extraData, mvData) }
+            visitorGenerator.generateTo(CodeSource::class.java, staticBlock.body, extraData, mvData)
         }
 
 
