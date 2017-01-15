@@ -29,6 +29,8 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
@@ -62,6 +64,8 @@ public class CommonBytecodeTest {
 
     public static @Named("Instance") <R> R test(Class<?> testClass, TypeDeclaration mainClass, CodeSource source, Function<Class<?>, R> function) {
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+
+        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
         BCLoader bcLoader = new BCLoader();
 

@@ -1,11 +1,11 @@
-md5: a3f588d28ef0dcb13ec349ccbf53c145
+md5: f2dcfe7e4485fce8f5293d129d86c684
 
 version: 52 (Java 8)
 access: 16416 (PACKAGE_PRIVATE)
 
-source: MyEnum$A$Inner.cai, debug: null
-innerClass: com/MyEnum.com/MyEnum$A$Inner -> com.MyEnum$A$Inner (access: 16424 (PACKAGE_PRIVATE))
- class com.MyEnum$A$Inner extends com.MyEnum {
+source: A$Inner.cai, debug: null
+innerClass: com/MyEnum.A$Inner -> A$Inner (access: 16424 (PACKAGE_PRIVATE))
+ class A$Inner extends com.MyEnum {
 
     
     @java.lang.Override(
@@ -18,7 +18,7 @@ innerClass: com/MyEnum.com/MyEnum$A$Inner -> com.MyEnum$A$Inner (access: 16424 (
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/MyEnum$A$Inner;, signature: null, start: Label_0, end: Label_1]
+      LOCAL_VARIABLE[index: 0, name: this, desc: LA$Inner;, signature: null, start: Label_0, end: Label_1]
       MAX_STACK: 2, MAX_LOCALS: 1
     }
 
@@ -32,7 +32,7 @@ innerClass: com/MyEnum.com/MyEnum$A$Inner -> com.MyEnum$A$Inner (access: 16424 (
         invokespecial com.MyEnum.<init>(java.lang.String, int)void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/MyEnum$A$Inner;, signature: null, start: Label_0, end: Label_1]
+      LOCAL_VARIABLE[index: 0, name: this, desc: LA$Inner;, signature: null, start: Label_0, end: Label_1]
       LOCAL_VARIABLE[index: 1, name: $name, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
       LOCAL_VARIABLE[index: 2, name: $ordinal, desc: I, signature: null, start: Label_0, end: Label_1]
       MAX_STACK: 3, MAX_LOCALS: 3

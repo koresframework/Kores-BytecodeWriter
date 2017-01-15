@@ -1,4 +1,4 @@
-md5: c60f80cb2bcc7a802b5fb3d31d85d9c5
+md5: a87e7cb5980826b204dadbeae38605c5
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -11,6 +11,8 @@ public class com.OperateTest extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 3 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         iload 1
@@ -21,11 +23,15 @@ public class com.OperateTest extends java.lang.Object {
         iadd
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_2:
+       LINE 4 -> Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         ineg
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_3:
+       LINE 5 -> Label_3
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         bipush 10
@@ -35,9 +41,9 @@ public class com.OperateTest extends java.lang.Object {
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/OperateTest;, signature: null, start: Label_0, end: Label_1]
-      LOCAL_VARIABLE[index: 1, name: num, desc: I, signature: null, start: Label_0, end: Label_1]
+      Label_4:
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/OperateTest;, signature: null, start: Label_0, end: Label_4]
+      LOCAL_VARIABLE[index: 1, name: num, desc: I, signature: null, start: Label_0, end: Label_4]
       MAX_STACK: 4, MAX_LOCALS: 2
     }
 

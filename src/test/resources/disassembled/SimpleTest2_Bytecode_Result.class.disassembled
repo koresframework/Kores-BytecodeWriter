@@ -1,4 +1,4 @@
-md5: f6f8eab2bd0d08ce7380a94acb42160f
+md5: 7ef8cd6b340651f305fea8a50df6d98c
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -15,6 +15,7 @@ public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         aload 0
+        aload 1
         putfield me.jonathanscripter.codeapi.test.SimpleTest2_bytecode.myField (type: java.lang.String)
         aload 1
         ifnull Label_1
@@ -23,10 +24,12 @@ public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         goto Label_2
       Label_1:
+       FRAME[type: F_FULL, locals: 2, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "NULL VALUE"
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_2:
+       FRAME[type: F_SAME, locals: 0, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
         ldc 5894567987
         ldc 89859845678798
         lcmp
@@ -36,15 +39,17 @@ public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         goto Label_4
       Label_3:
+       FRAME[type: F_SAME, locals: 0, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "First >= Second"
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_4:
+       FRAME[type: F_SAME, locals: 0, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
         return
       Label_5:
       LOCAL_VARIABLE[index: 0, name: this, desc: Lme/jonathanscripter/codeapi/test/SimpleTest2_bytecode;, signature: null, start: Label_0, end: Label_5]
       LOCAL_VARIABLE[index: 1, name: myField, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_5]
-      MAX_STACK: 0, MAX_LOCALS: 2
+      MAX_STACK: 4, MAX_LOCALS: 2
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)

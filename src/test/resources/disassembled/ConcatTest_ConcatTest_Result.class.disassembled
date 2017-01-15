@@ -1,4 +1,4 @@
-md5: 0aebe7953795b13ff95f86c5d87cf6c3
+md5: 05aeaae706a0e4596f91010b307c7b80
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -11,6 +11,8 @@ public class com.ConcatTest extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 3 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.StringBuilder
         dup
@@ -24,21 +26,27 @@ public class com.ConcatTest extends java.lang.Object {
         invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
         invokevirtual java.lang.Object.toString()java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_2:
+       LINE 4 -> Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc ""
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_3:
+       LINE 5 -> Label_3
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_4:
+       LINE 6 -> Label_4
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"
         ldc "B"
         invokevirtual java.lang.String.concat(java.lang.String)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/ConcatTest;, signature: null, start: Label_0, end: Label_1]
-      LOCAL_VARIABLE[index: 1, name: av, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
+      Label_5:
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/ConcatTest;, signature: null, start: Label_0, end: Label_5]
+      LOCAL_VARIABLE[index: 1, name: av, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_5]
       MAX_STACK: 4, MAX_LOCALS: 2
     }
 

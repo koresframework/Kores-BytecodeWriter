@@ -1,4 +1,4 @@
-md5: 689522a6d0a7cfbe1b5cfb3e4c0848bc
+md5: 1108e8a3aa2c5d4922a5fb8a5749dbf1
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -12,36 +12,45 @@ public class com.ForEach extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 3 -> Label_1
+       LINE 4 -> Label_1
         aload 1
         invokeinterface java.lang.Iterable.iterator()java.util.Iterator (ownerIsInterface: true)
         astore 2
-      Label_1:
+      Label_2:
        FRAME[type: F_FULL, locals: 3, local: {com.ForEach, java.util.List, java.util.Iterator, null}, stacks: 0, stack: {}]
         aload 2
         invokeinterface java.util.Iterator.hasNext()boolean (ownerIsInterface: true)
-        ifeq Label_2
+        ifeq Label_3
+      Label_4:
+       LINE 5 -> Label_4
         aload 2
         invokeinterface java.util.Iterator.next()java.lang.Object (ownerIsInterface: true)
         checkcast java.lang.String
-      Label_3:
+      Label_5:
         astore 3
+      Label_6:
+       LINE 6 -> Label_6
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 3
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-        goto Label_1
-      Label_2:
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_7:
+       LINE 7 -> Label_7
+        goto Label_2
+      Label_3:
        FRAME[type: F_SAME, locals: 0, local: {com.ForEach, java.util.List, java.util.Iterator, null}, stacks: 0, stack: {}]
         return
-      Label_4:
-        !localVariable[index: 0, name: this, desc: Lcom/ForEach;, signature: null, start: Label_0, end: Label_4]
-        !localVariable[index: 1, name: strList, desc: Ljava/util/List;, signature: Ljava/util/List<Ljava/lang/String;>;, start: Label_0, end: Label_4]
-        !localVariable[index: 3, name: str, desc: Ljava/lang/String;, signature: null, start: Label_3, end: Label_4]
-        MAX_STACK: 2, MAX_LOCALS: 4
+      Label_8:
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/ForEach;, signature: null, start: Label_0, end: Label_8]
+      LOCAL_VARIABLE[index: 1, name: strList, desc: Ljava/util/List;, signature: Ljava/util/List<Ljava/lang/String;>;, start: Label_0, end: Label_8]
+      LOCAL_VARIABLE[index: 3, name: str, desc: Ljava/lang/String;, signature: null, start: Label_5, end: Label_8]
+      MAX_STACK: 2, MAX_LOCALS: 4
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

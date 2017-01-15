@@ -85,10 +85,7 @@ object Util {
         }
     }
 
-    fun grabAndRemoveInnerDecl(source: CodeSource?): Pair<List<TypeDeclaration>, MutableCodeSource>? {
-
-        if (source == null)
-            return null
+    fun grabAndRemoveInnerDecl(source: CodeSource): Pair<List<TypeDeclaration>, MutableCodeSource> {
 
         val typeDeclarationList = java.util.ArrayList<TypeDeclaration>()
         val codeSource = MutableCodeSource()
@@ -121,14 +118,14 @@ object Util {
 
         for (innerClass in innerClasses) {
             val modifiers = ModifierUtil.innerModifiersToAsm(innerClass)
-            cw.visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.qualifiedName, modifiers)
+            cw.visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.type, modifiers)
 
 
-            val source = MutableCodeSource(innerClass.body ?: CodeSource.empty())
+            val source = MutableCodeSource(innerClass.body)
 
             val instructionCodePart = InstructionCodePart.create { _, extraData, _, _ ->
                 extraData.getRequired(TypeVisitor.CLASS_WRITER_REPRESENTATION)
-                        .visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.qualifiedName, modifiers)
+                        .visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.type, modifiers)
             }
 
             source.add(0, instructionCodePart)
@@ -270,16 +267,15 @@ object Util {
 
                     var target: CodePart = (part as Accessor).target
 
-                    if (part is VariableAccess) {
+                    if (part is FieldAccess) {
                         memberInfo = infos.find(part)
                     } else {
+
                         val invocation = part as MethodInvocation
                         val spec = invocation.spec
                         memberInfo = infos.find(spec)
                         codeArguments.addAll(invocation.arguments)
                         isConstructor = spec.methodName == "<init>"
-                        // NEW
-                        target = invocation.localization
                     }
 
                     if (memberInfo != null && !memberInfo.isAccessible) {
@@ -291,7 +287,7 @@ object Util {
 
                         if (isConstructor) {
                             codeArguments.add(CodeAPI.argument(CodeAPI.accessThis()))
-                            //target = null
+                            target = part.localization
                         }
 
                         val invoke = ElementUtil.invoke(accessibleMember, target, codeArguments, declaringOpt.get())

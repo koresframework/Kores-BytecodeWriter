@@ -37,9 +37,11 @@ import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.FieldDeclaration;
 import com.github.jonathanxd.codeapi.base.IfStatement;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
+import com.github.jonathanxd.codeapi.base.VariableDeclaration;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.FieldDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
+import com.github.jonathanxd.codeapi.builder.VariableDeclarationBuilder;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
@@ -146,12 +148,10 @@ public class CodeAPITestBytecode {
         CodePart variable = CodeAPI.accessField(localization, CodeAPI.accessStatic(), CodeAPI.getJavaType(PrintStream.class), "out");
 
         // ref local field
-        FieldDeclaration cf = FieldDeclarationBuilder.builder()
+        VariableDeclaration cf = VariableDeclarationBuilder.builder()
                 .withName("ref")
                 // Type is Object
                 .withType(Types.OBJECT)
-                // Set as final
-                .withModifiers(CodeModifier.FINAL)
                 // Value = variable (System.out)
                 .withValue(variable)
                 .build();
@@ -188,9 +188,9 @@ public class CodeAPITestBytecode {
 
         CodeSource finallySource = CodeAPI.source(Predefined.invokePrintln(new CodeArgument(Literals.STRING("Finally!"))));
 
-        CatchStatement catchStatement = CodeAPI.catchStatement(catchExceptions, VariableFactory.variable(Types.EXCEPTION, "thr"), rethrow("thr"));
+        CatchStatement catchStatement = CodeAPI.catchStatement(catchExceptions, VariableFactory.variable(Types.THROWABLE, "thr"), rethrow("thr"));
 
-        CatchStatement catchStatement2 = CodeAPI.catchStatement(catchExceptions2, VariableFactory.variable(Types.EXCEPTION, "tlr"), rethrow("tlr"));
+        CatchStatement catchStatement2 = CodeAPI.catchStatement(catchExceptions2, VariableFactory.variable(Types.THROWABLE, "tlr"), rethrow("tlr"));
 
         // Surround 'source' with 'try-catch'
         CodePart surround = CodeAPI.tryStatement(source, Arrays.asList(catchStatement,

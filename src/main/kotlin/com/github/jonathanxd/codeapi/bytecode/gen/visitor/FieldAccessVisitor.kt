@@ -72,7 +72,7 @@ object FieldAccessVisitor : VoidVisitor<FieldAccess, BytecodeClass, MVData> {
             mv.visitFieldInsn(Opcodes.GETSTATIC, CodeTypeUtil.codeTypeToBinaryName(localization), fieldAccess.name, CodeTypeUtil.toTypeDesc(fieldAccess.type))
         } else {
             // THIS
-            mv.visitFieldInsn(Opcodes.GETFIELD, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), fieldAccess.name, CodeTypeUtil.toTypeDesc(fieldAccess.type))
+            mv.visitFieldInsn(Opcodes.GETFIELD, CodeTypeUtil.codeTypeToBinaryName(localization), fieldAccess.name, CodeTypeUtil.toTypeDesc(fieldAccess.type))
         }
 
     }

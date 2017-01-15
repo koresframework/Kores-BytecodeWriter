@@ -1,4 +1,4 @@
-md5: 57110033bfc5b90bc47e09e41e09d20c
+md5: 4f22bfa592612c32fbe06eab9cea95c5
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -19,6 +19,7 @@ public class test.AnnotatedTestClass extends java.lang.Object {
     !access: 9 (ACC_PUBLIC, ACC_STATIC)
     public static java.lang.Object polymorphic(java.lang.Object) {
       Label_0:
+       LINE 4 -> Label_0
         aconst_null
         areturn
       Label_1:
@@ -39,6 +40,8 @@ public class test.AnnotatedTestClass extends java.lang.Object {
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
+      Label_0:
+       LINE 5 -> Label_0
         aconst_null
         putstatic test.AnnotatedTestClass.field (type: java.lang.String)
         return

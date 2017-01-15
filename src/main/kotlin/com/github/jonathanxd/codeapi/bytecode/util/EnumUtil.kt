@@ -50,7 +50,7 @@ object EnumUtil {
 
         modifiers.add(CodeModifier.ENUM)
 
-        if (enumDeclaration.entries.any { it.body.isEmpty }) {
+        if (enumDeclaration.entries.any { it.body.isNotEmpty }) {
             modifiers.add(CodeModifier.ABSTRACT)
         } else {
             modifiers.add(CodeModifier.FINAL)
@@ -107,7 +107,7 @@ object EnumUtil {
                 modifiers = EnumSet.of(CodeModifier.PRIVATE, CodeModifier.STATIC, CodeModifier.FINAL, CodeModifier.SYNTHETIC),
                 type = arrayType,
                 name = valuesFieldName,
-                value = CodeAPI.arrayConstruct(enumDeclaration, arrayOf(Literals.INT(fieldSize)), arrayArguments))
+                value = CodeAPI.arrayConstruct(arrayType, arrayOf(Literals.INT(fieldSize)), arrayArguments))
 
         codeSource.add(valuesField)
 
@@ -229,7 +229,7 @@ object EnumUtil {
                         CodeAPI.parameter(Types.STRING, name),
                         CodeAPI.parameter(Types.INT, ordinal)))
 
-                val source = constructorDeclaration.body?.toMutable() ?: MutableCodeSource()
+                val source = constructorDeclaration.body.toMutable()
 
                 source.add(0, CodeAPI.invokeSuperConstructor(
                         Types.ENUM,
@@ -273,7 +273,7 @@ object EnumUtil {
 
         val enumEntryName = CodeSourceUtil.getNewInnerName(enumEntry.name + "\$Inner", enumDeclaration)
 
-        val body = enumEntry.body!!.toMutable()
+        val body = enumEntry.body.toMutable()
 
         body.add(CodeAPI.constructorBuilder()
                 .withParameters(baseParameters)

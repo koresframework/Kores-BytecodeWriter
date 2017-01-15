@@ -42,7 +42,7 @@ open class CodeClassLoader : ClassLoader() {
      * @return Defined Class.
      */
     open fun define(typeDeclaration: TypeDeclaration, bytes: ByteArray): Class<*> {
-        return super.defineClass(typeDeclaration.qualifiedName, bytes, 0, bytes.size)
+        return super.defineClass(typeDeclaration.type, bytes, 0, bytes.size)
     }
 
     /**

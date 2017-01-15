@@ -1,4 +1,4 @@
-md5: 93d734e38c0eaabd7c09b299c0247022
+md5: b7c9bca7f23ddd9792707de324665925
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -14,12 +14,12 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         aload 0
         aload 1
         checkcast java.util.List
-        invokevirtual com.bridgeTest.iterate(java.util.List)void (ownerIsInterface: false)
+        invokeinterface com.AB.iterate(java.lang.Iterable)void (ownerIsInterface: true)
         return
       Label_1:
-        !localVariable[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_1]
-        !localVariable[index: 1, name: iter, desc: Ljava/lang/Iterable;, signature: Ljava/lang/Iterable<T*;>;, start: Label_0, end: Label_1]
-        MAX_STACK: 2, MAX_LOCALS: 2
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_1]
+      LOCAL_VARIABLE[index: 1, name: iter, desc: Ljava/lang/Iterable;, signature: Ljava/lang/Iterable<T*;>;, start: Label_0, end: Label_1]
+      MAX_STACK: 2, MAX_LOCALS: 2
     }
 
     !access: 1 (ACC_PUBLIC)
@@ -43,16 +43,16 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 3
         invokevirtual java.lang.Object.toString()java.lang.String (ownerIsInterface: false)
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         goto Label_1
       Label_2:
        FRAME[type: F_SAME1, locals: 0, local: {com.bridgeTest, java.util.List, java.util.Iterator, null}, stacks: 1, stack: {java.lang.Object, null, null}]
         return
       Label_4:
-        !localVariable[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_4]
-        !localVariable[index: 1, name: iter, desc: Ljava/util/List;, signature: null, start: Label_0, end: Label_4]
-        !localVariable[index: 3, name: obj, desc: Ljava/lang/Object;, signature: null, start: Label_3, end: Label_4]
-        MAX_STACK: 3, MAX_LOCALS: 4
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_4]
+      LOCAL_VARIABLE[index: 1, name: iter, desc: Ljava/util/List;, signature: null, start: Label_0, end: Label_4]
+      LOCAL_VARIABLE[index: 3, name: obj, desc: Ljava/lang/Object;, signature: null, start: Label_3, end: Label_4]
+      MAX_STACK: 3, MAX_LOCALS: 4
     }
 
     !access: 1 (ACC_PUBLIC)
@@ -62,13 +62,13 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
-        !localVariable[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 1, MAX_LOCALS: 1
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 1, MAX_LOCALS: 1
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

@@ -48,7 +48,6 @@ import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.type.TypeInfo
 import org.objectweb.asm.ClassWriter
-import java.lang.reflect.Modifier
 import java.util.*
 
 object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
@@ -114,78 +113,74 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
         // Visit Annotations
         visitorGenerator.generateTo(Annotable::class.java, t, extraData, null, null)
 
-        val body = t.body
-
-        val pair = Util.grabAndRemoveInnerDecl(body)
+        val pair = Util.grabAndRemoveInnerDecl(t.body)
 
         var typeDeclarationList: List<TypeDeclaration>
 
-        if (body != null) {
+        typeDeclarationList = pair!!.first
 
-            typeDeclarationList = pair!!.first
+        for (declaration in typeDeclarationList) {
+            val outerClass = declaration.outerClass ?: throw IllegalArgumentException("No outer class defined to type: '$declaration'!")
 
-            for (declaration in typeDeclarationList) {
-                val outerClass = declaration.outerClass ?: throw IllegalArgumentException("No outer class defined to type: '$declaration'!")
+            if (!outerClass.`is`(t))
 
-                if (!outerClass.`is`(t))
-
-                    throw IllegalArgumentException("Outer class specified to '" + declaration + "' don't matches the real outer class. " +
-                            "Specified: '" + outerClass + "'," +
-                            "Real: '" + t + "'!")
-            }
-
-            val originalDeclList = ArrayList(typeDeclarationList)
-
-            typeDeclarationList = Util.visitInner(cw, t, typeDeclarationList)
-
-            for (i in originalDeclList.indices) {
-                // Register inner types.
-                extraData.registerData(INNER_TYPE_REPRESENTATION, InnerType(originalDeclList[i], typeDeclarationList[i]))
-            }
-
-            val body = pair.second
-
-            // Create outer fields
-
-            val allAsList = extraData.getAllAsList(OUTER_TYPE_REPRESENTATION)
-
-            if (!t.modifiers.contains(CodeModifier.STATIC)) {
-
-                if (!allAsList.isEmpty()) {
-
-                    for (declaration in allAsList) {
-
-                        val simpleName = declaration.simpleName
-
-                        val name = Character.toLowerCase(simpleName[0]) + if (simpleName.length > 1) simpleName.substring(1) else ""
-
-                        val newName = CodeSourceUtil.getNewFieldName(name + "\$outer", body)
-
-                        val field = field(EnumSet.of(CodeModifier.PRIVATE, CodeModifier.FINAL), declaration, newName)
-
-                        extraData.registerData(OUTER_FIELD_REPRESENTATION, field)
-
-                        body.add(0, field)
-                    }
-
-                }
-            }
-
-
-            // /Create outer fields
-
-            if (body.size > 0) {
-                visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, null)
-            }
-
-            val hasConstructor = body.stream().filter { c -> c is ConstructorDeclaration }.findAny().isPresent
-
-            if (!hasConstructor && t.classType.isClass) { // Interfaces has no super call.
-                val codeConstructor = constructor(EnumSet.of(CodeModifier.PUBLIC), arrayOf(), CodeSource.empty())
-                visitorGenerator.generateTo(ConstructorDeclaration::class.java, codeConstructor, extraData, null, null)
-            }
-
+                throw IllegalArgumentException("Outer class specified to '" + declaration + "' don't matches the real outer class. " +
+                        "Specified: '" + outerClass + "'," +
+                        "Real: '" + t + "'!")
         }
+
+        val originalDeclList = ArrayList(typeDeclarationList)
+
+        typeDeclarationList = Util.visitInner(cw, t, typeDeclarationList)
+
+        for (i in originalDeclList.indices) {
+            // Register inner types.
+            extraData.registerData(INNER_TYPE_REPRESENTATION, InnerType(originalDeclList[i], typeDeclarationList[i]))
+        }
+
+        val body = pair.second
+
+        // Create outer fields
+
+        val allAsList = extraData.getAllAsList(OUTER_TYPE_REPRESENTATION)
+
+        if (!t.modifiers.contains(CodeModifier.STATIC)) {
+
+            if (!allAsList.isEmpty()) {
+
+                for (declaration in allAsList) {
+
+                    val simpleName = declaration.simpleName
+
+                    val name = Character.toLowerCase(simpleName[0]) + if (simpleName.length > 1) simpleName.substring(1) else ""
+
+                    val newName = CodeSourceUtil.getNewFieldName(name + "\$outer", body)
+
+                    val field = field(EnumSet.of(CodeModifier.PRIVATE, CodeModifier.FINAL), declaration, newName)
+
+                    extraData.registerData(OUTER_FIELD_REPRESENTATION, field)
+
+                    body.add(0, field)
+                }
+
+            }
+        }
+
+
+        // /Create outer fields
+
+        if (body.size > 0) {
+            visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, null)
+        }
+
+        val hasConstructor = body.stream().filter { c -> c is ConstructorDeclaration }.findAny().isPresent
+
+        if (!hasConstructor && t.classType.isClass) { // Interfaces has no super call.
+            val codeConstructor = constructor(EnumSet.of(CodeModifier.PUBLIC), arrayOf(), CodeSource.empty())
+            visitorGenerator.generateTo(ConstructorDeclaration::class.java, codeConstructor, extraData, null, null)
+        }
+
+
 
         MethodFragmentVisitor.visitFragmentsGeneration(visitorGenerator, extraData)
 
@@ -193,28 +188,28 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
         val bytecodeClassList = ArrayList<BytecodeClass>()
 
-        if (pair != null) {
-            // Visit inner classes
 
-            val data0 = extraData.newChild()
+        // Visit inner classes
 
-            extraData.getAllAsList(OUTER_TYPE_REPRESENTATION)
-                    .forEach { typeDcl -> data0.registerData(OUTER_TYPE_REPRESENTATION, typeDcl) }
+        val data0 = extraData.newChild()
 
-            data0.getAllAsList(ConstantDatas.MEMBER_INFOS)
-                    .forEach { memberInfos -> data0.registerData(ConstantDatas.MEMBER_INFOS, memberInfos) }
+        extraData.getAllAsList(OUTER_TYPE_REPRESENTATION)
+                .forEach { typeDcl -> data0.registerData(OUTER_TYPE_REPRESENTATION, typeDcl) }
 
-            data0.registerData(OUTER_TYPE_REPRESENTATION, t)
+        data0.getAllAsList(ConstantDatas.MEMBER_INFOS)
+                .forEach { memberInfos -> data0.registerData(ConstantDatas.MEMBER_INFOS, memberInfos) }
 
-            extraData.getAllAsList(INNER_TYPE_REPRESENTATION).map { it.adaptedDeclaration }
-                    .forEach { declaration ->
-                        val data = data0.clone() as MapData
+        data0.registerData(OUTER_TYPE_REPRESENTATION, t)
 
-                        val gen = visitorGenerator.gen(declaration, data, null)
+        extraData.getAllAsList(INNER_TYPE_REPRESENTATION).map { it.adaptedDeclaration }
+                .forEach { declaration ->
+                    val data = data0.clone() as MapData
 
-                        Collections.addAll(bytecodeClassList, *gen)
-                    }
-        }
+                    val gen = visitorGenerator.gen(declaration, data, null)
+
+                    Collections.addAll(bytecodeClassList, *gen)
+                }
+
 
         cw.visitEnd()
 
@@ -223,8 +218,8 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
         return bytecodeClassList.toTypedArray()
     }
 
-    override fun endVisit(r: Array<out BytecodeClass>, typeDeclaration: TypeDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
-        extraData.unregisterData(CODE_TYPE_REPRESENTATION, typeDeclaration)
+    override fun endVisit(r: Array<out BytecodeClass>, t: TypeDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+        extraData.unregisterData(CODE_TYPE_REPRESENTATION, t)
 
         val optional = extraData.getOptional(CLASS_WRITER_REPRESENTATION)
 
@@ -232,7 +227,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
             extraData.unregisterData(CLASS_WRITER_REPRESENTATION, optional.get())
         }
 
-        extraData.unregisterData(OUTER_TYPE_REPRESENTATION, typeDeclaration)
+        extraData.unregisterData(OUTER_TYPE_REPRESENTATION, t)
         extraData.unregisterAllData(OUTER_FIELD_REPRESENTATION)
         extraData.unregisterAllData(INNER_TYPE_REPRESENTATION)
     }

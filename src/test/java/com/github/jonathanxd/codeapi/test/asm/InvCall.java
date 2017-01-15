@@ -111,7 +111,7 @@ public class InvCall {
     private static final class BCLoader extends ClassLoader {
 
         public Class<?> define(TypeDeclaration typeDeclaration, byte[] bytes) {
-            return super.defineClass(typeDeclaration.getQualifiedName(), bytes, 0, bytes.length);
+            return super.defineClass(typeDeclaration.getType(), bytes, 0, bytes.length);
         }
     }
 

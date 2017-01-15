@@ -49,6 +49,8 @@ object FieldDefinitionVisitor : VoidVisitor<FieldDefinition, BytecodeClass, MVDa
 
         visitorGenerator.generateTo(target.javaClass, target, extraData, additional)
 
+        visitorGenerator.generateTo(t.value.javaClass, t.value, extraData, additional)
+
         additional.methodVisitor.visitFieldInsn(opcode, CodeTypeUtil.codeTypeToBinaryName(localization), variableName, CodeTypeUtil.toTypeDesc(variableType))
 
     }

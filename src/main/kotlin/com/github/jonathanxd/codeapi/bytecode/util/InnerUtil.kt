@@ -60,11 +60,11 @@ object InnerUtil {
             if (inner == null) {
                 visitorGenerator.generateTo(MethodDeclaration::class.java, gen, requireNotNull(extraData.parent), null)
             } else {
-                val source = outer.body?.toMutable() ?: MutableCodeSource()
+                val source = outer.body.toMutable()
 
                 source.add(gen)
 
-                inner.adaptedDeclaration = outer
+                inner.adaptedDeclaration = outer.builder().withBody(source).build()
             }
 
             memberInfo.accessibleMember = gen
@@ -77,7 +77,7 @@ object InnerUtil {
             throw IllegalArgumentException("Element doesn't match requirements: extends Modifierable & Typed.")
 
 
-        val type = element.type!!
+        val type = element.type
 
         var isConstructor = false
         val isStatic = element.modifiers.contains(CodeModifier.STATIC)
@@ -143,7 +143,7 @@ object InnerUtil {
 
         if (!isConstructor) {
             return CodeAPI.methodBuilder()
-                    .withName(CodeSourceUtil.getNewMethodName("invoke$000", outer.body ?: CodeSource.empty()))
+                    .withName(CodeSourceUtil.getNewMethodName("invoke$000", outer.body))
                     .withModifiers(modifiers)
                     .withParameters(parameters)
                     .withReturnType(type)

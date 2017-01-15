@@ -1,4 +1,4 @@
-md5: addbcd45b00aebd5a34963e3cab8ba5a
+md5: 2c9071fb2b7905e89bf8479059286d45
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -12,15 +12,22 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.
     !access: 1 (ACC_PUBLIC)
     public void <init>() {
       Label_0:
+       LINE 4 -> Label_0
         aload 0
         aconst_null
         invokespecial com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
+      Label_1:
+       LINE 5 -> Label_1
         aload 0
+        new com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox
+        dup
+        aload 0
+        invokespecial com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
         putfield finalfieldwiththis.Test.testField (type: com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox)
         return
-      Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lfinalfieldwiththis/Test;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 2, MAX_LOCALS: 1
+      Label_2:
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lfinalfieldwiththis/Test;, signature: null, start: Label_0, end: Label_2]
+      MAX_STACK: 4, MAX_LOCALS: 1
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)

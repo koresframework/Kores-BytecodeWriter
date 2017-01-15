@@ -29,7 +29,6 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.base.ArgumentHolder
-import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
@@ -37,7 +36,6 @@ import com.github.jonathanxd.codeapi.bytecode.util.InsnUtil
 import com.github.jonathanxd.codeapi.common.CodeArgument
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.iutils.data.MapData
 
 object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData> {
@@ -52,10 +50,10 @@ object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData
             val type = CodePartUtil.getTypeOrNull(value)
             val argType = types[i]
 
-            if(type != null) {
-                if(type.isPrimitive && !argType.isPrimitive) {
+            if (type != null) {
+                if (type.isPrimitive && !argType.isPrimitive) {
                     return@mapIndexed CodeArgument(CodeAPI.cast(type, argType, value))
-                } else if(!type.isPrimitive && argType.isPrimitive) {
+                } else if (!type.isPrimitive && argType.isPrimitive) {
                     return@mapIndexed CodeArgument(CodeAPI.cast(type, argType, value))
                 }
             }

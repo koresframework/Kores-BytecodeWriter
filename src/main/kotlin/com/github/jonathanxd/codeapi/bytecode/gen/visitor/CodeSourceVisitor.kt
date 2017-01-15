@@ -52,10 +52,13 @@ object CodeSourceVisitor : Visitor<CodeSource, BytecodeClass, Any?> {
 
         val offset = extraData.getOptional(OFFSET).orElse(0)
 
+        if (visit == VisitLineType.FOLLOW_CODE_SOURCE)
+            extraData.registerData(OFFSET, offset + max + 1)
+
         for (i in 0..max) {
 
             if (additional is MVData && visit == VisitLineType.FOLLOW_CODE_SOURCE) {
-                val line = i + offset
+                val line = i + 1 + offset
                 val label = Label()
 
                 additional.methodVisitor.visitLabel(label)

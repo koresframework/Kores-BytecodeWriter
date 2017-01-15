@@ -143,7 +143,7 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
             visitorGenerator.generateTo(target.javaClass, target, extraData, null, additional)
         }
 
-        visitorGenerator.generateTo(ArgumentHolder::class.java, t, extraData, null, additional)
+        visitorGenerator.generateTo(ArgumentHolder::class.java, methodInvocation, extraData, null, additional)
 
         val invokeDynamic = methodInvocation.invokeDynamic
 

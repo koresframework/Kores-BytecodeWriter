@@ -48,6 +48,7 @@ object ArrayConstructVisitor : VoidVisitor<ArrayConstructor, BytecodeClass, MVDa
         val initialize = arguments.isNotEmpty()
         val dimensions = t.dimensions
         val multi = dimensions.size > 1
+        val component = t.arrayType.arrayComponent
 
         if(t.arrayType.arrayDimension != dimensions.size)
             throw IllegalArgumentException("Array dimension not equal to provided dimensions")
@@ -57,13 +58,13 @@ object ArrayConstructVisitor : VoidVisitor<ArrayConstructor, BytecodeClass, MVDa
                 visitorGenerator.generateTo(it.javaClass, it, extraData, null, additional)
             }
 
-            mv.visitMultiANewArrayInsn(CodeTypeUtil.codeTypeToTypeDesc(t.arrayType), dimensions.size)
+            mv.visitMultiANewArrayInsn(CodeTypeUtil.codeTypeToTypeDesc(component), dimensions.size)
         } else {
             val dimensionX = if (dimensions.isNotEmpty()) dimensions[0] else Literals.INT(0)
 
             visitorGenerator.generateTo(dimensionX.javaClass, dimensionX, extraData, null, additional)
 
-            ArrayUtil.visitArrayStore(t.arrayType, dimensions.size, mv) // ANEWARRAY, ANEWARRAY T_INT, etc...
+            ArrayUtil.visitArrayStore(component, dimensions.size, mv) // ANEWARRAY, ANEWARRAY T_INT, etc...
         }
 
         if (initialize) {
