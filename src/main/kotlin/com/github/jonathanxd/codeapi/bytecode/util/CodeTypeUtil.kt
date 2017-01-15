@@ -28,6 +28,8 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.common.CodeParameter
 import com.github.jonathanxd.codeapi.common.TypeSpec
 import com.github.jonathanxd.codeapi.type.CodeType
@@ -35,7 +37,6 @@ import com.github.jonathanxd.codeapi.type.GenericType
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
-import java.lang.invoke.MethodHandles
 import com.github.jonathanxd.codeapi.util.CodeTypeUtil as BaseCodeTypeUtil
 
 object CodeTypeUtil {
@@ -130,7 +131,30 @@ object CodeTypeUtil {
     }
 
     fun parametersAndReturnToDesc(codeParameters: Collection<CodeParameter>, returnType: CodeType): String {
-        return "(${codeTypesToTypeDesc(codeParameters.map { it.type })})${toTypeDesc(returnType)}"
+        return parametersTypeAndReturnToDesc(codeParameters.map { it.type }, returnType)
+    }
+
+    fun parametersTypeAndReturnToDesc(parameterTypes: Collection<CodeType>, returnType: CodeType): String {
+        return "(${codeTypesToTypeDesc(parameterTypes)})${toTypeDesc(returnType)}"
+    }
+
+    /**
+     * Infer bound of generic types specified in [method declaration][method] or in [type declaration][owner].
+     */
+    fun parametersAndReturnToInferredDesc(owner: TypeDeclaration, method: MethodDeclaration, codeParameters: Collection<CodeParameter>, returnType: CodeType): String {
+
+        val genericSign = owner.genericSignature
+        val methodGenericSign = method.genericSignature
+        val parameterTypes = codeParameters.map { it.type }
+
+        fun infer(codeType: CodeType): CodeType =
+                if (codeType is GenericType && !codeType.isType) {
+                    GenericUtil.find(methodGenericSign, codeType.name) ?: GenericUtil.find(genericSign, codeType.name) ?: codeType.codeType
+                } else {
+                    codeType
+                }
+
+        return parametersTypeAndReturnToDesc(parameterTypes.map(::infer), infer(returnType))
     }
 
     fun arrayOpcodeFromType(codeType: CodeType): Int {

@@ -214,4 +214,7 @@ object GenericUtil {
 
     }
 
+    fun find(genericSignature: GenericSignature, typeName: String): GenericType? =
+            genericSignature.types.find { !it.isType && it.name == typeName }
+
 }

@@ -80,7 +80,7 @@ object InvokeTypeUtil {
             INVOKEVIRTUAL -> return INVOKE_VIRTUAL
             INVOKESTATIC -> return INVOKE_STATIC
             INVOKEDYNAMIC -> return INVOKE_DYNAMIC
-            else -> throw RuntimeException("Cannot determine InvokeType of opcde '$opcode'")
+            else -> throw RuntimeException("Cannot determine InvokeType of opcode '$opcode'")
         }
     }
 

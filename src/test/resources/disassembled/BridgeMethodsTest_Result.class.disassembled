@@ -1,4 +1,4 @@
-md5: b7c9bca7f23ddd9792707de324665925
+md5: a61758fc9f1309b29b2950f7ce49fd7e
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -14,7 +14,7 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         aload 0
         aload 1
         checkcast java.util.List
-        invokeinterface com.AB.iterate(java.lang.Iterable)void (ownerIsInterface: true)
+        invokevirtual com.bridgeTest.iterate(java.util.List)void (ownerIsInterface: false)
         return
       Label_1:
       LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_1]

@@ -1,4 +1,4 @@
-md5: 2bd58fb76137c91c1d545c754d9be2df
+md5: 132748e139b87e9e9b370e70db0e2617
 
 version: 52 (Java 8)
 access: 1537 (ACC_PUBLIC, ACC_ABSTRACT)
@@ -9,7 +9,7 @@ public abstract class com.AB extends java.lang.Object {
 
     !access: 1025 (ACC_PUBLIC, ACC_ABSTRACT)
     !signature: (TT;)V
-    public abstract void iterate(java.lang.Object) {
+    public abstract void iterate(java.lang.Iterable) {
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)

@@ -1,4 +1,4 @@
-md5: 4e3d194ab648e0c95acc6d1d2f49a49c
+md5: 71ea18fecfa80781b2e9bc714263af1f
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -45,17 +45,14 @@ public class test.InstanceOf extends java.lang.Object {
        FRAME[type: F_APPEND, locals: 1, local: {integer, null, null, null, null}, stacks: 0, stack: {}]
         iconst_0
       Label_8:
-       FRAME[type: F_SAME1, locals: 0, local: {integer, null, null, null, null}, stacks: 1, stack: {integer, null, null, null, null}]
+       FRAME[type: F_SAME1, locals: 0, local: {integer, null, null, null, null}, stacks: 1, stack: {integer, null, null}]
         istore 2
       Label_9:
        LINE 6 -> Label_9
         new java.lang.Integer
         dup
-        new java.lang.Integer
-        dup
         bipush 9
         invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
-        invokespecial java.lang.Integer.<init>(java.lang.Integer)void (ownerIsInterface: false)
       Label_10:
         astore 3
       Label_11:
@@ -70,10 +67,10 @@ public class test.InstanceOf extends java.lang.Object {
         goto Label_14
       Label_12:
        LINE 13 -> Label_12
-       FRAME[type: F_APPEND, locals: 2, local: {integer, java.lang.Integer, null, null, null}, stacks: 0, stack: {integer, null, null, null, null}]
+       FRAME[type: F_APPEND, locals: 2, local: {integer, java.lang.Integer, null, null, null}, stacks: 0, stack: {integer, null, null}]
         iconst_0
       Label_14:
-       FRAME[type: F_SAME1, locals: 0, local: {integer, java.lang.Integer, null, null, null}, stacks: 1, stack: {integer, null, null, null, null}]
+       FRAME[type: F_SAME1, locals: 0, local: {integer, java.lang.Integer, null, null, null}, stacks: 1, stack: {integer, null, null}]
         istore 4
         return
       Label_15:
@@ -82,7 +79,7 @@ public class test.InstanceOf extends java.lang.Object {
       LOCAL_VARIABLE[index: 2, name: b2, desc: Z, signature: null, start: Label_8, end: Label_15]
       LOCAL_VARIABLE[index: 3, name: ab, desc: Ljava/lang/Integer;, signature: null, start: Label_10, end: Label_15]
       LOCAL_VARIABLE[index: 4, name: b9, desc: Z, signature: null, start: Label_14, end: Label_15]
-      MAX_STACK: 5, MAX_LOCALS: 5
+      MAX_STACK: 3, MAX_LOCALS: 5
     }
 
     !access: 1 (ACC_PUBLIC)

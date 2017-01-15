@@ -71,7 +71,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
                 val any = !SourceInspect
                         .find { codePart -> codePart is MethodDeclaration && ElementUtil.getMethodSpec(typeDeclaration, codePart).compareTo(methodSpec) == 0 }
                         .include { bodied -> bodied is CodeSource }
-                        .inspect(typeDeclaration.body ?: CodeSource.empty()).isEmpty()
+                        .inspect(typeDeclaration.body).isEmpty()
 
                 if (!any) {
                     visitorGenerator.generateTo(bridgeMethod.javaClass, bridgeMethod, extraData, additional)
@@ -103,7 +103,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
             methodName = "<init>"
         }
 
-        val desc = CodeTypeUtil.parametersAndReturnToDesc(parameters, t.returnType)
+        val desc = CodeTypeUtil.parametersAndReturnToInferredDesc(typeDeclaration, t, parameters, t.returnType)
 
         val mv = cw.visitMethod(asmModifiers, methodName, desc, signature, null)
 

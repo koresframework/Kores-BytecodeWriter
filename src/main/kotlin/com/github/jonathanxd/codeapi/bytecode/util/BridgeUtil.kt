@@ -57,7 +57,7 @@ object BridgeUtil {
     fun genBridgeMethod(typeDeclaration: TypeDeclaration, methodDeclaration: MethodDeclaration): Optional<MethodDeclaration> {
         val bridgeMethod = BridgeUtil.findMethodToBridge(typeDeclaration, methodDeclaration)
 
-        return if (bridgeMethod == null) Optional.empty() else Optional.of(CodeAPI.bridgeMethod(methodDeclaration, bridgeMethod))
+        return if (bridgeMethod == null) Optional.empty() else Optional.of(CodeAPI.bridgeMethod(typeDeclaration, methodDeclaration, bridgeMethod))
     }
 
     fun findMethodToBridge(typeDeclaration: TypeDeclaration, methodDeclaration: MethodDeclaration): MethodTypeSpec? {
