@@ -70,12 +70,14 @@ object VariableDeclarationVisitor : VoidVisitor<VariableDeclaration, BytecodeCla
             i = additional.storeVar(t.name, t.variableType, i_label, null)
                     .orElseThrow({ additional.failStore(t) })
         }
+        
+        if(t.value != null) {
+            val type = Type.getType(t.variableType.javaSpecName)
 
-        val type = Type.getType(t.variableType.javaSpecName)
+            val opcode = type.getOpcode(Opcodes.ISTORE) // ALOAD
 
-        val opcode = type.getOpcode(Opcodes.ISTORE) // ALOAD
-
-        mv.visitVarInsn(opcode, i)
+            mv.visitVarInsn(opcode, i)
+        }
 
     }
 

@@ -88,6 +88,8 @@ public class Wiki {
 
         BytecodeClass[] gen = bytecodeGenerator.gen(decl);
 
+        ResultSaver.save(this.getClass(), gen);
+
         CodeClassLoader codeClassLoader = new CodeClassLoader();
 
         Class<?> define = codeClassLoader.define(gen);

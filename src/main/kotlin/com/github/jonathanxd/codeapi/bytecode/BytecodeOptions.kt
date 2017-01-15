@@ -36,6 +36,14 @@ import com.github.jonathanxd.iutils.type.TypeInfo
 val LINE: TypeInfo<Int> = TypeInfo.aUnique(Int::class.java)
 
 /**
+ * Calls [org.objectweb.asm.util.CheckClassAdapter] to check generated class.
+ *
+ * The Adapter is called after the visit ends because the CodeAPI let asm to calculate locals and
+ * stack.
+ */
+val CHECK = Option(true)
+
+/**
  * Calls MethodVisitor.visitLine for each expression
  */
 @JvmField

@@ -43,6 +43,7 @@ import org.junit.Test;
 
 import java.util.EnumSet;
 
+import static com.github.jonathanxd.codeapi.CodeAPI.emptySource;
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.returnValue;
 import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
@@ -64,7 +65,7 @@ public class InterfaceTest {
 
         CodeSource source = sourceOfParts(interfaceDeclaration = ClassFactory.anInterface(EnumSet.of(PUBLIC), "test.Impl", sourceOfParts(
 
-                MethodFactory.method(EnumSet.of(PUBLIC), "parse", VOID, new CodeParameter[]{parameter(STRING, "string")}, null),
+                MethodFactory.method(EnumSet.of(PUBLIC), "parse", VOID, new CodeParameter[]{parameter(STRING, "string")}, emptySource()),
 
                 MethodFactory.method(EnumSet.of(PUBLIC), "getI", INT, new CodeParameter[]{parameter(INT, "num")}, sourceOfParts(
                         returnValue(INT, CodeAPI.operateAndAssign(VariableFactory.variable(INT, "num"), Operators.MULTIPLY, Literals.INT(9)))

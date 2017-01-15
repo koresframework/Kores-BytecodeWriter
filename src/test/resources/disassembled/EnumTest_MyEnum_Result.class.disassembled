@@ -1,12 +1,12 @@
-md5: f3470adc9bd02416fb3ae3b530a50665
+md5: f64786bc3d5f5d5f0160af7d59cfe82f
 
 version: 52 (Java 8)
 access: 17441 (ACC_PUBLIC, ACC_ABSTRACT)
 signature: Ljava/lang/Enum<Lcom/MyEnum;>;
 
 source: MyEnum.cai, debug: null
-innerClass: com/MyEnum.com/MyEnum$A$Inner -> com.MyEnum$A$Inner (access: 16424 (PACKAGE_PRIVATE))
-innerClass: com/MyEnum.com/MyEnum$B$Inner -> com.MyEnum$B$Inner (access: 16424 (PACKAGE_PRIVATE))
+innerClass: com/MyEnum.com/MyEnum$A$Inner -> A$Inner (access: 16392 (PACKAGE_PRIVATE))
+innerClass: com/MyEnum.com/MyEnum$B$Inner -> B$Inner (access: 16392 (PACKAGE_PRIVATE))
 public abstract class com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.codeapi.test.EnumTest_$MyItf {
 
     !access: 16409 (ACC_PUBLIC, ACC_STATIC, ACC_FINAL)

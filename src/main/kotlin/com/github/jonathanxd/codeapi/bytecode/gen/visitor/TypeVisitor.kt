@@ -47,6 +47,7 @@ import com.github.jonathanxd.codeapi.util.MemberInfosUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.type.TypeInfo
+import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
 import java.util.*
 
@@ -54,7 +55,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
     val CODE_TYPE_REPRESENTATION = TypeInfo.a(TypeDeclaration::class.java).setUnique(true).build()
 
-    val CLASS_WRITER_REPRESENTATION = TypeInfo.a(ClassWriter::class.java).setUnique(true).build()
+    val CLASS_VISITOR_REPRESENTATION = TypeInfo.a(ClassVisitor::class.java).setUnique(true).build()
 
     val OUTER_TYPE_REPRESENTATION = TypeInfo.aUnique(TypeDeclaration::class.java)
 
@@ -63,17 +64,12 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
     val OUTER_FIELD_REPRESENTATION = TypeInfo.aUnique(FieldDeclaration::class.java)
 
     override fun visit(t: TypeDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
+
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS or ClassWriter.COMPUTE_FRAMES)
 
-        val sourceFile = extraData
-                .getOptional(BytecodeGenerator.SOURCE_FILE_FUNCTION)
-                .map { func -> func(t) }
-                .orElse("${t.simpleName}.cai") //CodeAPI Instructions
-
-        cw.visitSource(sourceFile, null)
 
         extraData.registerData(CODE_TYPE_REPRESENTATION, t)
-        extraData.registerData(CLASS_WRITER_REPRESENTATION, cw)
+        extraData.registerData(CLASS_VISITOR_REPRESENTATION, cw)
 
         var any = false
 
@@ -110,6 +106,14 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
         // Visit class
         cw.visit(52, modifiers, className, genericRepresentation, CodeTypeUtil.codeTypeToBinaryName(superClass), asmImplementations)
 
+        val sourceFile = extraData
+                .getOptional(BytecodeGenerator.SOURCE_FILE_FUNCTION)
+                .map { func -> func(t) }
+                .orElse("${t.simpleName}.cai") //CodeAPI Instructions
+
+        cw.visitSource(sourceFile, null)
+
+
         // Visit Annotations
         visitorGenerator.generateTo(Annotable::class.java, t, extraData, null, null)
 
@@ -117,7 +121,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
         var typeDeclarationList: List<TypeDeclaration>
 
-        typeDeclarationList = pair!!.first
+        typeDeclarationList = pair.first
 
         for (declaration in typeDeclarationList) {
             val outerClass = declaration.outerClass ?: throw IllegalArgumentException("No outer class defined to type: '$declaration'!")
@@ -221,10 +225,10 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
     override fun endVisit(r: Array<out BytecodeClass>, t: TypeDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         extraData.unregisterData(CODE_TYPE_REPRESENTATION, t)
 
-        val optional = extraData.getOptional(CLASS_WRITER_REPRESENTATION)
+        val optional = extraData.getOptional(CLASS_VISITOR_REPRESENTATION)
 
         if (optional.isPresent) {
-            extraData.unregisterData(CLASS_WRITER_REPRESENTATION, optional.get())
+            extraData.unregisterData(CLASS_VISITOR_REPRESENTATION, optional.get())
         }
 
         extraData.unregisterData(OUTER_TYPE_REPRESENTATION, t)

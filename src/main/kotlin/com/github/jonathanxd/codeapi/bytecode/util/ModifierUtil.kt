@@ -56,7 +56,7 @@ object ModifierUtil {
     }
 
     fun innerModifiersToAsm(typeDeclaration: TypeDeclaration): Int {
-        return (if (!typeDeclaration.isInterface) Opcodes.ACC_SUPER else 0) + ModifierUtil.modifiersToAsm(typeDeclaration.modifiers, typeDeclaration.classType.isInterface)
+        return ModifierUtil.modifiersToAsm(typeDeclaration.modifiers, typeDeclaration.classType.isInterface)
     }
 
     fun isClassOrMethod(elementType: Int): Boolean {

@@ -42,6 +42,7 @@ import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.type.TypeInfo
+import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
@@ -50,7 +51,7 @@ object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
 
     val STATIC_BLOCKS = TypeInfo.a(StaticBlock::class.java).setUnique(true).build()
 
-    fun generate(extraData: MapData, visitorGenerator: VisitorGenerator<*>, cw: ClassWriter, typeDeclaration: TypeDeclaration) {
+    fun generate(extraData: MapData, visitorGenerator: VisitorGenerator<*>, cw: ClassVisitor, typeDeclaration: TypeDeclaration) {
 
         val mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null)
 

@@ -44,6 +44,7 @@ import com.github.jonathanxd.codeapi.util.element.ElementUtil
 import com.github.jonathanxd.iutils.container.MutableContainer
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.type.TypeInfo
+import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
 import java.util.*
 
@@ -111,21 +112,21 @@ object Util {
         return pair
     }
 
-    fun visitInner(cw: ClassWriter, outer: TypeDeclaration, innerClasses: List<TypeDeclaration>): List<TypeDeclaration> {
+    fun visitInner(cw: ClassVisitor, outer: TypeDeclaration, innerClasses: List<TypeDeclaration>): List<TypeDeclaration> {
 
         val visited = java.util.ArrayList<TypeDeclaration>()
         val name = CodeTypeUtil.codeTypeToBinaryName(outer)
 
         for (innerClass in innerClasses) {
             val modifiers = ModifierUtil.innerModifiersToAsm(innerClass)
-            cw.visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.type, modifiers)
+            cw.visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.specifiedName, modifiers)
 
 
             val source = MutableCodeSource(innerClass.body)
 
             val instructionCodePart = InstructionCodePart.create { _, extraData, _, _ ->
-                extraData.getRequired(TypeVisitor.CLASS_WRITER_REPRESENTATION)
-                        .visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.type, modifiers)
+                extraData.getRequired(TypeVisitor.CLASS_VISITOR_REPRESENTATION)
+                        .visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.specifiedName, modifiers)
             }
 
             source.add(0, instructionCodePart)

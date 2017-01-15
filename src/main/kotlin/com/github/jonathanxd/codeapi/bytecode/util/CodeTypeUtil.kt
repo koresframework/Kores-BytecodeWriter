@@ -56,20 +56,11 @@ object CodeTypeUtil {
 
     fun primitiveToTypeDesc(type: CodeType): String = BaseCodeTypeUtil.primitiveCodeTypeToAsm(type)
 
-    fun arrayToTypeDesc(codeType: CodeType, dimensions: Int): String {
-        if (dimensions <= 1) {
-            return codeTypeToBinaryName(codeType)
-        }
+    fun arrayToTypeDesc(codeType: CodeType): String =
+            if (codeType.arrayDimension <= 1) {
+                codeTypeToBinaryName(codeType)
+            } else toTypeDesc(codeType)
 
-        val name = toTypeDesc(codeType)
-
-        val sb = StringBuilder()
-
-        for (x in 1..dimensions - 1)
-            sb.append("[")
-
-        return sb.toString() + name
-    }
 
     fun codeTypesToBinaryName(type: Iterable<CodeType>): String {
         val sb = StringBuilder()
@@ -110,7 +101,11 @@ object CodeTypeUtil {
 
             if (bounds.isEmpty()) {
                 if (!codeType.isType) {
-                    return GenericUtil.fixResult("T$name;")
+                    if(codeType.isWildcard) {
+                        return GenericUtil.fixResult("$name")
+                    }else {
+                        return GenericUtil.fixResult("T$name;")
+                    }
                 } else {
                     return name + ";"
                 }

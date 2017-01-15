@@ -1,4 +1,4 @@
-md5: a61758fc9f1309b29b2950f7ce49fd7e
+md5: a2c7ee03e58e7872ca7f2b2f97a512fe
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -8,7 +8,7 @@ source: bridgeTest.cai, debug: null
 public class com.bridgeTest extends java.lang.Object implements com.AB {
 
     !access: 65 (ACC_PUBLIC, ACC_BRIDGE)
-    !signature: (Ljava/lang/Iterable<T*;>;)V
+    !signature: (Ljava/lang/Iterable<*>;)V
     public void iterate(java.lang.Iterable) {
       Label_0:
         aload 0
@@ -18,7 +18,7 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         return
       Label_1:
       LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/bridgeTest;, signature: null, start: Label_0, end: Label_1]
-      LOCAL_VARIABLE[index: 1, name: iter, desc: Ljava/lang/Iterable;, signature: Ljava/lang/Iterable<T*;>;, start: Label_0, end: Label_1]
+      LOCAL_VARIABLE[index: 1, name: iter, desc: Ljava/lang/Iterable;, signature: Ljava/lang/Iterable<*>;, start: Label_0, end: Label_1]
       MAX_STACK: 2, MAX_LOCALS: 2
     }
 

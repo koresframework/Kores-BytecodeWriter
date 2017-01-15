@@ -122,7 +122,7 @@ object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
                 if (aCase !is EmptyCase) {
                     mv.visitLabel(label)
 
-                    visitorGenerator.generateTo(CodeSource::class.java, aCase.body!!, extraData, additional)
+                    visitorGenerator.generateTo(CodeSource::class.java, aCase.body, extraData, additional)
                 }
             }
 
@@ -231,10 +231,10 @@ object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
     private fun insertEqualityCheck(aSwitch: SwitchStatement): SwitchStatement {
         val switchValue = aSwitch.value
 
-        if (switchValue.type!!.`is`(Types.INT))
+        if (switchValue.type.`is`(Types.INT))
             return aSwitch
 
-        return SwitchStatementBuilder(aSwitch).withCases(aSwitch.cases.map { aCase ->
+        return aSwitch.builder().withCases(aSwitch.cases.map { aCase ->
 
             if (aCase.isDefault)
                 return@map aCase
@@ -249,7 +249,7 @@ object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
                 if (type.`is`(Types.INT))
                     return@map aCase
 
-                return@map CaseBuilder(aCase).withBody(CodeAPI.sourceOfParts(
+                return@map aCase.builder().withBody(CodeAPI.sourceOfParts(
                         SwitchIfStatement(codeSource,
                                 CodeSource.empty(),
                                 listOf(CodeAPI.checkTrue(

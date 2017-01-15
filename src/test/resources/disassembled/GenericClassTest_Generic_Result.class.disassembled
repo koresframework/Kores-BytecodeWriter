@@ -1,4 +1,4 @@
-md5: eef631ecfb5dd9f8d320af00ee699dca
+md5: e3f952cc642e5a3f4321be3673a42bd6
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -13,7 +13,7 @@ public class com.Generic extends java.lang.Object implements java.util.List {
 
     !access: 9 (ACC_PUBLIC, ACC_STATIC)
     !signature: <T::Ljava/util/List<TT;>;>(TT;)V
-    public static void test(java.lang.Object) {
+    public static void test(java.util.List) {
       Label_0:
        LINE 4 -> Label_0
         aconst_null

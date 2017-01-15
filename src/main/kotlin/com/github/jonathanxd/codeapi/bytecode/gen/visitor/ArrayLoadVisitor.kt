@@ -35,6 +35,7 @@ import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
+import com.github.jonathanxd.codeapi.util.Stack
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
@@ -56,7 +57,7 @@ object ArrayLoadVisitor : VoidVisitor<ArrayLoad, BytecodeClass, MVData> {
         additional.methodVisitor.visitInsn(opcode)
 
         if (!arrayComponentType.`is`(valueType)) {
-            val cast = CodeAPI.cast(valueType, arrayComponentType, null)
+            val cast = CodeAPI.cast(valueType, arrayComponentType, Stack)
             visitorGenerator.generateTo(cast.javaClass, cast, extraData, additional)
         }
     }

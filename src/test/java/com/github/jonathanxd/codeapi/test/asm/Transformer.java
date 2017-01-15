@@ -206,7 +206,7 @@ public class Transformer {
         @Override
         public void println(Object obj) {
             super.println(obj);
-            printed.add(obj.toString());
+            printed.add(String.valueOf(obj));
         }
     }
 }

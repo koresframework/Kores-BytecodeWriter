@@ -41,7 +41,7 @@ import org.objectweb.asm.Opcodes
 object AnnotationPropertyVisitor : VoidVisitor<AnnotationProperty, BytecodeClass, Any?> {
 
     override fun voidVisit(t: AnnotationProperty, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
-        val cw = Util.find(TypeVisitor.CLASS_WRITER_REPRESENTATION, extraData, additional)
+        val cw = Util.find(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)
 
         val asmModifiers = Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT
 

@@ -1,10 +1,10 @@
-md5: 6af0c04dce62e64a7ae39f1148f2556b
+md5: 6d5ca08ee487acce0e0c13ae6c9a470b
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
 
 source: InnerClass$Inner.cai, debug: null
-innerClass: test/InnerClass.test/InnerClass$Inner -> test.InnerClass$Inner (access: 33 (ACC_PUBLIC))
+innerClass: test/InnerClass.test/InnerClass$Inner -> Inner (access: 1 (ACC_PUBLIC))
 public class test.InnerClass$Inner extends java.lang.Object {
 
     !access: 18 (ACC_PRIVATE, ACC_FINAL)

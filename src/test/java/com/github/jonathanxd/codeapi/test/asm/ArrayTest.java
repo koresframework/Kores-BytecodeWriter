@@ -27,6 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.test.CommonGen;
 
@@ -43,11 +45,9 @@ public class ArrayTest {
 
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        byte[] bytes = bytecodeGenerator.gen(sourceOfParts(CommonGen.gen()))[0].getBytecode();
+        CodeSource gen = CommonGen.gen();
 
-        ResultSaver.save(getClass(), bytes);
-
-        Class<?> define = new BCLoader().define(CommonGen.name, bytes);
+        Class<?> define = CommonBytecodeTest.test(this.getClass(), (TypeDeclaration) gen.get(0), gen, aClass -> aClass);
 
         try {
             define.newInstance();

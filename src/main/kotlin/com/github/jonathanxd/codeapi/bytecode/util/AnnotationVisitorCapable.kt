@@ -42,14 +42,14 @@ interface AnnotationVisitorCapable {
 
     fun visitParameterAnnotation(parameter: Int, desc: String, visible: Boolean): AnnotationVisitor
 
-    class ClassWriterVisitorCapable(private val classWriter: ClassWriter) : AnnotationVisitorCapable {
+    class ClassVisitorVisitorCapable(private val classVisitor: ClassVisitor) : AnnotationVisitorCapable {
 
         override fun visitAnnotation(desc: String, visible: Boolean): AnnotationVisitor {
-            return this.classWriter.visitAnnotation(desc, visible)
+            return this.classVisitor.visitAnnotation(desc, visible)
         }
 
         override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath, desc: String, visible: Boolean): AnnotationVisitor {
-            return this.classWriter.visitTypeAnnotation(typeRef, typePath, desc, visible)
+            return this.classVisitor.visitTypeAnnotation(typeRef, typePath, desc, visible)
         }
 
         override fun visitParameterAnnotation(parameter: Int, desc: String, visible: Boolean): AnnotationVisitor {

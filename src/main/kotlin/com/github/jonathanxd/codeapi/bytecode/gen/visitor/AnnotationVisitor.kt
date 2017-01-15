@@ -42,7 +42,7 @@ object AnnotationVisitor : VoidVisitor<Annotation, BytecodeClass, Any?> {
     override fun voidVisit(t: Annotation, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         val classWriterOpt =
                 if (additional == null) {
-                    extraData.getOptional(TypeVisitor.CLASS_WRITER_REPRESENTATION)
+                    extraData.getOptional(TypeVisitor.CLASS_VISITOR_REPRESENTATION)
                 } else {
                     null
                 }
@@ -51,7 +51,7 @@ object AnnotationVisitor : VoidVisitor<Annotation, BytecodeClass, Any?> {
 
         when (additional) {
             null -> if (classWriterOpt!!.isPresent) {
-                annotationVisitorCapable = AnnotationVisitorCapable.ClassWriterVisitorCapable(classWriterOpt.get())
+                annotationVisitorCapable = AnnotationVisitorCapable.ClassVisitorVisitorCapable(classWriterOpt.get())
             }
 
             is MVData -> annotationVisitorCapable = AnnotationVisitorCapable.MethodVisitorCapable(additional.methodVisitor)

@@ -79,7 +79,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
             }
         }
 
-        val cw = Util.find(TypeVisitor.CLASS_WRITER_REPRESENTATION, extraData, additional)
+        val cw = Util.find(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)
 
         val body = t.body
 
@@ -176,18 +176,19 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
             if (returnType == "V") {
                 mv.visitInsn(Opcodes.RETURN)
             }
-            try {
-                mv.visitMaxs(0, 0)
-            } catch (e: Exception) {
-                RuntimeException("An exception occurred during the call of 'MethodVisitor.visitMaxs(0, 0)' (stack count and frame generation) of method '$t'!", e).printStackTrace()
-            }
-
 
             val end = Label()
 
             mv.visitLabel(end)
 
             mvData.visitVars(l0, end)
+
+            try {
+                mv.visitMaxs(0, 0)
+            } catch (e: Exception) {
+                RuntimeException("An exception occurred during the call of 'MethodVisitor.visitMaxs(0, 0)' (stack count and frame generation) of method '$t'!", e).printStackTrace()
+            }
+
         }
 
         // Unregister sugar env

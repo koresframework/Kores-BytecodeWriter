@@ -55,7 +55,7 @@ object FieldVisitor : Visitor<FieldDeclaration, BytecodeClass, Any?> {
 
         val asm = ModifierUtil.modifiersToAsm(t.modifiers)
 
-        val required = Util.find(TypeVisitor.CLASS_WRITER_REPRESENTATION, extraData, additional)/*extraData.getRequired(TypeVisitor.CLASS_WRITER_REPRESENTATION);*/
+        val required = Util.find(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)/*extraData.getRequired(TypeVisitor.CLASS_WRITER_REPRESENTATION);*/
 
         var signature: String? = null
 

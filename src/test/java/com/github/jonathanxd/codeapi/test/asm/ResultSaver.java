@@ -28,6 +28,7 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.bytecodedisassembler.Disassembler;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.iutils.array.PrimitiveArrayConverter;
 
 import java.io.File;
@@ -56,6 +57,18 @@ public final class ResultSaver {
 
     }*/
     // Temporary disabled
+    public static void save(Class<?> ofClass, BytecodeClass[] result) {
+        for (BytecodeClass bytecodeClass : result) {
+            save(ofClass, bytecodeClass.getType().getSimpleName(), bytecodeClass.getBytecode());
+        }
+    }
+
+    public static void save(Class<?> ofClass, String tag, BytecodeClass[] result) {
+        for (BytecodeClass bytecodeClass : result) {
+            save(ofClass, tag + "_" + bytecodeClass.getType().getSimpleName(), bytecodeClass.getBytecode());
+        }
+    }
+
     public static void save(Class<?> ofClass, String tag, byte[] result) {
         if (IS_GRADLE_ENVIRONMENT)
             return;

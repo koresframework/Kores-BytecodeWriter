@@ -29,26 +29,21 @@ package com.github.jonathanxd.codeapi.bytecode.gen
 
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.base.Access
-import com.github.jonathanxd.codeapi.base.Annotable
-import com.github.jonathanxd.codeapi.base.AnnotationProperty
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
-import com.github.jonathanxd.codeapi.bytecode.LINE
-import com.github.jonathanxd.codeapi.bytecode.VisitLineType
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.bytecode.gen.visitor.*
-import com.github.jonathanxd.codeapi.common.IterationType
-import com.github.jonathanxd.codeapi.common.IterationTypes
-import com.github.jonathanxd.codeapi.gen.ArrayAppender
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.base.Annotation
+import com.github.jonathanxd.codeapi.bytecode.*
+import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.bytecode.gen.visitor.*
+import com.github.jonathanxd.codeapi.exception.ProcessingException
+import com.github.jonathanxd.codeapi.gen.ArrayAppender
+import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.option.Options
 import com.github.jonathanxd.iutils.type.AbstractTypeInfo
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.tree.ClassNode
+import org.objectweb.asm.util.CheckClassAdapter
 import java.util.function.Consumer
 
 class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclaration) -> String = { "${it.simpleName}.cai" }) //CodeAPI Instructions
@@ -121,11 +116,11 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
 
     override fun generateTo(partClass: Class<out CodePart>, codePart: CodePart, extraData: MapData, consumer: Consumer<Array<out BytecodeClass>>?, additional: Any?): Array<out BytecodeClass> {
 
-        if(this.options.get(VISIT_LINES).get() == VisitLineType.INCREMENTAL
+        if (this.options.get(VISIT_LINES).get() == VisitLineType.INCREMENTAL
                 && additional != null
                 && additional is MVData) {
             val line = extraData.getOptional(LINE).let {
-                if(!it.isPresent) {
+                if (!it.isPresent) {
                     extraData.registerData(LINE, 1)
                     0
                 } else {
@@ -143,12 +138,32 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
 
         }
 
-        return super.generateTo(partClass, codePart, extraData, consumer, additional)
+        return super.generateTo(partClass, codePart, extraData, consumer, additional).let {
+            check(it)
+            it
+        }
+    }
+
+    private fun check(classes: Array<out BytecodeClass>) {
+        if(this.options[CHECK].get()) {
+            if (classes.isNotEmpty()) {
+                classes.forEach {
+                    val bytecode = it.bytecode
+                    if (bytecode.isNotEmpty()) {
+                        try {
+                            ClassReader(bytecode).accept(CheckClassAdapter(ClassNode(), true), 0)
+                        }catch (t: Throwable) {
+                            throw ProcessingException("Failed to check bytecode of class ${it.type.qualifiedName}", t)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     companion object {
         @JvmStatic
-        val SOURCE_FILE_FUNCTION = object: AbstractTypeInfo<(TypeDeclaration) -> String>(true) {}
+        val SOURCE_FILE_FUNCTION = object : AbstractTypeInfo<(TypeDeclaration) -> String>(true) {}
     }
 
     private class ByteAppender internal constructor() : ArrayAppender<BytecodeClass>() {

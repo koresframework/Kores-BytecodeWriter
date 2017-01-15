@@ -59,7 +59,7 @@ object ArrayUtil {
         }
     }
 
-    fun visitArrayStore(arrayType: CodeType, dimensions: Int, mv: MethodVisitor) {
+    fun visitArrayStore(arrayType: CodeType, mv: MethodVisitor) {
         when (arrayType.type) {
             "int" -> {
                 mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_INT)
@@ -86,7 +86,7 @@ object ArrayUtil {
                 mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_LONG)
             }
             else -> {
-                mv.visitTypeInsn(Opcodes.ANEWARRAY, CodeTypeUtil.arrayToTypeDesc(arrayType, dimensions))
+                mv.visitTypeInsn(Opcodes.ANEWARRAY, CodeTypeUtil.arrayToTypeDesc(arrayType))
             }
         }
     }
