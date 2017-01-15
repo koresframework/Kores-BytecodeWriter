@@ -202,5 +202,11 @@ public class Transformer {
             super.println(str);
             printed.add(str);
         }
+
+        @Override
+        public void println(Object obj) {
+            super.println(obj);
+            printed.add(obj.toString());
+        }
     }
 }
