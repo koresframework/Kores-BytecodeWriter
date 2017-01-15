@@ -1,4 +1,4 @@
-md5: dec53ab05d767bd2f96dfe74a5146abf
+md5: 13894dd254c59f3cea09d991d68ba5b3
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -16,7 +16,7 @@ public class com.MethodFragment extends java.lang.Object {
        LINE 4 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "BOB"
-        invokestatic com.MethodFragment.fragment$$1628243149(java.lang.String)java.lang.String (ownerIsInterface: false)
+        invokestatic com.MethodFragment.fragment$$_786775336(java.lang.String)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       MAX_STACK: 2, MAX_LOCALS: 0
@@ -34,7 +34,7 @@ public class com.MethodFragment extends java.lang.Object {
     }
 
     !access: 10 (ACC_PRIVATE, ACC_STATIC)
-    private static java.lang.String fragment$$1628243149(java.lang.String) {
+    private static java.lang.String fragment$$_786775336(java.lang.String) {
       Label_0:
        LINE 5 -> Label_0
         aload 0

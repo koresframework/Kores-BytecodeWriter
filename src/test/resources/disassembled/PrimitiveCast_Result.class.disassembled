@@ -1,4 +1,4 @@
-md5: a0c58f557a02967ad623e96997e51371
+md5: 41a21e3997d153ba1adb42a1d51035f5
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -11,17 +11,17 @@ public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated exte
       Label_0:
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
-        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         new java.lang.Integer
         dup
-        bipush lconst_0
+        bipush 9
         invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
         checkcast java.lang.Object
       Label_1:
         astore 1
         new java.lang.Integer
         dup
-        bipush lconst_0
+        bipush 9
         invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
         checkcast java.lang.Object
       Label_2:
@@ -36,7 +36,7 @@ public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated exte
         invokevirtual java.lang.Integer.intValue()int (ownerIsInterface: false)
       Label_4:
         istore 4
-        bipush lconst_0
+        bipush 9
       Label_5:
         istore 5
         iload 5
@@ -52,21 +52,21 @@ public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated exte
         istore 8
         new java.lang.Integer
         dup
-        bipush lconst_0
+        bipush 9
         invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
         invokevirtual java.lang.Integer.intValue()int (ownerIsInterface: false)
         ireturn
       Label_9:
-        !localVariable[index: 0, name: string, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_9]
-        !localVariable[index: 1, name: objectF, desc: Ljava/lang/Object;, signature: null, start: Label_1, end: Label_9]
-        !localVariable[index: 2, name: iF, desc: Ljava/lang/Object;, signature: null, start: Label_2, end: Label_9]
-        !localVariable[index: 3, name: IntegerBoxed, desc: I, signature: null, start: Label_3, end: Label_9]
-        !localVariable[index: 4, name: IntegerBoxed2, desc: I, signature: null, start: Label_4, end: Label_9]
-        !localVariable[index: 5, name: int, desc: I, signature: null, start: Label_5, end: Label_9]
-        !localVariable[index: 6, name: IntToInt, desc: I, signature: null, start: Label_6, end: Label_9]
-        !localVariable[index: 7, name: Long, desc: J, signature: null, start: Label_7, end: Label_9]
-        !localVariable[index: 8, name: LongToByte, desc: B, signature: null, start: Label_8, end: Label_9]
-        MAX_STACK: 3, MAX_LOCALS: 9
+      LOCAL_VARIABLE[index: 0, name: string, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_9]
+      LOCAL_VARIABLE[index: 1, name: objectF, desc: Ljava/lang/Object;, signature: null, start: Label_1, end: Label_9]
+      LOCAL_VARIABLE[index: 2, name: iF, desc: Ljava/lang/Object;, signature: null, start: Label_2, end: Label_9]
+      LOCAL_VARIABLE[index: 3, name: IntegerBoxed, desc: I, signature: null, start: Label_3, end: Label_9]
+      LOCAL_VARIABLE[index: 4, name: IntegerBoxed2, desc: I, signature: null, start: Label_4, end: Label_9]
+      LOCAL_VARIABLE[index: 5, name: int, desc: I, signature: null, start: Label_5, end: Label_9]
+      LOCAL_VARIABLE[index: 6, name: IntToInt, desc: I, signature: null, start: Label_6, end: Label_9]
+      LOCAL_VARIABLE[index: 7, name: Long, desc: J, signature: null, start: Label_7, end: Label_9]
+      LOCAL_VARIABLE[index: 8, name: LongToByte, desc: B, signature: null, start: Label_8, end: Label_9]
+      MAX_STACK: 3, MAX_LOCALS: 9
     }
 
     !access: 1 (ACC_PUBLIC)
@@ -76,13 +76,13 @@ public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated exte
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
-        !localVariable[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/PrimitiveCast_Generated;, signature: null, start: Label_0, end: Label_1]
-        MAX_STACK: 1, MAX_LOCALS: 1
+      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/PrimitiveCast_Generated;, signature: null, start: Label_0, end: Label_1]
+      MAX_STACK: 1, MAX_LOCALS: 1
     }
 
     !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
     static void <clinit>() {
         return
-        MAX_STACK: 0, MAX_LOCALS: 0
+      MAX_STACK: 0, MAX_LOCALS: 0
     }
 }

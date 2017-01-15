@@ -208,8 +208,8 @@ object CodeTypeUtil {
         var opcode = -1
 
         if (from.isPrimitive && to.isPrimitive) {
-            val fromTypeChar = Character.toUpperCase(from.type[0])
-            val toTypeChar = Character.toUpperCase(to.type[0])
+            val fromTypeChar = Character.toUpperCase(from.canonicalName[0])
+            val toTypeChar = Character.toUpperCase(to.canonicalName[0])
 
             opcode = this.getOpcode(fromTypeChar, toTypeChar)
 
