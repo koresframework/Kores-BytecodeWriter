@@ -45,10 +45,6 @@ object FieldAccessVisitor : VoidVisitor<FieldAccess, BytecodeClass, MVData> {
         val mv = additional.methodVisitor
         var fieldAccess = t
 
-        val typeDeclaration by lazy {
-            Util.find(TypeVisitor.CODE_TYPE_REPRESENTATION, extraData, null)
-        }
-
         var localization: CodeType = Util.resolveType(fieldAccess.localization, extraData, additional)
 
         val at = fieldAccess.target

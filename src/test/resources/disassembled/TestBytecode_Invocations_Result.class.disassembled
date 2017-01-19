@@ -1,4 +1,4 @@
-md5: def0d4bc2b39db14e72a47a36f720040
+md5: 7ad115997764c1ac5edad89f25d96868
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -116,7 +116,7 @@ public class fullName.TestBytecode_Invocations_Generated extends java.lang.Objec
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_9:
        LINE 21 -> Label_9
-        invokedynamic get()java.util.function.Supplier (bootstrap: java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [()Ljava/lang/Object;, fullName.TestBytecode_Invocations_Generated.fragment$$_1575825260()java.lang.String (tag: h_invokestatic, itf: false), ()Ljava/lang/String;])
+        invokedynamic get()java.util.function.Supplier (bootstrap: java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [()Ljava/lang/Object;, fullName.TestBytecode_Invocations_Generated.fragment$$_1732069347()java.lang.String (tag: h_invokestatic, itf: false), ()Ljava/lang/String;])
       Label_10:
         astore 4
       Label_11:
@@ -202,7 +202,7 @@ public class fullName.TestBytecode_Invocations_Generated extends java.lang.Objec
     }
 
     !access: 10 (ACC_PRIVATE, ACC_STATIC)
-    private static java.lang.String fragment$$_1575825260() {
+    private static java.lang.String fragment$$_1732069347() {
       Label_0:
        LINE 34 -> Label_0
         ldc "BRB"

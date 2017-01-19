@@ -138,7 +138,7 @@ object ConstructorUtil {
          * Declare variables
          */
         val all = CodeSourceUtil.find<FieldDeclaration>(
-                typeDeclaration.body!!,
+                typeDeclaration.body,
                 { codePart ->
                     codePart is FieldDeclaration
                             && !codePart.modifiers.contains(CodeModifier.STATIC)

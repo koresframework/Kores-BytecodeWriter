@@ -97,7 +97,7 @@ object Util {
             if (part is CodeSource) {
                 val listCodeSourcePair = Util.grabAndRemoveInnerDecl(part)
 
-                typeDeclarationList.addAll(listCodeSourcePair!!.first)
+                typeDeclarationList.addAll(listCodeSourcePair.first)
 
                 codeSource.add(listCodeSourcePair.second)
             } else {
@@ -151,6 +151,7 @@ object Util {
     fun <T : Accessor> fixAccessor(accessor: T, extraData: MapData,
                                    localization: MutableContainer<CodeType>,
                                    consumer: ((MutableContainer<T>, InnerType) -> Unit)?): T {
+        @Suppress("NAME_SHADOWING")
         var accessor = accessor
 
 

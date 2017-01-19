@@ -47,6 +47,7 @@ object ParameterUtil {
     }
 
     fun parametersToMap(parameters: Collection<CodeParameter>, startAt: Int): Map<String, Int> {
+        @Suppress("NAME_SHADOWING")
         var startAt = startAt
 
         if (parameters.isEmpty())

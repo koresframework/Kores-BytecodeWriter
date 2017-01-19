@@ -40,8 +40,6 @@ import org.objectweb.asm.Type
 object VariableDefinitionVisitor : VoidVisitor<VariableDefinition, BytecodeClass, MVData> {
 
     override fun voidVisit(t: VariableDefinition, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val visitor = additional.methodVisitor
-
         val variableName = t.name
         val variableType = t.type
 

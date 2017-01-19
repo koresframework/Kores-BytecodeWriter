@@ -28,7 +28,6 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.CatchStatement
 import com.github.jonathanxd.codeapi.base.TryStatement
@@ -101,7 +100,7 @@ object TryWithResourcesVisitor : VoidVisitor<TryWithResources, BytecodeClass, MV
         catchStatements.add(catchStatement)
         catchStatements.addAll(t.catchStatements)
 
-        val tryCatchStatement = CodeAPI.tryStatement(t.body!!,
+        val tryCatchStatement = CodeAPI.tryStatement(t.body,
                 catchStatements,
                 CodeAPI.source(
                         CodeAPI.ifStatement(
@@ -116,7 +115,7 @@ object TryWithResourcesVisitor : VoidVisitor<TryWithResources, BytecodeClass, MV
                                                         closeInvocation
                                                 ))
                                 )),
-                        t.finallyStatement ?: CodeSource.empty()
+                        t.finallyStatement
                 ))
 
         visitorGenerator.generateTo(TryStatement::class.java, tryCatchStatement, extraData, null, additional)

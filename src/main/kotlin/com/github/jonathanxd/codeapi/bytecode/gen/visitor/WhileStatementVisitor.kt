@@ -53,13 +53,13 @@ object WhileStatementVisitor : VoidVisitor<WhileStatement, BytecodeClass, MVData
         val insideEnd = Label()
         val outsideEnd = Label()
 
-        val ifStatement = IfStatementImpl(t.expressions, t.body ?: CodeSource.empty(), CodeSource.empty())
+        val ifStatement = IfStatementImpl(t.expressions, t.body, CodeSource.empty())
 
         val flow = Flow(null, whileStart, insideStart, insideEnd, outsideEnd)
 
         extraData.registerData(ConstantDatas.FLOW_TYPE_INFO, flow)
 
-        if(t.type == WhileStatement.Type.DO_WHILE) {
+        if (t.type == WhileStatement.Type.DO_WHILE) {
 
             mv.visitLabel(whileStart)
 
@@ -68,18 +68,16 @@ object WhileStatementVisitor : VoidVisitor<WhileStatement, BytecodeClass, MVData
 
             visitorGenerator.generateTo(IfStatement::class.java, ifStatement, extraData, null, additional)
 
-            t.body?.let {
-                visitorGenerator.generateTo(CodeSource::class.java, it, extraData, null, additional)
-            }
+            visitorGenerator.generateTo(CodeSource::class.java, t.body, extraData, null, additional)
 
             mv.visitLabel(insideEnd)
 
             visit(ifStatement, whileStart, outOfIf, true, true, extraData, visitorGenerator, additional)
 
             mv.visitLabel(outsideEnd)
-        } else if(t.type == WhileStatement.Type.WHILE) {
+        } else if (t.type == WhileStatement.Type.WHILE) {
 
-            val source = t.body?.toMutable() ?: MutableCodeSource()
+            val source = t.body.toMutable()
 
             mv.visitLabel(whileStart)
 

@@ -50,7 +50,7 @@ object AnnotationDeclarationVisitor : Visitor<AnnotationDeclaration, BytecodeCla
 
         val body = t.body
 
-        if (body != null) {
+        if (body.isNotEmpty) {
             source.addAll(body)
         }
 

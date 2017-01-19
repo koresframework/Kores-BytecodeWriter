@@ -176,7 +176,7 @@ fun visit(ifStatement: IfStatement,
 
     visitor.visitLabel(inIfLabel)
 
-    val body = ifStatement.body!!
+    val body = ifStatement.body
 
     visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, mvData)
 

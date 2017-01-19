@@ -40,8 +40,7 @@ object CodePartUtil {
         if (codePart is Literal) {
             return Literals.isPrimitive(codePart)
         } else if (codePart is Typed) {
-
-            return (codePart.type ?: throw RuntimeException("Cannot determine type of '$codePart'")).isPrimitive
+            return codePart.type.isPrimitive
         } else {
             throw RuntimeException("Cannot determine type of part '$codePart'!")
         }

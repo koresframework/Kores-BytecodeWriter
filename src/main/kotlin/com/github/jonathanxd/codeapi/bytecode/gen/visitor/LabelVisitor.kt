@@ -27,7 +27,6 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.base.Label as CodeLabel
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
@@ -35,12 +34,12 @@ import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
+import com.github.jonathanxd.codeapi.base.Label as CodeLabel
 
 
 object LabelVisitor : VoidVisitor<CodeLabel, BytecodeClass, MVData> {
 
     override fun voidVisit(t: CodeLabel, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val mv = additional.methodVisitor
 
         val start = Label()
         val end = Label()
@@ -49,9 +48,7 @@ object LabelVisitor : VoidVisitor<CodeLabel, BytecodeClass, MVData> {
 
         extraData.registerData(ConstantDatas.FLOW_TYPE_INFO, flow)
 
-        t.body?.let {
-            visitorGenerator.gen(it, extraData, additional)
-        }
+        visitorGenerator.gen(t.body, extraData, additional)
 
         extraData.unregisterData(ConstantDatas.FLOW_TYPE_INFO, flow)
 

@@ -134,7 +134,7 @@ object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
 
             val aDefault = this.getDefault(originCaseList)
 
-            val codeSource = aDefault.body ?: CodeSource.empty()
+            val codeSource = aDefault.body
 
             visitorGenerator.generateTo(CodeSource::class.java, codeSource, extraData, additional)
 

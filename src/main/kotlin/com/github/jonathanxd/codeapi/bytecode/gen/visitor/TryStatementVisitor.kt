@@ -56,11 +56,7 @@ object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
         val finallySource = t.finallyStatement
 
-        val finallyLabel = if (finallySource != null) {
-            Label()
-        } else {
-            null
-        }
+        val finallyLabel = Label()
 
         val catches = java.util.HashMap<CatchStatement, Label>()
 
@@ -83,16 +79,12 @@ object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
         val body = t.body
 
-        if (body != null) {
-            visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, additional)
-        }
+        visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, additional)
 
         mv.visitLabel(l1)
 
-        if (finallyLabel != null) {
-            mv.visitLabel(finallyLabel)
-            visitorGenerator.generateTo(CodeSource::class.java, finallySource!!, extraData, null, additional)
-        }
+        mv.visitLabel(finallyLabel)
+        visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
 
 
         mv.visitJumpInsn(Opcodes.GOTO, outOfIf)
@@ -128,35 +120,25 @@ object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
             val codeSource = catchBlock.body
 
-            var toAdd = CodeSource.empty()
-
-            if (finallyLabel != null) {
-                toAdd = finallySource!!
-            }
-
             val booleanContainer = BooleanContainer(false)
 
-            if (codeSource != null) {
-                var codeSource1 = CodeSource.fromIterable(codeSource)
+            var codeSource1 = CodeSource.fromIterable(codeSource)
 
 
-                codeSource1 = CodeSourceUtil.insertBefore({ codePart ->
-                    if (codePart is ThrowException) {
-                        booleanContainer.set(true)
-                        return@insertBefore true
-                    }
+            codeSource1 = CodeSourceUtil.insertBefore({ codePart ->
+                if (codePart is ThrowException) {
+                    booleanContainer.set(true)
+                    return@insertBefore true
+                }
 
-                    false
-                }, toAdd, codeSource1)
+                false
+            }, finallySource, codeSource1)
 
-                visitorGenerator.generateTo(CodeSource::class.java, codeSource1, extraData, null, additional)
-            }
+            visitorGenerator.generateTo(CodeSource::class.java, codeSource1, extraData, null, additional)
 
 
             if (!booleanContainer.get()) {
-                if (finallyLabel != null) {
-                    visitorGenerator.generateTo(CodeSource::class.java, finallySource!!, extraData, null, additional)
-                }
+                visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
             }
 
             mv.visitJumpInsn(Opcodes.GOTO, outOfIf)

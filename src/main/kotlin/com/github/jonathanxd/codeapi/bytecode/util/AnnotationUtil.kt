@@ -47,6 +47,7 @@ object AnnotationUtil {
     }
 
     fun visitAnnotationValue(annotationVisitor: org.objectweb.asm.AnnotationVisitor, key: String?, value: Any) {
+        @Suppress("NAME_SHADOWING")
         var value = value
 
         if (value.javaClass.isArray) {

@@ -49,8 +49,8 @@ internal interface InstructionCodePart : CodePart {
 
     object InstructionCodePartVisitor : VoidVisitor<InstructionCodePart, BytecodeClass, Any?> {
 
-        override fun voidVisit(part: InstructionCodePart, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
-            part.apply(part, extraData, visitorGenerator, additional)
+        override fun voidVisit(t: InstructionCodePart, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+            t.apply(t, extraData, visitorGenerator, additional)
         }
 
     }

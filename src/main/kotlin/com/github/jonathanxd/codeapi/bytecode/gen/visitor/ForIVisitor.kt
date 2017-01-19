@@ -62,7 +62,7 @@ object ForIVisitor : VoidVisitor<ForStatement, BytecodeClass, MVData> {
 
         val source = MutableCodeSource()
 
-        t.body?.let { source.addAll(it) }
+        source.addAll(t.body)
 
         val ifStatement = IfStatementImpl(t.forExpression, source, CodeSource.empty())
 

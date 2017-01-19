@@ -45,15 +45,14 @@ import com.github.jonathanxd.iutils.data.MapData
 object ConstructorVisitor : Visitor<ConstructorDeclaration, BytecodeClass, Any?> {
 
     override fun visit(t: ConstructorDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
+        @Suppress("NAME_SHADOWING")
         var t = t
 
         val outerFields = extraData.getAllAsList(TypeVisitor.OUTER_FIELD_REPRESENTATION)
 
         if (!outerFields.isEmpty()) {
-            val typeDeclaration = extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot find CodeClass. Register 'TypeVisitor.CODE_TYPE_REPRESENTATION'!")
-
             val parameters = ArrayList<CodeParameter>(t.parameters)
-            var source = CodeSource.fromIterable(t.body ?: CodeSource.empty())
+            var source = CodeSource.fromIterable(t.body)
 
             for (outerField in outerFields) {
                 parameters.add(0, CodeParameter(outerField.type, outerField.name))

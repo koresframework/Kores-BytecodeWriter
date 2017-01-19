@@ -27,7 +27,6 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.common
 
-import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.ToStringBuilder
 import org.objectweb.asm.Label
@@ -42,14 +41,14 @@ class Variable @JvmOverloads constructor(val name: String, val type: CodeType, v
         return Objects.hash(this.name, this.type)
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj == null)
+    override fun equals(other: Any?): Boolean {
+        if (other == null)
             return false
 
-        if (obj !is Variable)
+        if (other !is Variable)
             return false
 
-        return obj.name == this.name && obj.type.compareTo(this.type) == 0
+        return other.name == this.name && other.type.compareTo(this.type) == 0
 
     }
 
