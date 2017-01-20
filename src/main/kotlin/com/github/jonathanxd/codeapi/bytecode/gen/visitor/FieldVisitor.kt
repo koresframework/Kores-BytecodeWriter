@@ -29,19 +29,19 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.base.Annotable
 import com.github.jonathanxd.codeapi.base.FieldDeclaration
-import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.type.GenericType
-import com.github.jonathanxd.iutils.data.MapData
+import org.objectweb.asm.ClassVisitor
 
 object FieldVisitor : Visitor<FieldDeclaration, BytecodeClass, Any?> {
 
-    override fun visit(t: FieldDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
+    override fun visit(t: FieldDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
         if (additional == null) {
 
             if (t.value != null) { // Only initialize for fields with default value.
@@ -55,7 +55,7 @@ object FieldVisitor : Visitor<FieldDeclaration, BytecodeClass, Any?> {
 
         val asm = ModifierUtil.modifiersToAsm(t.modifiers)
 
-        val required = Util.find(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)/*extraData.getRequired(TypeVisitor.CLASS_WRITER_REPRESENTATION);*/
+        val required = Util.find<ClassVisitor>(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)/*extraData.getRequired(TypeVisitor.CLASS_WRITER_REPRESENTATION);*/
 
         var signature: String? = null
 

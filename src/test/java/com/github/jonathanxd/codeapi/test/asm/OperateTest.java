@@ -36,9 +36,6 @@ import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
-/**
- * Created by jonathan on 03/09/16.
- */
 public class OperateTest {
 
     @Test

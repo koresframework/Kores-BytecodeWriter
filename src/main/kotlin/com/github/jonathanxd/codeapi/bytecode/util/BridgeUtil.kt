@@ -33,7 +33,6 @@ import com.github.jonathanxd.codeapi.base.ImplementationHolder
 import com.github.jonathanxd.codeapi.base.MethodDeclaration
 import com.github.jonathanxd.codeapi.base.SuperClassHolder
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.common.CodeParameter
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
 import com.github.jonathanxd.codeapi.common.TypeSpec
 import com.github.jonathanxd.codeapi.generic.GenericSignature
@@ -43,14 +42,8 @@ import com.github.jonathanxd.codeapi.type.Generic
 import com.github.jonathanxd.codeapi.type.LoadedCodeType
 import com.github.jonathanxd.codeapi.util.TypeVarUtil
 import com.github.jonathanxd.codeapi.util.element.ElementUtil
-
-import java.lang.reflect.Method
-import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
-import java.util.ArrayList
-import java.util.Objects
-import java.util.Optional
-import java.util.stream.Collectors
+import java.util.*
 
 object BridgeUtil {
 

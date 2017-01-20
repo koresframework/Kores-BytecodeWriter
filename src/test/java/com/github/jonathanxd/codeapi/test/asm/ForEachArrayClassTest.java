@@ -38,9 +38,6 @@ import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * Created by jonathan on 05/07/16.
- */
 public class ForEachArrayClassTest {
 
     @Test

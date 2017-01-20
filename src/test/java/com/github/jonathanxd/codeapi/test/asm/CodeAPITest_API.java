@@ -31,7 +31,6 @@ import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.factory.ClassFactory;
 import com.github.jonathanxd.codeapi.factory.MethodFactory;
@@ -49,12 +48,9 @@ import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.source;
 import static com.github.jonathanxd.codeapi.Types.STRING;
 import static com.github.jonathanxd.codeapi.Types.VOID;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.*;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.STATIC;
 
-
-/**
- * Created by jonathan on 02/05/16.
- */
 @SuppressWarnings("Duplicates")
 public class CodeAPITest_API {
 

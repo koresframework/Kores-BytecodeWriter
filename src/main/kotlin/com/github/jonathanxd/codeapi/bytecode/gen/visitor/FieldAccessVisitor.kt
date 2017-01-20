@@ -32,16 +32,16 @@ import com.github.jonathanxd.codeapi.base.FieldAccess
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.iutils.container.MutableContainer
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
 object FieldAccessVisitor : VoidVisitor<FieldAccess, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: FieldAccess, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: FieldAccess, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val mv = additional.methodVisitor
         var fieldAccess = t
 

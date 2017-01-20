@@ -31,7 +31,6 @@ import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.factory.ClassFactory;
 import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
 import com.github.jonathanxd.codeapi.factory.FieldFactory;
@@ -42,15 +41,13 @@ import com.github.jonathanxd.iutils.exception.RethrowException;
 
 import org.junit.Test;
 
-import java.lang.reflect.Modifier;
 import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.common.CodeModifier.*;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.FINAL;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PRIVATE;
+import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
 import static kotlin.collections.CollectionsKt.listOf;
 
-/**
- * Created by jonathan on 25/07/16.
- */
 public class FinalFieldWithThis {
 
 

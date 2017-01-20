@@ -32,14 +32,14 @@ import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.EnumDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.util.EnumUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.type.Generic
-import com.github.jonathanxd.iutils.data.MapData
 
 object EnumVisitor : Visitor<EnumDeclaration, BytecodeClass, Any?> {
 
-    override fun visit(t: EnumDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
+    override fun visit(t: EnumDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
         val enumModifiers = EnumUtil.getEnumModifiers(t)
         val source = EnumUtil.generateEnumClassSource(t)
 

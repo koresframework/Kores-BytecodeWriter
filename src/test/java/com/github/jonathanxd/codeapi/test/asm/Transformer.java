@@ -30,9 +30,9 @@ package com.github.jonathanxd.codeapi.test.asm;
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.bytecode.common.MVData;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.common.Data;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
-import com.github.jonathanxd.iutils.data.MapData;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -143,7 +143,7 @@ public class Transformer {
 
             if (opcode == Opcodes.ARETURN) {
                 MVData mvData = new MVData(super.mv, new ArrayList<>());
-                MapData mapData = new MapData();
+                Data mapData = new Data();
 
                 super.visitInsn(Opcodes.POP);
 
@@ -179,7 +179,7 @@ public class Transformer {
 
                 bytecodeGenerator.gen(
                         CodeAPI.sourceOfParts(Predefined.invokePrintln(CodeAPI.argument(Literals.STRING("Inicializado!")))),
-                        new MapData(),
+                        new Data(),
                         mvData);
 
                 //bytecodeGenerator.gen

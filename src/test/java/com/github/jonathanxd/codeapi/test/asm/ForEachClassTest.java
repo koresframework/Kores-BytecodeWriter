@@ -40,9 +40,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by jonathan on 05/07/16.
- */
 public class ForEachClassTest {
 
     @Test

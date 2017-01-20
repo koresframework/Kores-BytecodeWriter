@@ -45,9 +45,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 
-/**
- * Created by jonathan on 21/08/16.
- */
 public class FinallyTest {
 
     @Test(expected = RuntimeException.class)

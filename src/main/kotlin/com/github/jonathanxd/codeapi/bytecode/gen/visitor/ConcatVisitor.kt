@@ -33,14 +33,14 @@ import com.github.jonathanxd.codeapi.base.Concat
 import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
 
 
 object ConcatVisitor : VoidVisitor<Concat, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: Concat, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: Concat, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val concatenations = t.concatenations
 
         val first = if (concatenations.isEmpty()) null else concatenations[0]

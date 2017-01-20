@@ -29,26 +29,23 @@ package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodePart
-import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.MutableCodeSource
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.base.impl.MethodSpecificationImpl
+import com.github.jonathanxd.codeapi.builder.MethodInvocationBuilder
+import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.gen.visitor.TypeVisitor
 import com.github.jonathanxd.codeapi.common.*
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.base.impl.MethodSpecificationImpl
-import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.builder.MethodInvocationBuilder
-import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.util.source.CodeArgumentUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
-import com.github.jonathanxd.iutils.data.MapData
 import java.util.*
 
 object InnerUtil {
     fun genOuterAccessor(outer: TypeDeclaration,
                          inner: InnerType?,
                          memberInfo: MemberInfo,
-                         extraData: MapData,
+                         extraData: Data,
                          visitorGenerator: VisitorGenerator<BytecodeClass>,
                          isConstructor: Boolean) {
 
@@ -71,7 +68,7 @@ object InnerUtil {
         }
     }
 
-    private fun generatePackagePrivateAccess(outer: TypeDeclaration, extraData: MapData, element: CodePart): MethodDeclaration {
+    private fun generatePackagePrivateAccess(outer: TypeDeclaration, extraData: Data, element: CodePart): MethodDeclaration {
 
         if (element !is ModifiersHolder || element !is Typed)
             throw IllegalArgumentException("Element doesn't match requirements: extends Modifierable & Typed.")
@@ -117,7 +114,7 @@ object InnerUtil {
             val arguments = CodeArgumentUtil.argumentsFromParameters(parameters)
 
             if (isConstructor) {
-                val current = extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION)
+                val current: TypeDeclaration = extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION)
                 val parameter = CodeAPI.parameter(current, CodeSourceUtil.getNewName("\$inner", parameters))
 
                 parameters.add(parameter)
@@ -132,7 +129,7 @@ object InnerUtil {
                         this.spec = MethodSpecificationImpl(
                                 methodType = if (isConstructor) MethodType.SUPER_CONSTRUCTOR else MethodType.METHOD,
                                 methodName = element.name,
-                                description = TypeSpec(element.returnType, element.parameters.map {it.type})
+                                description = TypeSpec(element.returnType, element.parameters.map { it.type })
                         )
                         this.arguments = arguments
                     }

@@ -28,7 +28,6 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.common.TypeSpec
-import java.util.*
 
 object TypeSpecUtil {
 

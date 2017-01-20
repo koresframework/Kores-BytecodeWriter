@@ -32,16 +32,16 @@ import com.github.jonathanxd.codeapi.base.ArrayStore
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.ArrayUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.util.CodeTypeUtil
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
 object ArrayConstructVisitor : VoidVisitor<ArrayConstructor, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ArrayConstructor, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: ArrayConstructor, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val mv = additional.methodVisitor
         val arguments = t.arguments
 
@@ -50,7 +50,7 @@ object ArrayConstructVisitor : VoidVisitor<ArrayConstructor, BytecodeClass, MVDa
         val multi = dimensions.size > 1
         val component = t.arrayType.arrayComponent
 
-        if(t.arrayType.arrayDimension != dimensions.size)
+        if (t.arrayType.arrayDimension != dimensions.size)
             throw IllegalArgumentException("Array dimension not equal to provided dimensions. Array Dimension: ${t.arrayType.arrayDimension}. Provided dimensions: ${dimensions.size}")
 
         if (multi && !initialize) {

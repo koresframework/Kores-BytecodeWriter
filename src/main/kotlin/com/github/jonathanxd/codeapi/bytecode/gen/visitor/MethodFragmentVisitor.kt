@@ -32,19 +32,19 @@ import com.github.jonathanxd.codeapi.base.MethodFragment
 import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.type.TypeInfo
 
 object MethodFragmentVisitor : VoidVisitor<MethodFragment, BytecodeClass, Any?> {
 
+    // MethodFragment
     @JvmStatic
-    val FRAGMENT_TYPE_INFO = TypeInfo.aUnique(MethodFragment::class.java)
+    val FRAGMENT_TYPE_INFO = "METHOD_FRAGMENT"
 
     @JvmStatic
-    fun <T: Any> visitFragmentsGeneration(visitorGenerator: VisitorGenerator<T>, extraData: MapData) {
-        val all = extraData.getAll(MethodFragmentVisitor.FRAGMENT_TYPE_INFO)
+    fun <T : Any> visitFragmentsGeneration(visitorGenerator: VisitorGenerator<T>, extraData: Data) {
+        val all = extraData.getAllAsList<MethodFragment>(MethodFragmentVisitor.FRAGMENT_TYPE_INFO)
 
         if (!all.isEmpty()) {
             for (methodFragment in all) {
@@ -53,10 +53,25 @@ object MethodFragmentVisitor : VoidVisitor<MethodFragment, BytecodeClass, Any?> 
         }
     }
 
-    override fun voidVisit(t: MethodFragment, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+    @JvmStatic
+    fun newFragment(t: MethodFragment, extraData: Data): MethodFragment =
+            Util.getNewName("fragment$$", t.declaration, extraData).let { name ->
+                t.builder().withSpec(t.spec.builder().withName(name).build()).withDeclaration(t.declaration.builder().withName(name).build()).build()
+            }
+
+    override fun voidVisit(t: MethodFragment, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         if (additional != null && additional is MVData) {
-            extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, t)
-            visitorGenerator.generateTo(MethodInvocation::class.java, t, extraData, null, additional)
+
+            val fragment = newFragment(t, extraData)
+
+            /*val declaration = t.declaration.builder().withName().build()
+            t.builder().withDeclaration()*/
+
+            /*extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, t)
+            visitorGenerator.generateTo(MethodInvocation::class.java, t, extraData, null, additional)*/
+
+            extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, fragment)
+            visitorGenerator.generateTo(MethodInvocation::class.java, fragment, extraData, null, additional)
         } else {
             visitorGenerator.generateTo(MethodDeclaration::class.java, t.declaration, extraData, null, null)
         }

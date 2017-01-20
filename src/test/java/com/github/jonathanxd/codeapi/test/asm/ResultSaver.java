@@ -36,9 +36,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
-/**
- * Created by jonathan on 13/06/16.
- */
 public final class ResultSaver {
 
     public static final boolean IS_GRADLE_ENVIRONMENT;
@@ -95,11 +92,13 @@ public final class ResultSaver {
 
                 Files.write(pathJavap.toPath(), disassemble.getBytes(Charset.forName("UTF-8")), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 
-                new ProcessBuilder("git", "add", savedPath)
+                Process start = new ProcessBuilder("git", "add", savedPath)
                         .redirectOutput(ProcessBuilder.Redirect.INHERIT)
                         .redirectError(ProcessBuilder.Redirect.INHERIT)
                         .redirectErrorStream(true)
                         .start();
+
+                start.waitFor();
 
             }catch (Exception e) {
                 e.printStackTrace();

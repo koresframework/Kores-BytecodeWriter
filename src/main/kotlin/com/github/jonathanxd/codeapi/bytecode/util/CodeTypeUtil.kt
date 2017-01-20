@@ -101,9 +101,9 @@ object CodeTypeUtil {
 
             if (bounds.isEmpty()) {
                 if (!codeType.isType) {
-                    if(codeType.isWildcard) {
+                    if (codeType.isWildcard) {
                         return GenericUtil.fixResult("$name")
-                    }else {
+                    } else {
                         return GenericUtil.fixResult("T$name;")
                     }
                 } else {

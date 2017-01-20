@@ -30,14 +30,14 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.LiteralUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.literal.Literal
-import com.github.jonathanxd.iutils.data.MapData
 
 object LiteralVisitor : Visitor<Literal, BytecodeClass, MVData> {
 
-    override fun visit(t: Literal, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData): Array<BytecodeClass> {
+    override fun visit(t: Literal, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData): Array<BytecodeClass> {
         LiteralUtil.visitLiteral(t, additional.methodVisitor)
 
         return emptyArray()

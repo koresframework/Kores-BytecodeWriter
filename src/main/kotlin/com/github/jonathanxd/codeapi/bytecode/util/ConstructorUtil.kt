@@ -34,11 +34,11 @@ import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.common.InvokeType
 import com.github.jonathanxd.codeapi.common.MethodType
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
@@ -128,7 +128,7 @@ object ConstructorUtil {
         return searchResult
     }
 
-    fun <T> declareFinalFields(visitorGenerator: VisitorGenerator<T>, methodBody: CodeSource?, typeDeclaration: TypeDeclaration, mv: MethodVisitor, extraData: MapData, mvData: MVData, validate: Boolean) {
+    fun <T> declareFinalFields(visitorGenerator: VisitorGenerator<T>, methodBody: CodeSource?, typeDeclaration: TypeDeclaration, mv: MethodVisitor, extraData: Data, mvData: MVData, validate: Boolean) {
 
         if (ConstructorUtil.searchInitThis(typeDeclaration, methodBody, validate)) {
             return

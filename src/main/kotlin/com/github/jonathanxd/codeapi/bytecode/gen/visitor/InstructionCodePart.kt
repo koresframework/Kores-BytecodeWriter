@@ -29,18 +29,18 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
 
 internal interface InstructionCodePart : CodePart {
 
-    fun apply(value: Any, extraData: MapData, visitorGenerator: VisitorGenerator<*>, additional: Any?)
+    fun apply(value: Any, extraData: Data, visitorGenerator: VisitorGenerator<*>, additional: Any?)
 
     companion object {
-        fun create(func: (Any, MapData, VisitorGenerator<*>, Any?) -> Unit): InstructionCodePart {
-            return object: InstructionCodePart {
-                override fun apply(value: Any, extraData: MapData, visitorGenerator: VisitorGenerator<*>, additional: Any?) {
+        fun create(func: (Any, Data, VisitorGenerator<*>, Any?) -> Unit): InstructionCodePart {
+            return object : InstructionCodePart {
+                override fun apply(value: Any, extraData: Data, visitorGenerator: VisitorGenerator<*>, additional: Any?) {
                     func(value, extraData, visitorGenerator, additional)
                 }
             }
@@ -49,7 +49,7 @@ internal interface InstructionCodePart : CodePart {
 
     object InstructionCodePartVisitor : VoidVisitor<InstructionCodePart, BytecodeClass, Any?> {
 
-        override fun voidVisit(t: InstructionCodePart, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+        override fun voidVisit(t: InstructionCodePart, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
             t.apply(t, extraData, visitorGenerator, additional)
         }
 

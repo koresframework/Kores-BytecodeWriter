@@ -54,9 +54,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.EnumSet;
 
-/**
- * Created by jonathan on 12/05/16.
- */
 public class SimpleTest2_Bytecode {
 
     // antes da refatoração: ~890ms

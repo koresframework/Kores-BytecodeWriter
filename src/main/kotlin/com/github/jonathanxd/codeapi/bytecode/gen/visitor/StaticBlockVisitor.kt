@@ -35,23 +35,20 @@ import com.github.jonathanxd.codeapi.base.StaticBlock
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
-import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.type.TypeInfo
 import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.ClassWriter
-import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
 object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
 
-    val STATIC_BLOCKS = TypeInfo.a(StaticBlock::class.java).setUnique(true).build()
+    // StaticBlock
+    val STATIC_BLOCKS = "STATIC_BLOCK"
 
-    fun generate(extraData: MapData, visitorGenerator: VisitorGenerator<*>, cw: ClassVisitor, typeDeclaration: TypeDeclaration) {
+    fun generate(extraData: Data, visitorGenerator: VisitorGenerator<*>, cw: ClassVisitor, typeDeclaration: TypeDeclaration) {
 
         val mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null)
 
@@ -85,12 +82,12 @@ object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
         }
 
 
-        if(body.isNotEmpty)
+        if (body.isNotEmpty)
             visitorGenerator.generateTo(CodeSource::class.java, body, extraData, mvData)
 
         // Static Blocks
 
-        val staticBlocks = extraData.getAll(STATIC_BLOCKS)
+        val staticBlocks = extraData.getAllAsList<StaticBlock>(STATIC_BLOCKS)
 
         for (staticBlock in staticBlocks) {
             visitorGenerator.generateTo(CodeSource::class.java, staticBlock.body, extraData, mvData)
@@ -107,7 +104,7 @@ object StaticBlockVisitor : VoidVisitor<StaticBlock, BytecodeClass, Any?> {
         mv.visitEnd()
     }
 
-    override fun voidVisit(t: StaticBlock, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+    override fun voidVisit(t: StaticBlock, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         extraData.registerData(STATIC_BLOCKS, t)
     }
 

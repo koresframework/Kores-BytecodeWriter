@@ -36,22 +36,20 @@ import com.github.jonathanxd.codeapi.base.Case
 import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.base.SwitchStatement
 import com.github.jonathanxd.codeapi.base.Typed
-import com.github.jonathanxd.codeapi.builder.CaseBuilder
-import com.github.jonathanxd.codeapi.builder.SwitchStatementBuilder
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.common.SwitchTypes
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 
 object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: SwitchStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: SwitchStatement, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val switchType = t.switchType
         var aSwitch: SwitchStatement = t
 

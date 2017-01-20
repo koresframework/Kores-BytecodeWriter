@@ -28,7 +28,6 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.CodePart
-import com.github.jonathanxd.codeapi.base.Cast
 import com.github.jonathanxd.codeapi.base.impl.CastImpl
 import com.github.jonathanxd.codeapi.common.CodeArgument
 import com.github.jonathanxd.codeapi.util.TypeResolver

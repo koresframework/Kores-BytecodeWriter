@@ -38,19 +38,20 @@ import com.github.jonathanxd.codeapi.bytecode.common.Variable
 import com.github.jonathanxd.codeapi.bytecode.util.*
 import com.github.jonathanxd.codeapi.bytecode.util.asm.ParameterVisitor
 import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.SugarSyntaxVisitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.inspect.SourceInspect
 import com.github.jonathanxd.codeapi.util.element.ElementUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
-import com.github.jonathanxd.iutils.data.MapData
+import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
 object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, Any?> {
 
-    override fun voidVisit(t: MethodDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+    override fun voidVisit(t: MethodDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
 
         val validateSuper = visitorGenerator.options.getOrElse(VALIDATE_SUPER, true)
         val validateThis = visitorGenerator.options.getOrElse(VALIDATE_THIS, true)
@@ -58,7 +59,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
 
         val isConstructor = t is ConstructorDeclaration
 
-        val typeDeclaration = extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot find CodeClass. Register 'TypeVisitor.CODE_TYPE_REPRESENTATION'!")
+        val typeDeclaration = Util.find<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, extraData, additional)
 
         if (!t.modifiers.contains(CodeModifier.BRIDGE) && genBridge) {
             val bridgeOpt = BridgeUtil.genBridgeMethod(typeDeclaration, t)
@@ -79,7 +80,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
             }
         }
 
-        val cw = Util.find(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)
+        val cw = Util.find<ClassVisitor>(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)
 
         val body = t.body
 
@@ -120,7 +121,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
 
         // Register Sugar Env
         val sugarEnv = MVDataSugarEnvironment(mvData)
-        extraData.addData(SugarSyntaxVisitor.ENVIRONMENT, sugarEnv)
+        extraData.registerData(SugarSyntaxVisitor.ENVIRONMENT, sugarEnv)
 
         visitorGenerator.generateTo(Annotable::class.java, t, extraData, null, mvData)
 

@@ -34,14 +34,15 @@ import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.IfExpr
 import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
 import com.github.jonathanxd.codeapi.bytecode.util.IfUtil
 import com.github.jonathanxd.codeapi.bytecode.util.OperatorUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.operator.Operators
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
@@ -50,7 +51,7 @@ fun visit(ifStatement: IfStatement,
           outOfIfLabel: Label,
           revert: Boolean,
           jumpToStart: Boolean,
-          extraData: MapData,
+          extraData: Data,
           visitorGenerator: VisitorGenerator<BytecodeClass>,
           mvData: MVData) {
 
@@ -79,7 +80,7 @@ fun visit(ifStatement: IfStatement,
             val isInverse = !revert == (next == null || next !== Operators.OR)
 
             val lbl = if (ifStatement is SwitchVisitor.SwitchIfStatement) { // Workaround ?
-                extraData.getRequired(ConstantDatas.FLOW_TYPE_INFO).insideEnd
+                extraData.getRequired<Flow>(ConstantDatas.FLOW_TYPE_INFO).insideEnd
             } else {
                 if (jumpToStart) ifStartLabel else if (!isInverse) inIfLabel else elseLabel ?: outOfIfLabel // Jump to else if exists
             }

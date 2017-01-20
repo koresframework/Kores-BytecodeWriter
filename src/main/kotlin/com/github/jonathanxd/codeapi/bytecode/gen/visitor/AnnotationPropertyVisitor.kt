@@ -27,21 +27,22 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.base.Annotable
+import com.github.jonathanxd.codeapi.base.AnnotationProperty
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.base.Annotable
-import com.github.jonathanxd.codeapi.base.AnnotationProperty
 import com.github.jonathanxd.codeapi.util.CodeTypeUtil
-import com.github.jonathanxd.iutils.data.MapData
+import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.Opcodes
 
 object AnnotationPropertyVisitor : VoidVisitor<AnnotationProperty, BytecodeClass, Any?> {
 
-    override fun voidVisit(t: AnnotationProperty, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
-        val cw = Util.find(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)
+    override fun voidVisit(t: AnnotationProperty, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+        val cw = Util.find<ClassVisitor>(TypeVisitor.CLASS_VISITOR_REPRESENTATION, extraData, additional)
 
         val asmModifiers = Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT
 

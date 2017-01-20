@@ -81,9 +81,6 @@ import java.util.function.Supplier;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-/**
- * Created by jonathan on 03/06/16.
- */
 @SuppressWarnings("Duplicates")
 public class TestBytecode_Invocations {
     public static final TestBytecode_Invocations INSTANCE = new TestBytecode_Invocations();

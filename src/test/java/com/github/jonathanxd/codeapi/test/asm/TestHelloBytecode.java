@@ -49,9 +49,6 @@ import java.util.EnumSet;
 
 import static java.util.Collections.singletonList;
 
-/**
- * Created by jonathan on 03/06/16.
- */
 public class TestHelloBytecode {
     @Test
     public void testBytecode() {

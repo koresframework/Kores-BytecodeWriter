@@ -31,16 +31,18 @@ import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.base.Annotation
-import com.github.jonathanxd.codeapi.bytecode.*
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.CHECK
+import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.gen.visitor.*
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.exception.ProcessingException
 import com.github.jonathanxd.codeapi.gen.ArrayAppender
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.literal.Literal
-import com.github.jonathanxd.iutils.data.MapData
 import com.github.jonathanxd.iutils.option.Options
-import com.github.jonathanxd.iutils.type.AbstractTypeInfo
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.util.CheckClassAdapter
@@ -50,6 +52,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
     : VisitorGenerator<BytecodeClass>() {
 
     private val options_ = Options()
+    override val emptyArray: Array<out BytecodeClass> = kotlin.emptyArray()
 
     init {
         addVisitor(Access::class.java, AccessVisitor)
@@ -103,8 +106,8 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
 
     override val options: Options = this.options_
 
-    override fun makeData(): MapData {
-        val data = MapData()
+    override fun makeData(): Data {
+        val data = Data()
 
         data.registerData(SOURCE_FILE_FUNCTION, sourceFile)
 
@@ -114,12 +117,12 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
     override fun createAppender(): ArrayAppender<BytecodeClass> = ByteAppender()
 
 
-    override fun generateTo(partClass: Class<out CodePart>, codePart: CodePart, extraData: MapData, consumer: Consumer<Array<out BytecodeClass>>?, additional: Any?): Array<out BytecodeClass> {
+    override fun <C : CodePart> generateTo(partClass: Class<out C>, codePart: C, extraData: Data, consumer: Consumer<Array<out BytecodeClass>>?, additional: Any?): Array<out BytecodeClass> {
 
         if (this.options.get(VISIT_LINES).get() == VisitLineType.INCREMENTAL
                 && additional != null
                 && additional is MVData) {
-            val line = extraData.getOptional(LINE).let {
+            val line = extraData.getOptional<Int>(LINE).let {
                 if (!it.isPresent) {
                     extraData.registerData(LINE, 1)
                     0
@@ -145,14 +148,14 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
     }
 
     private fun check(classes: Array<out BytecodeClass>) {
-        if(this.options[CHECK].get()) {
+        if (this.options[CHECK].get()) {
             if (classes.isNotEmpty()) {
                 classes.forEach {
                     val bytecode = it.bytecode
                     if (bytecode.isNotEmpty()) {
                         try {
                             ClassReader(bytecode).accept(CheckClassAdapter(ClassNode(), true), 0)
-                        }catch (t: Throwable) {
+                        } catch (t: Throwable) {
                             throw ProcessingException("Failed to check bytecode of class ${it.type.qualifiedName}", t)
                         }
                     }
@@ -162,8 +165,13 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
     }
 
     companion object {
+        //(TypeDeclaration) -> String
         @JvmStatic
-        val SOURCE_FILE_FUNCTION = object : AbstractTypeInfo<(TypeDeclaration) -> String>(true) {}
+        val SOURCE_FILE_FUNCTION = "SOURCE_FILE_FUNCTION"
+
+        // Int
+        @JvmField
+        val LINE = "LINE_POSITION"
     }
 
     private class ByteAppender internal constructor() : ArrayAppender<BytecodeClass>() {

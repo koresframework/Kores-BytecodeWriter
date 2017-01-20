@@ -28,16 +28,14 @@
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
-import com.github.jonathanxd.codeapi.base.Access
-import com.github.jonathanxd.codeapi.base.ArgumentHolder
-import com.github.jonathanxd.codeapi.base.MethodInvocation
-import com.github.jonathanxd.codeapi.base.SuperClassHolder
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.MethodInvocationUtil
 import com.github.jonathanxd.codeapi.bytecode.util.TypeSpecUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.common.InvokeDynamic
 import com.github.jonathanxd.codeapi.common.InvokeType
 import com.github.jonathanxd.codeapi.common.MethodType
@@ -45,19 +43,18 @@ import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.iutils.container.MutableContainer
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
 object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData> {
 
-    override fun visit(t: MethodInvocation, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData): Array<out BytecodeClass> {
+    override fun visit(t: MethodInvocation, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData): Array<out BytecodeClass> {
         val mv = additional.methodVisitor
         var methodInvocation = t
 
         var localization: CodeType = Util.resolveType(methodInvocation.localization, extraData, additional)
 
         val enclosingType: CodeType by lazy {
-            extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!")
+            extraData.getRequired<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!")
         }
 
         if (methodInvocation.spec.methodType == MethodType.SUPER_CONSTRUCTOR) {
@@ -152,12 +149,18 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
             // Generate lambda 'invokeDynamic'
             if (invokeDynamic is InvokeDynamic.LambdaMethodReference) {
 
-                MethodInvocationUtil.visitLambdaInvocation(invokeDynamic, invokeType, localization, specification, mv)
-
-                if (invokeDynamic is InvokeDynamic.LambdaFragment) {
+                val spec = if (invokeDynamic is InvokeDynamic.LambdaFragment) {
                     // Register fragment to gen
-                    extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, invokeDynamic.methodFragment)
-                }
+                    val newFragment = MethodFragmentVisitor.newFragment(invokeDynamic.methodFragment, extraData)
+
+                    extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, newFragment)
+
+                    specification.builder().withMethodName(newFragment.declaration.name).build()
+                } else specification
+
+
+                MethodInvocationUtil.visitLambdaInvocation(invokeDynamic, invokeType, localization, spec, mv)
+
             } else if (invokeDynamic is InvokeDynamic.Bootstrap) { // Generate bootstrap 'invokeDynamic'
                 // Visit bootstrap invoke dynamic
                 MethodInvocationUtil.visitBootstrapInvocation(invokeDynamic, specification, mv)

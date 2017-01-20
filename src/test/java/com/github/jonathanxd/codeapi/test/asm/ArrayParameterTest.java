@@ -44,9 +44,6 @@ import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
 import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
 import static com.github.jonathanxd.codeapi.factory.ConstructorFactory.constructor;
 
-/**
- * Created by jonathan on 18/06/16.
- */
 public class ArrayParameterTest {
     final String name = getClass().getCanonicalName() + "_Generated";
 

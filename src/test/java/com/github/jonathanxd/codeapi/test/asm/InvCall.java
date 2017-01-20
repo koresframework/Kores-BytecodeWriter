@@ -51,9 +51,6 @@ import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
 import static com.github.jonathanxd.codeapi.Types.STRING;
 import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
 
-/**
- * Created by jonathan on 26/06/16.
- */
 public class InvCall {
 
     @Test

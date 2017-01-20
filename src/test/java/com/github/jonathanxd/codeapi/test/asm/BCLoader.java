@@ -29,9 +29,6 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 
-/**
- * Created by jonathan on 05/07/16.
- */
 public final class BCLoader extends ClassLoader {
 
     public Class<?> define(String name, byte[] bytes) {

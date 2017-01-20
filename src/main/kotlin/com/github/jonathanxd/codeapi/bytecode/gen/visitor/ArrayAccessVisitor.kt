@@ -29,14 +29,13 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.base.ArrayAccess
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
 
 object ArrayAccessVisitor : VoidVisitor<ArrayAccess, BytecodeClass, Any?> {
 
-    override fun voidVisit(t: ArrayAccess, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+    override fun voidVisit(t: ArrayAccess, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         val target = t.target
 
         visitorGenerator.generateTo(target.javaClass, target, extraData, null, additional)

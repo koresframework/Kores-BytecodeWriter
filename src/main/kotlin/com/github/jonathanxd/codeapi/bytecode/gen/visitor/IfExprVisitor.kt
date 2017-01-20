@@ -32,14 +32,14 @@ import com.github.jonathanxd.codeapi.base.IfExpr
 import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.iutils.data.MapData
 
 object IfExprVisitor : VoidVisitor<IfExpr, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: IfExpr, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: IfExpr, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val ifStatement = CodeAPI.ifStatement(
                 CodeAPI.ifExprs(t),
                 CodeAPI.sourceOfParts(

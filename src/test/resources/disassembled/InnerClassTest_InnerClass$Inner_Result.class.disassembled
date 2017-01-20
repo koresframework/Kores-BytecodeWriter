@@ -1,4 +1,4 @@
-md5: 6d5ca08ee487acce0e0c13ae6c9a470b
+md5: eb29a0a93a81d36e2be0648990d58e63
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -8,7 +8,7 @@ innerClass: test/InnerClass.test/InnerClass$Inner -> Inner (access: 1 (ACC_PUBLI
 public class test.InnerClass$Inner extends java.lang.Object {
 
     !access: 18 (ACC_PRIVATE, ACC_FINAL)
-    private final test.InnerClass innerClass$outer
+    private final test.InnerClass innerClass$outer1
 
     !access: 1 (ACC_PUBLIC)
     public test.InnerClass a
@@ -19,13 +19,13 @@ public class test.InnerClass$Inner extends java.lang.Object {
        LINE 7 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
-        getfield test.InnerClass$Inner.innerClass$outer (type: test.InnerClass)
+        getfield test.InnerClass$Inner.innerClass$outer1 (type: test.InnerClass)
         invokevirtual test.InnerClass.invoke$000()java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
        LINE 8 -> Label_1
         aload 0
-        getfield test.InnerClass$Inner.innerClass$outer (type: test.InnerClass)
+        getfield test.InnerClass$Inner.innerClass$outer1 (type: test.InnerClass)
         invokevirtual test.InnerClass.mm()void (ownerIsInterface: false)
       Label_2:
        LINE 9 -> Label_2
@@ -65,11 +65,11 @@ public class test.InnerClass$Inner extends java.lang.Object {
        LINE 12 -> Label_1
         aload 0
         aload 1
-        putfield test.InnerClass$Inner.innerClass$outer (type: test.InnerClass)
+        putfield test.InnerClass$Inner.innerClass$outer1 (type: test.InnerClass)
         return
       Label_2:
       LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/InnerClass$Inner;, signature: null, start: Label_0, end: Label_2]
-      LOCAL_VARIABLE[index: 1, name: innerClass$outer, desc: Ltest/InnerClass;, signature: null, start: Label_0, end: Label_2]
+      LOCAL_VARIABLE[index: 1, name: innerClass$outer1, desc: Ltest/InnerClass;, signature: null, start: Label_0, end: Label_2]
       MAX_STACK: 5, MAX_LOCALS: 2
     }
 

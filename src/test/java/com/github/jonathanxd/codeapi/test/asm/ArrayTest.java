@@ -29,22 +29,13 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.test.CommonGen;
 
 import org.junit.Test;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
-
-/**
- * Created by jonathan on 18/06/16.
- */
 public class ArrayTest {
     @Test
     public void arrayTest() {
-
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
-
         CodeSource gen = CommonGen.gen();
 
         Class<?> define = CommonBytecodeTest.test(this.getClass(), (TypeDeclaration) gen.get(0), gen, aClass -> aClass);

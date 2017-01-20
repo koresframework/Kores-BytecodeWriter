@@ -34,12 +34,10 @@ import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.CatchStatement;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
-import com.github.jonathanxd.codeapi.base.FieldDeclaration;
 import com.github.jonathanxd.codeapi.base.IfStatement;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.VariableDeclaration;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
-import com.github.jonathanxd.codeapi.builder.FieldDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.VariableDeclarationBuilder;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
@@ -67,12 +65,6 @@ import java.util.List;
 
 import kotlin.collections.CollectionsKt;
 
-/**
- * Created by jonathan on 02/05/16.
- */
-// Will works only if Bytecode Generator is fully complete!
-// No, i need to generate Try-Catch Blocks
-// Generate for, while, do statements, switch, <clint> and improve if statements!
 @SuppressWarnings("Duplicates")
 public class CodeAPITestBytecode {
 

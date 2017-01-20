@@ -33,13 +33,13 @@ import com.github.jonathanxd.codeapi.base.AnnotationDeclaration
 import com.github.jonathanxd.codeapi.builder.InterfaceDeclarationBuilder
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.common.CodeModifier
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.iutils.data.MapData
 
 object AnnotationDeclarationVisitor : Visitor<AnnotationDeclaration, BytecodeClass, Any?> {
 
-    override fun visit(t: AnnotationDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
+    override fun visit(t: AnnotationDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
         val modifiers = java.util.TreeSet(t.modifiers)
 
         modifiers.add(CodeModifier.ANNOTATION)

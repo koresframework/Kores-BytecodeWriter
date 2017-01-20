@@ -30,15 +30,15 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 import com.github.jonathanxd.codeapi.base.VariableAccess
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 
 object VariableAccessVisitor : VoidVisitor<VariableAccess, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: VariableAccess, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: VariableAccess, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val mv = additional.methodVisitor
         val variableAccess = t
 

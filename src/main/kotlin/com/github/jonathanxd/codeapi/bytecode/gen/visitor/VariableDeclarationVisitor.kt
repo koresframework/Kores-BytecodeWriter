@@ -32,17 +32,17 @@ import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.VariableVariantUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.util.HiddenVariable
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 
 object VariableDeclarationVisitor : VoidVisitor<VariableDeclaration, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: VariableDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: VariableDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val mv = additional.methodVisitor
 
         val value = t.value
@@ -70,8 +70,8 @@ object VariableDeclarationVisitor : VoidVisitor<VariableDeclaration, BytecodeCla
             i = additional.storeVar(t.name, t.variableType, i_label, null)
                     .orElseThrow({ additional.failStore(t) })
         }
-        
-        if(t.value != null) {
+
+        if (t.value != null) {
             val type = Type.getType(t.variableType.javaSpecName)
 
             val opcode = type.getOpcode(Opcodes.ISTORE) // ALOAD

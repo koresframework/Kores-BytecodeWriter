@@ -36,16 +36,16 @@ import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.base.impl.VariableDeclarationImpl
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.common.TypeSpec
 import com.github.jonathanxd.codeapi.factory.variable
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.iutils.data.MapData
 
 object TryWithResourcesVisitor : VoidVisitor<TryWithResources, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: TryWithResources, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: TryWithResources, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val vari = t.variable
 
         // Generate try-catch initialize field

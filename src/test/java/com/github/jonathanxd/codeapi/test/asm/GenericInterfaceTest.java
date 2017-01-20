@@ -41,7 +41,6 @@ import com.github.jonathanxd.codeapi.type.Generic;
 
 import org.junit.Test;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.EnumSet;
 

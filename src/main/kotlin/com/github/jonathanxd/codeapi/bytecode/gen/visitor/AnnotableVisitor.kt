@@ -27,17 +27,17 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.base.Annotable
 import com.github.jonathanxd.codeapi.base.Annotation
-import com.github.jonathanxd.iutils.data.MapData
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.common.Data
+import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
+import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import org.objectweb.asm.Opcodes
 
 object AnnotableVisitor : VoidVisitor<Annotable, BytecodeClass, Any?>, Opcodes {
 
-    override fun voidVisit(t: Annotable, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+    override fun voidVisit(t: Annotable, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         t.annotations.forEach {
             visitorGenerator.generateTo(Annotation::class.java, it, extraData, null, additional)
         }

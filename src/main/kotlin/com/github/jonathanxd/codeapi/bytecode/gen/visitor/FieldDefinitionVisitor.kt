@@ -32,14 +32,14 @@ import com.github.jonathanxd.codeapi.base.FieldDefinition
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
 object FieldDefinitionVisitor : VoidVisitor<FieldDefinition, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: FieldDefinition, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: FieldDefinition, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val localization = Util.resolveType(t.localization, extraData, additional)
         val target = t.target
 

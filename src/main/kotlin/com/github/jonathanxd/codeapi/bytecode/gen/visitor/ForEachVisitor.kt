@@ -33,9 +33,11 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.MVDataSugarEnvironment
 import com.github.jonathanxd.codeapi.bytecode.util.ObjectCache
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.SugarSyntaxVisitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
+import com.github.jonathanxd.codeapi.sugar.SugarEnvironment
 import com.github.jonathanxd.iutils.data.MapData
 
 /**
@@ -43,9 +45,9 @@ import com.github.jonathanxd.iutils.data.MapData
  */
 object ForEachVisitor : VoidVisitor<ForEachStatement, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ForEachStatement, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: ForEachStatement, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
 
-        val env = extraData.getOptional(SugarSyntaxVisitor.ENVIRONMENT).orElse(MVDataSugarEnvironment(additional))
+        val env = extraData.getOptional<SugarEnvironment>(SugarSyntaxVisitor.ENVIRONMENT).orElse(MVDataSugarEnvironment(additional))
 
         val iterationType = t.iterationType
         val start = iterationType.createGenerator(env)

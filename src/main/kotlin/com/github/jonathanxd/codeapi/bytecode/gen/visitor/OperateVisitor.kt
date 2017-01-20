@@ -31,6 +31,7 @@ import com.github.jonathanxd.codeapi.base.Operate
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.helper.OperateHelper
@@ -38,13 +39,12 @@ import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 
 object OperateVisitor : VoidVisitor<Operate, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: Operate, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: Operate, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val target = t.target
 
         val operation = t.operation

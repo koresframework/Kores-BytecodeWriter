@@ -62,9 +62,6 @@ import java.util.EnumSet;
 
 import static java.util.Collections.singletonList;
 
-/**
- * Created by jonathan on 03/06/16.
- */
 @SuppressWarnings("Duplicates")
 public class TestBytecode {
     public static CodePart invokePrintln(CodeArgument toPrint) {
@@ -73,6 +70,37 @@ public class TestBytecode {
                 "println",
                 CodeAPI.typeSpec(Types.VOID, Types.OBJECT),
                 singletonList(toPrint));
+    }
+
+    public static MethodDeclaration makeCM() {
+        MutableCodeSource methodSource = new MutableCodeSource();
+
+        MethodDeclaration codeMethod = MethodDeclarationBuilder.builder()
+                .withModifiers(CodeModifier.PUBLIC)
+                .withName("printIt")
+                .withParameters(new CodeParameter(Types.OBJECT, "n"))
+                .withReturnType(Types.VOID)
+                .withBody(methodSource)
+                .build();
+
+        methodSource.add(CodeAPI.ifStatement(
+                CodeAPI.checkNotNull(CodeAPI.accessLocalVariable(Object.class, "n")),
+                CodeAPI.source(invokePrintln(new CodeArgument(Literals.STRING("Hello :D"))))
+                )
+        );
+
+        methodSource.add(VariableFactory.variable(Types.STRING, "dingdong", Literals.STRING("DingDong")));
+
+        methodSource.add(Predefined.invokePrintln(new CodeArgument(CodeAPI.accessLocalVariable(String.class, "dingdong"))));
+
+        methodSource.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
+                CodeAPI.accessStaticField(System.class, PrintStream.class, "out"),
+                "println",
+                CodeAPI.typeSpec(Types.VOID, Types.OBJECT),
+                singletonList(new CodeArgument(CodeAPI.accessLocalVariable(Types.OBJECT, "n")))));
+
+
+        return codeMethod;
     }
 
     @Test
@@ -181,37 +209,6 @@ public class TestBytecode {
         }
 
 
-    }
-
-    public static MethodDeclaration makeCM() {
-        MutableCodeSource methodSource = new MutableCodeSource();
-
-        MethodDeclaration codeMethod = MethodDeclarationBuilder.builder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withName("printIt")
-                .withParameters(new CodeParameter(Types.OBJECT, "n"))
-                .withReturnType(Types.VOID)
-                .withBody(methodSource)
-                .build();
-
-        methodSource.add(CodeAPI.ifStatement(
-                CodeAPI.checkNotNull(CodeAPI.accessLocalVariable(Object.class, "n")),
-                CodeAPI.source(invokePrintln(new CodeArgument(Literals.STRING("Hello :D"))))
-                )
-        );
-
-        methodSource.add(VariableFactory.variable(Types.STRING, "dingdong", Literals.STRING("DingDong")));
-
-        methodSource.add(Predefined.invokePrintln(new CodeArgument(CodeAPI.accessLocalVariable(String.class, "dingdong"))));
-
-        methodSource.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
-                CodeAPI.accessStaticField(System.class, PrintStream.class, "out"),
-                "println",
-                CodeAPI.typeSpec(Types.VOID, Types.OBJECT),
-                singletonList(new CodeArgument(CodeAPI.accessLocalVariable(Types.OBJECT, "n")))));
-
-
-        return codeMethod;
     }
 
     public MethodDeclaration makeCM2() {

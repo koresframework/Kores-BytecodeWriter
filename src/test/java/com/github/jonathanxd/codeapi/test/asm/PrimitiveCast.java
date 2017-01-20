@@ -61,9 +61,6 @@ import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
 import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
 
 
-/**
- * Created by jonathan on 02/05/16.
- */
 @SuppressWarnings("Duplicates")
 public class PrimitiveCast {
 

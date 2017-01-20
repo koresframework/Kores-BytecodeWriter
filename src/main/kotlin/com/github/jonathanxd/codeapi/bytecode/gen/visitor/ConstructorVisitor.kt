@@ -30,6 +30,7 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.ConstructorDeclaration
+import com.github.jonathanxd.codeapi.base.FieldDeclaration
 import com.github.jonathanxd.codeapi.base.MethodDeclaration
 import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder
@@ -37,18 +38,18 @@ import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.util.ConstructorUtil
 import com.github.jonathanxd.codeapi.common.CodeParameter
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
-import com.github.jonathanxd.iutils.data.MapData
 
 object ConstructorVisitor : Visitor<ConstructorDeclaration, BytecodeClass, Any?> {
 
-    override fun visit(t: ConstructorDeclaration, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
+    override fun visit(t: ConstructorDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
         @Suppress("NAME_SHADOWING")
         var t = t
 
-        val outerFields = extraData.getAllAsList(TypeVisitor.OUTER_FIELD_REPRESENTATION)
+        val outerFields = extraData.getAllAsList<FieldDeclaration>(TypeVisitor.OUTER_FIELD_REPRESENTATION)
 
         if (!outerFields.isEmpty()) {
             val parameters = ArrayList<CodeParameter>(t.parameters)

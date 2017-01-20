@@ -42,18 +42,17 @@ import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.Alias
 import com.github.jonathanxd.codeapi.util.element.ElementUtil
 import com.github.jonathanxd.iutils.container.MutableContainer
-import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.type.TypeInfo
+import com.github.jonathanxd.iutils.description.Description
 import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.ClassWriter
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 object Util {
 
-    fun resolveType(codeType: CodeType, data: MapData, additional: Any?): CodeType {
+    fun resolveType(codeType: CodeType, data: Data, additional: Any?): CodeType {
 
         val type by lazy {
-            this.find(TypeVisitor.CODE_TYPE_REPRESENTATION, data, additional)
+            this.find<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, data, additional)
         }
 
         return if (codeType is Alias.THIS) {
@@ -74,15 +73,13 @@ object Util {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> find(typeInfo: TypeInfo<T>, data: MapData, additional: Any?): T {
-        val aClass = typeInfo.aClass
+    inline fun <reified T : Any> find(key: String, data: Data, additional: Any?): T {
+        val optional = data.getOptional<T>(key)
 
-        val optional = data.getOptional(typeInfo)
-
-        if (additional != null && aClass.isInstance(additional)) {
+        if (additional != null && T::class.java.isInstance(additional)) {
             return additional as T
         } else {
-            return optional.orElseThrow { IllegalArgumentException("Could not determine: $typeInfo! You must to register. Current additional data: $additional") }
+            return optional.orElseThrow { IllegalArgumentException("Could not determine value of: $key! You must to register. Current additional data: $additional") }
         }
     }
 
@@ -125,7 +122,7 @@ object Util {
             val source = MutableCodeSource(innerClass.body)
 
             val instructionCodePart = InstructionCodePart.create { _, extraData, _, _ ->
-                extraData.getRequired(TypeVisitor.CLASS_VISITOR_REPRESENTATION)
+                extraData.getRequired<ClassVisitor>(TypeVisitor.CLASS_VISITOR_REPRESENTATION)
                         .visitInnerClass(CodeTypeUtil.codeTypeToBinaryName(innerClass), name, innerClass.specifiedName, modifiers)
             }
 
@@ -135,6 +132,59 @@ object Util {
         }
 
         return visited
+    }
+
+    fun getNewName(element: Named, extraData: Data): String {
+        return this.getNewName(element.name, element, extraData)
+    }
+
+    fun getNewName(baseName: String, extraData: Data): String {
+
+        extraData.getOptional<MemberInfos>(ConstantDatas.MEMBER_INFOS).let {
+            if (it.isPresent) {
+                it.get().let {
+                    var endName: String = baseName
+                    val memberList = it.getMemberInfoList().map { it.description.elementName }
+
+                    while (memberList.contains(endName))
+                        endName += 1
+
+                    return endName
+                }
+            }
+        }
+
+        return baseName + ThreadLocalRandom.current().nextInt().toString().replace('-', '_')
+
+    }
+
+    fun getNewName(baseName: String, element: CodePart, extraData: Data): String {
+        val optionalMemberInfos = extraData.getOptional<MemberInfos>(ConstantDatas.MEMBER_INFOS)
+        val optionalRoot = extraData.getOptional<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION)
+
+        if (optionalMemberInfos.isPresent && optionalRoot.isPresent)
+            return this.getNewName(baseName, element, optionalMemberInfos.get(), optionalRoot.get())
+
+        return baseName + ThreadLocalRandom.current().nextInt().toString().replace('-', '_')
+    }
+
+    fun getNewName(baseName: String, element: CodePart, memberInfos: MemberInfos, typeDeclaration: TypeDeclaration): String {
+
+        var desc = MemberInfo.getDescription(typeDeclaration, element)
+        var number = 1L
+
+        val elementType = desc.elementType
+
+        val memberInfoList = memberInfos.getMemberInfoList()
+                .filter { it.description.elementType == elementType }
+                .map { it.description.plainDescription }
+
+        while (memberInfoList.contains(desc.plainDescription)) {
+            ++number
+            desc = Description(desc.binaryClassName, "$baseName$number", desc.parameterTypes, desc.type, desc.elementType)
+        }
+
+        return "$baseName$number"
     }
 
     /**
@@ -148,14 +198,14 @@ object Util {
      * @return Fixed accessor.
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T : Accessor> fixAccessor(accessor: T, extraData: MapData,
+    fun <T : Accessor> fixAccessor(accessor: T, extraData: Data,
                                    localization: MutableContainer<CodeType>,
                                    consumer: ((MutableContainer<T>, InnerType) -> Unit)?): T {
         @Suppress("NAME_SHADOWING")
         var accessor = accessor
 
 
-        val innerTypes = extraData.getAllAsList(TypeVisitor.INNER_TYPE_REPRESENTATION)
+        val innerTypes = extraData.getAllAsList<InnerType>(TypeVisitor.INNER_TYPE_REPRESENTATION)
 
         for (innerType in innerTypes) {
 
@@ -192,13 +242,13 @@ object Util {
      * @param localization Localization
      * @return Access to its enclosing class.
      */
-    fun accessEnclosingClass(extraData: MapData,
+    fun accessEnclosingClass(extraData: Data,
                              target: CodePart,
                              localization: CodeType?): CodePart? {
-        val enclosingType by lazy { extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!") }
+        val enclosingType by lazy { extraData.getRequired<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!") }
 
         if ((target is Access && target.type == Access.Type.THIS) && localization != null && !localization.`is`(enclosingType)) {
-            val allAsList = extraData.getAllAsList(TypeVisitor.OUTER_FIELD_REPRESENTATION)
+            val allAsList = extraData.getAllAsList<FieldDeclaration>(TypeVisitor.OUTER_FIELD_REPRESENTATION)
 
             for (fieldDeclaration in allAsList) {
                 if (fieldDeclaration.type.`is`(localization)) {
@@ -217,9 +267,9 @@ object Util {
      * @param extraData Data
      * @return Access to its enclosing class.
      */
-    fun accessEnclosingClass(extraData: MapData,
+    fun accessEnclosingClass(extraData: Data,
                              type: CodeType): CodePart? {
-        val allAsList = extraData.getAllAsList(TypeVisitor.OUTER_FIELD_REPRESENTATION)
+        val allAsList = extraData.getAllAsList<FieldDeclaration>(TypeVisitor.OUTER_FIELD_REPRESENTATION)
 
         allAsList.filter { it.type.`is`(type) }
                 .forEach { return CodeAPI.accessThisField(it.type, it.name) }
@@ -228,15 +278,15 @@ object Util {
         return null
     }
 
-    fun access(part: CodePart, localization: CodeType?, visitorGenerator: VisitorGenerator<BytecodeClass>, extraData: MapData, additional: Any): Array<out BytecodeClass>? {
+    fun access(part: CodePart, localization: CodeType?, visitorGenerator: VisitorGenerator<BytecodeClass>, extraData: Data, additional: Any): Array<out BytecodeClass>? {
         if (localization != null) {
-            var declaringOpt = extraData.getOptional(TypeVisitor.OUTER_TYPE_REPRESENTATION)
+            var declaringOpt = extraData.getOptional<TypeDeclaration>(TypeVisitor.OUTER_TYPE_REPRESENTATION)
 
             var innerType: InnerType? = null
             var infos: MemberInfos? = null
 
             if (!declaringOpt.isPresent) {
-                val innerTypes = extraData.getAllAsList(TypeVisitor.INNER_TYPE_REPRESENTATION)
+                val innerTypes = extraData.getAllAsList<InnerType>(TypeVisitor.INNER_TYPE_REPRESENTATION)
 
                 for (inner in innerTypes) {
                     val adaptedDeclaration = inner.adaptedDeclaration
@@ -252,8 +302,10 @@ object Util {
 
             }
 
-            if (innerType == null && extraData.parent != null) {
-                infos = extraData.parent.getOptional(ConstantDatas.MEMBER_INFOS).orElse(null)
+            val parent = extraData.parent
+
+            if (innerType == null && parent != null) {
+                infos = parent.getOptional<MemberInfos>(ConstantDatas.MEMBER_INFOS).orElse(null)
             }
 
             if (infos != null && declaringOpt.isPresent) {

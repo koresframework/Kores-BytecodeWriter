@@ -52,9 +52,6 @@ import static com.github.jonathanxd.codeapi.CodeAPI.source;
 import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
 import static java.util.Collections.singletonList;
 
-/**
- * Created by jonathan on 03/06/16.
- */
 public class TestLoopBytecode {
     @Test
     public void testBytecode() {

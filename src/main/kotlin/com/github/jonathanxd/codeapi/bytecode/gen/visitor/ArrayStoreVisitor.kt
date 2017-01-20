@@ -33,14 +33,14 @@ import com.github.jonathanxd.codeapi.base.ArrayStore
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
 object ArrayStoreVisitor : VoidVisitor<ArrayStore, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ArrayStore, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+    override fun voidVisit(t: ArrayStore, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         visitorGenerator.generateTo(ArrayAccess::class.java, t, extraData, null, additional)
 
         val index = t.index

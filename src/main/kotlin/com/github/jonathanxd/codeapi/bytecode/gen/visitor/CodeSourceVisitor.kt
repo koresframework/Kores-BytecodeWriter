@@ -32,25 +32,25 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.Visitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.iutils.data.MapData
-import com.github.jonathanxd.iutils.type.TypeInfo
 import org.objectweb.asm.Label
 import java.util.function.Consumer
 
 object CodeSourceVisitor : Visitor<CodeSource, BytecodeClass, Any?> {
 
-    val OFFSET = TypeInfo.aUnique(Int::class.java)
+    // Int
+    val OFFSET = "LINE_OFFSET"
 
-    override fun visit(t: CodeSource, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
+    override fun visit(t: CodeSource, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<out BytecodeClass> {
         val appender = visitorGenerator.createAppender()
 
         val max = t.size - 1
 
         val visit = visitorGenerator.options.get(VISIT_LINES).get()
 
-        val offset = extraData.getOptional(OFFSET).orElse(0)
+        val offset = extraData.getOptional<Int>(OFFSET).orElse(0)
 
         if (visit == VisitLineType.FOLLOW_CODE_SOURCE)
             extraData.registerData(OFFSET, offset + max + 1)

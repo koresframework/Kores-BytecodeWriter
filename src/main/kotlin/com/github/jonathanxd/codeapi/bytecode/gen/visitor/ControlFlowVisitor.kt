@@ -29,25 +29,26 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.base.ControlFlow
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
 import org.objectweb.asm.Opcodes
 
 object ControlFlowVisitor : VoidVisitor<ControlFlow, BytecodeClass, MVData> {
 
-    override fun voidVisit(t: ControlFlow, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
-        val flows = extraData.getAll(ConstantDatas.FLOW_TYPE_INFO)
+    override fun voidVisit(t: ControlFlow, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
+        val flows = extraData.getAllAsList<Flow>(ConstantDatas.FLOW_TYPE_INFO)
 
         if (flows.isEmpty())
             throw IllegalArgumentException("Cannot handle ControlFlow outside a label or a control-flow statement!")
 
         val flow = if (t.at == null) flows.last() else flows.findLast { it.label != null && t.at!!.name == it.label.name }!!
 
-        if(t.type == ControlFlow.Type.BREAK) {
+        if (t.type == ControlFlow.Type.BREAK) {
             additional.methodVisitor.visitJumpInsn(Opcodes.GOTO, flow.outsideEnd)
-        } else if(t.type == ControlFlow.Type.CONTINUE) {
+        } else if (t.type == ControlFlow.Type.CONTINUE) {
             additional.methodVisitor.visitJumpInsn(Opcodes.GOTO, flow.insideEnd)
         }
     }

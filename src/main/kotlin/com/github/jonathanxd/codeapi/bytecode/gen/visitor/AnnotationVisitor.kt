@@ -33,16 +33,17 @@ import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.bytecode.util.asm.ParameterVisitor
+import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.iutils.data.MapData
+import org.objectweb.asm.ClassVisitor
 
 object AnnotationVisitor : VoidVisitor<Annotation, BytecodeClass, Any?> {
 
-    override fun voidVisit(t: Annotation, extraData: MapData, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
+    override fun voidVisit(t: Annotation, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         val classWriterOpt =
                 if (additional == null) {
-                    extraData.getOptional(TypeVisitor.CLASS_VISITOR_REPRESENTATION)
+                    extraData.getOptional<ClassVisitor>(TypeVisitor.CLASS_VISITOR_REPRESENTATION)
                 } else {
                     null
                 }

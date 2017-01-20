@@ -30,10 +30,6 @@
 package com.github.jonathanxd.codeapi.bytecode
 
 import com.github.jonathanxd.iutils.option.Option
-import com.github.jonathanxd.iutils.type.TypeInfo
-
-@JvmField
-val LINE: TypeInfo<Int> = TypeInfo.aUnique(Int::class.java)
 
 /**
  * Calls [org.objectweb.asm.util.CheckClassAdapter] to check generated class.
