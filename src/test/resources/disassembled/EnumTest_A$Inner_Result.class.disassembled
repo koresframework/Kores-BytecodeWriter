@@ -1,9 +1,9 @@
-md5: e8470f4369560a37995ef97535c44deb
+md5: 508554ce8e6e27502ca9c93b2e1dc861
 
 version: 52 (Java 8)
 access: 16416 (PACKAGE_PRIVATE)
 
-source: A$Inner.cai, debug: null
+source: MyEnum.cai, debug: null
 innerClass: com/MyEnum.com/MyEnum$A$Inner -> A$Inner (access: 16392 (PACKAGE_PRIVATE))
  class com.MyEnum$A$Inner extends com.MyEnum {
 

@@ -123,7 +123,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
         val sourceFile = extraData
                 .getOptional<(TypeDeclaration) -> String>(BytecodeGenerator.SOURCE_FILE_FUNCTION)
                 .map { func -> func(t) }
-                .orElse("${t.simpleName}.cai") //CodeAPI Instructions
+                .orElse("${Util.getOwner(t).simpleName}.cai") //CodeAPI Instructions
 
         cw.visitSource(sourceFile, null)
 

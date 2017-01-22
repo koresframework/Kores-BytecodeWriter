@@ -72,6 +72,13 @@ object Util {
 
     }
 
+    tailrec fun getOwner(typeDeclaration: TypeDeclaration): TypeDeclaration =
+            if (typeDeclaration.outerClass == null || typeDeclaration.outerClass !is TypeDeclaration)
+                typeDeclaration
+            else
+                this.getOwner(typeDeclaration.outerClass as TypeDeclaration)
+
+
     @Suppress("UNCHECKED_CAST")
     inline fun <reified T : Any> find(key: String, data: Data, additional: Any?): T {
         val optional = data.getOptional<T>(key)
