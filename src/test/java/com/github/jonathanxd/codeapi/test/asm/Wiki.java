@@ -43,7 +43,6 @@ import java.util.EnumSet;
 
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
 import static com.github.jonathanxd.codeapi.CodeAPI.accessStaticField;
-import static com.github.jonathanxd.codeapi.CodeAPI.argument;
 import static com.github.jonathanxd.codeapi.CodeAPI.invokeVirtual;
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
@@ -77,7 +76,7 @@ public class Wiki {
                                         accessStaticField(System.class, PrintStream.class, "out"),
                                         "println",
                                         typeSpec(VOID, Types.STRING),
-                                        listOf(argument(STRING("Hello"))))
+                                        listOf(STRING("Hello")))
                         )
                 )
         );

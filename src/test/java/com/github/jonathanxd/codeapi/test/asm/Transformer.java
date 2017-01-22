@@ -28,11 +28,15 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.common.MVData;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.Data;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
+import com.github.jonathanxd.codeapi.test.InvocationsTest_;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -70,7 +74,13 @@ public class Transformer {
         WrappedPrintStream wrappedPrintStream = new WrappedPrintStream(System.out);
         System.setOut(wrappedPrintStream);
 
-        byte[] bytes = new TestBytecode_Invocations().generateTestClass();
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+
+        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
+
+        BytecodeClass[] bytecodeClasses = bytecodeGenerator.gen(InvocationsTest_.$()._2());
+
+        byte[] bytes = bytecodeClasses[0].getBytecode();
 
         ClassReader cr = new ClassReader(bytes);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
@@ -83,7 +93,7 @@ public class Transformer {
 
         BCLoader bcLoader = new BCLoader();
 
-        Class<?> define = bcLoader.define("fullName.TestBytecode_Invocations_Generated", bytes1);
+        Class<?> define = bcLoader.define("fullName.InvocationsTest__Generated", bytes1);
 
         Object o = define.newInstance();
 
@@ -178,7 +188,7 @@ public class Transformer {
                 MVData mvData = new MVData(super.mv, new ArrayList<>());
 
                 bytecodeGenerator.gen(
-                        CodeAPI.sourceOfParts(Predefined.invokePrintln(CodeAPI.argument(Literals.STRING("Inicializado!")))),
+                        CodeAPI.sourceOfParts(Predefined.invokePrintln(Literals.STRING("Inicializado!"))),
                         new Data(),
                         mvData);
 

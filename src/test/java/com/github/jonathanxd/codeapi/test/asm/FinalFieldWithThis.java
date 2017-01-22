@@ -60,9 +60,9 @@ public class FinalFieldWithThis {
         ClassDeclaration testField = ClassFactory.aClass(EnumSet.of(PUBLIC), "finalfieldwiththis.Test", testBoxJavaType, new CodeType[0],
                 CodeAPI.sourceOfParts(
                         FieldFactory.field(EnumSet.of(PRIVATE, FINAL), testBoxJavaType, "testField",
-                                CodeAPI.invokeConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(CodeAPI.argument(CodeAPI.accessThis())))),
+                                CodeAPI.invokeConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(CodeAPI.accessThis()))),
                         ConstructorFactory.constructor(EnumSet.of(PUBLIC), CodeAPI.sourceOfParts(
-                                CodeAPI.invokeSuperConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(CodeAPI.argument(Literals.NULL)))
+                                CodeAPI.invokeSuperConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(Literals.NULL))
                         ))
                 ));
 

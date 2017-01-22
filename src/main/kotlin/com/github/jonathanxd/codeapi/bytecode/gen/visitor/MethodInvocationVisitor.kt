@@ -88,7 +88,7 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
                 val parameterTypes = java.util.ArrayList(methodDescription.parameterTypes)
                 val arguments = java.util.ArrayList(mi.get().arguments)
 
-                arguments.add(0, CodeAPI.argument(CodeAPI.accessThis()))
+                arguments.add(0, CodeAPI.accessThis())
                 parameterTypes.add(0, enclosingType)
 
                 methodDescription = methodDescription.builder().withParameterTypes(parameterTypes).build()

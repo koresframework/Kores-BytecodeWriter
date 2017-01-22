@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
-import static com.github.jonathanxd.codeapi.CodeAPI.argument;
 import static com.github.jonathanxd.codeapi.CodeAPI.invokeConstructor;
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.returnValue;
@@ -73,7 +72,7 @@ public class PrimitiveCast {
         ClassDeclaration codeClass = aClass(EnumSet.of(PUBLIC), name, source(
                 method(EnumSet.of(PUBLIC, STATIC), "printString", INT, new CodeParameter[]{parameter(STRING, "string")},
                         source(
-                                Predefined.invokePrintln(argument(accessLocalVariable(STRING, "string"))),
+                                Predefined.invokePrintln(accessLocalVariable(STRING, "string")),
 
                                 variable(OBJECT, "objectF", CodeAPI.cast(INT, OBJECT, Literals.INT(9))),
 
@@ -96,7 +95,7 @@ public class PrimitiveCast {
                                         invokeConstructor(
                                                 Types.INTEGER_WRAPPER,
                                                 CodeAPI.constructorTypeSpec(int.class),
-                                                Collections.singletonList(argument(Literals.INT(9))))))
+                                                Collections.singletonList(Literals.INT(9)))))
                         ))
         ));
 

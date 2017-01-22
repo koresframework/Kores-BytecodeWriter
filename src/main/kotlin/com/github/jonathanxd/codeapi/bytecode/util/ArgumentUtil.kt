@@ -29,19 +29,18 @@ package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.base.impl.CastImpl
-import com.github.jonathanxd.codeapi.common.CodeArgument
 import com.github.jonathanxd.codeapi.util.TypeResolver
 import com.github.jonathanxd.iutils.description.Description
 
 object ArgumentUtil {
 
-    fun createArguments(description: Description, arguments: List<CodePart>, typeResolver: TypeResolver): List<CodeArgument> {
+    fun createArguments(description: Description, arguments: List<CodePart>, typeResolver: TypeResolver): List<CodePart> {
         val parameterTypes = description.parameterTypes
 
         if (parameterTypes.size != arguments.size)
             throw IllegalArgumentException("Parameter types size doesn't matches arguments size.")
 
-        val codeArgumentList = java.util.ArrayList<CodeArgument>()
+        val codeArgumentList = java.util.ArrayList<CodePart>()
 
         for (i in parameterTypes.indices) {
             val parameterTypeStr = parameterTypes[i]
@@ -49,7 +48,7 @@ object ArgumentUtil {
 
             val codePart = arguments[i]
 
-            codeArgumentList.add(CodeArgument(CastImpl(null, parameterType, codePart)))
+            codeArgumentList.add(CastImpl(null, parameterType, codePart))
 
         }
 

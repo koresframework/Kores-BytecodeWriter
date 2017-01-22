@@ -83,14 +83,17 @@ public final class ResultSaver {
 
             String savedPath = path+"/disassembled/" + simpleName + ".disassembled";
 
-            File pathJavap = new File(savedPath);
+            File pathDisassembled = new File(savedPath);
 
-            Files.deleteIfExists(pathJavap.toPath());
+            if(pathDisassembled.getParentFile() != null && !pathDisassembled.getParentFile().exists())
+                pathDisassembled.getParentFile().mkdirs();
+
+            Files.deleteIfExists(pathDisassembled.toPath());
 
             try {
                 String disassemble = Disassembler.disassemble(file.toPath(), false, true);
 
-                Files.write(pathJavap.toPath(), disassemble.getBytes(Charset.forName("UTF-8")), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+                Files.write(pathDisassembled.toPath(), disassemble.getBytes(Charset.forName("UTF-8")), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 
                 Process start = new ProcessBuilder("git", "add", savedPath)
                         .redirectOutput(ProcessBuilder.Redirect.INHERIT)

@@ -35,7 +35,6 @@ import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.base.FieldDeclaration;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.common.InvokeType;
@@ -120,7 +119,7 @@ public class SimpleTest2_Bytecode {
                                                 CodeAPI.accessStaticField(CodeAPI.getJavaType(System.class), CodeAPI.getJavaType(PrintStream.class), "out"),
                                                 "println",
                                                 CodeAPI.typeSpec(Types.VOID, Types.STRING),
-                                                Collections.singletonList(new CodeArgument(CodeAPI.accessLocalVariable(stringType, "myField")))
+                                                Collections.singletonList(CodeAPI.accessLocalVariable(stringType, "myField"))
                                         )), CodeAPI.source(
                                         CodeAPI.invoke(
                                                 InvokeType.INVOKE_VIRTUAL,
@@ -128,9 +127,9 @@ public class SimpleTest2_Bytecode {
                                                 CodeAPI.accessStaticField(CodeAPI.getJavaType(System.class), CodeAPI.getJavaType(PrintStream.class), "out"),
                                                 "println",
                                                 CodeAPI.typeSpec(Types.VOID, Types.STRING),
-                                                Collections.singletonList(new CodeArgument(
+                                                Collections.singletonList(
                                                         CodeAPI.cast(stringType, stringType, Literals.STRING("NULL VALUE"))
-                                                )))
+                                                ))
                                 )),
                         CodeAPI.ifStatement(
                                 CodeAPI.ifExprs(CodeAPI.check(Literals.LONG(5894567987L), Operators.LESS_THAN, Literals.LONG(89859845678798L))),

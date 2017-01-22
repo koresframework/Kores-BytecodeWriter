@@ -35,7 +35,6 @@ import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.InvokeType;
 import com.github.jonathanxd.codeapi.factory.FieldFactory;
@@ -80,7 +79,7 @@ public class TestHelloBytecode {
                                 // Informa que o metodo é println, e retorna um void
                                 "println",
                                 CodeAPI.typeSpec(Types.VOID, Types.STRING),
-                                singletonList(new CodeArgument(Literals.STRING("Hello World"))))
+                                singletonList(Literals.STRING("Hello World")))
                 ))
                 .build();
 

@@ -58,7 +58,7 @@ public class FinallyTest {
                         CodeAPI.tryStatement(CodeAPI.sourceOfParts(
                                 CodeAPI.throwException(CodeAPI.invokeConstructor(CodeAPI.getJavaType(RuntimeException.class),
                                         CodeAPI.constructorTypeSpec(String.class),
-                                        Collections.singletonList(CodeAPI.argument(Literals.STRING("EXCEPTION"))))
+                                        Collections.singletonList(Literals.STRING("EXCEPTION")))
                                 )),
                                 Collections.singletonList(
                                         CodeAPI.catchStatement(Collections.singletonList(CodeAPI.getJavaType(Exception.class)),
@@ -68,16 +68,15 @@ public class FinallyTest {
                                                                 CodeAPI.invokeConstructor(
                                                                         CodeAPI.getJavaType(RuntimeException.class),
                                                                         CodeAPI.constructorTypeSpec(String.class, Throwable.class),
-
                                                                         Arrays.asList(
-                                                                                CodeAPI.argument(Literals.STRING("Rethrow")),
-                                                                                CodeAPI.argument(CodeAPI.accessLocalVariable(Throwable.class, "ex"))
+                                                                                Literals.STRING("Rethrow"),
+                                                                                CodeAPI.accessLocalVariable(Throwable.class, "ex")
                                                                         )
                                                                 ))
                                                 )
                                         )),
                                 CodeAPI.sourceOfParts(
-                                        Predefined.invokePrintln(CodeAPI.argument(Literals.STRING("Finally")))
+                                        Predefined.invokePrintln(Literals.STRING("Finally"))
                                 ))
                 ))
         )));

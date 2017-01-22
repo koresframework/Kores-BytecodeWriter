@@ -253,7 +253,7 @@ object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
                                 listOf(CodeAPI.checkTrue(
                                         CodeAPI.invokeVirtual(Any::class.java, switchValue, "equals",
                                                 CodeAPI.typeSpec(Types.BOOLEAN, Types.OBJECT),
-                                                listOf(CodeAPI.argument(caseValue))
+                                                listOf(caseValue)
                                         )
                                 )))
                 )).build()

@@ -84,7 +84,7 @@ object TryWithResourcesVisitor : VoidVisitor<TryWithResources, BytecodeClass, MV
                 CodeAPI.accessLocalVariable(throwableVariable.variableType, throwableVariable.name),
                 "addSuppressed",
                 TypeSpec(Types.VOID, listOf(Types.THROWABLE)),
-                listOf(CodeAPI.argument(CodeAPI.accessLocalVariable(Types.THROWABLE, catch2_name))))
+                listOf(CodeAPI.accessLocalVariable(Types.THROWABLE, catch2_name)))
 
         val surroundedCloseInvocation = CodeAPI.tryStatement(CodeAPI.source(closeInvocation),
                 listOf(CodeAPI.catchStatement(listOf(Types.THROWABLE),

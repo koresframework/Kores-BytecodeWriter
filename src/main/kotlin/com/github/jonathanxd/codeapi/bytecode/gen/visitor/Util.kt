@@ -317,7 +317,7 @@ object Util {
                     val memberInfo: MemberInfo?
                     var isConstructor = false
 
-                    val codeArguments = ArrayList<CodeArgument>()
+                    val codeArguments = ArrayList<CodePart>()
 
                     var target: CodePart = (part as Accessor).target
 
@@ -340,7 +340,7 @@ object Util {
                         val accessibleMember = memberInfo.accessibleMember as MethodDeclaration
 
                         if (isConstructor) {
-                            codeArguments.add(CodeAPI.argument(CodeAPI.accessThis()))
+                            codeArguments.add(CodeAPI.accessThis())
                             target = part.localization
                         }
 

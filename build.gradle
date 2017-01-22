@@ -18,7 +18,7 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '1.0-SNAPSHOT'
+version '3.0-SNAPSHOT'
 
 apply from: project(":CodeAPI").file("gradle/common.gradle")
 

@@ -44,7 +44,7 @@ object ModifierUtil {
         if (modifiers.contains(CodeModifier.STATIC))
             modifiers.remove(CodeModifier.STATIC)
 
-        return (if (!typeDeclaration.isInterface) Opcodes.ACC_SUPER else 0) + ModifierUtil.modifiersToAsm(modifiers, typeDeclaration.classType.isInterface)
+        return (if (!typeDeclaration.isInterface) Opcodes.ACC_SUPER else 0) + ModifierUtil.modifiersToAsm(modifiers, typeDeclaration.isInterface)
     }
 
     fun modifiersToAsm(codeModifiers: Collection<CodeModifier>): Int {
@@ -56,7 +56,7 @@ object ModifierUtil {
     }
 
     fun innerModifiersToAsm(typeDeclaration: TypeDeclaration): Int {
-        return ModifierUtil.modifiersToAsm(typeDeclaration.modifiers, typeDeclaration.classType.isInterface)
+        return ModifierUtil.modifiersToAsm(typeDeclaration.modifiers, typeDeclaration.isInterface)
     }
 
     fun isClassOrMethod(elementType: Int): Boolean {

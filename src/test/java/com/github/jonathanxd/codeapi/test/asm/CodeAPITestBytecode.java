@@ -41,7 +41,6 @@ import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.VariableDeclarationBuilder;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.common.InvokeType;
@@ -73,7 +72,7 @@ public class CodeAPITestBytecode {
     private static CodeSource rethrow(String variable) {
         MutableCodeSource source = new MutableCodeSource();
 
-        source.add(Predefined.invokePrintln(new CodeArgument(Literals.STRING("Rethrow from var '" + variable + "'!"))));
+        source.add(Predefined.invokePrintln(Literals.STRING("Rethrow from var '" + variable + "'!")));
 
         source.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, Throwable.class, CodeAPI.accessLocalVariable(Throwable.class, variable),
                 "printStackTrace",
@@ -96,7 +95,7 @@ public class CodeAPITestBytecode {
                 CodeAPI.accessField(CodeAPI.getJavaType(System.class), CodeAPI.accessStatic(), CodeAPI.getJavaType(PrintStream.class), "out"),
                 "println",
                 new TypeSpec(Types.VOID, CollectionsKt.listOf(Types.OBJECT)),
-                CollectionsKt.listOf(new CodeArgument(varToPrint)));
+                CollectionsKt.listOf(varToPrint));
     }
 
     private static MethodDeclaration createMethod() {
@@ -119,9 +118,9 @@ public class CodeAPITestBytecode {
         LoadedCodeType<CodeAPITestBytecode> javaType = CodeAPI.getJavaType(CodeAPITestBytecode.class);
 
         methodSource.add(VariableFactory.variable(javaType, "test", CodeAPI.invokeConstructor(javaType)));
-        methodSource.add(Predefined.invokePrintln(new CodeArgument(
+        methodSource.add(Predefined.invokePrintln(
                 CodeAPI.accessField(javaType, CodeAPI.accessLocalVariable(javaType, "test"), Types.STRING, "b")
-        )));
+        ));
 
         // Create method body source
         MutableCodeSource source = new MutableCodeSource();
@@ -156,7 +155,7 @@ public class CodeAPITestBytecode {
                 CodeAPI.invokeConstructor(
                         exceptionType,
                         CodeAPI.constructorTypeSpec(Types.STRING),
-                        CollectionsKt.listOf(new CodeArgument(Literals.STRING("Error")))
+                        CollectionsKt.listOf(Literals.STRING("Error"))
                 )
         ));
 
@@ -168,7 +167,7 @@ public class CodeAPITestBytecode {
                 "println",
                 new TypeSpec(Types.VOID, CollectionsKt.listOf(Types.OBJECT)),
                 // with argument 'msgVar' (Method msg parameter)
-                CollectionsKt.listOf(new CodeArgument(msgVar)))
+                CollectionsKt.listOf(msgVar))
         );
 
 
@@ -178,7 +177,7 @@ public class CodeAPITestBytecode {
 
         // Finally block
 
-        CodeSource finallySource = CodeAPI.source(Predefined.invokePrintln(new CodeArgument(Literals.STRING("Finally!"))));
+        CodeSource finallySource = CodeAPI.source(Predefined.invokePrintln(Literals.STRING("Finally!")));
 
         CatchStatement catchStatement = CodeAPI.catchStatement(catchExceptions, VariableFactory.variable(Types.THROWABLE, "thr"), rethrow("thr"));
 

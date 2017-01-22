@@ -97,11 +97,11 @@ public class BridgeMethodsTest {
                                                 CodeAPI.accessLocalVariable(List.class, "iter"),
                                                 "get",
                                                 CodeAPI.typeSpec(Object.class, Integer.TYPE),
-                                                CollectionsKt.listOf(CodeAPI.argument(Literals.INT(0)))),
+                                                CollectionsKt.listOf(Literals.INT(0))),
                                         CodeAPI.forEachIterable(VariableFactory.variable(Types.OBJECT, "obj"), CodeAPI.accessLocalVariable(List.class, "iter"),
                                                 CodeAPI.sourceOfParts(
                                                         Predefined.invokePrintln(
-                                                                CodeAPI.argument(Predefined.toString(CodeAPI.accessLocalVariable(Object.class, "obj")))
+                                                                Predefined.toString(CodeAPI.accessLocalVariable(Object.class, "obj"))
                                                         )
                                                 ))
                                 ))

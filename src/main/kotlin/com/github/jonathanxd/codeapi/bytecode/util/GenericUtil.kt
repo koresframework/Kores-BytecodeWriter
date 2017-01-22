@@ -130,7 +130,7 @@ object GenericUtil {
 
     }
 
-    fun bounds(isWildcard: Boolean, bounds: Array<GenericType.Bound<CodeType>>): String {
+    fun bounds(isWildcard: Boolean, bounds: Array<GenericType.Bound>): String {
 
         val sb = StringBuilder()
 
@@ -149,7 +149,7 @@ object GenericUtil {
         return sb.toString()
     }
 
-    private fun boundToMain(isWildcard: Boolean, bounds: Array<GenericType.Bound<CodeType>>): String {
+    private fun boundToMain(isWildcard: Boolean, bounds: Array<GenericType.Bound>): String {
 
         val sb = StringBuilder()
 

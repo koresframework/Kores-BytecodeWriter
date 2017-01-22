@@ -36,7 +36,6 @@ import com.github.jonathanxd.codeapi.base.VariableAccess;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.common.CodeArgument;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.InvokeType;
 import com.github.jonathanxd.codeapi.helper.Predefined;
@@ -81,7 +80,7 @@ public class TestLoopBytecode {
                         CodeAPI.whileStatement(
                                 CodeAPI.ifExprs(CodeAPI.check(accessX, Operators.LESS_THAN, Literals.INT(17))),
                                 source(
-                                        Predefined.invokePrintln(new CodeArgument(accessX)),
+                                        Predefined.invokePrintln(accessX),
                                         CodeAPI.operateAndAssign(Types.INT, "x", Operators.ADD, Literals.INT(1))
                                 )
                         ),
@@ -92,7 +91,7 @@ public class TestLoopBytecode {
                                 source(
                                         CodeAPI.ifStatement(CodeAPI.check(accessI, Operators.EQUAL_TO, Literals.INT(5)),
                                                 CodeAPI.sourceOfParts(CodeAPI.aContinue())),
-                                        Predefined.invokePrintln(new CodeArgument(accessI))
+                                        Predefined.invokePrintln(accessI)
                                 )),
 
 
@@ -101,7 +100,7 @@ public class TestLoopBytecode {
                         CodeAPI.doWhileStatement(
                                 CodeAPI.ifExprs(CodeAPI.check(accessU, Operators.LESS_THAN, Literals.INT(5))),
                                 source(
-                                        Predefined.invokePrintln(new CodeArgument(accessU)),
+                                        Predefined.invokePrintln(accessU),
                                         CodeAPI.operateAndAssign(Types.INT, "u", Operators.ADD, Literals.INT(1)),
                                         CodeAPI.ifStatement(CodeAPI.ifExprs(CodeAPI.check(accessU, Operators.EQUAL_TO, Literals.INT(2))),
                                                 CodeAPI.sourceOfParts(CodeAPI.aBreak()))
@@ -115,7 +114,7 @@ public class TestLoopBytecode {
                                 // Informa que o metodo é println, recebe String e retorna um void
                                 CodeAPI.typeSpec(Types.VOID, Types.STRING),
                                 // Adiciona um argumento String
-                                singletonList(new CodeArgument(Literals.STRING("Hello World"))))
+                                singletonList(Literals.STRING("Hello World")))
                 ))
                 .build();
 

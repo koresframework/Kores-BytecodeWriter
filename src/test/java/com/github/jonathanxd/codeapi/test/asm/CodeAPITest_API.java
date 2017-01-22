@@ -43,7 +43,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.EnumSet;
 
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
-import static com.github.jonathanxd.codeapi.CodeAPI.argument;
 import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
 import static com.github.jonathanxd.codeapi.CodeAPI.source;
 import static com.github.jonathanxd.codeapi.Types.STRING;
@@ -64,7 +63,7 @@ public class CodeAPITest_API {
         ClassDeclaration codeClass = ClassFactory.aClass(EnumSet.of(PUBLIC), name, source(
                 MethodFactory.method(EnumSet.of(PUBLIC, STATIC), "printString", VOID, new CodeParameter[]{parameter(STRING, "string")},
                         source(
-                                Predefined.invokePrintln(argument(accessLocalVariable(STRING, "string")))
+                                Predefined.invokePrintln(accessLocalVariable(STRING, "string"))
                         ))
         ));
 

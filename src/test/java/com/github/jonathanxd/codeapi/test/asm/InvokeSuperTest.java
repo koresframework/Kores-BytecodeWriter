@@ -45,7 +45,6 @@ import java.util.EnumSet;
 import kotlin.collections.CollectionsKt;
 
 import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
-import static com.github.jonathanxd.codeapi.CodeAPI.argument;
 import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
 import static com.github.jonathanxd.codeapi.Types.STRING;
 import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
@@ -65,7 +64,7 @@ public class InvokeSuperTest {
                         CodeAPI.invokeSuperConstructor(
                                 CodeAPI.getJavaType(My.class),
                                 CodeAPI.constructorTypeSpec(STRING),
-                                CollectionsKt.listOf(argument(accessLocalVariable(STRING, "blc")))
+                                CollectionsKt.listOf(accessLocalVariable(STRING, "blc"))
                         )
 
                 ))

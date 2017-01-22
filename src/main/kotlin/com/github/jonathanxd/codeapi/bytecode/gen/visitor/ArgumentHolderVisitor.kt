@@ -33,7 +33,6 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
 import com.github.jonathanxd.codeapi.bytecode.util.InsnUtil
-import com.github.jonathanxd.codeapi.common.CodeArgument
 import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
@@ -46,15 +45,14 @@ object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData
         val types = t.types
         // Try to auto box and unbox
         val arguments = t.arguments.mapIndexed { i, it ->
-            val value = it.value
-            val type = CodePartUtil.getTypeOrNull(value)
+            val type = CodePartUtil.getTypeOrNull(it)
             val argType = types[i]
 
             if (type != null) {
                 if (type.isPrimitive && !argType.isPrimitive) {
-                    return@mapIndexed CodeArgument(CodeAPI.cast(type, argType, value))
+                    return@mapIndexed CodeAPI.cast(type, argType, it)
                 } else if (!type.isPrimitive && argType.isPrimitive) {
-                    return@mapIndexed CodeArgument(CodeAPI.cast(type, argType, value))
+                    return@mapIndexed CodeAPI.cast(type, argType, it)
                 }
             }
 
@@ -64,10 +62,7 @@ object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData
         if (!t.array) {
 
             for (argument in arguments) {
-                val value = argument.value
-
-                visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
-
+                visitorGenerator.generateTo(argument.javaClass, argument, extraData, null, additional)
             }
         } else {
             for (i in arguments.indices) {
@@ -76,9 +71,7 @@ object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData
 
                 val argument = arguments[i]
 
-                val value = argument.value
-
-                visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
+                visitorGenerator.generateTo(argument.javaClass, argument, extraData, null, additional)
 
             }
         }

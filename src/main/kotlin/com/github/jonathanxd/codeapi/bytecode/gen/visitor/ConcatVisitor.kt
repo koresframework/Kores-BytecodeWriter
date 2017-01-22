@@ -55,7 +55,7 @@ object ConcatVisitor : VoidVisitor<Concat, BytecodeClass, MVData> {
 
                 val stringConcat = CodeAPI.invokeVirtual(String::class.java, first, "concat",
                         CodeAPI.typeSpec(String::class.java, String::class.java),
-                        listOf(CodeAPI.argument(concatenations[1])))
+                        listOf(concatenations[1]))
 
                 visitorGenerator.generateTo(MethodInvocation::class.java, stringConcat, extraData, additional)
             } else {
@@ -63,13 +63,13 @@ object ConcatVisitor : VoidVisitor<Concat, BytecodeClass, MVData> {
                 var strBuilder = CodeAPI.invokeConstructor(
                         Types.STRING_BUILDER,
                         CodeAPI.constructorTypeSpec(String::class.java),
-                        listOf(CodeAPI.argument(first))
+                        listOf(first)
                 )
 
                 (1..concatenations.size - 1)
                         .map { concatenations[it] }
                         .forEach {
-                            strBuilder = CodeAPI.invokeVirtual(Types.STRING_BUILDER, strBuilder, "append", CodeAPI.typeSpec(Types.STRING_BUILDER, Types.STRING), listOf(CodeAPI.argument(it)))
+                            strBuilder = CodeAPI.invokeVirtual(Types.STRING_BUILDER, strBuilder, "append", CodeAPI.typeSpec(Types.STRING_BUILDER, Types.STRING), listOf(it))
                         }
 
                 strBuilder = CodeAPI.invokeVirtual(Types.OBJECT, strBuilder, "toString", CodeAPI.typeSpec(Types.STRING), emptyList())

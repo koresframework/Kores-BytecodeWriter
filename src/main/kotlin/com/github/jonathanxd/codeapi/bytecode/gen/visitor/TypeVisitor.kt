@@ -196,7 +196,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
         val hasConstructor = body.stream().filter { c -> c is ConstructorDeclaration }.findAny().isPresent
 
-        if (!hasConstructor && t.classType.isClass) { // Interfaces has no super call.
+        if (!hasConstructor && !t.isInterface) { // Interfaces has no super call.
             val codeConstructor = constructor(EnumSet.of(CodeModifier.PUBLIC), arrayOf(), CodeSource.empty())
             visitorGenerator.generateTo(ConstructorDeclaration::class.java, codeConstructor, extraData, null, null)
         }

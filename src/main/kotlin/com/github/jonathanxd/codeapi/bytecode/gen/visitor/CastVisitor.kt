@@ -81,7 +81,7 @@ object CastVisitor : VoidVisitor<Cast, BytecodeClass, MVData> {
 
         if (from.isPrimitive && !to.isPrimitive) {
 
-            translate = CodeAPI.invokeConstructor(from.wrapperType, CodeAPI.constructorTypeSpec(from), listOf(CodeAPI.argument(casted)))
+            translate = CodeAPI.invokeConstructor(from.wrapperType, CodeAPI.constructorTypeSpec(from), listOf(casted))
 
         } else if (!from.isPrimitive && to.isPrimitive) {
 

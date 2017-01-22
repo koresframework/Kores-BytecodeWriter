@@ -31,7 +31,6 @@ import com.github.jonathanxd.codeapi.*
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder
 import com.github.jonathanxd.codeapi.builder.build
-import com.github.jonathanxd.codeapi.common.CodeArgument
 import com.github.jonathanxd.codeapi.common.CodeModifier
 import com.github.jonathanxd.codeapi.common.CodeParameter
 import com.github.jonathanxd.codeapi.common.TypeSpec
@@ -100,7 +99,7 @@ object EnumUtil {
 
         val arrayArguments = fields
                 .map { fieldDeclaration ->
-                    CodeAPI.argument(CodeAPI.accessStaticField(fieldDeclaration.type, fieldDeclaration.name))
+                    CodeAPI.accessStaticField(fieldDeclaration.type, fieldDeclaration.name)
                 }
 
         val valuesField = field(
@@ -155,8 +154,8 @@ object EnumUtil {
                                         Types.CLASS,
                                         Types.STRING),
                                         listOf(
-                                                CodeAPI.argument(Literals.CLASS(enumDeclaration)),
-                                                CodeAPI.argument(CodeAPI.accessLocalVariable(Types.STRING, "name"))
+                                                Literals.CLASS(enumDeclaration),
+                                                CodeAPI.accessLocalVariable(Types.STRING, "name")
                                         )
                                 ))
                         )
@@ -174,10 +173,10 @@ object EnumUtil {
     private fun callConstructor(location: TypeDeclaration, enumEntry: EnumEntry, ordinal: Int): CodePart {
         val constructorSpec = enumEntry.constructorSpec
 
-        val arguments = ArrayList<CodeArgument>()
+        val arguments = ArrayList<CodePart>()
 
-        arguments.add(CodeAPI.argument(Literals.STRING(enumEntry.name)))
-        arguments.add(CodeAPI.argument(Literals.INT(ordinal)))
+        arguments.add(Literals.STRING(enumEntry.name))
+        arguments.add(Literals.INT(ordinal))
 
         var spec = TypeSpec(Types.VOID, listOf(Types.STRING, Types.INT))
 
@@ -211,8 +210,8 @@ object EnumUtil {
                             CodeSource.fromPart(
                                     CodeAPI.invokeSuperConstructor(CodeAPI.constructorTypeSpec(Types.STRING, Types.INT),
                                             listOf(
-                                                    CodeAPI.argument(CodeAPI.accessLocalVariable(Types.STRING, "name")),
-                                                    CodeAPI.argument(CodeAPI.accessLocalVariable(Types.INT, "ordinal"))
+                                                    CodeAPI.accessLocalVariable(Types.STRING, "name"),
+                                                    CodeAPI.accessLocalVariable(Types.INT, "ordinal")
                                             ))
                             )
                     ))
@@ -234,8 +233,8 @@ object EnumUtil {
                 source.add(0, CodeAPI.invokeSuperConstructor(
                         Types.ENUM,
                         TypeSpec(Types.VOID, listOf(Types.STRING, Types.INT)),
-                        listOf(CodeAPI.argument(CodeAPI.accessLocalVariable(Types.STRING, name)),
-                                CodeAPI.argument(CodeAPI.accessLocalVariable(Types.INT, ordinal)))
+                        listOf(CodeAPI.accessLocalVariable(Types.STRING, name),
+                                CodeAPI.accessLocalVariable(Types.INT, ordinal))
                 ))
 
                 originalSource.remove(constructorDeclaration)
