@@ -21,6 +21,4 @@ build:
     - script:
         name: "Refresh dependencies & Build"
         code: |
-          git submodule init
-          git submodule update
           ./gradlew --refresh-dependencies
