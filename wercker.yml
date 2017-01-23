@@ -1,0 +1,9 @@
+box: podbox/java8
+build:
+  steps:
+    - install-packages:
+        packages: openjdk-8-jdk
+    - script:
+        name: "Refresh dependencies & Build"
+        code: |
+          ./gradlew --refresh-dependencies
