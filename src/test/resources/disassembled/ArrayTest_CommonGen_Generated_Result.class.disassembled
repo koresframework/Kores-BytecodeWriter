@@ -1,4 +1,4 @@
-md5: eae37ffebda7b80e5bddfaf53050f13f
+md5: 4c507f17a15a862a49fa126b2d6bde94
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -96,7 +96,6 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         checkcast java.lang.String[]
         iconst_0
         aaload
-        checkcast java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_8:

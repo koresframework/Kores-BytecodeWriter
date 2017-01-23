@@ -226,7 +226,7 @@ object CodeTypeUtil {
     fun convertToPrimitive(from: CodeType, to: CodeType, mv: MethodVisitor) {
         var opcode = -1
 
-        if (from.isPrimitive && to.isPrimitive) {
+        if (!from.isArray && !to.isArray && from.isPrimitive && to.isPrimitive) {
             val fromTypeChar = Character.toUpperCase(from.canonicalName[0])
             val toTypeChar = Character.toUpperCase(to.canonicalName[0])
 

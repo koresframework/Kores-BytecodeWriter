@@ -1,4 +1,4 @@
-md5: 02243d437b909a6bc5bbaf40f1f63b46
+md5: 95bee8bb33e3b51ea7151d259c4cea36
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -98,9 +98,11 @@ public class com.SwitchTestClass extends java.lang.Object {
       Label_14:
        LINE 5 -> Label_14
        FRAME[type: F_SAME, locals: 0, local: {com.SwitchTestClass, integer, integer, com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, java.lang.String, java.lang.Object}, stacks: 0, stack: {}]
+        getstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
         aload 3
         invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
-        tableSwitch(0..1) {
+        iaload
+        tableSwitch(1..2) {
             handler 0: Label_17
             handler 1: Label_18
             default: Label_19

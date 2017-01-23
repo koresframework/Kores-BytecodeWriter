@@ -60,7 +60,7 @@ object ArrayUtil {
     }
 
     fun visitArrayStore(arrayType: CodeType, mv: MethodVisitor) {
-        when (arrayType.type) {
+        when (arrayType.canonicalName) {
             "int" -> {
                 mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_INT)
             }

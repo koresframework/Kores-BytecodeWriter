@@ -34,10 +34,7 @@ import com.github.jonathanxd.codeapi.base.ImplementationHolder
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator
-import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
-import com.github.jonathanxd.codeapi.bytecode.util.GenericUtil
-import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
-import com.github.jonathanxd.codeapi.bytecode.util.TypeDeclarationUtil
+import com.github.jonathanxd.codeapi.bytecode.util.*
 import com.github.jonathanxd.codeapi.common.CodeModifier
 import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.common.InnerType
@@ -56,7 +53,7 @@ import java.util.*
 object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
     // TypeDeclaration
-    val CODE_TYPE_REPRESENTATION = "TYPE_DECLARATION"
+    val TYPE_DECLARATION_REPRESENTATION = "TYPE_DECLARATION"
 
     // ClassVisitor
     val CLASS_VISITOR_REPRESENTATION = "CLASS_VISITOR"
@@ -72,10 +69,12 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
     override fun visit(t: TypeDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
 
+        val baseDataClone = extraData.clone()
+
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS or ClassWriter.COMPUTE_FRAMES)
 
 
-        extraData.registerData(CODE_TYPE_REPRESENTATION, t)
+        extraData.registerData(TYPE_DECLARATION_REPRESENTATION, t)
         extraData.registerData(CLASS_VISITOR_REPRESENTATION, cw)
 
         var any = false
@@ -219,6 +218,14 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
         data0.registerData(OUTER_TYPE_REPRESENTATION, t)
 
+        extraData.getAllAsList<SwitchOnEnum.Mapping>(SwitchOnEnum.MAPPINGS).forEach {
+            val clone = baseDataClone.clone()
+
+            val gen = visitorGenerator.gen(it.buildClass(), clone, null)
+
+            Collections.addAll(bytecodeClassList, *gen)
+        }
+
         extraData.getAllAsList<InnerType>(INNER_TYPE_REPRESENTATION).map { it.adaptedDeclaration }
                 .forEach { declaration ->
                     val data = data0.clone()
@@ -237,7 +244,7 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
     }
 
     override fun endVisit(r: Array<out BytecodeClass>, t: TypeDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
-        extraData.unregisterData(CODE_TYPE_REPRESENTATION, t)
+        extraData.unregisterData(TYPE_DECLARATION_REPRESENTATION, t)
 
         val optional = extraData.getOptional<ClassVisitor>(CLASS_VISITOR_REPRESENTATION)
 

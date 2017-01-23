@@ -54,7 +54,7 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
         var localization: CodeType = Util.resolveType(methodInvocation.localization, extraData, additional)
 
         val enclosingType: CodeType by lazy {
-            extraData.getRequired<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!")
+            extraData.getRequired<TypeDeclaration>(TypeVisitor.TYPE_DECLARATION_REPRESENTATION, "Cannot determine current type!")
         }
 
         if (methodInvocation.spec.methodType == MethodType.SUPER_CONSTRUCTOR) {

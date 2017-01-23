@@ -40,6 +40,7 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
+import com.github.jonathanxd.codeapi.bytecode.util.SwitchOnEnum
 import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.common.SwitchTypes
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
@@ -54,13 +55,20 @@ object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
         var aSwitch: SwitchStatement = t
 
         if (switchType !== SwitchTypes.NUMERIC) {
-            if (!switchType.isUnique) {
-                aSwitch = this.insertEqualityCheck(aSwitch)
+
+            if(switchType === SwitchTypes.ENUM) {
+                val newSwitch = SwitchOnEnum.mappings(t, extraData)
+
+                visitorGenerator.generateTo(SwitchStatement::class.java, newSwitch, extraData, additional)
+            } else {
+                if (!switchType.isUnique) {
+                    aSwitch = this.insertEqualityCheck(aSwitch)
+                }
+
+                val generate = aSwitch.switchType.createGenerator().generate(aSwitch, this)
+
+                visitorGenerator.generateTo(SwitchStatement::class.java, generate, extraData, additional)
             }
-
-            val generate = aSwitch.switchType.createGenerator().generate(aSwitch, this)
-
-            visitorGenerator.generateTo(SwitchStatement::class.java, generate, extraData, additional)
         } else {
             val mv = additional.methodVisitor
             val value = aSwitch.value

@@ -59,7 +59,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
 
         val isConstructor = t is ConstructorDeclaration
 
-        val typeDeclaration = Util.find<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, extraData, additional)
+        val typeDeclaration = Util.find<TypeDeclaration>(TypeVisitor.TYPE_DECLARATION_REPRESENTATION, extraData, additional)
 
         if (!t.modifiers.contains(CodeModifier.BRIDGE) && genBridge) {
             val bridgeOpt = BridgeUtil.genBridgeMethod(typeDeclaration, t)

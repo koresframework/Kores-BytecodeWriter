@@ -1,0 +1,56 @@
+md5: d141f3ff51e22ee95256f2564e2561c8
+
+version: 52 (Java 8)
+access: 4128 (PACKAGE_PRIVATE, ACC_SYNTHETIC)
+
+source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.cai, debug: null
+ class com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings extends java.lang.Object {
+
+    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    static int[] ENUM_MAP
+
+    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    static void <clinit>() {
+        !tryCatchBlock[type: java/lang/NoSuchFieldError, start: Label_0, end: Label_1, handler: Label_2]
+        !tryCatchBlock[type: java/lang/NoSuchFieldError, start: Label_3, end: Label_4, handler: Label_5]
+      Label_6:
+       LINE 5 -> Label_6
+        invokestatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.values()com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum[] (ownerIsInterface: false)
+        arraylength
+        newarray 10
+        putstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
+      Label_0:
+       LINE 6 -> Label_0
+       LINE 8 -> Label_0
+        getstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
+        getstatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.A (type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum)
+        invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
+        iconst_1
+        iastore
+      Label_1:
+        goto Label_3
+      Label_2:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.NoSuchFieldError, null, null}]
+        astore 0
+        goto Label_3
+      Label_3:
+       LINE 7 -> Label_3
+       LINE 9 -> Label_3
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {java.lang.NoSuchFieldError, null, null}]
+        getstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
+        getstatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.B (type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum)
+        invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
+        iconst_2
+        iastore
+      Label_4:
+        goto Label_7
+      Label_5:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.NoSuchFieldError, null, null}]
+        astore 1
+        goto Label_7
+      Label_7:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {java.lang.NoSuchFieldError, null, null}]
+        return
+      MAX_STACK: 3, MAX_LOCALS: 2
+    }
+}

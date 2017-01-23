@@ -52,7 +52,7 @@ object Util {
     fun resolveType(codeType: CodeType, data: Data, additional: Any?): CodeType {
 
         val type by lazy {
-            this.find<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, data, additional)
+            this.find<TypeDeclaration>(TypeVisitor.TYPE_DECLARATION_REPRESENTATION, data, additional)
         }
 
         return if (codeType is Alias.THIS) {
@@ -167,7 +167,7 @@ object Util {
 
     fun getNewName(baseName: String, element: CodePart, extraData: Data): String {
         val optionalMemberInfos = extraData.getOptional<MemberInfos>(ConstantDatas.MEMBER_INFOS)
-        val optionalRoot = extraData.getOptional<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION)
+        val optionalRoot = extraData.getOptional<TypeDeclaration>(TypeVisitor.TYPE_DECLARATION_REPRESENTATION)
 
         if (optionalMemberInfos.isPresent && optionalRoot.isPresent)
             return this.getNewName(baseName, element, optionalMemberInfos.get(), optionalRoot.get())
@@ -252,7 +252,7 @@ object Util {
     fun accessEnclosingClass(extraData: Data,
                              target: CodePart,
                              localization: CodeType?): CodePart? {
-        val enclosingType by lazy { extraData.getRequired<TypeDeclaration>(TypeVisitor.CODE_TYPE_REPRESENTATION, "Cannot determine current type!") }
+        val enclosingType by lazy { extraData.getRequired<TypeDeclaration>(TypeVisitor.TYPE_DECLARATION_REPRESENTATION, "Cannot determine current type!") }
 
         if ((target is Access && target.type == Access.Type.THIS) && localization != null && !localization.`is`(enclosingType)) {
             val allAsList = extraData.getAllAsList<FieldDeclaration>(TypeVisitor.OUTER_FIELD_REPRESENTATION)

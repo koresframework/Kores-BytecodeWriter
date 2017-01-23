@@ -1,4 +1,4 @@
-md5: af2fe6ce9301b59863bfad95bfcbcc80
+md5: 4466eb8a5b1196d88f08198f724f6622
 
 version: 52 (Java 8)
 access: 33 (ACC_PUBLIC)
@@ -60,20 +60,8 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         nop
         nop
         athrow
-      Label_3:
-       FRAME[type: F_FULL, locals: 2, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.Exception, null, null}]
-        astore 3
-        getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Rethrow from var 'tlr'!"
-        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-        aload 3
-        invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
-        getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Finally!"
-        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-        goto Label_9
       Label_2:
-       FRAME[type: F_SAME1, locals: 0, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.RuntimeException, null, null}]
+       FRAME[type: F_FULL, locals: 2, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.RuntimeException, null, null}]
         astore 3
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Rethrow from var 'thr'!"
@@ -84,14 +72,26 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         ldc "Finally!"
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         goto Label_9
+      Label_3:
+       FRAME[type: F_SAME1, locals: 0, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.Exception, null, null}]
+        astore 3
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Rethrow from var 'tlr'!"
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        aload 3
+        invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Finally!"
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        goto Label_9
       Label_9:
-       FRAME[type: F_APPEND, locals: 2, local: {top, java.lang.Exception, null, null}, stacks: 0, stack: {java.lang.RuntimeException, null, null}]
+       FRAME[type: F_APPEND, locals: 2, local: {top, java.lang.Exception, null, null}, stacks: 0, stack: {java.lang.Exception, null, null}]
         return
       Label_10:
       LOCAL_VARIABLE[index: 0, name: msg, desc: Ljava/lang/Object;, signature: null, start: Label_4, end: Label_10]
       LOCAL_VARIABLE[index: 1, name: test, desc: Lcom/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode;, signature: null, start: Label_5, end: Label_10]
       LOCAL_VARIABLE[index: 2, name: ref, desc: Ljava/lang/Object;, signature: null, start: Label_7, end: Label_10]
-      LOCAL_VARIABLE[index: 3, name: thr, desc: Ljava/lang/Throwable;, signature: null, start: Label_2, end: Label_9]
+      LOCAL_VARIABLE[index: 3, name: tlr, desc: Ljava/lang/Throwable;, signature: null, start: Label_3, end: Label_9]
       MAX_STACK: 3, MAX_LOCALS: 4
     }
 

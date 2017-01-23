@@ -114,7 +114,7 @@ object InnerUtil {
             val arguments = CodeArgumentUtil.argumentsFromParameters(parameters)
 
             if (isConstructor) {
-                val current: TypeDeclaration = extraData.getRequired(TypeVisitor.CODE_TYPE_REPRESENTATION)
+                val current: TypeDeclaration = extraData.getRequired(TypeVisitor.TYPE_DECLARATION_REPRESENTATION)
                 val parameter = CodeAPI.parameter(current, CodeSourceUtil.getNewName("\$inner", parameters))
 
                 parameters.add(parameter)
