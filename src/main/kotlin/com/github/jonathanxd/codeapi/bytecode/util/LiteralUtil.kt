@@ -27,8 +27,10 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
+import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.Stack
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
@@ -54,23 +56,19 @@ object LiteralUtil {
 
             mv.visitInsn(Opcodes.ICONST_0)
 
-        } else if (num is Literals.QuotedStringLiteral) {
+        } else if (num.type.`is`(Types.STRING)) {
 
             mv.visitLdcInsn(name.substring(1, name.length - 1))
 
-        } else if (num is Literals.ShortLiteral) {
+        } else if (num.type.`is`(Types.INT) && num !is Literals.ByteLiteral) {
 
             InsnUtil.visitInt(Integer.parseInt(name), mv)
 
-        } else if (num is Literals.IntLiteral) {
-
-            InsnUtil.visitInt(Integer.parseInt(name), mv)
-
-        } else if (num is Literals.LongLiteral) {
+        } else if (num.type.`is`(Types.LONG)) {
 
             InsnUtil.visitLong(java.lang.Long.parseLong(name), mv)
 
-        } else if (num is Literals.DoubleLiteral) {
+        } else if (num.type.`is`(Types.DOUBLE)) {
 
             InsnUtil.visitDouble(java.lang.Double.parseDouble(name), mv)
 
@@ -78,19 +76,21 @@ object LiteralUtil {
 
             mv.visitIntInsn(Opcodes.BIPUSH, java.lang.Byte.parseByte(name).toInt())
 
-        } else if (num is Literals.CharLiteral) {
+        } else if (num.type.`is`(Types.CHAR)) {
 
             mv.visitIntInsn(Opcodes.BIPUSH, name[0].toInt())
 
-        } else if (num is Literals.FloatLiteral) {
+        } else if (num.type.`is`(Types.FLOAT)) {
 
             InsnUtil.visitFloat(java.lang.Float.parseFloat(name), mv)
 
-        } else if (num is Literals.ClassLiteral) {
+        } else if (num.type.`is`(Types.CODE_TYPE)) {
 
-            val type = Type.getType(num.type.javaSpecName)
+            val type = Type.getType((num.value as CodeType).javaSpecName)
 
             mv.visitLdcInsn(type)
+        } else {
+            throw IllegalArgumentException("Cannot handle literal: $num")
         }
     }
 

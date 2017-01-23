@@ -1,4 +1,4 @@
-md5: f64786bc3d5f5d5f0160af7d59cfe82f
+md5: cc693e0c63ed20c259a8b6fd76cd4a77
 
 version: 52 (Java 8)
 access: 17441 (ACC_PUBLIC, ACC_ABSTRACT)
@@ -49,7 +49,7 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     public static com.MyEnum valueOf(java.lang.String) {
       Label_0:
        LINE 10 -> Label_0
-        ldc Lcom/github/jonathanxd/codeapi/type/CodeType;
+        ldc Lcom/MyEnum;
         aload 0
         invokestatic java.lang.Enum.valueOf(java.lang.Class, java.lang.String)java.lang.Enum (ownerIsInterface: false)
         checkcast com.MyEnum

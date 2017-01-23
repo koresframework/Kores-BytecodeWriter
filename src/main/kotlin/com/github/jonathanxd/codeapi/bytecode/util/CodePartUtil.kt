@@ -56,7 +56,7 @@ object CodePartUtil {
     }
 
     fun getBooleanValue(part: CodePart): Boolean {
-        return (part as Literals.BoolLiteral).value
+        return (part as Literal).name.toBoolean()
     }
 
 }
