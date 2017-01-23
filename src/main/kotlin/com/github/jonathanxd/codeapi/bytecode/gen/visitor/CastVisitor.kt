@@ -79,6 +79,9 @@ object CastVisitor : VoidVisitor<Cast, BytecodeClass, MVData> {
     private fun autoboxing(from: CodeType, to: CodeType, casted: CodePart): CodePart? {
         var translate: CodePart? = null
 
+        if (from.isArray || to.isArray)
+            return null
+
         if (from.isPrimitive && !to.isPrimitive) {
 
             translate = CodeAPI.invokeConstructor(from.wrapperType, CodeAPI.constructorTypeSpec(from), listOf(casted))
