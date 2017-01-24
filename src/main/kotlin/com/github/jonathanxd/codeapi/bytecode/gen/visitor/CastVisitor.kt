@@ -29,6 +29,7 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodePart
+import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.Cast
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
@@ -80,6 +81,10 @@ object CastVisitor : VoidVisitor<Cast, BytecodeClass, MVData> {
         var translate: CodePart? = null
 
         if (from.isArray || to.isArray)
+            return null
+
+        // No autoboxing for void types
+        if(!from.`is`(to) && from.`is`(Types.VOID) || to.`is`(Types.VOID))
             return null
 
         if (from.isPrimitive && !to.isPrimitive) {
