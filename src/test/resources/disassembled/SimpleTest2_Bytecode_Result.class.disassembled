@@ -1,16 +1,19 @@
 md5: 83a47f44e1d499d5dd3d6ec4ece79819
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: SimpleTest2_bytecode.cai, debug: null
+source: SimpleTest2_bytecode.cai
+
 public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.lang.Object {
 
-    !access: 17 (ACC_PUBLIC, ACC_FINAL)
+    !access: ACC_PUBLIC, ACC_FINAL
     public final java.lang.String myField
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>(java.lang.String) {
+      desc: (Ljava/lang/String;)V 
+      maxStack: 4, maxLocals: 2 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
@@ -26,35 +29,38 @@ public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.
       Label_1:
        FRAME[type: F_FULL, locals: 2, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "NULL VALUE"
+        ldc "NULL VALUE"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_2:
-       FRAME[type: F_SAME, locals: 0, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
-        ldc 5894567987
-        ldc 89859845678798
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        ldc 5894567987              // type: java.lang.Long
+        ldc 89859845678798              // type: java.lang.Long
         lcmp
         ifge Label_3
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "First < Second"
+        ldc "First < Second"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         goto Label_4
       Label_3:
-       FRAME[type: F_SAME, locals: 0, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "First >= Second"
+        ldc "First >= Second"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_4:
-       FRAME[type: F_SAME, locals: 0, local: {me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, java.lang.String}, stacks: 0, stack: {}]
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
       Label_5:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lme/jonathanscripter/codeapi/test/SimpleTest2_bytecode;, signature: null, start: Label_0, end: Label_5]
-      LOCAL_VARIABLE[index: 1, name: myField, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_5]
-      MAX_STACK: 4, MAX_LOCALS: 2
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, signature: null
+        index: 1, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

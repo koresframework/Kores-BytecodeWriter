@@ -1,13 +1,16 @@
 md5: a47c323c332ccac3ed6496b6161ea666
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: TestLoopBytecode.cai, debug: null
+source: TestLoopBytecode.cai
+
 public class fullName.TestLoopBytecode extends java.lang.Object {
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 4, maxLocals: 4 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
@@ -15,7 +18,7 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
       Label_1:
         istore 1
         iload 1
-        bipush 17
+        bipush org.objectweb.asm.tree.IntInsnNode@3aefe5e5.operand
         if_icmpge Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.Integer
@@ -26,21 +29,21 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         iinc 1 1
       Label_2:
-       FRAME[type: F_FULL, locals: 2, local: {fullName.TestLoopBytecode, integer, null, null}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 2, local: {fullName.TestLoopBytecode, integer}, stacks: 0, stack: {}]
         iconst_0
       Label_3:
         istore 2
       Label_4:
-       FRAME[type: F_APPEND, locals: 1, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 1, local: {integer}, stacks: 0, stack: {}]
         iload 2
-        bipush 100
-        if_icmpge Label_5
+        bipush org.objectweb.asm.tree.IntInsnNode@149e0f5d.operand
+        if_icmpge Label_7
         iload 2
         iconst_5
-        if_icmpne Label_6
-        goto Label_7
-      Label_6:
-       FRAME[type: F_SAME, locals: 0, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+        if_icmpne Label_5
+        goto Label_6
+      Label_5:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.Integer
         dup
@@ -48,17 +51,17 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
         invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
         checkcast java.lang.Object
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_7:
-       FRAME[type: F_SAME, locals: 0, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+      Label_6:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iinc 2 1
         goto Label_4
-      Label_5:
-       FRAME[type: F_SAME, locals: 0, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+      Label_7:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_0
       Label_8:
         istore 3
       Label_9:
-       FRAME[type: F_APPEND, locals: 1, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 1, local: {integer}, stacks: 0, stack: {}]
         iload 3
         iconst_5
         if_icmpge Label_10
@@ -73,9 +76,9 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
         iload 3
         iconst_2
         if_icmpne Label_10
-        goto Label_11
+        goto Label_12
       Label_10:
-       FRAME[type: F_SAME, locals: 0, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.Integer
         dup
@@ -86,10 +89,10 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
         iinc 3 1
         iload 3
         iconst_2
-        if_icmpne Label_12
-        goto Label_11
-      Label_12:
-       FRAME[type: F_SAME, locals: 0, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+        if_icmpne Label_11
+        goto Label_12
+      Label_11:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iload 3
         iconst_5
         if_icmplt Label_9
@@ -103,25 +106,28 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
         iinc 3 1
         iload 3
         iconst_2
-        if_icmpne Label_11
-        goto Label_11
-      Label_11:
-       FRAME[type: F_SAME, locals: 0, local: {integer, integer, null, null}, stacks: 0, stack: {}]
+        if_icmpne Label_12
+        goto Label_12
+      Label_12:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Hello World"
+        ldc "Hello World"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
       Label_13:
-      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestLoopBytecode;, signature: null, start: Label_0, end: Label_13]
-      LOCAL_VARIABLE[index: 1, name: x, desc: I, signature: null, start: Label_1, end: Label_13]
-      LOCAL_VARIABLE[index: 2, name: i, desc: I, signature: null, start: Label_3, end: Label_13]
-      LOCAL_VARIABLE[index: 3, name: u, desc: I, signature: null, start: Label_8, end: Label_13]
-      MAX_STACK: 4, MAX_LOCALS: 4
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: fullName.TestLoopBytecode, signature: null
+        index: 1, start: Label_1, end: Label_1, type: int, signature: null
+        index: 2, start: Label_3, end: Label_3, type: int, signature: null
+        index: 3, start: Label_8, end: Label_8, type: int, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

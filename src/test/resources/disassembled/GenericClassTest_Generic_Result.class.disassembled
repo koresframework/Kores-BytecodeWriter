@@ -1,19 +1,21 @@
 md5: e3f952cc642e5a3f4321be3673a42bd6
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
-signature: <T::Ljava/util/List<TT;>;>Ljava/lang/Object;Ljava/util/List<TT;>;
+version: Java 8
+access: ACC_PUBLIC
 
-source: Generic.cai, debug: null
+source: Generic.cai
+
 public class com.Generic extends java.lang.Object implements java.util.List {
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     !signature: TT;
     public java.lang.Object test
 
-    !access: 9 (ACC_PUBLIC, ACC_STATIC)
+    !access: ACC_PUBLIC, ACC_STATIC
     !signature: <T::Ljava/util/List<TT;>;>(TT;)V
     public static void test(java.util.List) {
+      desc: (Ljava/util/List;)V 
+      maxStack: 1, maxLocals: 2 
       Label_0:
        LINE 4 -> Label_0
         aconst_null
@@ -21,25 +23,31 @@ public class com.Generic extends java.lang.Object implements java.util.List {
         astore 1
         return
       Label_2:
-      LOCAL_VARIABLE[index: 0, name: val, desc: Ljava/lang/Object;, signature: TT;, start: Label_0, end: Label_2]
-      LOCAL_VARIABLE[index: 1, name: fieldi, desc: Ljava/lang/Object;, signature: TT;, start: Label_1, end: Label_2]
-      MAX_STACK: 1, MAX_LOCALS: 2
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: java.lang.Object, signature: TT;
+        index: 1, start: Label_1, end: Label_1, type: java.lang.Object, signature: TT;
+      }
     }
-
-    !access: 1 (ACC_PUBLIC)
+    
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/Generic;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 1, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: com.Generic, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

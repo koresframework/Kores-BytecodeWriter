@@ -1,20 +1,24 @@
 md5: ee4046378c5aa54db6cad3f03a433ecf
 
-version: 52 (Java 8)
-access: 1537 (ACC_PUBLIC, ACC_ABSTRACT)
-signature: <T::Ljava/lang/Iterable<*>;>Ljava/lang/Object;
+version: Java 8
+access: ACC_PUBLIC, ACC_ABSTRACT
 
-source: AB.cai, debug: null
+source: AB.cai
+
 public abstract class com.AB extends java.lang.Object {
 
-    !access: 1025 (ACC_PUBLIC, ACC_ABSTRACT)
+    !access: ACC_PUBLIC
     !signature: (TT;)V
     public abstract void iterate(java.lang.Iterable) {
+      desc: (Ljava/lang/Iterable;)V 
+      maxStack: 0, maxLocals: 0 
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

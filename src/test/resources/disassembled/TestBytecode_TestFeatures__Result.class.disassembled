@@ -1,59 +1,64 @@
 md5: a475e078fd9f9993f4e94b4725ffba4c
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: TestFeatures_.cai, debug: null
+source: TestFeatures_.cai
+
 public class fullName.TestFeatures_ extends java.lang.Object {
 
-    !access: 17 (ACC_PUBLIC, ACC_FINAL)
+    !access: ACC_PUBLIC, ACC_FINAL
     public final java.lang.String FIELD
-
-    !access: 17 (ACC_PUBLIC, ACC_FINAL)
+    !access: ACC_PUBLIC, ACC_FINAL
     public final int n
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 2, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         aload 0
-        ldc "AVD"
+        ldc "AVD"              // type: java.lang.String
         putfield fullName.TestFeatures_.FIELD (type: java.lang.String)
         aload 0
-        bipush 15
+        bipush org.objectweb.asm.tree.IntInsnNode@441772e.operand
         putfield fullName.TestFeatures_.n (type: int)
       Label_1:
        LINE 7 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Hello"
+        ldc "Hello"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
        LINE 8 -> Label_2
         aload 0
-        ldc "Oi"
+        ldc "Oi"              // type: java.lang.String
         invokevirtual fullName.TestFeatures_.printIt(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_3:
-      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestFeatures_;, signature: null, start: Label_0, end: Label_3]
-      MAX_STACK: 2, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: fullName.TestFeatures_, signature: null
+      }
     }
-
-    !access: 1 (ACC_PUBLIC)
+    
+    !access: ACC_PUBLIC
     public void printIt(java.lang.Object) {
+      desc: (Ljava/lang/Object;)V 
+      maxStack: 2, maxLocals: 3 
       Label_0:
        LINE 9 -> Label_0
         aload 1
-        ifnull Label_1
-      Label_2:
-       LINE 13 -> Label_2
-        getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Hello :D"
-        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        ifnull Label_2
       Label_1:
-       LINE 10 -> Label_1
+       LINE 13 -> Label_1
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Hello :D"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_2:
+       LINE 10 -> Label_2
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
-        ldc "DingDong"
+        ldc "DingDong"              // type: java.lang.String
       Label_3:
         astore 2
       Label_4:
@@ -68,21 +73,24 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_6:
-      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestFeatures_;, signature: null, start: Label_0, end: Label_6]
-      LOCAL_VARIABLE[index: 1, name: n, desc: Ljava/lang/Object;, signature: null, start: Label_0, end: Label_6]
-      LOCAL_VARIABLE[index: 2, name: dingdong, desc: Ljava/lang/String;, signature: null, start: Label_3, end: Label_6]
-      MAX_STACK: 2, MAX_LOCALS: 3
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: fullName.TestFeatures_, signature: null
+        index: 1, start: Label_0, end: Label_0, type: java.lang.Object, signature: null
+        index: 2, start: Label_3, end: Label_3, type: java.lang.String, signature: null
+      }
     }
-
-    !access: 1 (ACC_PUBLIC)
+    
+    !access: ACC_PUBLIC
     public boolean check(int) {
+      desc: (I)Z 
+      maxStack: 4, maxLocals: 2 
       Label_0:
        LINE 14 -> Label_0
         iload 1
-        bipush 9
+        bipush org.objectweb.asm.tree.IntInsnNode@6dc17b83.operand
         if_icmpeq Label_1
         iload 1
-        bipush 7
+        bipush org.objectweb.asm.tree.IntInsnNode@5e0826e7.operand
         if_icmpne Label_2
       Label_1:
        LINE 17 -> Label_1
@@ -104,14 +112,17 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         iconst_1
         ireturn
       Label_4:
-      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestFeatures_;, signature: null, start: Label_0, end: Label_4]
-      LOCAL_VARIABLE[index: 1, name: x, desc: I, signature: null, start: Label_0, end: Label_4]
-      MAX_STACK: 4, MAX_LOCALS: 2
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: fullName.TestFeatures_, signature: null
+        index: 1, start: Label_0, end: Label_0, type: int, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

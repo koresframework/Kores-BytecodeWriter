@@ -1,13 +1,16 @@
 md5: 4c507f17a15a862a49fa126b2d6bde94
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: CommonGen_Generated.cai, debug: null
+source: CommonGen_Generated.cai
+
 public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java.lang.Object {
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 7, maxLocals: 4 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
@@ -21,23 +24,23 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         anewarray java.lang.String
         dup
         iconst_0
-        ldc "A"
+        ldc "A"              // type: java.lang.String
         aastore
         dup
         iconst_1
-        ldc "B"
+        ldc "B"              // type: java.lang.String
         aastore
         dup
         iconst_2
-        ldc "C"
+        ldc "C"              // type: java.lang.String
         aastore
         dup
         iconst_3
-        ldc "D"
+        ldc "D"              // type: java.lang.String
         aastore
         dup
         iconst_4
-        ldc "E"
+        ldc "E"              // type: java.lang.String
         aastore
         aastore
         dup
@@ -46,23 +49,23 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         anewarray java.lang.String
         dup
         iconst_0
-        ldc "F"
+        ldc "F"              // type: java.lang.String
         aastore
         dup
         iconst_1
-        ldc "G"
+        ldc "G"              // type: java.lang.String
         aastore
         dup
         iconst_2
-        ldc "H"
+        ldc "H"              // type: java.lang.String
         aastore
         dup
         iconst_3
-        ldc "I"
+        ldc "I"              // type: java.lang.String
         aastore
         dup
         iconst_4
-        ldc "J"
+        ldc "J"              // type: java.lang.String
         aastore
         aastore
       Label_2:
@@ -99,16 +102,19 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_8:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/CommonGen_Generated;, signature: null, start: Label_0, end: Label_8]
-      LOCAL_VARIABLE[index: 1, name: array, desc: [[Ljava/lang/String;, signature: null, start: Label_2, end: Label_8]
-      LOCAL_VARIABLE[index: 2, name: array2, desc: [Ljava/lang/String;, signature: null, start: Label_4, end: Label_8]
-      LOCAL_VARIABLE[index: 3, name: array3, desc: [Ljava/lang/Object;, signature: null, start: Label_6, end: Label_8]
-      MAX_STACK: 7, MAX_LOCALS: 4
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: com.github.jonathanxd.codeapi.test.CommonGen_Generated, signature: null
+        index: 1, start: Label_2, end: Label_2, type: java.lang.String[][], signature: null
+        index: 2, start: Label_4, end: Label_4, type: java.lang.String[], signature: null
+        index: 3, start: Label_6, end: Label_6, type: java.lang.Object[], signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

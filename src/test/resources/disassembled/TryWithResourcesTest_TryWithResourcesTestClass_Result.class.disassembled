@@ -1,135 +1,143 @@
 md5: c671b11500d5bd0beed2a3a0c5ee20d2
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: TryWithResourcesTestClass.cai, debug: null
+source: TryWithResourcesTestClass.cai
+
 public class test.TryWithResourcesTestClass extends java.lang.Object {
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>() {
-        !tryCatchBlock[type: java/lang/Throwable, start: Label_0, end: Label_1, handler: Label_2]
-        !tryCatchBlock[type: java/lang/Throwable, start: Label_3, end: Label_4, handler: Label_5]
-        !tryCatchBlock[type: java/lang/Throwable, start: Label_6, end: Label_7, handler: Label_8]
-      Label_9:
+      desc: ()V 
+      maxStack: 2, maxLocals: 6 
+      Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_10:
-       LINE 3 -> Label_10
+      Label_1:
+       LINE 3 -> Label_1
         new com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm
         dup
         invokespecial com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm.<init>()void (ownerIsInterface: false)
-      Label_11:
+      Label_2:
         astore 1
         aconst_null
-      Label_12:
+      Label_3:
         astore 2
-      Label_0:
-       LINE 4 -> Label_0
+      Label_4:
+       LINE 4 -> Label_4
         aload 1
         invokevirtual com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm.read()void (ownerIsInterface: false)
-      Label_1:
-       LINE 5 -> Label_1
+      Label_5:
+       LINE 5 -> Label_5
         aload 1
         ifnull Label_13
-      Label_14:
-       LINE 7 -> Label_14
+      Label_6:
+       LINE 7 -> Label_6
         aload 2
-        ifnull Label_15
-      Label_3:
-       LINE 8 -> Label_3
-       LINE 9 -> Label_3
+        ifnull Label_12
+      Label_7:
+       LINE 8 -> Label_7
+       LINE 9 -> Label_7
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
-      Label_4:
-        goto Label_16
-      Label_5:
-       FRAME[type: F_FULL, locals: 3, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null, null, null, null}, stacks: 1, stack: {java.lang.Throwable, null}]
+      Label_8:
+        goto Label_11
+      Label_9:
+       FRAME[type: F_FULL, locals: 3, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null}, stacks: 1, stack: {java.lang.Throwable}]
         astore 3
-      Label_17:
-       LINE 10 -> Label_17
+      Label_10:
+       LINE 10 -> Label_10
         aload 2
         aload 3
         invokevirtual java.lang.Throwable.addSuppressed(java.lang.Throwable)void (ownerIsInterface: false)
-        goto Label_16
-      Label_16:
-       FRAME[type: F_SAME, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null, null, null, null}, stacks: 0, stack: {java.lang.Throwable, null}]
+        goto Label_11
+      Label_11:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         goto Label_13
-      Label_15:
-       LINE 11 -> Label_15
-       FRAME[type: F_SAME, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null, null, null, null}, stacks: 0, stack: {java.lang.Throwable, null}]
+      Label_12:
+       LINE 11 -> Label_12
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
       Label_13:
        LINE 6 -> Label_13
-       FRAME[type: F_SAME, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null, null, null, null}, stacks: 0, stack: {java.lang.Throwable, null}]
-        goto Label_18
-      Label_2:
-       FRAME[type: F_SAME1, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null, null, null, null}, stacks: 1, stack: {java.lang.Throwable, null}]
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        goto Label_26
+      Label_14:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
         astore 4
-      Label_19:
-       LINE 12 -> Label_19
+      Label_15:
+       LINE 12 -> Label_15
         aload 4
         astore 2
-      Label_20:
-       LINE 13 -> Label_20
+      Label_16:
+       LINE 13 -> Label_16
         aload 1
-        ifnull Label_21
-      Label_22:
-       LINE 16 -> Label_22
+        ifnull Label_24
+      Label_17:
+       LINE 16 -> Label_17
         aload 2
         ifnull Label_23
-      Label_6:
-       LINE 17 -> Label_6
-       LINE 18 -> Label_6
+      Label_18:
+       LINE 17 -> Label_18
+       LINE 18 -> Label_18
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
-      Label_7:
-        goto Label_24
-      Label_8:
-       FRAME[type: F_FULL, locals: 5, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, top, java.lang.Throwable, null}, stacks: 1, stack: {java.lang.Throwable, null}]
+      Label_19:
+        goto Label_22
+      Label_20:
+       FRAME[type: F_FULL, locals: 5, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, top, java.lang.Throwable}, stacks: 1, stack: {java.lang.Throwable}]
         astore 5
-      Label_25:
-       LINE 19 -> Label_25
+      Label_21:
+       LINE 19 -> Label_21
         aload 2
         aload 5
         invokevirtual java.lang.Throwable.addSuppressed(java.lang.Throwable)void (ownerIsInterface: false)
+        goto Label_22
+      Label_22:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         goto Label_24
-      Label_24:
-       FRAME[type: F_SAME, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, top, java.lang.Throwable, null}, stacks: 0, stack: {java.lang.Throwable, null}]
-        goto Label_21
       Label_23:
        LINE 20 -> Label_23
-       FRAME[type: F_SAME, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, top, java.lang.Throwable, null}, stacks: 0, stack: {java.lang.Throwable, null}]
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
-      Label_21:
-       LINE 14 -> Label_21
-       LINE 15 -> Label_21
-       FRAME[type: F_SAME, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, top, java.lang.Throwable, null}, stacks: 0, stack: {java.lang.Throwable, null}]
+      Label_24:
+       LINE 14 -> Label_24
+       LINE 15 -> Label_24
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 4
         athrow
-      Label_26:
-       FRAME[type: F_FULL, locals: 0, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, top, java.lang.Throwable, null}, stacks: 1, stack: {java.lang.Throwable, null}]
+      Label_25:
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
         nop
         nop
         athrow
-      Label_18:
-       FRAME[type: F_APPEND, locals: 3, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null, top, java.lang.Throwable, null}, stacks: 0, stack: {java.lang.Throwable, null}]
+      Label_26:
+       FRAME[type: F_APPEND, locals: 3, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null}, stacks: 0, stack: {}]
         return
       Label_27:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/TryWithResourcesTestClass;, signature: null, start: Label_9, end: Label_27]
-      LOCAL_VARIABLE[index: 1, name: trm, desc: Lcom/github/jonathanxd/codeapi/test/TryWithResourcesTest_$Trm;, signature: null, start: Label_11, end: Label_27]
-      LOCAL_VARIABLE[index: 2, name: $throwable_0, desc: Ljava/lang/Throwable;, signature: null, start: Label_12, end: Label_27]
-      LOCAL_VARIABLE[index: 3, name: $catch_2_0, desc: Ljava/lang/Throwable;, signature: null, start: Label_5, end: Label_16]
-      LOCAL_VARIABLE[index: 4, name: $catch_0, desc: Ljava/lang/Throwable;, signature: null, start: Label_2, end: Label_18]
-      LOCAL_VARIABLE[index: 5, name: $catch_2_0, desc: Ljava/lang/Throwable;, signature: null, start: Label_8, end: Label_24]
-      MAX_STACK: 2, MAX_LOCALS: 6
+      TryCatchBlocks {
+        start: Label_4, end: Label_4, handler: Label_14, exception: java.lang.Throwable
+        start: Label_7, end: Label_7, handler: Label_9, exception: java.lang.Throwable
+        start: Label_18, end: Label_18, handler: Label_20, exception: java.lang.Throwable
+      }
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: test.TryWithResourcesTestClass, signature: null
+        index: 1, start: Label_2, end: Label_2, type: com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, signature: null
+        index: 2, start: Label_3, end: Label_3, type: java.lang.Throwable, signature: null
+        index: 3, start: Label_9, end: Label_9, type: java.lang.Throwable, signature: null
+        index: 4, start: Label_14, end: Label_14, type: java.lang.Throwable, signature: null
+        index: 5, start: Label_20, end: Label_20, type: java.lang.Throwable, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

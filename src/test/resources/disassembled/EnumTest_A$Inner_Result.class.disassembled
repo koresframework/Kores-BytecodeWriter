@@ -1,29 +1,36 @@
 md5: 508554ce8e6e27502ca9c93b2e1dc861
 
-version: 52 (Java 8)
-access: 16416 (PACKAGE_PRIVATE)
+version: Java 8
+access: PACKAGE_PRIVATE
 
-source: MyEnum.cai, debug: null
-innerClass: com/MyEnum.com/MyEnum$A$Inner -> A$Inner (access: 16392 (PACKAGE_PRIVATE))
+source: MyEnum.cai
+
  class com.MyEnum$A$Inner extends com.MyEnum {
 
-    
-    @java.lang.Override(
-    !access: 1 (ACC_PUBLIC)
+    !access: PACKAGE_PRIVATE
+     com.MyEnum.A$Inner -> com.MyEnum$A$Inner
+
+    !access: ACC_PUBLIC
+    @java.lang.Override()
     public void v() {
+      desc: ()V 
+      maxStack: 2, maxLocals: 1 
       Label_0:
        LINE 5 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "A"
+        ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/MyEnum$A$Inner;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 2, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: com.MyEnum$A$Inner, signature: null
+      }
     }
-
-    !access: 0 (PACKAGE_PRIVATE)
+    
+    !access: PACKAGE_PRIVATE
      void <init>(java.lang.String, int) {
+      desc: (Ljava/lang/String;I)V 
+      maxStack: 3, maxLocals: 3 
       Label_0:
        LINE 6 -> Label_0
         aload 0
@@ -32,15 +39,18 @@ innerClass: com/MyEnum.com/MyEnum$A$Inner -> A$Inner (access: 16392 (PACKAGE_PRI
         invokespecial com.MyEnum.<init>(java.lang.String, int)void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/MyEnum$A$Inner;, signature: null, start: Label_0, end: Label_1]
-      LOCAL_VARIABLE[index: 1, name: $name, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
-      LOCAL_VARIABLE[index: 2, name: $ordinal, desc: I, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 3, MAX_LOCALS: 3
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: com.MyEnum$A$Inner, signature: null
+        index: 1, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+        index: 2, start: Label_0, end: Label_0, type: int, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

@@ -1,22 +1,27 @@
 md5: a361ad28f495ff212973e4d3a5165870
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: InnerClass.cai, debug: null
-innerClass: test/InnerClass.test/InnerClass$Inner -> Inner (access: 1 (ACC_PUBLIC))
+source: InnerClass.cai
+
 public class test.InnerClass extends java.lang.Object {
 
-    !access: 2 (ACC_PRIVATE)
+    !access: ACC_PUBLIC
+    public test.InnerClass.Inner -> test.InnerClass$Inner
+
+    !access: ACC_PRIVATE
     private java.lang.String field
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 3, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         aload 0
-        ldc "XSD"
+        ldc "XSD"              // type: java.lang.String
         putfield test.InnerClass.field (type: java.lang.String)
       Label_1:
        LINE 6 -> Label_1
@@ -27,17 +32,20 @@ public class test.InnerClass extends java.lang.Object {
         invokevirtual test.InnerClass$Inner.invoke$000()java.lang.String (ownerIsInterface: false)
         return
       Label_2:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/InnerClass;, signature: null, start: Label_0, end: Label_2]
-      MAX_STACK: 3, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: test.InnerClass, signature: null
+      }
     }
-
-    !access: 2 (ACC_PRIVATE)
+    
+    !access: ACC_PRIVATE
     private void <init>(java.lang.String) {
+      desc: (Ljava/lang/String;)V 
+      maxStack: 2, maxLocals: 2 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         aload 0
-        ldc "XSD"
+        ldc "XSD"              // type: java.lang.String
         putfield test.InnerClass.field (type: java.lang.String)
       Label_1:
        LINE 7 -> Label_1
@@ -46,44 +54,54 @@ public class test.InnerClass extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_2:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/InnerClass;, signature: null, start: Label_0, end: Label_2]
-      LOCAL_VARIABLE[index: 1, name: str, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_2]
-      MAX_STACK: 2, MAX_LOCALS: 2
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: test.InnerClass, signature: null
+        index: 1, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+      }
     }
-
-    !access: 1 (ACC_PUBLIC)
+    
+    !access: ACC_PUBLIC
     public void mm() {
+      desc: ()V 
+      maxStack: 2, maxLocals: 1 
       Label_0:
        LINE 8 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "A"
+        ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/InnerClass;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 2, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: test.InnerClass, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
-
-    !access: 4096 (PACKAGE_PRIVATE, ACC_SYNTHETIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC
      java.lang.String invoke$000() {
+      desc: ()Ljava/lang/String; 
+      maxStack: 1, maxLocals: 1 
       Label_0:
        LINE 9 -> Label_0
         aload 0
         getfield test.InnerClass.field (type: java.lang.String)
         areturn
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/InnerClass;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 1, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: test.InnerClass, signature: null
+      }
     }
-
-    !access: 4096 (PACKAGE_PRIVATE, ACC_SYNTHETIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC
      void <init>(java.lang.String, test.InnerClass$Inner) {
+      desc: (Ljava/lang/String;Ltest/InnerClass$Inner;)V 
+      maxStack: 2, maxLocals: 3 
       Label_0:
        LINE 10 -> Label_0
         aload 0
@@ -91,9 +109,11 @@ public class test.InnerClass extends java.lang.Object {
         invokespecial test.InnerClass.<init>(java.lang.String)void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/InnerClass;, signature: null, start: Label_0, end: Label_1]
-      LOCAL_VARIABLE[index: 1, name: str, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_1]
-      LOCAL_VARIABLE[index: 2, name: $inner, desc: Ltest/InnerClass$Inner;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 2, MAX_LOCALS: 3
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: test.InnerClass, signature: null
+        index: 1, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+        index: 2, start: Label_0, end: Label_0, type: test.InnerClass$Inner, signature: null
+      }
     }
+    
 }

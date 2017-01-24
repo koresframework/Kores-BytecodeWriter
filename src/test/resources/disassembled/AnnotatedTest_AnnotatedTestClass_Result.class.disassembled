@@ -1,50 +1,60 @@
 md5: ddff12ea4f48eea2d77c8debb229fdd8
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: AnnotatedTestClass.cai, debug: null
+source: AnnotatedTestClass.cai
 
-@com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {, , com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.C
+@com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.C})
 public class test.AnnotatedTestClass extends java.lang.Object {
 
-    
-    @com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {, , com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A
-    !access: 9 (ACC_PUBLIC, ACC_STATIC)
+    !access: ACC_PUBLIC, ACC_STATIC
+    @com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A})
     public static java.lang.String field
 
-    
-    @java.lang.invoke.MethodHandle.PolymorphicSignature(
-    !parameterAnnotation(parameter: 0) [@java.lang.Deprecated(
-    !access: 9 (ACC_PUBLIC, ACC_STATIC)
+    !access: ACC_PUBLIC, ACC_STATIC
+    !parametersAnnotations [
+      [0] {
+        @java.lang.Deprecated()
+      }
+    ]
+    @java.lang.invoke.MethodHandle.PolymorphicSignature()
     public static java.lang.Object polymorphic(java.lang.Object) {
+      desc: (Ljava/lang/Object;)Ljava/lang/Object; 
+      maxStack: 1, maxLocals: 1 
       Label_0:
        LINE 4 -> Label_0
         aconst_null
         areturn
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: first, desc: Ljava/lang/Object;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 1, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: java.lang.Object, signature: null
+      }
     }
-
-    !access: 1 (ACC_PUBLIC)
+    
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Ltest/AnnotatedTestClass;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 1, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: test.AnnotatedTestClass, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 0 
       Label_0:
        LINE 5 -> Label_0
         aconst_null
         putstatic test.AnnotatedTestClass.field (type: java.lang.String)
         return
-      MAX_STACK: 1, MAX_LOCALS: 0
     }
+    
 }

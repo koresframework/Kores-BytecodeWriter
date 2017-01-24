@@ -1,45 +1,44 @@
 md5: af2fe6ce9301b59863bfad95bfcbcc80
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: CodeAPITestBytecode.cai, debug: null
+source: CodeAPITestBytecode.cai
+
 public class github.com.CodeAPITestBytecode extends java.lang.Object {
 
-    !access: 9 (ACC_PUBLIC, ACC_STATIC)
+    !access: ACC_PUBLIC, ACC_STATIC
     public static void println(java.lang.Object) {
-        !tryCatchBlock[type: java/lang/IllegalArgumentException, start: Label_0, end: Label_1, handler: Label_2]
-        !tryCatchBlock[type: java/lang/IllegalStateException, start: Label_0, end: Label_1, handler: Label_2]
-        !tryCatchBlock[type: java/io/IOException, start: Label_0, end: Label_1, handler: Label_3]
-        !tryCatchBlock[type: java/lang/ClassNotFoundException, start: Label_0, end: Label_1, handler: Label_3]
-      Label_4:
+      desc: (Ljava/lang/Object;)V 
+      maxStack: 3, maxLocals: 4 
+      Label_0:
         new com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode
         dup
         invokespecial com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode.<init>()void (ownerIsInterface: false)
-      Label_5:
+      Label_1:
         astore 1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 1
         getfield com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode.b (type: java.lang.String)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_0:
+      Label_2:
         aload 0
-        ifnull Label_6
+        ifnull Label_3
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_6:
-       FRAME[type: F_APPEND, locals: 1, local: {com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null, null}, stacks: 0, stack: {}]
+      Label_3:
+       FRAME[type: F_APPEND, locals: 1, local: {com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
-      Label_7:
+      Label_4:
         astore 2
         new java.lang.IllegalStateException
         dup
-        ldc "Error"
+        ldc "Error"              // type: java.lang.String
         invokespecial java.lang.IllegalStateException.<init>(java.lang.String)void (ownerIsInterface: false)
         athrow
-      Label_1:
-       FRAME[type: F_FULL, locals: 0, local: {com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null, null}, stacks: 1, stack: {java.lang.Throwable, null, null}]
+      Label_5:
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
         nop
         nop
         nop
@@ -47,8 +46,8 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         nop
         nop
         athrow
-      Label_8:
-       FRAME[type: F_SAME1, locals: 0, local: {com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null, null}, stacks: 1, stack: {java.lang.Throwable, null, null}]
+      Label_6:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
         nop
         nop
         nop
@@ -60,55 +59,67 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         nop
         nop
         athrow
-      Label_3:
-       FRAME[type: F_FULL, locals: 2, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.Exception, null, null}]
+      Label_7:
+       FRAME[type: F_FULL, locals: 2, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode}, stacks: 1, stack: {java.lang.Exception}]
         astore 3
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Rethrow from var 'tlr'!"
+        ldc "Rethrow from var 'tlr'!"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         aload 3
         invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Finally!"
+        ldc "Finally!"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         goto Label_9
-      Label_2:
-       FRAME[type: F_SAME1, locals: 0, local: {java.lang.Object, com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, null, null}, stacks: 1, stack: {java.lang.RuntimeException, null, null}]
+      Label_8:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.RuntimeException}]
         astore 3
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Rethrow from var 'thr'!"
+        ldc "Rethrow from var 'thr'!"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         aload 3
         invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Finally!"
+        ldc "Finally!"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         goto Label_9
       Label_9:
-       FRAME[type: F_APPEND, locals: 2, local: {top, java.lang.Exception, null, null}, stacks: 0, stack: {java.lang.RuntimeException, null, null}]
+       FRAME[type: F_APPEND, locals: 2, local: {top, java.lang.Exception}, stacks: 0, stack: {}]
         return
       Label_10:
-      LOCAL_VARIABLE[index: 0, name: msg, desc: Ljava/lang/Object;, signature: null, start: Label_4, end: Label_10]
-      LOCAL_VARIABLE[index: 1, name: test, desc: Lcom/github/jonathanxd/codeapi/test/asm/CodeAPITestBytecode;, signature: null, start: Label_5, end: Label_10]
-      LOCAL_VARIABLE[index: 2, name: ref, desc: Ljava/lang/Object;, signature: null, start: Label_7, end: Label_10]
-      LOCAL_VARIABLE[index: 3, name: thr, desc: Ljava/lang/Throwable;, signature: null, start: Label_2, end: Label_9]
-      MAX_STACK: 3, MAX_LOCALS: 4
+      TryCatchBlocks {
+        start: Label_2, end: Label_2, handler: Label_8, exception: java.lang.IllegalArgumentException
+        start: Label_2, end: Label_2, handler: Label_8, exception: java.lang.IllegalStateException
+        start: Label_2, end: Label_2, handler: Label_7, exception: java.io.IOException
+        start: Label_2, end: Label_2, handler: Label_7, exception: java.lang.ClassNotFoundException
+      }
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: java.lang.Object, signature: null
+        index: 1, start: Label_1, end: Label_1, type: com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, signature: null
+        index: 2, start: Label_4, end: Label_4, type: java.lang.Object, signature: null
+        index: 3, start: Label_8, end: Label_8, type: java.lang.Throwable, signature: null
+      }
     }
-
-    !access: 1 (ACC_PUBLIC)
+    
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lgithub/com/CodeAPITestBytecode;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 1, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: github.com.CodeAPITestBytecode, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

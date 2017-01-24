@@ -1,33 +1,39 @@
 md5: 793478bda946a83e7f52b4b0875aa797
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: TestHelloBytecode.cai, debug: null
+source: TestHelloBytecode.cai
+
 public class fullName.TestHelloBytecode extends java.lang.Object {
 
-    !access: 25 (ACC_PUBLIC, ACC_STATIC, ACC_FINAL)
+    !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL
     public static final int DEFAULT_VALUE
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 2, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Hello World"
+        ldc "Hello World"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
       Label_1:
-      LOCAL_VARIABLE[index: 0, name: this, desc: LfullName/TestHelloBytecode;, signature: null, start: Label_0, end: Label_1]
-      MAX_STACK: 2, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: fullName.TestHelloBytecode, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
-        bipush 17
+      desc: ()V 
+      maxStack: 1, maxLocals: 0 
+        bipush org.objectweb.asm.tree.IntInsnNode@610694f1.operand
         putstatic fullName.TestHelloBytecode.DEFAULT_VALUE (type: int)
         return
-      MAX_STACK: 1, MAX_LOCALS: 0
     }
+    
 }

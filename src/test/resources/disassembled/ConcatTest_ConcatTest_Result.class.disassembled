@@ -1,13 +1,16 @@
 md5: b2bfb6654a8bf73abd6f1488ab567570
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: ConcatTest.cai, debug: null
+source: ConcatTest.cai
+
 public class com.ConcatTest extends java.lang.Object {
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>(java.lang.String) {
+      desc: (Ljava/lang/String;)V 
+      maxStack: 4, maxLocals: 2 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
@@ -16,43 +19,46 @@ public class com.ConcatTest extends java.lang.Object {
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.StringBuilder
         dup
-        ldc "Hello"
+        ldc "Hello"              // type: java.lang.String
         invokespecial java.lang.StringBuilder.<init>(java.lang.String)void (ownerIsInterface: false)
-        ldc " "
+        ldc " "              // type: java.lang.String
         invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
         aload 1
         invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
-        ldc " :D"
+        ldc " :D"              // type: java.lang.String
         invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
         invokevirtual java.lang.Object.toString()java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_2:
        LINE 4 -> Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc ""
+        ldc ""              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_3:
        LINE 5 -> Label_3
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "A"
+        ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_4:
        LINE 6 -> Label_4
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "A"
-        ldc "B"
+        ldc "A"              // type: java.lang.String
+        ldc "B"              // type: java.lang.String
         invokevirtual java.lang.String.concat(java.lang.String)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
       Label_5:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/ConcatTest;, signature: null, start: Label_0, end: Label_5]
-      LOCAL_VARIABLE[index: 1, name: av, desc: Ljava/lang/String;, signature: null, start: Label_0, end: Label_5]
-      MAX_STACK: 4, MAX_LOCALS: 2
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: com.ConcatTest, signature: null
+        index: 1, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

@@ -1,16 +1,19 @@
 md5: 5071ed00ace253849c3d1aa47a8115c6
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: Test.cai, debug: null
+source: Test.cai
+
 public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox {
 
-    !access: 18 (ACC_PRIVATE, ACC_FINAL)
+    !access: ACC_PRIVATE, ACC_FINAL
     private final com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox testField
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>() {
+      desc: ()V 
+      maxStack: 4, maxLocals: 1 
       Label_0:
        LINE 4 -> Label_0
         aload 0
@@ -26,13 +29,16 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.
         putfield finalfieldwiththis.Test.testField (type: com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox)
         return
       Label_2:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lfinalfieldwiththis/Test;, signature: null, start: Label_0, end: Label_2]
-      MAX_STACK: 4, MAX_LOCALS: 1
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: finalfieldwiththis.Test, signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }

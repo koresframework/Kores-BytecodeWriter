@@ -1,13 +1,16 @@
 md5: dcd7594445b874fe9f605828d7b84d86
 
-version: 52 (Java 8)
-access: 33 (ACC_PUBLIC)
+version: Java 8
+access: ACC_PUBLIC
 
-source: ArrayParameterTest_Generated.cai, debug: null
+source: ArrayParameterTest_Generated.cai
+
 public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated extends java.lang.Object {
 
-    !access: 1 (ACC_PUBLIC)
+    !access: ACC_PUBLIC
     public void <init>(com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[]) {
+      desc: ([Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;)V 
+      maxStack: 1, maxLocals: 4 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
@@ -21,16 +24,19 @@ public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated
         astore 3
         return
       Label_3:
-      LOCAL_VARIABLE[index: 0, name: this, desc: Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest_Generated;, signature: null, start: Label_0, end: Label_3]
-      LOCAL_VARIABLE[index: 1, name: par, desc: [Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;, signature: null, start: Label_0, end: Label_3]
-      LOCAL_VARIABLE[index: 2, name: cf, desc: Ljava/lang/Object;, signature: null, start: Label_1, end: Label_3]
-      LOCAL_VARIABLE[index: 3, name: lt, desc: [Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;, signature: null, start: Label_2, end: Label_3]
-      MAX_STACK: 1, MAX_LOCALS: 4
+      LocalVariables {
+        index: 0, start: Label_0, end: Label_0, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated, signature: null
+        index: 1, start: Label_0, end: Label_0, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
+        index: 2, start: Label_1, end: Label_1, type: java.lang.Object, signature: null
+        index: 3, start: Label_2, end: Label_2, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
+      }
     }
-
-    !access: 8 (PACKAGE_PRIVATE, ACC_STATIC)
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC
     static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
         return
-      MAX_STACK: 0, MAX_LOCALS: 0
     }
+    
 }
