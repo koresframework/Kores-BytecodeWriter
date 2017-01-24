@@ -27,54 +27,69 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.classloader
 
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 
-open class CodeClassLoader : ClassLoader() {
+/**
+ * Class injection utility.
+ *
+ * **This code may not work in Java 9+*
+ */
+object ClassInject {
 
     /**
-     * Define type declaration class.
+     * Inject class in [this classloader][ClassLoader].
      *
-     * @param typeDeclaration Type declaration.
-     * @param bytes           Bytes.
-     * @return Defined Class.
+     * @param bytecodeClass Bytecode class to inject
+     * @return Defined class
+     * @throws IllegalStateException if the injection fails.
      */
-    open fun define(typeDeclaration: TypeDeclaration, bytes: ByteArray): Class<*> {
-        return super.defineClass(typeDeclaration.type, bytes, 0, bytes.size)
+    fun ClassLoader.inject(bytecodeClass: BytecodeClass): Class<*> {
+        return this.inject(bytecodeClass.type.type, bytecodeClass.bytecode)
     }
 
     /**
-     * Define [BytecodeClass] class.
+     * Inject class and inner classes of this class in [this classloader][ClassLoader].
      *
-     * @param bytecodeClass Bytecode class.
-     * @return Defined Class.
+     * @param bytecodeClasses Bytecode classes to inject (first element must be the outer class).
+     * @return Defined class.
+     * @throws IllegalStateException if the injection fails or [bytecode classes array][bytecodeClasses] is empty.
      */
-    open fun define(bytecodeClass: BytecodeClass): Class<*> {
-        return this.define(bytecodeClass.type, bytecodeClass.bytecode)
-    }
-
-    /**
-     * Define [classes][BytecodeClass] and inner classes.
-     *
-     * Make sure that all elements in the `bytecodeClasses` is a inner type of element at
-     * index 0.
-     *
-     * @param bytecodeClasses Bytecode class (index 0) and inner classes (1..n).
-     * @return First Defined Class.
-     */
-    open fun define(bytecodeClasses: Array<out BytecodeClass>): Class<*> {
+    fun ClassLoader.inject(bytecodeClasses: Array<out BytecodeClass>): Class<*> {
         if (bytecodeClasses.isEmpty()) {
             throw IllegalArgumentException("Empty 'bytecodeClasses' array")
         }
 
         val bytecodeClass = bytecodeClasses[0]
 
-        val define = this.define(bytecodeClass.type, bytecodeClass.bytecode)
+        val define = this.inject(bytecodeClass)
 
         for (i in 1..bytecodeClasses.size - 1) {
-            this.define(bytecodeClasses[i])
+            this.inject(bytecodeClasses[i])
         }
 
         return define
     }
+
+
+    /**
+     * Inject class in [this classloader][ClassLoader].
+     *
+     * @param name Class name
+     * @param bytes Class bytes
+     * @return Defined class
+     * @throws IllegalStateException if the injection fails.
+     */
+    fun ClassLoader.inject(name: String, bytes: ByteArray): Class<*> {
+        try {
+            val defineClass = ClassLoader::class.java.getDeclaredMethod("defineClass", String::class.java, ByteArray::class.java, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+
+            defineClass.isAccessible = true
+
+            return defineClass.invoke(this, name, bytes, 0, bytes.size) as Class<*>
+        } catch (e: Exception) {
+            throw IllegalStateException("Injection of class '$name' in class loader '$this' failed!", e)
+        }
+
+    }
+
 }
