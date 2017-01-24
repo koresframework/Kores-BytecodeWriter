@@ -49,6 +49,10 @@ object CastVisitor : VoidVisitor<Cast, BytecodeClass, MVData> {
         val from = t.originalType
         val to = t.targetType
 
+        // No cast of void types.
+        if(from != null && !from.`is`(to) && from.`is`(Types.VOID) || to.`is`(Types.VOID))
+            return
+
         val castedPart = t.castedPart
 
         val autoboxing = if (from != null) autoboxing(from, to, castedPart) else null
