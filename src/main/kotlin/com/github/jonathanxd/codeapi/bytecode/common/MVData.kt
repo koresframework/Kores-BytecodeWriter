@@ -30,6 +30,7 @@ package com.github.jonathanxd.codeapi.bytecode.common
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.type.GenericType
+import com.github.jonathanxd.iutils.map.ListHashMap
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import java.util.*
@@ -46,13 +47,59 @@ import java.util.*
  */
 class MVData constructor(
         val methodVisitor: MethodVisitor,
-        private val variables: MutableList<Variable>) {
+        variables: MutableList<Variable>) {
 
-    /**
-     * Unmodifiable variable list.
-     */
-    private val unmod: List<Variable> = Collections.unmodifiableList(variables)
+    private var variableHistory = ListHashMap<Int, Variable>()
 
+    private var frame_: Frame? = Frame(null, variables)
+
+    private var frame: Frame
+        get() = this.frame_ ?: throw IllegalStateException("Visit end")
+        set(value) {
+            this.frame_ = value
+        }
+
+    fun enterNewFrame() {
+        val end = Label()
+
+/*
+        val start = this.frame.parent?.immutableVariableList?.size ?: 0
+        val endSize = this.frame.immutableVariableList.size
+
+        val subList = this.frame.immutableVariableList.subList(start, endSize)
+
+        this.variableHistory.addAll(subList)
+*/
+
+        this.frame = Frame(this.frame, emptyList(), end)
+    }
+
+    fun exitFrame() {
+        this.frame.endLabel?.let {
+            methodVisitor.visitLabel(it)
+        }
+
+        val start = this.frame.parent?.immutableVariableList?.size ?: 0
+        val endSize = this.frame.immutableVariableList.size
+
+        val subList = this.frame.immutableVariableList.subList(start, endSize)
+
+        subList.forEachIndexed { i, variable ->
+            this.variableHistory.putToList(start + i, variable)
+        }
+
+        //this.variableHistory.addAll(subList)
+
+        this.frame = this.frame.parent ?: throw IllegalStateException("Cannot exit from main frame")
+    }
+
+    private fun exitAllFrames() {
+        var f = this.frame.parent
+        while(f != null) {
+            exitFrame()
+            f = this.frame.parent
+        }
+    }
 
     /**
      * Get variable at stack pos `i`.
@@ -60,12 +107,7 @@ class MVData constructor(
      * @param i Index in the stack.
      * @return Variable or [Optional.empty] if not present.
      */
-    fun getVar(i: Int): Optional<Variable> {
-        if (i < 0 || i >= this.variables.size)
-            return Optional.empty<Variable>()
-
-        return Optional.of(this.variables[i])
-    }
+    fun getVar(i: Int): Optional<Variable> = Optional.ofNullable(this.frame.getVar(i))
 
     /**
      * Get a variable by name.
@@ -73,9 +115,7 @@ class MVData constructor(
      * @param name Name of the variable.
      * @return Variable or [Optional.empty] if not present.
      */
-    fun getVarByName(name: String): Optional<Variable> {
-        return this.variables.stream().filter { `var` -> `var`.name == name }.findAny()
-    }
+    fun getVarByName(name: String): Optional<Variable> = Optional.ofNullable(this.frame.getVarByName(name))
 
     /**
      * Get a variable by name and type.
@@ -84,13 +124,7 @@ class MVData constructor(
      * @param type Type of the variable.
      * @return Variable or [Optional.empty] if not present.
      */
-    fun getVar(name: String, type: CodeType?): Optional<Variable> {
-        if (type == null) {
-            return this.getVarByName(name)
-        }
-
-        return variables.stream().filter { `var` -> `var`.name == name && `var`.type.compareTo(type) == 0 }.findAny()
-    }
+    fun getVar(name: String, type: CodeType?): Optional<Variable> = Optional.ofNullable(this.frame.getVar(name, type))
 
     /**
      * Gets the position of a variable instance
@@ -98,14 +132,12 @@ class MVData constructor(
      * @param variable Variable instance
      * @return Position of variable if exists, or [OptionalInt.empty] otherwise.
      */
-    fun getVarPos(variable: Variable): OptionalInt {
-        for (i in variables.indices.reversed()) {
-            if (this.variables[i] == variable)
-                return OptionalInt.of(i)
-        }
+    fun getVarPos(variable: Variable): OptionalInt = this.frame.getVarPos(variable)
 
-        return OptionalInt.empty()
-    }
+    /**
+     * Add variables
+     */
+    fun addVar(variable: Variable) = this.frame.add(variable)
 
     /**
      * Store a variable in stack "table".
@@ -117,25 +149,8 @@ class MVData constructor(
      * @return [OptionalInt] holding the position, or empty if failed to store.
      * @throws RuntimeException if variable is already defined.
      */
-    fun storeVar(name: String, type: CodeType, startLabel: Label, endLabel: Label?): OptionalInt {
-        val variable = Variable(name, type, startLabel, endLabel)
-
-        for (i in this.variables.indices.reversed()) {
-            val variable1 = this.variables[i]
-
-            if (variable1 == variable) {
-                if (variable1.isTemp) {
-                    throw RuntimeException("Cannot store variable named '$name'. Variable already stored!")
-                }
-
-                return OptionalInt.of(i)
-            }
-        }
-
-        this.variables.add(variable)
-        // ? Last index with synchronized method is good!!!
-        return this.getVarPos(variable)
-    }
+    fun storeVar(name: String, type: CodeType, startLabel: Label, endLabel: Label?): OptionalInt =
+            this.frame.storeVar(name, type, startLabel, endLabel)
 
     /**
      * Store a internal variable. (internal variables doesn't have their names generated in
@@ -153,19 +168,8 @@ class MVData constructor(
      * @param endLabel   End label (last usage of variable).
      * @return [OptionalInt] holding the position, or empty if failed to store.
      */
-    fun storeInternalVar(name: String, type: CodeType, startLabel: Label, endLabel: Label?): OptionalInt {
-        val variable = Variable(name, type, startLabel, endLabel, true)
-
-        for (i in variables.indices.reversed()) {
-            if (this.variables[i] == variable) {
-                return OptionalInt.of(i)
-            }
-        }
-
-        this.variables.add(variable)
-        // ? Last index with synchronized method is good!!!
-        return this.getVarPos(variable)
-    }
+    fun storeInternalVar(name: String, type: CodeType, startLabel: Label, endLabel: Label?): OptionalInt =
+            this.frame.storeInternalVar(name, type, startLabel, endLabel)
 
     /**
      * Redefine a variable in a `position`.
@@ -176,57 +180,29 @@ class MVData constructor(
      * @param startLabel Start label (first occurrence of variable).
      * @param endLabel   End label (last usage of variable).
      */
-    fun redefineVar(pos: Int, name: String, type: CodeType, startLabel: Label, endLabel: Label?) {
-        val variable = Variable(name, type, startLabel, endLabel)
-
-        if (pos >= this.variables.size) {
-            this.variables.add(pos, variable)
-        } else {
-            if (this.variables[pos].isTemp) {
-                throw RuntimeException("Cannot store variable named '$name'. Variable already stored!")
-            }
-
-            this.variables[pos] = variable
-        }
-    }
+    fun redefineVar(pos: Int, name: String, type: CodeType, startLabel: Label, endLabel: Label?) =
+            this.frame.redefineVar(pos, name, type, startLabel, endLabel)
 
     /**
      * Return last position in stack map.
      *
      * @return Last position in stack map.
      */
-    fun currentPos(): Int {
-        return this.variables.size - 1
-    }
+    fun currentPos(): Int = this.frame.currentPos()
 
     /**
      * Gets a immutable list with all variables.
      *
      * @return Immutable list with all variables.
      */
-    fun getVariables(): List<Variable> {
-        return this.unmod
-    }
+    fun getVariables(): List<Variable> = this.frame.immutableVariableList
 
     /**
      * Create a unique name of variable based on [base] name.
      */
-    fun getUniqueVariableName(base: String): String {
-        if (hasVar(base))
-            return base
+    fun getUniqueVariableName(base: String): String = this.frame.getUniqueVariableName(base)
 
-        var finalName = base
-        var i = 0
-
-        do {
-            finalName += i
-            ++i
-        } while (hasVar(finalName))
-
-        return finalName
-    }
-
-    fun hasVar(varName: String) = this.variables.any { it.name == varName }
+    fun hasVar(varName: String) = this.frame.hasVar(varName)
 
     /**
      * Generate LocalVariableTable
@@ -235,27 +211,40 @@ class MVData constructor(
      * @param end   End of the method.
      */
     fun visitVars(start: Label, end: Label) {
-        val variables = this.getVariables()
+        this.exitAllFrames()
 
-        for (i in variables.indices) {
-            val variable = variables[i]
+        this.frame.immutableVariableList.forEachIndexed { i, variable ->
+            this.variableHistory.putToList(i, variable)
+        }
 
-            if (variable.isTemp || variable.name.contains("#"))
-            // Internal variables
-                continue
+        val variables = variableHistory
 
-            val varStart = variable.startLabel ?: start
-            val varEnd = variable.endLabel ?: end
+        this.frame_ = null
 
-            val type = CodeTypeUtil.toTypeDesc(variable.type)
 
-            var signature: String? = null
+        for (i in variables.keys.sorted().asReversed()) {
+            val varis = variables[i]!!
 
-            if (variable.type is GenericType) {
-                signature = CodeTypeUtil.toName(variable.type)
+            for(variable in varis) {
+
+                if (variable.isTemp || variable.name.contains("#"))
+                // Internal variables
+                    continue
+
+                val varStart = variable.startLabel
+                val varEnd = variable.endLabel ?: end
+
+                val type = CodeTypeUtil.toTypeDesc(variable.type)
+
+                var signature: String? = null
+
+                if (variable.type is GenericType) {
+                    signature = CodeTypeUtil.toName(variable.type)
+                }
+
+                methodVisitor.visitLocalVariable(variable.name, type, signature, varStart, varEnd, i)
+
             }
-
-            methodVisitor.visitLocalVariable(variable.name, type, signature, varStart, varEnd, i)
         }
     }
 

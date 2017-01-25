@@ -1,13 +1,13 @@
-md5: a2c7ee03e58e7872ca7f2b2f97a512fe
+md5: fda01733c40536d7071ab08206916537
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: bridgeTest.cai
 
 public class com.bridgeTest extends java.lang.Object implements com.AB {
 
-    !access: ACC_PUBLIC, ACC_VOLATILE
+    !access: ACC_PUBLIC, ACC_BRIDGE (65)
     !signature: (Ljava/lang/Iterable<*>;)V
     public void iterate(java.lang.Iterable) {
       desc: (Ljava/lang/Iterable;)V 
@@ -20,12 +20,12 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         return
       Label_1:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.bridgeTest, signature: null
-        index: 1, start: Label_0, end: Label_0, type: java.lang.Iterable, signature: Ljava/lang/Iterable<*>;
+        index: 1, name: iter, start: Label_0, end: Label_1, type: java.lang.Iterable, signature: Ljava/lang/Iterable<*>;
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.bridgeTest, signature: null
       }
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void iterate(java.util.List) {
       desc: (Ljava/util/List;)V 
       maxStack: 3, maxLocals: 4 
@@ -55,13 +55,13 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         return
       Label_4:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.bridgeTest, signature: null
-        index: 1, start: Label_0, end: Label_0, type: java.util.List, signature: null
-        index: 3, start: Label_2, end: Label_2, type: java.lang.Object, signature: null
+        index: 3, name: obj, start: Label_2, end: Label_3, type: java.lang.Object, signature: null
+        index: 1, name: iter, start: Label_0, end: Label_4, type: java.util.List, signature: null
+        index: 0, name: this, start: Label_0, end: Label_4, type: com.bridgeTest, signature: null
       }
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 1, maxLocals: 1 
@@ -71,11 +71,11 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         return
       Label_1:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.bridgeTest, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.bridgeTest, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

@@ -1,17 +1,17 @@
 md5: 47a58090362257ab16a302886cc81576
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: MethodFragment.cai
 
 public class com.MethodFragment extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     !signature: TT;
     public java.lang.Object test
 
-    !access: ACC_PUBLIC, ACC_STATIC
+    !access: ACC_PUBLIC, ACC_STATIC (9)
     public static void test() {
       desc: ()V 
       maxStack: 2, maxLocals: 0 
@@ -24,7 +24,7 @@ public class com.MethodFragment extends java.lang.Object {
         return
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 1, maxLocals: 1 
@@ -34,11 +34,11 @@ public class com.MethodFragment extends java.lang.Object {
         return
       Label_1:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.MethodFragment, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.MethodFragment, signature: null
       }
     }
     
-    !access: ACC_PRIVATE, ACC_STATIC
+    !access: ACC_PRIVATE, ACC_STATIC (10)
     private static java.lang.String fragment$$1(java.lang.String) {
       desc: (Ljava/lang/String;)Ljava/lang/String; 
       maxStack: 1, maxLocals: 1 
@@ -48,11 +48,11 @@ public class com.MethodFragment extends java.lang.Object {
         areturn
       Label_1:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+        index: 0, name: input, start: Label_0, end: Label_1, type: java.lang.String, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

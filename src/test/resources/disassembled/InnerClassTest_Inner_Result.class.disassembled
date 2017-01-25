@@ -1,21 +1,21 @@
-md5: 27b957a55f5844b35271d5678de8ff5e
+md5: 4fda9608729dc2a2948c5e5eee48381d
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: InnerClass.cai
 
 public class test.InnerClass$Inner extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public test.InnerClass.Inner -> test.InnerClass$Inner
 
-    !access: ACC_PRIVATE, ACC_FINAL
+    !access: ACC_PRIVATE, ACC_FINAL (18)
     private final test.InnerClass innerClass$outer1
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public test.InnerClass a
 
-    !access: ACC_PRIVATE
+    !access: ACC_PRIVATE (2)
     private java.lang.String call() {
       desc: ()Ljava/lang/String; 
       maxStack: 2, maxLocals: 1 
@@ -37,11 +37,11 @@ public class test.InnerClass$Inner extends java.lang.Object {
         areturn
       Label_3:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: test.InnerClass$Inner, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: test.InnerClass$Inner, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
      java.lang.String invoke$000() {
       desc: ()Ljava/lang/String; 
       maxStack: 1, maxLocals: 1 
@@ -52,11 +52,11 @@ public class test.InnerClass$Inner extends java.lang.Object {
         areturn
       Label_1:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: test.InnerClass$Inner, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
       }
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>(test.InnerClass) {
       desc: (Ltest/InnerClass;)V 
       maxStack: 5, maxLocals: 2 
@@ -79,12 +79,12 @@ public class test.InnerClass$Inner extends java.lang.Object {
         return
       Label_2:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: test.InnerClass$Inner, signature: null
-        index: 1, start: Label_0, end: Label_0, type: test.InnerClass, signature: null
+        index: 1, name: innerClass$outer1, start: Label_0, end: Label_2, type: test.InnerClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: test.InnerClass$Inner, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

@@ -1,13 +1,13 @@
-md5: b2bfb6654a8bf73abd6f1488ab567570
+md5: 313fc1de4acbf700900b420a01492e5e
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: ConcatTest.cai
 
 public class com.ConcatTest extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 4, maxLocals: 2 
@@ -49,12 +49,12 @@ public class com.ConcatTest extends java.lang.Object {
         return
       Label_5:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.ConcatTest, signature: null
-        index: 1, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+        index: 1, name: av, start: Label_0, end: Label_5, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_5, type: com.ConcatTest, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

@@ -56,14 +56,21 @@ public final class ResultSaver {
     // Temporary disabled
     public static void save(Class<?> ofClass, BytecodeClass[] result) {
         for (BytecodeClass bytecodeClass : result) {
-            save(ofClass, bytecodeClass.getType().getSimpleName(), bytecodeClass.getBytecode());
+            save(ofClass, bytecodeClass.getType().getSimpleName(), bytecodeClass);
         }
     }
 
     public static void save(Class<?> ofClass, String tag, BytecodeClass[] result) {
         for (BytecodeClass bytecodeClass : result) {
-            save(ofClass, tag + "_" + bytecodeClass.getType().getSimpleName(), bytecodeClass.getBytecode());
+            save(ofClass, tag + "_" + bytecodeClass.getType().getSimpleName(), bytecodeClass);
         }
+    }
+
+    public static void save(Class<?> ofClass, String tag, BytecodeClass result) {
+        if (IS_GRADLE_ENVIRONMENT)
+            return;
+
+        save(ofClass, tag, result.getBytecode());
     }
 
     public static void save(Class<?> ofClass, String tag, byte[] result) {
@@ -110,6 +117,14 @@ public final class ResultSaver {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void save(Class<?> ofClass, BytecodeClass bytecodeClass) {
+        if (IS_GRADLE_ENVIRONMENT)
+            return;
+
+        save(ofClass, null, bytecodeClass);
+
     }
 
     public static void save(Class<?> ofClass, byte[] result) {

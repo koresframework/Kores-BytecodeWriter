@@ -30,6 +30,7 @@ package com.github.jonathanxd.codeapi.test.asm;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.factory.ClassFactory;
@@ -89,9 +90,11 @@ public class CodeAPITest_API {
     public byte[] generate(CodeSource source) {
         BytecodeGenerator generator = new BytecodeGenerator();
 
-        byte[] bytes = generator.gen(source)[0].getBytecode();
+        BytecodeClass bytecodeClass = generator.gen(source)[0];
 
-        ResultSaver.save(this.getClass(), bytes);
+        byte[] bytes = bytecodeClass.getBytecode();
+
+        ResultSaver.save(this.getClass(), bytecodeClass);
 
         return bytes;
     }

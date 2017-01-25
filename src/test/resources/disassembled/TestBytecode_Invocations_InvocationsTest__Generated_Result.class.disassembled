@@ -1,18 +1,18 @@
-md5: df541403cb75615c3af481a64e4feb71
+md5: b755dff300d7fa21d5068c9d0544195e
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: InvocationsTest__Generated.cai
 
 public class fullName.InvocationsTest__Generated extends java.lang.Object {
 
-    !access: ACC_PUBLIC, ACC_FINAL
+    !access: ACC_PUBLIC, ACC_FINAL (17)
     public final java.lang.String FIELD
-    !access: ACC_PUBLIC, ACC_FINAL
+    !access: ACC_PUBLIC, ACC_FINAL (17)
     public final int n
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 2, maxLocals: 1 
@@ -23,7 +23,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         ldc "AVD"              // type: java.lang.String
         putfield fullName.InvocationsTest__Generated.FIELD (type: java.lang.String)
         aload 0
-        bipush org.objectweb.asm.tree.IntInsnNode@42d8062c.operand
+        bipush 15
         putfield fullName.InvocationsTest__Generated.n (type: int)
       Label_1:
        LINE 7 -> Label_1
@@ -38,11 +38,11 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         return
       Label_3:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: fullName.InvocationsTest__Generated, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: fullName.InvocationsTest__Generated, signature: null
       }
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void printIt(java.lang.Object) {
       desc: (Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 3 
@@ -74,13 +74,13 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         return
       Label_6:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: fullName.InvocationsTest__Generated, signature: null
-        index: 1, start: Label_0, end: Label_0, type: java.lang.Object, signature: null
-        index: 2, start: Label_3, end: Label_3, type: java.lang.String, signature: null
+        index: 2, name: dingdong, start: Label_3, end: Label_6, type: java.lang.String, signature: null
+        index: 1, name: n, start: Label_0, end: Label_6, type: java.lang.Object, signature: null
+        index: 0, name: this, start: Label_0, end: Label_6, type: fullName.InvocationsTest__Generated, signature: null
       }
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public boolean check(int) {
       desc: (I)Z 
       maxStack: 4, maxLocals: 7 
@@ -124,7 +124,15 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_9:
        LINE 21 -> Label_9
-        invokedynamic get()java.util.function.Supplier (bootstrap: java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [()Ljava/lang/Object;, fullName.InvocationsTest__Generated.fragment$$1()java.lang.String (tag: h_invokestatic, itf: false), ()Ljava/lang/String;])
+        invokedynamic get()java.util.function.Supplier [
+          // Bootstrap method
+          java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+            // Arguments
+            ()Ljava/lang/Object;
+            fullName.InvocationsTest__Generated.fragment$$1()java.lang.String (tag: h_invokestatic, itf: false)
+            ()Ljava/lang/String;
+          ]
+        ]
       Label_10:
         astore 4
       Label_11:
@@ -137,7 +145,15 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
       Label_12:
        LINE 23 -> Label_12
         aload 2
-        invokedynamic get(com.github.jonathanxd.codeapi.test.Greeter)java.util.function.Supplier (bootstrap: java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [()Ljava/lang/Object;, com.github.jonathanxd.codeapi.test.Greeter.hello()java.lang.String (tag: h_invokeinterface, itf: true), ()Ljava/lang/String;])
+        invokedynamic get(com.github.jonathanxd.codeapi.test.Greeter)java.util.function.Supplier [
+          // Bootstrap method
+          java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+            // Arguments
+            ()Ljava/lang/Object;
+            com.github.jonathanxd.codeapi.test.Greeter.hello()java.lang.String (tag: h_invokeinterface, itf: true)
+            ()Ljava/lang/String;
+          ]
+        ]
       Label_13:
         astore 5
       Label_14:
@@ -165,7 +181,11 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
       Label_19:
        LINE 28 -> Label_19
         ldc "World"              // type: java.lang.String
-        invokedynamic helloWorld(java.lang.String)void (bootstrap: com.github.jonathanxd.codeapi.test.InvocationsTest_.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false), args: [])
+        invokedynamic helloWorld(java.lang.String)void [
+          // Bootstrap method
+          com.github.jonathanxd.codeapi.test.InvocationsTest_.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+          ]
+        ]
       Label_20:
        LINE 29 -> Label_20
         getstatic java.lang.System.out (type: java.io.PrintStream)
@@ -174,10 +194,10 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
       Label_21:
        LINE 30 -> Label_21
         iload 1
-        bipush org.objectweb.asm.tree.IntInsnNode@612fc6eb.operand
+        bipush 9
         if_icmpeq Label_22
         iload 1
-        bipush org.objectweb.asm.tree.IntInsnNode@1060b431.operand
+        bipush 7
         if_icmpne Label_23
       Label_22:
        LINE 33 -> Label_22
@@ -200,17 +220,17 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         ireturn
       Label_25:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: fullName.InvocationsTest__Generated, signature: null
-        index: 1, start: Label_0, end: Label_0, type: int, signature: null
-        index: 2, start: Label_3, end: Label_3, type: com.github.jonathanxd.codeapi.test.Greeter, signature: null
-        index: 3, start: Label_5, end: Label_5, type: java.lang.String, signature: null
-        index: 4, start: Label_10, end: Label_10, type: java.util.function.Supplier, signature: null
-        index: 5, start: Label_13, end: Label_13, type: java.util.function.Supplier, signature: null
-        index: 6, start: Label_15, end: Label_15, type: java.lang.String, signature: null
+        index: 6, name: str, start: Label_15, end: Label_25, type: java.lang.String, signature: null
+        index: 5, name: supplier, start: Label_13, end: Label_25, type: java.util.function.Supplier, signature: null
+        index: 4, name: supplier2, start: Label_10, end: Label_25, type: java.util.function.Supplier, signature: null
+        index: 3, name: greetingVar, start: Label_5, end: Label_25, type: java.lang.String, signature: null
+        index: 2, name: greeter, start: Label_3, end: Label_25, type: com.github.jonathanxd.codeapi.test.Greeter, signature: null
+        index: 1, name: x, start: Label_0, end: Label_25, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_25, type: fullName.InvocationsTest__Generated, signature: null
       }
     }
     
-    !access: ACC_PRIVATE, ACC_STATIC
+    !access: ACC_PRIVATE, ACC_STATIC (10)
     private static java.lang.String fragment$$1() {
       desc: ()Ljava/lang/String; 
       maxStack: 1, maxLocals: 0 
@@ -220,7 +240,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         areturn
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.InvokeType;
@@ -90,9 +91,11 @@ public class TestHelloBytecode {
 
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        byte[] gen = bytecodeGenerator.gen(codeSource)[0].getBytecode();
+        BytecodeClass bytecodeClass = bytecodeGenerator.gen(codeSource)[0];
 
-        ResultSaver.save(this.getClass(), gen);
+        byte[] gen = bytecodeClass.getBytecode();
+
+        ResultSaver.save(this.getClass(), bytecodeClass);
 
         BCLoader bcLoader = new BCLoader();
 

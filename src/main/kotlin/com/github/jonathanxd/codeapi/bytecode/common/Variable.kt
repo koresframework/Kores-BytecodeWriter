@@ -35,7 +35,7 @@ import java.util.*
 /**
  * Internal class undocumented.
  */
-class Variable @JvmOverloads constructor(val name: String, val type: CodeType, val startLabel: Label?, val endLabel: Label?, val isTemp: Boolean = false) {
+class Variable @JvmOverloads constructor(val name: String, val type: CodeType, val startLabel: Label, val endLabel: Label?, val isTemp: Boolean = false) {
 
     override fun hashCode(): Int {
         return Objects.hash(this.name, this.type)

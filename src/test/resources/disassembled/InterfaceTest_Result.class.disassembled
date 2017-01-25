@@ -1,25 +1,25 @@
 md5: ad1adb5a0589f11eb01b5271ba4e34dc
 
-version: Java 8
-access: ACC_PUBLIC, ACC_ABSTRACT
+version: Java 8 (52)
+access: ACC_PUBLIC, ACC_ABSTRACT (1537)
 
 source: Impl.cai
 
 public abstract class test.Impl extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     public abstract void parse(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 0, maxLocals: 0 
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     public abstract int getI(int) {
       desc: (I)I 
       maxStack: 0, maxLocals: 0 
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

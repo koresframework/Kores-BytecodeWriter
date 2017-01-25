@@ -1,13 +1,13 @@
-md5: 4c507f17a15a862a49fa126b2d6bde94
+md5: 3ca82b07293b35e2831f0d2c0bb6c7e9
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: CommonGen_Generated.cai
 
 public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 7, maxLocals: 4 
@@ -103,14 +103,14 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         return
       Label_8:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.github.jonathanxd.codeapi.test.CommonGen_Generated, signature: null
-        index: 1, start: Label_2, end: Label_2, type: java.lang.String[][], signature: null
-        index: 2, start: Label_4, end: Label_4, type: java.lang.String[], signature: null
-        index: 3, start: Label_6, end: Label_6, type: java.lang.Object[], signature: null
+        index: 3, name: array3, start: Label_6, end: Label_8, type: java.lang.Object[], signature: null
+        index: 2, name: array2, start: Label_4, end: Label_8, type: java.lang.String[], signature: null
+        index: 1, name: array, start: Label_2, end: Label_8, type: java.lang.String[][], signature: null
+        index: 0, name: this, start: Label_0, end: Label_8, type: com.github.jonathanxd.codeapi.test.CommonGen_Generated, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

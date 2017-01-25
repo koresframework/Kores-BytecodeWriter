@@ -108,16 +108,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
 
         val mv = cw.visitMethod(asmModifiers, methodName, desc, signature, null)
 
-        val vars = java.util.ArrayList<Variable>()
-
-        if (modifiers.contains(CodeModifier.STATIC)) {
-            ParameterUtil.parametersToVars(parameters, /* to */ vars)
-        } else {
-            vars.add(Variable("this", typeDeclaration, null, null))
-            ParameterUtil.parametersToVars(parameters, /* to */ vars)
-        }
-
-        val mvData = MVData(mv, vars)
+        val mvData = MVData(mv, mutableListOf())
 
         // Register Sugar Env
         val sugarEnv = MVDataSugarEnvironment(mvData)
@@ -133,6 +124,24 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
 
         if (!isAbstract || isConstructor) {
             mv.visitCode()
+
+            val startLabel = Label()
+            mv.visitLabel(startLabel)
+
+
+            if (modifiers.contains(CodeModifier.STATIC)) {
+
+                ParameterUtil.parametersToVars(parameters, startLabel).forEach {
+                    mvData.addVar(it)
+                }
+            } else {
+                mvData.addVar(Variable("this", typeDeclaration, startLabel, null))
+                ParameterUtil.parametersToVars(parameters, startLabel).forEach {
+                    mvData.addVar(it)
+                }
+            }
+
+
             val l0 = Label()
             mv.visitLabel(l0)
 
@@ -182,7 +191,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
 
             mv.visitLabel(end)
 
-            mvData.visitVars(l0, end)
+            mvData.visitVars(startLabel, end)
 
             try {
                 mv.visitMaxs(0, 0)
