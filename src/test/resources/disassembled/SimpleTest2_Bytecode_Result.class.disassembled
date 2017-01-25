@@ -1,16 +1,16 @@
-md5: 83a47f44e1d499d5dd3d6ec4ece79819
+md5: 2077964485efdee5df023edbd3b43df0
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: SimpleTest2_bytecode.cai
 
 public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.lang.Object {
 
-    !access: ACC_PUBLIC, ACC_FINAL
+    !access: ACC_PUBLIC, ACC_FINAL (17)
     public final java.lang.String myField
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 4, maxLocals: 2 
@@ -51,12 +51,12 @@ public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.
         return
       Label_5:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, signature: null
-        index: 1, start: Label_0, end: Label_0, type: java.lang.String, signature: null
+        index: 1, name: myField, start: Label_0, end: Label_5, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_5, type: me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

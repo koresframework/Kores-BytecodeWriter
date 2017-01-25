@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.base.FieldDeclaration;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
@@ -144,10 +145,11 @@ public class SimpleTest2_Bytecode {
 
         // Algumas classes são Singleton, então você não precisa instanciar.
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeClass bytecodeClass = bytecodeGenerator.gen(source)[0];
 
-        byte[] bytes = bytecodeGenerator.gen(source)[0].getBytecode();
+        byte[] bytes = bytecodeClass.getBytecode();
 
-        ResultSaver.save(this.getClass(), bytes);
+        ResultSaver.save(this.getClass(), bytecodeClass);
 
         BCLoader bcLoader = new BCLoader();
 

@@ -1,13 +1,13 @@
-md5: a47c323c332ccac3ed6496b6161ea666
+md5: ee7116b75b04f3c8ba17c75404722af7
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: TestLoopBytecode.cai
 
 public class fullName.TestLoopBytecode extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 4, maxLocals: 4 
@@ -18,7 +18,7 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
       Label_1:
         istore 1
         iload 1
-        bipush org.objectweb.asm.tree.IntInsnNode@3aefe5e5.operand
+        bipush 17
         if_icmpge Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.Integer
@@ -36,7 +36,7 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
       Label_4:
        FRAME[type: F_APPEND, locals: 1, local: {integer}, stacks: 0, stack: {}]
         iload 2
-        bipush org.objectweb.asm.tree.IntInsnNode@149e0f5d.operand
+        bipush 100
         if_icmpge Label_7
         iload 2
         iconst_5
@@ -116,14 +116,14 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
         return
       Label_13:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: fullName.TestLoopBytecode, signature: null
-        index: 1, start: Label_1, end: Label_1, type: int, signature: null
-        index: 2, start: Label_3, end: Label_3, type: int, signature: null
-        index: 3, start: Label_8, end: Label_8, type: int, signature: null
+        index: 3, name: u, start: Label_8, end: Label_13, type: int, signature: null
+        index: 2, name: i, start: Label_3, end: Label_13, type: int, signature: null
+        index: 1, name: x, start: Label_1, end: Label_13, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_13, type: fullName.TestLoopBytecode, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

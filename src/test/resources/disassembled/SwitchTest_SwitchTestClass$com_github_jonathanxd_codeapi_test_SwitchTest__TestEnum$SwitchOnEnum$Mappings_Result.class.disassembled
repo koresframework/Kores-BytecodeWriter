@@ -1,24 +1,24 @@
-md5: d141f3ff51e22ee95256f2564e2561c8
+md5: 54196997307f8a0db002f208f34646ec
 
-version: Java 8
-access: PACKAGE_PRIVATE, ACC_SYNTHETIC
+version: Java 8 (52)
+access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
 
 source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.cai
 
  class com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings extends java.lang.Object {
 
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static int[] ENUM_MAP
 
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
-      maxStack: 3, maxLocals: 2 
+      maxStack: 3, maxLocals: 1 
       Label_0:
        LINE 5 -> Label_0
         invokestatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.values()com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum[] (ownerIsInterface: false)
         arraylength
-        newarray org.objectweb.asm.tree.IntInsnNode@1188e820.operand
+        newarray 10
         putstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
       Label_1:
        LINE 6 -> Label_1
@@ -29,32 +29,36 @@ source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$
         iconst_1
         iastore
       Label_2:
-        goto Label_4
+        goto Label_5
       Label_3:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.NoSuchFieldError}]
         astore 0
-        goto Label_4
       Label_4:
-       LINE 7 -> Label_4
        LINE 9 -> Label_4
+        goto Label_5
+      Label_5:
+       LINE 7 -> Label_5
+       LINE 10 -> Label_5
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
         getstatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.B (type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum)
         invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
         iconst_2
         iastore
-      Label_5:
-        goto Label_7
       Label_6:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.NoSuchFieldError}]
-        astore 1
-        goto Label_7
+        goto Label_9
       Label_7:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.NoSuchFieldError}]
+        astore 0
+      Label_8:
+       LINE 11 -> Label_8
+        goto Label_9
+      Label_9:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
       TryCatchBlocks {
-        start: Label_1, end: Label_1, handler: Label_3, exception: java.lang.NoSuchFieldError
-        start: Label_4, end: Label_4, handler: Label_6, exception: java.lang.NoSuchFieldError
+        start: Label_1, end: Label_2, handler: Label_3, exception: java.lang.NoSuchFieldError
+        start: Label_5, end: Label_6, handler: Label_7, exception: java.lang.NoSuchFieldError
       }
     }
     

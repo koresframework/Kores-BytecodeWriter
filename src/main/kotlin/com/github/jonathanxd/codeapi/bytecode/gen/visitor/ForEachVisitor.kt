@@ -53,8 +53,9 @@ object ForEachVisitor : VoidVisitor<ForEachStatement, BytecodeClass, MVData> {
         val start = iterationType.createGenerator(env)
 
         val generated = start.generate(t, this)
-
+        additional.enterNewFrame()
         visitorGenerator.generateTo(CodeSource::class.java, generated, extraData, null, additional)
+        additional.exitFrame()
     }
 
 }

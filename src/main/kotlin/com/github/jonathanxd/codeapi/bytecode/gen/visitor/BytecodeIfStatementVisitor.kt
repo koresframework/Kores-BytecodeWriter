@@ -179,7 +179,11 @@ fun visit(ifStatement: IfStatement,
 
     val body = ifStatement.body
 
+    mvData.enterNewFrame()
+
     visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, mvData)
+
+    mvData.exitFrame()
 
     if (elseLabel != null) {
         visitor.visitJumpInsn(Opcodes.GOTO, outOfIfLabel)
@@ -190,7 +194,11 @@ fun visit(ifStatement: IfStatement,
         visitor.visitLabel(elseLabel)
 
         if (!elseBody.isEmpty) {
+            mvData.enterNewFrame()
+
             visitorGenerator.generateTo(CodeSource::class.java, elseBody, extraData, null, mvData)
+
+            mvData.exitFrame()
         }
     }
 

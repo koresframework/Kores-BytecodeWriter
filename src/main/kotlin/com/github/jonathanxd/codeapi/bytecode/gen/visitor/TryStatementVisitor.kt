@@ -29,9 +29,7 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.base.CatchStatement
-import com.github.jonathanxd.codeapi.base.ThrowException
-import com.github.jonathanxd.codeapi.base.TryStatement
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
@@ -42,6 +40,7 @@ import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
 import com.github.jonathanxd.iutils.container.primitivecontainers.BooleanContainer
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
+import java.util.function.Predicate
 
 object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
@@ -77,15 +76,30 @@ object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
         mv.visitLabel(l0)
 
-        val body = t.body
+        var body = t.body
+
+        additional.enterNewFrame()
+
+        if(finallySource.isNotEmpty) {
+            body = CodeSourceUtil.insertAfterOrEnd({
+                it is ThrowException || it is Return || it is ControlFlow
+            }, finallySource, body)
+        }
 
         visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, additional)
 
+        additional.exitFrame()
+
         mv.visitLabel(l1)
 
-        mv.visitLabel(finallyLabel)
-        visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
+        /*if(finallySource.isNotEmpty) {
+            additional.enterNewFrame()
 
+            mv.visitLabel(finallyLabel)
+            visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
+
+            additional.exitFrame()
+        }*/
 
         mv.visitJumpInsn(Opcodes.GOTO, outOfIf)
 
@@ -97,18 +111,19 @@ object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
         val endLabel = Label()
 
-        val unkExceptionName = additional.getUniqueVariableName("unknownException$$")
-        val stackPos = additional.storeVar(unkExceptionName, CodeAPI.getJavaType(Throwable::class.java), i_label, null)
-                .orElseThrow({ additional.failStore(unkExceptionName) })
 
         catches.forEach { catchBlock, label ->
 
             mv.visitLabel(label)
+            additional.enterNewFrame()
 
             val field = catchBlock.variable
             val fieldValue = field.value
 
-            additional.redefineVar(stackPos, field.name, field.variableType, label, endLabel)
+            val stackPos = additional.storeVar(field.name, field.type, i_label, null)
+                    .orElseThrow({ additional.failStore(field.name) })
+
+            //additional.redefineVar(stackPos, field.name, field.variableType, label, endLabel)
 
             mv.visitVarInsn(Opcodes.ASTORE, stackPos)
 
@@ -120,26 +135,23 @@ object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
 
             val codeSource = catchBlock.body
 
-            val booleanContainer = BooleanContainer(false)
+            //val booleanContainer = BooleanContainer(false)
 
             var codeSource1 = CodeSource.fromIterable(codeSource)
 
 
-            codeSource1 = CodeSourceUtil.insertBefore({ codePart ->
-                if (codePart is ThrowException) {
-                    booleanContainer.set(true)
-                    return@insertBefore true
-                }
-
-                false
+            codeSource1 = CodeSourceUtil.insertBeforeOrEnd({
+                it is ThrowException || it is Return || it is ControlFlow
             }, finallySource, codeSource1)
 
             visitorGenerator.generateTo(CodeSource::class.java, codeSource1, extraData, null, additional)
 
 
-            if (!booleanContainer.get()) {
+            /*if (!booleanContainer.get()) {
                 visitorGenerator.generateTo(CodeSource::class.java, finallySource, extraData, null, additional)
-            }
+            }*/
+
+            additional.exitFrame()
 
             mv.visitJumpInsn(Opcodes.GOTO, outOfIf)
 

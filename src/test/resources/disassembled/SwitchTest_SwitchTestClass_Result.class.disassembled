@@ -1,13 +1,13 @@
-md5: 95bee8bb33e3b51ea7151d259c4cea36
+md5: 2964e31a37907bf417594e9cc0d8b769
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: SwitchTestClass.cai
 
 public class com.SwitchTestClass extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>(int, int, com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, java.lang.String, java.lang.Object) {
       desc: (IILcom/github/jonathanxd/codeapi/test/SwitchTest_$TestEnum;Ljava/lang/String;Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 6 
@@ -222,16 +222,16 @@ public class com.SwitchTestClass extends java.lang.Object {
         return
       Label_37:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.SwitchTestClass, signature: null
-        index: 1, start: Label_0, end: Label_0, type: int, signature: null
-        index: 2, start: Label_0, end: Label_0, type: int, signature: null
-        index: 3, start: Label_0, end: Label_0, type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, signature: null
-        index: 4, start: Label_0, end: Label_0, type: java.lang.String, signature: null
-        index: 5, start: Label_0, end: Label_0, type: java.lang.Object, signature: null
+        index: 5, name: o, start: Label_0, end: Label_37, type: java.lang.Object, signature: null
+        index: 4, name: str, start: Label_0, end: Label_37, type: java.lang.String, signature: null
+        index: 3, name: testEnum, start: Label_0, end: Label_37, type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, signature: null
+        index: 2, name: number2, start: Label_0, end: Label_37, type: int, signature: null
+        index: 1, name: number, start: Label_0, end: Label_37, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_37, type: com.SwitchTestClass, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

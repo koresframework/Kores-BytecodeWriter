@@ -32,6 +32,7 @@ import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
@@ -73,9 +74,11 @@ public class BridgeMethodsTest {
                 ))
                 .build();
 
-        byte[] bts = new BytecodeGenerator().gen(itfDeclaration)[0].getBytecode();
+        BytecodeClass bytecodeClass = new BytecodeGenerator().gen(itfDeclaration)[0];
 
-        ResultSaver.save(this.getClass(), "Itf", bts);
+        byte[] bts = bytecodeClass.getBytecode();
+
+        ResultSaver.save(this.getClass(), "Itf", bytecodeClass);
 
         bcLoader.define(itfDeclaration, bts);
 

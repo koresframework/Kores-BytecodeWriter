@@ -74,7 +74,7 @@ public class CommonBytecodeTest {
             TypeDeclaration type = bytecodeClass.getType();
             byte[] bytecode = bytecodeClass.getBytecode();
 
-            ResultSaver.save(testClass, type.getSimpleName(), bytecode);
+            ResultSaver.save(testClass, type.getSimpleName(), bytecodeClass);
 
             Class<?> define = bcLoader.define(type, bytecode);
 

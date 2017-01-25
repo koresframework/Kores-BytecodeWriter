@@ -1,13 +1,13 @@
-md5: 6989e8359d09dad40f393df109b34025
+md5: d03ab18376d6f0839fe0a3e3c4fd3911
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: Impl.cai
 
 public class test.Impl extends com.github.jonathanxd.codeapi.test.asm.InvokeSuperTest$My {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 2, maxLocals: 2 
@@ -21,12 +21,12 @@ public class test.Impl extends com.github.jonathanxd.codeapi.test.asm.InvokeSupe
         return
       Label_2:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: test.Impl, signature: null
-        index: 1, start: Label_1, end: Label_1, type: java.lang.String, signature: null
+        index: 1, name: blc, start: Label_1, end: Label_2, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: test.Impl, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

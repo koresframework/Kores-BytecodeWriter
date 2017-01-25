@@ -1,13 +1,13 @@
-md5: dcd7594445b874fe9f605828d7b84d86
+md5: 831b4c037d13a57fc5dcb1ac56bd8b16
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: ArrayParameterTest_Generated.cai
 
 public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>(com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[]) {
       desc: ([Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;)V 
       maxStack: 1, maxLocals: 4 
@@ -25,14 +25,14 @@ public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated
         return
       Label_3:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated, signature: null
-        index: 1, start: Label_0, end: Label_0, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
-        index: 2, start: Label_1, end: Label_1, type: java.lang.Object, signature: null
-        index: 3, start: Label_2, end: Label_2, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
+        index: 3, name: lt, start: Label_2, end: Label_3, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
+        index: 2, name: cf, start: Label_1, end: Label_3, type: java.lang.Object, signature: null
+        index: 1, name: par, start: Label_0, end: Label_3, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

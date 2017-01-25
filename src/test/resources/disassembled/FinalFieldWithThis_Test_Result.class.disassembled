@@ -1,16 +1,16 @@
 md5: 5071ed00ace253849c3d1aa47a8115c6
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: Test.cai
 
 public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox {
 
-    !access: ACC_PRIVATE, ACC_FINAL
+    !access: ACC_PRIVATE, ACC_FINAL (18)
     private final com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox testField
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 4, maxLocals: 1 
@@ -30,11 +30,11 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.
         return
       Label_2:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: finalfieldwiththis.Test, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: finalfieldwiththis.Test, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

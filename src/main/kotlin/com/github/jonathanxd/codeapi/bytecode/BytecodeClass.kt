@@ -30,7 +30,7 @@ package com.github.jonathanxd.codeapi.bytecode
 import com.github.jonathanxd.bytecodedisassembler.Disassembler
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 
-class BytecodeClass(val type: TypeDeclaration, private val bytecode_: ByteArray) {
+class BytecodeClass constructor(val type: TypeDeclaration, private val bytecode_: ByteArray) {
 
     val disassembledCode: String by lazy {
         Disassembler.disassemble(bytes = this.bytecode, hash = true)

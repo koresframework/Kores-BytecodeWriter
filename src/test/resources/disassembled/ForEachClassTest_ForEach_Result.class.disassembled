@@ -1,13 +1,13 @@
-md5: 77adc338b9a5ed266b456c074e1dcde8
+md5: 51443a9c7ea771e34b8811e95314a565
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: ForEach.cai
 
 public class com.ForEach extends java.lang.Object {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     !signature: (Ljava/util/List<Ljava/lang/String;>;)V
     public void <init>(java.util.List) {
       desc: (Ljava/util/List;)V 
@@ -46,13 +46,13 @@ public class com.ForEach extends java.lang.Object {
         return
       Label_8:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: com.ForEach, signature: null
-        index: 1, start: Label_0, end: Label_0, type: java.util.List, signature: Ljava/util/List<Ljava/lang/String;>;
-        index: 3, start: Label_4, end: Label_4, type: java.lang.String, signature: null
+        index: 3, name: str, start: Label_4, end: Label_7, type: java.lang.String, signature: null
+        index: 1, name: strList, start: Label_0, end: Label_8, type: java.util.List, signature: Ljava/util/List<Ljava/lang/String;>;
+        index: 0, name: this, start: Label_0, end: Label_8, type: com.ForEach, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

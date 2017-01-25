@@ -1,13 +1,13 @@
 md5: ee252e16481472e822838a6c99c02c2a
 
-version: Java 8
-access: ACC_PUBLIC, ACC_ABSTRACT
+version: Java 8 (52)
+access: ACC_PUBLIC, ACC_ABSTRACT (1537)
 
 source: clv.cai
 
 public abstract class clv extends java.lang.Object implements java.util.ArrayList {
 
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

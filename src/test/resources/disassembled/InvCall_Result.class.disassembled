@@ -1,13 +1,13 @@
-md5: 46ba8f700fa1ec022be87ba0d32b0dfd
+md5: 2013ecfb681f45a0882ff84b6995c905
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: Impl.cai
 
 public class test.Impl extends com.github.jonathanxd.codeapi.test.asm.InvCall$My {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 2, maxLocals: 2 
@@ -21,12 +21,12 @@ public class test.Impl extends com.github.jonathanxd.codeapi.test.asm.InvCall$My
         return
       Label_2:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: test.Impl, signature: null
-        index: 1, start: Label_1, end: Label_1, type: java.lang.String, signature: null
+        index: 1, name: blc, start: Label_1, end: Label_2, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: test.Impl, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

@@ -1,18 +1,18 @@
-md5: a475e078fd9f9993f4e94b4725ffba4c
+md5: 54ec3e99986bd69db9d7427c3ded5321
 
-version: Java 8
-access: ACC_PUBLIC
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
 
 source: TestFeatures_.cai
 
 public class fullName.TestFeatures_ extends java.lang.Object {
 
-    !access: ACC_PUBLIC, ACC_FINAL
+    !access: ACC_PUBLIC, ACC_FINAL (17)
     public final java.lang.String FIELD
-    !access: ACC_PUBLIC, ACC_FINAL
+    !access: ACC_PUBLIC, ACC_FINAL (17)
     public final int n
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
       maxStack: 2, maxLocals: 1 
@@ -23,7 +23,7 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         ldc "AVD"              // type: java.lang.String
         putfield fullName.TestFeatures_.FIELD (type: java.lang.String)
         aload 0
-        bipush org.objectweb.asm.tree.IntInsnNode@441772e.operand
+        bipush 15
         putfield fullName.TestFeatures_.n (type: int)
       Label_1:
        LINE 7 -> Label_1
@@ -38,11 +38,11 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         return
       Label_3:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: fullName.TestFeatures_, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: fullName.TestFeatures_, signature: null
       }
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public void printIt(java.lang.Object) {
       desc: (Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 3 
@@ -74,23 +74,23 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         return
       Label_6:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: fullName.TestFeatures_, signature: null
-        index: 1, start: Label_0, end: Label_0, type: java.lang.Object, signature: null
-        index: 2, start: Label_3, end: Label_3, type: java.lang.String, signature: null
+        index: 2, name: dingdong, start: Label_3, end: Label_6, type: java.lang.String, signature: null
+        index: 1, name: n, start: Label_0, end: Label_6, type: java.lang.Object, signature: null
+        index: 0, name: this, start: Label_0, end: Label_6, type: fullName.TestFeatures_, signature: null
       }
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC (1)
     public boolean check(int) {
       desc: (I)Z 
       maxStack: 4, maxLocals: 2 
       Label_0:
        LINE 14 -> Label_0
         iload 1
-        bipush org.objectweb.asm.tree.IntInsnNode@6dc17b83.operand
+        bipush 9
         if_icmpeq Label_1
         iload 1
-        bipush org.objectweb.asm.tree.IntInsnNode@5e0826e7.operand
+        bipush 7
         if_icmpne Label_2
       Label_1:
        LINE 17 -> Label_1
@@ -113,12 +113,12 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         ireturn
       Label_4:
       LocalVariables {
-        index: 0, start: Label_0, end: Label_0, type: fullName.TestFeatures_, signature: null
-        index: 1, start: Label_0, end: Label_0, type: int, signature: null
+        index: 1, name: x, start: Label_0, end: Label_4, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_4, type: fullName.TestFeatures_, signature: null
       }
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 

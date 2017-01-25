@@ -1,40 +1,40 @@
 md5: 8c2a7dd680237c5303ba8477dd1ebabf
 
-version: Java 8
-access: ACC_PUBLIC, ACC_ABSTRACT
+version: Java 8 (52)
+access: ACC_PUBLIC, ACC_ABSTRACT (9729)
 
 source: MyAnnotation.cai
 
 public abstract class com.MyAnnotation extends java.lang.Object implements java.lang.annotation.Annotation {
 
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     public abstract java.lang.String value() {
       desc: ()Ljava/lang/String; 
       maxStack: 0, maxLocals: 0 
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     !annotationDefault: kotlin.Unit
     public abstract java.lang.String id() {
       desc: ()Ljava/lang/String; 
       maxStack: 0, maxLocals: 0 
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     !annotationDefault: kotlin.Unit
     public abstract java.lang.String[] names() {
       desc: ()[Ljava/lang/String; 
       maxStack: 0, maxLocals: 0 
     }
     
-    !access: ACC_PUBLIC
+    !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     !annotationDefault: kotlin.Unit
     public abstract int[] ns() {
       desc: ()[I 
       maxStack: 0, maxLocals: 0 
     }
     
-    !access: PACKAGE_PRIVATE, ACC_STATIC
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
       maxStack: 0, maxLocals: 0 
