@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.common
 
+import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.type.CodeType
 import org.objectweb.asm.Label
 import java.util.*
@@ -49,6 +50,9 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
         if (i < 0 || i >= this.variables.size)
             return null
 
+        if(!this.variables[i].isVisible)
+            throw IllegalArgumentException("Cannot access a invisible variable!!!")
+
         return this.variables[i]
     }
 
@@ -59,7 +63,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      * @return Variable or `null` if not present.
      */
     fun getVarByName(name: String): Variable? {
-        return this.variables.find { `var` -> `var`.name == name }
+        return this.variables.find { `var` -> `var`.isVisible && `var`.name == name }
     }
 
     /**
@@ -74,7 +78,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
             return this.getVarByName(name)
         }
 
-        return this.variables.find { `var` -> `var`.name == name && `var`.type.compareTo(type) == 0 }
+        return this.variables.find { `var` -> `var`.isVisible && `var`.name == name && `var`.type.compareTo(type) == 0 }
     }
 
     /**
@@ -85,7 +89,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      */
     fun getVarPos(variable: Variable): OptionalInt {
         for (i in this.variables.indices.reversed()) {
-            if (this.variables[i] == variable)
+            if (variable.isVisible && this.variables[i] == variable)
                 return OptionalInt.of(i)
         }
 
@@ -97,6 +101,36 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      */
     fun add(variable: Variable) {
         this.variables.add(variable)
+        this.handle(variable)
+    }
+
+    /**
+     * Add variable
+     */
+    fun add(pos: Int, variable: Variable) {
+        this.variables.add(pos, variable)
+        this.handle(variable)
+    }
+
+    /**
+     * Set variable
+     */
+    fun set(pos: Int, variable: Variable) {
+
+        if(variable.type.`is`(Types.DOUBLE) || variable.type.`is`(Types.LONG))
+            throw IllegalArgumentException("Cannot set variable at pos '$pos' because it is of type Double or Long and it requires a right-move of all other variables.")
+
+        this.variables[pos] = variable
+    }
+
+    /**
+     * Handle variable addition.
+     *
+     * Workaround to properly store double and longs in the Local Variable Table.
+     */
+    private fun handle(variable: Variable) {
+        if(variable.type.`is`(Types.DOUBLE) || variable.type.`is`(Types.LONG))
+            this.variables.add(variable.copy(name = "#${variable.name}ext_", isTemp = true, isVisible = false))
     }
 
     /**
@@ -115,7 +149,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
         for (i in this.variables.indices.reversed()) {
             val variable1 = this.variables[i]
 
-            if (variable1 == variable) {
+            if (variable1.isVisible && variable1 == variable) {
                 if (variable1.isTemp) {
                     throw RuntimeException("Cannot store variable named '$name'. Variable already stored!")
                 }
@@ -124,7 +158,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
             }
         }
 
-        this.variables.add(variable)
+        this.add(variable)
         // ? Last index with synchronized method is good!!!
         return this.getVarPos(variable)
     }
@@ -149,37 +183,16 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
         val variable = Variable(name, type, startLabel, endLabel ?: this.endLabel, true)
 
         for (i in variables.indices.reversed()) {
-            if (this.variables[i] == variable) {
+            val variable_ = this.variables[i]
+
+            if (variable_.isVisible && variable_ == variable) {
                 return OptionalInt.of(i)
             }
         }
 
-        this.variables.add(variable)
+        this.add(variable)
         // ? Last index with synchronized method is good!!!
         return this.getVarPos(variable)
-    }
-
-    /**
-     * Redefine a variable in a `position`.
-     *
-     * @param pos        Position of variable in stack map.
-     * @param name       Name of variable
-     * @param type       Type of variable
-     * @param startLabel Start label (first occurrence of variable).
-     * @param endLabel   End label (last usage of variable).
-     */
-    fun redefineVar(pos: Int, name: String, type: CodeType, startLabel: Label, endLabel: Label?) {
-        val variable = Variable(name, type, startLabel, endLabel)
-
-        if (pos >= this.variables.size) {
-            this.variables.add(pos, variable)
-        } else {
-            if (this.variables[pos].isTemp) {
-                throw RuntimeException("Cannot store variable named '$name'. Variable already stored!")
-            }
-
-            this.variables[pos] = variable
-        }
     }
 
     /**

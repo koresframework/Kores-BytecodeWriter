@@ -172,18 +172,6 @@ class MVData constructor(
             this.frame.storeInternalVar(name, type, startLabel, endLabel)
 
     /**
-     * Redefine a variable in a `position`.
-     *
-     * @param pos        Position of variable in stack map.
-     * @param name       Name of variable
-     * @param type       Type of variable
-     * @param startLabel Start label (first occurrence of variable).
-     * @param endLabel   End label (last usage of variable).
-     */
-    fun redefineVar(pos: Int, name: String, type: CodeType, startLabel: Label, endLabel: Label?) =
-            this.frame.redefineVar(pos, name, type, startLabel, endLabel)
-
-    /**
      * Return last position in stack map.
      *
      * @return Last position in stack map.
@@ -227,8 +215,8 @@ class MVData constructor(
 
             for(variable in varis) {
 
-                if (variable.isTemp || variable.name.contains("#"))
-                // Internal variables
+                if (!variable.isVisible || variable.isTemp || variable.name.contains("#"))
+                  // Internal variables
                     continue
 
                 val varStart = variable.startLabel

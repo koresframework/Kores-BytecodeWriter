@@ -34,8 +34,10 @@ import java.util.*
 
 /**
  * Internal class undocumented.
+ *
+ * isVisible -> If false, this variable will be ignored by get operations.
  */
-class Variable @JvmOverloads constructor(val name: String, val type: CodeType, val startLabel: Label, val endLabel: Label?, val isTemp: Boolean = false) {
+data class Variable @JvmOverloads constructor(val name: String, val type: CodeType, val startLabel: Label, val endLabel: Label?, val isTemp: Boolean = false, val isVisible: Boolean = true) {
 
     override fun hashCode(): Int {
         return Objects.hash(this.name, this.type)
