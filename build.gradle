@@ -18,7 +18,7 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '3.0.3-hotfix1'
+version '3.0.3-hotfix2'
 
 apply from: project(":CodeAPI").file("gradle/common.gradle")
 
