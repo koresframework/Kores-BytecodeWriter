@@ -29,6 +29,7 @@ package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
 import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.base.ArgumentHolder
+import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.bytecode.util.CodePartUtil
@@ -45,6 +46,11 @@ object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData
         val types = t.types
         // Try to auto box and unbox
         val arguments = t.arguments.mapIndexed { i, it ->
+
+            // Auto boxing and unboxing disabled for dynamic invocations (like lambdas)
+            if(it is MethodInvocation && it.invokeDynamic != null)
+                return@mapIndexed it
+
             val type = CodePartUtil.getTypeOrNull(it)
             val argType = types[i]
 
