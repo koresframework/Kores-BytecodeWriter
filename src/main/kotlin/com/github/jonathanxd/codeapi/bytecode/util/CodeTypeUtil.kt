@@ -227,12 +227,23 @@ object CodeTypeUtil {
         var opcode = -1
 
         if (!from.isArray && !to.isArray && from.isPrimitive && to.isPrimitive) {
-            val fromTypeChar = Character.toUpperCase(from.canonicalName[0])
+            var fromTypeChar = Character.toUpperCase(from.canonicalName[0])
             val toTypeChar = Character.toUpperCase(to.canonicalName[0])
+
+            // Fixes Short, Byte & Char conversion to int
+            if(fromTypeChar == 'S' || fromTypeChar == 'B' || fromTypeChar == 'C') {
+                if(toTypeChar == 'I')
+                    return
+                else
+                    fromTypeChar = 'I'
+            }
 
             opcode = this.getOpcode(fromTypeChar, toTypeChar)
 
             if (opcode == -1) {
+                if(this.getOpcode(fromTypeChar, 'I') == -1 || this.getOpcode('I', toTypeChar) == -1) {
+                    throw IllegalArgumentException("Can't cast from '$from' to '$to'.")
+                }
                 CodeTypeUtil.convertToPrimitive(from, Types.INT, mv)
                 CodeTypeUtil.convertToPrimitive(Types.INT, to, mv)
                 return

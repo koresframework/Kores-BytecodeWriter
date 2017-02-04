@@ -86,9 +86,16 @@ object LiteralUtil {
 
         } else if (num.type.`is`(Types.CODE_TYPE)) {
 
-            val type = Type.getType((num.value as CodeType).javaSpecName)
+            val type = num.value as CodeType
 
-            mv.visitLdcInsn(type)
+            if(type.isPrimitive) {
+                val wrapperTypeSpec = CodeTypeUtil.codeTypeToBinaryName(type.wrapperType ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version."))
+                val classType = CodeTypeUtil.toTypeDesc(Types.CLASS)
+
+                mv.visitFieldInsn(Opcodes.GETSTATIC, wrapperTypeSpec, "TYPE", classType)
+            } else {
+                mv.visitLdcInsn(type)
+            }
         } else {
             throw IllegalArgumentException("Cannot handle literal: $num")
         }
