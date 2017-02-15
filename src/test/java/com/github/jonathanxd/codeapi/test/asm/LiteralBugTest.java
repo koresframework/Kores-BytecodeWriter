@@ -54,7 +54,7 @@ public class LiteralBugTest {
         CodeSource source = sourceOfParts(
                 method(EnumSet.of(PUBLIC), "test", VOID, new CodeParameter[]{},
                         sourceOfParts(
-                                Predefined.invokePrintln(Literals.CLASS(Integer.class))
+                                Predefined.invokePrintln(Literals.CLASS(Void.TYPE))
                         )
                 )
         );

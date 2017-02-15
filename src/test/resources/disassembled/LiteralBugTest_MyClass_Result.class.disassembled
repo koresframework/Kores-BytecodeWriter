@@ -1,4 +1,4 @@
-md5: f08e583d0e08e79c9171c65bfb8eec6d
+md5: 870d9cb47d22c02f0028537876b6a126
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,7 +13,7 @@ public class com.MyClass extends java.lang.Object {
       maxStack: 2, maxLocals: 1 
       Label_0:
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc Ljava/lang/Integer;              // type: java.lang.Class
+        getstatic java.lang.Void.TYPE (type: java.lang.Class)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
       Label_1:
