@@ -94,7 +94,8 @@ object LiteralUtil {
 
                 mv.visitFieldInsn(Opcodes.GETSTATIC, wrapperTypeSpec, "TYPE", classType)
             } else {
-                mv.visitLdcInsn(type)
+                val asmType = Type.getType(type.javaSpecName)
+                mv.visitLdcInsn(asmType)
             }
         } else {
             throw IllegalArgumentException("Cannot handle literal: $num")
