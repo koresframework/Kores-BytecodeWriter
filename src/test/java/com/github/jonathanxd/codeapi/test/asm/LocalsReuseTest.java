@@ -45,10 +45,9 @@ import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.Opcodes;
 
 import java.util.List;
-
-import jdk.internal.org.objectweb.asm.Opcodes;
 
 public class LocalsReuseTest {
 
