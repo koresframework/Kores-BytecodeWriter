@@ -90,7 +90,7 @@ object LiteralUtil {
             val type = num.value as CodeType
 
             if(type.isPrimitive) {
-                val wrapperType = if(type.`is`(Types.VOID)) CodeAPI.getJavaType(Void::class.java) else type.wrapperType ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version.")
+                val wrapperType = type.wrapperType ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version.")
 
                 val wrapperTypeSpec = CodeTypeUtil.codeTypeToBinaryName(wrapperType)
                 val classType = CodeTypeUtil.toTypeDesc(Types.CLASS)
