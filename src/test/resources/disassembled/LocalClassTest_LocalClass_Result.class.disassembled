@@ -1,0 +1,41 @@
+md5: 66df9ef26ab3e5f26bb2690aa7f1e097
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: LocalClass.cai
+
+public class test.LocalClass extends java.lang.Object {
+
+    !access: PACKAGE_PRIVATE (0)
+     test.LocalClass.Greeter -> test.LocalClass$Greeter
+
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 3, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 3 -> Label_1
+        new test.LocalClass$Greeter
+        dup
+        aload 0
+        invokespecial test.LocalClass$Greeter.<init>(test.LocalClass)void (ownerIsInterface: false)
+        invokevirtual test.LocalClass$Greeter.greet()void (ownerIsInterface: false)
+        return
+      Label_2:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_2, type: test.LocalClass, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

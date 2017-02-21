@@ -107,6 +107,15 @@ object Util {
             } else {
                 if (part is TypeDeclaration) {
                     typeDeclarationList.add(part)
+                } else if (part is MethodDeclaration) {
+                    val grabRemovePair = Util.grabAndRemoveInnerDecl(part.body)
+
+                    typeDeclarationList.addAll(grabRemovePair.first)
+
+                    val modifiedMethod = part.builder().withBody(grabRemovePair.second).build()
+
+                    codeSource.add(modifiedMethod)
+
                 } else {
                     codeSource.add(part)
                 }

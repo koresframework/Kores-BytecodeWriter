@@ -69,7 +69,28 @@ object TypeVisitor : Visitor<TypeDeclaration, BytecodeClass, Any?> {
 
     override fun visit(t: TypeDeclaration, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?): Array<BytecodeClass> {
 
+        /*val extraData = if(additional == null)
+            data
+        else
+            data.clone()*/
+
         val baseDataClone = extraData.clone()
+
+        /*if(additional != null) {
+            val outer = data.getRequired<TypeDeclaration>(TYPE_DECLARATION_REPRESENTATION)
+            val cw = data.getRequired<ClassVisitor>(CLASS_VISITOR_REPRESENTATION)
+
+            if(!outer.`is`(t.outerClass))
+                throw IllegalArgumentException("Outer class specified to '" + t + "' don't matches the real outer class. " +
+                        "Specified: '" + t.outerClass + "'," +
+                        "Real: '" + outer + "'!")
+
+            val inn = Util.visitInner(cw, outer, listOf(t))
+
+
+
+            data.registerData(INNER_TYPE_REPRESENTATION, )
+        }*/
 
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS or ClassWriter.COMPUTE_FRAMES)
 
