@@ -64,12 +64,6 @@ object MethodFragmentVisitor : VoidVisitor<MethodFragment, BytecodeClass, Any?> 
 
             val fragment = newFragment(t, extraData)
 
-            /*val declaration = t.declaration.builder().withName().build()
-            t.builder().withDeclaration()*/
-
-            /*extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, t)
-            visitorGenerator.generateTo(MethodInvocation::class.java, t, extraData, null, additional)*/
-
             extraData.registerData(MethodFragmentVisitor.FRAGMENT_TYPE_INFO, fragment)
             visitorGenerator.generateTo(MethodInvocation::class.java, fragment, extraData, null, additional)
         } else {
