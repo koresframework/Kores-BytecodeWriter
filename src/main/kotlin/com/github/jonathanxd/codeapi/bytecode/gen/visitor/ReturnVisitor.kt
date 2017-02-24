@@ -32,8 +32,10 @@ import com.github.jonathanxd.codeapi.base.Return
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.common.Data
+import com.github.jonathanxd.codeapi.common.Void
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
+import com.github.jonathanxd.codeapi.literal.Literals
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 
@@ -44,7 +46,9 @@ object ReturnVisitor : VoidVisitor<Return, BytecodeClass, MVData> {
 
         val tValue = t.value
 
-        visitorGenerator.generateTo(tValue.javaClass, tValue, extraData, null, additional)
+        if(tValue != Void) {
+            visitorGenerator.generateTo(tValue::class.java, tValue, extraData, null, additional)
+        }
 
         val toRet = t.type
 
