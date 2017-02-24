@@ -27,9 +27,45 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.extra
 
+import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.base.Typed
+import com.github.jonathanxd.codeapi.type.CodeType
 
 /**
  * CodeAPI-BytecodeWriter Dup part. This part will dup result of [part].
  */
-data class Dup(val part: Typed) : Typed by part
+data class Dup(val part: CodePart, override val type: CodeType) : Typed {
+
+    constructor(part: Typed) : this(part, part.type)
+
+    override fun builder(): Builder = Builder(this)
+
+    class Builder() : Typed.Builder<Dup, Builder> {
+
+        lateinit var part: CodePart
+        lateinit var type: CodeType
+
+        constructor(defaults: Dup) : this() {
+            this.part = defaults.part
+            this.type = defaults.type
+        }
+
+        fun withPart(value: CodePart): Builder {
+            this.part = value
+            return this
+        }
+
+        override fun withType(value: CodeType): Builder {
+            this.type = value
+            return this
+        }
+
+        override fun build(): Dup = Dup(this.part, this.type)
+
+        companion object {
+            @JvmStatic
+            fun builder() = Builder()
+        }
+    }
+
+}
