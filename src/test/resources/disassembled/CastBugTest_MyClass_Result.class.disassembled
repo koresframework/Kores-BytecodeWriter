@@ -1,4 +1,4 @@
-md5: 9b20acc784c06e9a126c1f05a261f5d9
+md5: 1c6aef4af74d03515690fdf11c47726f
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,7 @@ source: MyClass.cai
 public class com.MyClass extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: s, access:  (0)]
     public void test(short) {
       desc: (S)V 
       maxStack: 4, maxLocals: 2 

@@ -1,4 +1,4 @@
-md5: 45db4018fea4313629a30a39a3762409
+md5: 9cdab3aa6f921749a2c41c4f88cb689e
 
 version: Java 8 (52)
 access: PACKAGE_PRIVATE (32)
@@ -30,6 +30,7 @@ source: LocalClass.cai
     }
     
     !access: ACC_PUBLIC (1)
+    !parameter[name: localClass$outer1, access:  (0)]
     public void <init>(test.LocalClass) {
       desc: (Ltest/LocalClass;)V 
       maxStack: 2, maxLocals: 2 

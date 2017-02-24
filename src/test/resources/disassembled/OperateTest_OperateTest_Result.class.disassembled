@@ -1,4 +1,4 @@
-md5: 08c335cdd486cb812914cf923207f50d
+md5: 20a98651055276c1b2a49da63e458597
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,7 @@ source: OperateTest.cai
 public class com.OperateTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: num, access:  (0)]
     public void <init>(int) {
       desc: (I)V 
       maxStack: 4, maxLocals: 2 

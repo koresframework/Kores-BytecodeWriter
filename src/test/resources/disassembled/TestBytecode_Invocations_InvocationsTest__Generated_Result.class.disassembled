@@ -1,4 +1,4 @@
-md5: b755dff300d7fa21d5068c9d0544195e
+md5: 690110f9b56ad1e88531a43350bad775
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -43,6 +43,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
     }
     
     !access: ACC_PUBLIC (1)
+    !parameter[name: n, access:  (0)]
     public void printIt(java.lang.Object) {
       desc: (Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 3 
@@ -81,6 +82,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
     }
     
     !access: ACC_PUBLIC (1)
+    !parameter[name: x, access:  (0)]
     public boolean check(int) {
       desc: (I)Z 
       maxStack: 4, maxLocals: 7 

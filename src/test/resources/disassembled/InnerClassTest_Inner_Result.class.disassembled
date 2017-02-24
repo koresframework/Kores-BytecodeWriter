@@ -1,4 +1,4 @@
-md5: 4fda9608729dc2a2948c5e5eee48381d
+md5: 8256522e965bddaae8c805919a8887ec
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -57,6 +57,7 @@ public class test.InnerClass$Inner extends java.lang.Object {
     }
     
     !access: ACC_PUBLIC (1)
+    !parameter[name: innerClass$outer1, access:  (0)]
     public void <init>(test.InnerClass) {
       desc: (Ltest/InnerClass;)V 
       maxStack: 5, maxLocals: 2 

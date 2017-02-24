@@ -1,4 +1,4 @@
-md5: ad1adb5a0589f11eb01b5271ba4e34dc
+md5: 5d44001af80190e5523f04a5202e6022
 
 version: Java 8 (52)
 access: ACC_PUBLIC, ACC_ABSTRACT (1537)
@@ -8,12 +8,14 @@ source: Impl.cai
 public abstract class test.Impl extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
+    !parameter[name: string, access:  (0)]
     public abstract void parse(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 0, maxLocals: 0 
     }
     
     !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
+    !parameter[name: num, access:  (0)]
     public abstract int getI(int) {
       desc: (I)I 
       maxStack: 0, maxLocals: 0 

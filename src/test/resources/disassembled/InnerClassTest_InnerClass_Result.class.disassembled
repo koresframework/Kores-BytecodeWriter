@@ -1,4 +1,4 @@
-md5: 60152287c35cabcd302e8246bcee5ab3
+md5: 7e37eddad9da1c7cdb27ea923cb109a7
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -38,6 +38,7 @@ public class test.InnerClass extends java.lang.Object {
     }
     
     !access: ACC_PRIVATE (2)
+    !parameter[name: str, access:  (0)]
     private void <init>(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 2, maxLocals: 2 
@@ -99,6 +100,8 @@ public class test.InnerClass extends java.lang.Object {
     }
     
     !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
+    !parameter[name: str, access:  (0)]
+    !parameter[name: $inner, access:  (0)]
      void <init>(java.lang.String, test.InnerClass$Inner) {
       desc: (Ljava/lang/String;Ltest/InnerClass$Inner;)V 
       maxStack: 2, maxLocals: 3 

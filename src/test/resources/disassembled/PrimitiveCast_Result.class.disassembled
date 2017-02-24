@@ -1,4 +1,4 @@
-md5: 892940c9b0f597c9358fbf78572659c0
+md5: 629858cf606e2389d1e6a31eab878e5d
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,9 +8,10 @@ source: PrimitiveCast_Generated.cai
 public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
+    !parameter[name: string, access:  (0)]
     public static int printString(java.lang.String) {
       desc: (Ljava/lang/String;)I 
-      maxStack: 3, maxLocals: 9 
+      maxStack: 3, maxLocals: 10 
       Label_0:
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
@@ -52,7 +53,7 @@ public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated exte
         l2i
         i2b
       Label_8:
-        istore 8
+        istore 9
         new java.lang.Integer
         dup
         bipush 9
@@ -61,7 +62,7 @@ public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated exte
         ireturn
       Label_9:
       LocalVariables {
-        index: 8, name: LongToByte, start: Label_8, end: Label_9, type: byte, signature: null
+        index: 9, name: LongToByte, start: Label_8, end: Label_9, type: byte, signature: null
         index: 7, name: Long, start: Label_7, end: Label_9, type: long, signature: null
         index: 6, name: IntToInt, start: Label_6, end: Label_9, type: int, signature: null
         index: 5, name: int, start: Label_5, end: Label_9, type: int, signature: null

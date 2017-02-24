@@ -1,4 +1,4 @@
-md5: fda01733c40536d7071ab08206916537
+md5: 930d7cf81aed5bbfd9707aea3ff5b3ca
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -9,6 +9,7 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
     !signature: (Ljava/lang/Iterable<*>;)V
+    !parameter[name: iter, access:  (0)]
     public void iterate(java.lang.Iterable) {
       desc: (Ljava/lang/Iterable;)V 
       maxStack: 2, maxLocals: 2 
@@ -26,6 +27,7 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
     }
     
     !access: ACC_PUBLIC (1)
+    !parameter[name: iter, access:  (0)]
     public void iterate(java.util.List) {
       desc: (Ljava/util/List;)V 
       maxStack: 3, maxLocals: 4 

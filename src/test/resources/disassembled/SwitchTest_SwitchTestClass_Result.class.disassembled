@@ -1,4 +1,4 @@
-md5: 2964e31a37907bf417594e9cc0d8b769
+md5: 85816c34f9ce11639a6eff82a8862c6d
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,11 @@ source: SwitchTestClass.cai
 public class com.SwitchTestClass extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: number, access:  (0)]
+    !parameter[name: number2, access:  (0)]
+    !parameter[name: testEnum, access:  (0)]
+    !parameter[name: str, access:  (0)]
+    !parameter[name: o, access:  (0)]
     public void <init>(int, int, com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, java.lang.String, java.lang.Object) {
       desc: (IILcom/github/jonathanxd/codeapi/test/SwitchTest_$TestEnum;Ljava/lang/String;Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 6 

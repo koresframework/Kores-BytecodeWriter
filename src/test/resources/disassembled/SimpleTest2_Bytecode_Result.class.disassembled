@@ -1,4 +1,4 @@
-md5: 2077964485efdee5df023edbd3b43df0
+md5: 08f81a8baf1d465f2ad21050bbfa96f1
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -11,6 +11,7 @@ public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.
     public final java.lang.String myField
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: myField, access:  (0)]
     public void <init>(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 4, maxLocals: 2 

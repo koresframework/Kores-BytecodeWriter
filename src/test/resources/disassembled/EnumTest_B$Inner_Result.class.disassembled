@@ -1,4 +1,4 @@
-md5: f9b58aa31822051c16a8bc866743580e
+md5: 4247b98ba18b9321307e5c886474a29f
 
 version: Java 8 (52)
 access: PACKAGE_PRIVATE (16416)
@@ -28,6 +28,8 @@ source: MyEnum.cai
     }
     
     !access: PACKAGE_PRIVATE (0)
+    !parameter[name: $name, access:  (0)]
+    !parameter[name: $ordinal, access:  (0)]
      void <init>(java.lang.String, int) {
       desc: (Ljava/lang/String;I)V 
       maxStack: 3, maxLocals: 3 

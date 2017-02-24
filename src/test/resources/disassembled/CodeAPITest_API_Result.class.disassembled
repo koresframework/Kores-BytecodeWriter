@@ -1,4 +1,4 @@
-md5: b51e26cdec777c77e1e557026222f101
+md5: 66f2d6aed66973f410efc9e75ddb1117
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,7 @@ source: CodeAPITest_API_Generated.cai
 public class com.github.jonathanxd.codeapi.test.asm.CodeAPITest_API_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
+    !parameter[name: string, access:  (0)]
     public static void printString(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 2, maxLocals: 1 

@@ -1,4 +1,4 @@
-md5: 489bd0a0488edd0ee8d9fc5f2665c2c7
+md5: 3d478d1f9698be3410367220f21d60e2
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,6 +13,7 @@ public class com.Generic extends java.lang.Object implements java.util.List {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !signature: <T::Ljava/util/List<TT;>;>(TT;)V
+    !parameter[name: val, access:  (0)]
     public static void test(java.util.List) {
       desc: (Ljava/util/List;)V 
       maxStack: 1, maxLocals: 2 

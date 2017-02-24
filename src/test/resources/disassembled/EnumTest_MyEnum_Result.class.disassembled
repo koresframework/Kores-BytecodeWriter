@@ -1,4 +1,4 @@
-md5: e9c91dc1374344361b53815593fa18db
+md5: e7e7d3bc585944bce827ac83b20c89fa
 
 version: Java 8 (52)
 access: ACC_PUBLIC, ACC_ABSTRACT (17441)
@@ -20,6 +20,8 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     private static final com.MyEnum[] $VALUES
 
     !access: ACC_PROTECTED, ACC_SYNTHETIC (4100)
+    !parameter[name: name, access:  (0)]
+    !parameter[name: ordinal, access:  (0)]
     protected void <init>(java.lang.String, int) {
       desc: (Ljava/lang/String;I)V 
       maxStack: 3, maxLocals: 3 
@@ -51,6 +53,7 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     }
     
     !access: ACC_PUBLIC, ACC_STATIC (9)
+    !parameter[name: name, access:  (0)]
     public static com.MyEnum valueOf(java.lang.String) {
       desc: (Ljava/lang/String;)Lcom/MyEnum; 
       maxStack: 2, maxLocals: 1 

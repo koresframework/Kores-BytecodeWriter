@@ -1,4 +1,4 @@
-md5: 313fc1de4acbf700900b420a01492e5e
+md5: 2133a08bb1dbdcce33a4beb30ab13c53
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,7 @@ source: ConcatTest.cai
 public class com.ConcatTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: av, access:  (0)]
     public void <init>(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 4, maxLocals: 2 

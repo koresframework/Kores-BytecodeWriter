@@ -1,4 +1,4 @@
-md5: 831b4c037d13a57fc5dcb1ac56bd8b16
+md5: 992825c7c3c6d394e731e925e5da3749
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,7 @@ source: ArrayParameterTest_Generated.cai
 public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: par, access:  (0)]
     public void <init>(com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[]) {
       desc: ([Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;)V 
       maxStack: 1, maxLocals: 4 

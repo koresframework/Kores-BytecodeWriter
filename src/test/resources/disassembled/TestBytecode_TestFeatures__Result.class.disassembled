@@ -1,4 +1,4 @@
-md5: 54ec3e99986bd69db9d7427c3ded5321
+md5: 1e76a51da96ab2865220004f694b9d75
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -43,6 +43,7 @@ public class fullName.TestFeatures_ extends java.lang.Object {
     }
     
     !access: ACC_PUBLIC (1)
+    !parameter[name: n, access:  (0)]
     public void printIt(java.lang.Object) {
       desc: (Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 3 
@@ -81,6 +82,7 @@ public class fullName.TestFeatures_ extends java.lang.Object {
     }
     
     !access: ACC_PUBLIC (1)
+    !parameter[name: x, access:  (0)]
     public boolean check(int) {
       desc: (I)Z 
       maxStack: 4, maxLocals: 2 

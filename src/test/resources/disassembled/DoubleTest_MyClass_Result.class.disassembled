@@ -1,4 +1,4 @@
-md5: 48f4b826284d716bfe215e93faa15d1d
+md5: 94665c4a893c0a2e39b7a499397f9244
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,11 @@ source: MyClass.cai
 public class com.MyClass extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: f, access:  (0)]
+    !parameter[name: b, access:  (0)]
+    !parameter[name: s, access:  (0)]
+    !parameter[name: d, access:  (0)]
+    !parameter[name: l, access:  (0)]
     public void test(float, boolean, short, double, long) {
       desc: (FZSDJ)V 
       maxStack: 5, maxLocals: 9 

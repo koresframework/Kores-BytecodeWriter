@@ -1,4 +1,4 @@
-md5: 930e5bba2f0c24302a9677fa33fcc4ab
+md5: c098631bfb3b1fc47c0ebd989b9005d7
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,6 +8,7 @@ source: LocalsReuse.cai
 public class codeapi.LocalsReuse extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: bool, access:  (0)]
     public int test(boolean) {
       desc: (Z)I 
       maxStack: 1, maxLocals: 3 

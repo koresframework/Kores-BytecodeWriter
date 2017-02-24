@@ -1,4 +1,4 @@
-md5: b89bdd7c6569ab9bf99714719312f1d3
+md5: f7dcb191cea983c58c6aa79461b3ec94
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -11,6 +11,7 @@ public class com.ForEach extends java.lang.Object {
     public static java.lang.String stra
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: strArray, access:  (0)]
     public void <init>(java.lang.String[]) {
       desc: ([Ljava/lang/String;)V 
       maxStack: 2, maxLocals: 5 

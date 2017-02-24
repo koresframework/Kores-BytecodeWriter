@@ -1,4 +1,4 @@
-md5: 47a58090362257ab16a302886cc81576
+md5: 10f2f83482a18d28b51bc5dee5317bc3
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -39,6 +39,7 @@ public class com.MethodFragment extends java.lang.Object {
     }
     
     !access: ACC_PRIVATE, ACC_STATIC (10)
+    !parameter[name: input, access:  (0)]
     private static java.lang.String fragment$$1(java.lang.String) {
       desc: (Ljava/lang/String;)Ljava/lang/String; 
       maxStack: 1, maxLocals: 1 

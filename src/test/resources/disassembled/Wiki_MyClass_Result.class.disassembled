@@ -1,4 +1,4 @@
-md5: f6977af8425250fada8f5a8dc4d77530
+md5: c2e63aeceee86d9997b0f24ddc88ac0c
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -11,6 +11,7 @@ public class com.MyClass extends java.lang.Object {
     private final java.lang.String myField
 
     !access: ACC_PUBLIC (1)
+    !parameter[name: name, access:  (0)]
     public void test(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 3, maxLocals: 3 

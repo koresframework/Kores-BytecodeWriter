@@ -1,4 +1,4 @@
-md5: 51443a9c7ea771e34b8811e95314a565
+md5: 0e7359c6a39f269acc173fb8dac7b9a0
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -9,6 +9,7 @@ public class com.ForEach extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
     !signature: (Ljava/util/List<Ljava/lang/String;>;)V
+    !parameter[name: strList, access:  (0)]
     public void <init>(java.util.List) {
       desc: (Ljava/util/List;)V 
       maxStack: 2, maxLocals: 4 

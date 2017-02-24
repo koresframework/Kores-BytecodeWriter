@@ -1,4 +1,4 @@
-md5: ee4046378c5aa54db6cad3f03a433ecf
+md5: fef62662b75e01011010d26952252306
 
 version: Java 8 (52)
 access: ACC_PUBLIC, ACC_ABSTRACT (1537)
@@ -9,6 +9,7 @@ public abstract class com.AB extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     !signature: (TT;)V
+    !parameter[name: iter, access:  (0)]
     public abstract void iterate(java.lang.Iterable) {
       desc: (Ljava/lang/Iterable;)V 
       maxStack: 0, maxLocals: 0 
