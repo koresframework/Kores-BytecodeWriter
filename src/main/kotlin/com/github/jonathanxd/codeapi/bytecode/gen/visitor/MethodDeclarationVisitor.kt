@@ -119,6 +119,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
         for (i in parameters.indices) {
             val codeParameter = parameters[i]
 
+            mv.visitParameter(codeParameter.name, 0)
             visitorGenerator.generateTo(Annotable::class.java, codeParameter, extraData, null, ParameterVisitor(mvData, i))
         }
 
