@@ -1,0 +1,50 @@
+md5: 14450d3a0876c1121645817525b6b3f0
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: DupTest_getNull.cai
+
+public class test.DupTest_getNull extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 3, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 3 -> Label_1
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        invokestatic com.github.jonathanxd.codeapi.test.asm.DupTest.getNull()java.lang.String (ownerIsInterface: false)
+        dup
+        ifnull Label_3
+      Label_2:
+       LINE 4 -> Label_2
+        goto Label_5
+      Label_3:
+       LINE 5 -> Label_3
+       FRAME[type: F_FULL, locals: 1, local: {test.DupTest_getNull}, stacks: 2, stack: {java.io.PrintStream, java.lang.String}]
+        pop
+      Label_4:
+       LINE 6 -> Label_4
+        ldc "NULL"              // type: java.lang.String
+      Label_5:
+       FRAME[type: F_FULL, locals: 1, local: {test.DupTest_getNull}, stacks: 2, stack: {java.io.PrintStream, java.lang.String}]
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        return
+      Label_6:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_6, type: test.DupTest_getNull, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

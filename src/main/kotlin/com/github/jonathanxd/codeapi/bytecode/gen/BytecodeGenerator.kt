@@ -36,6 +36,9 @@ import com.github.jonathanxd.codeapi.bytecode.CHECK
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException
+import com.github.jonathanxd.codeapi.bytecode.extra.Dup
+import com.github.jonathanxd.codeapi.bytecode.extra.Pop
 import com.github.jonathanxd.codeapi.bytecode.gen.visitor.*
 import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.exception.ProcessingException
@@ -102,6 +105,9 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
         addUncheckedVisitor(ClassDeclaration::class.java, TypeVisitor)
         addUncheckedVisitor(InterfaceDeclaration::class.java, TypeVisitor)
 
+        // Extra
+        addVisitor(Dup::class.java, DupVisitor)
+        addVisitor(Pop::class.java, PopVisitor)
     }
 
     override val options: Options = this.options_
@@ -140,10 +146,13 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
             additional.methodVisitor.visitLineNumber(line, lbl)
 
         }
-
-        return super.generateTo(partClass, codePart, extraData, consumer, additional).let {
-            check(it)
-            it
+        try {
+            return super.generateTo(partClass, codePart, extraData, consumer, additional).let {
+                check(it)
+                it
+            }
+        }catch (e: Throwable) {
+            throw if(e is ProcessingException) throw e.cause?.let { it as? ClassCheckException ?: e } ?: e else e
         }
     }
 
@@ -156,7 +165,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
                         try {
                             ClassReader(bytecode).accept(CheckClassAdapter(ClassNode(), true), 0)
                         } catch (t: Throwable) {
-                            throw ProcessingException("Failed to check bytecode of class ${it.type.qualifiedName}", t)
+                            throw ClassCheckException("Failed to check bytecode of class ${it.type.qualifiedName}", t, classes, it)
                         }
                     }
                 }

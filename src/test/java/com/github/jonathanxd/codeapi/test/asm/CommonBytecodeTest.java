@@ -33,6 +33,7 @@ import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
+import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException;
 import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
@@ -66,7 +67,13 @@ public class CommonBytecodeTest {
 
         BCLoader bcLoader = new BCLoader();
 
-        BytecodeClass[] bytecodeClasses = bytecodeGenerator.gen(source);
+        BytecodeClass[] bytecodeClasses;
+
+        try {
+            bytecodeClasses = bytecodeGenerator.gen(source);
+        } catch (ClassCheckException e) {
+            bytecodeClasses = e.getBytecodeClasses();
+        }
 
         Class<?> first = null;
 

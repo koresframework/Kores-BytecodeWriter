@@ -18,14 +18,14 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '3.1.1'
+version '3.1.0-3.1.2'
 
 apply from: project(":CodeAPI").file("gradle/common.gradle")
 
 dependencies {
     compile project(":CodeAPI")
     compile 'com.github.JonathanxD:BytecodeDisassembler:2.0.3-d'
-    compile group: 'org.ow2.asm', name: 'asm-all', version: '5.1'
+    compile group: 'org.ow2.asm', name: 'asm-all', version: '5.2'
     testCompile project(path: ':CodeAPI', configuration: 'tests')
 }
 
