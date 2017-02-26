@@ -50,7 +50,7 @@ object AccessVisitor : VoidVisitor<Access, BytecodeClass, MVData> {
                 val localization = t.localization ?: throw NullPointerException("Localization is required to OUTER Access.")
                 val part = Util.accessEnclosingClass(extraData, localization) ?: throw IllegalArgumentException("Cannot access \"outer class\" '$localization'.")
 
-                visitorGenerator.generateTo(part.javaClass, part, extraData, additional)
+                visitorGenerator.generateTo(part::class.java, part, extraData, additional)
             }
             else -> {
                 throw IllegalArgumentException("Cannot handle access of type '${t.type}'")

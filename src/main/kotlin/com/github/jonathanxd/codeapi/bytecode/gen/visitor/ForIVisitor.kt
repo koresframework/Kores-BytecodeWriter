@@ -56,7 +56,7 @@ object ForIVisitor : VoidVisitor<ForStatement, BytecodeClass, MVData> {
         val init = t.forInit
 
         if (init != null) {
-            visitorGenerator.generateTo(init.javaClass, init, extraData, null, additional)
+            visitorGenerator.generateTo(init::class.java, init, extraData, null, additional)
         }
 
 
@@ -77,7 +77,7 @@ object ForIVisitor : VoidVisitor<ForStatement, BytecodeClass, MVData> {
             val update = t.forUpdate
 
             if (update != null) {
-                visitorGenerator.generateTo(update.javaClass, update, extraData, null, additional)
+                visitorGenerator.generateTo(update::class.java, update, extraData, null, additional)
             }
 
             mv.visitJumpInsn(Opcodes.GOTO, whileStart)

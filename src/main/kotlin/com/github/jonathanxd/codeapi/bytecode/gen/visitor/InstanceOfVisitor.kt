@@ -44,7 +44,7 @@ object InstanceOfVisitor : VoidVisitor<InstanceOfCheck, BytecodeClass, MVData> {
         val part = t.part
         val codeType = t.checkType
 
-        visitorGenerator.generateTo(part.javaClass, part, extraData, null, additional)
+        visitorGenerator.generateTo(part::class.java, part, extraData, null, additional)
 
         visitor.visitTypeInsn(Opcodes.INSTANCEOF, CodeTypeUtil.codeTypeToBinaryName(codeType))
     }

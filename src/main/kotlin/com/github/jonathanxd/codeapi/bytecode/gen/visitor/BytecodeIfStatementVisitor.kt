@@ -111,10 +111,10 @@ fun visit(ifStatement: IfStatement,
                     opcode = IfUtil.invertIfNeEqOpcode(opcode)
 
                 if (firstIsBoolean) {
-                    visitorGenerator.generateTo(expr2.javaClass, expr2, extraData, null, mvData)
+                    visitorGenerator.generateTo(expr2::class.java, expr2, extraData, null, mvData)
                     visitor.visitJumpInsn(opcode, lbl)
                 } else {
-                    visitorGenerator.generateTo(expr1.javaClass, expr1, extraData, null, mvData)
+                    visitorGenerator.generateTo(expr1::class.java, expr1, extraData, null, mvData)
                     visitor.visitJumpInsn(opcode, lbl)
                 }
 
@@ -131,12 +131,12 @@ fun visit(ifStatement: IfStatement,
                     }
                 }
 
-                visitorGenerator.generateTo(expr1.javaClass, expr1, extraData, null, mvData)
+                visitorGenerator.generateTo(expr1::class.java, expr1, extraData, null, mvData)
 
                 if (expr2 === Literals.NULL) {
                     visitor.visitJumpInsn(OperatorUtil.nullCheckToAsm(operation, isInverse), lbl)
                 } else if (CodePartUtil.isPrimitive(expr1) && CodePartUtil.isPrimitive(expr2)) {
-                    visitorGenerator.generateTo(expr2.javaClass, expr2, extraData, null, mvData)
+                    visitorGenerator.generateTo(expr2::class.java, expr2, extraData, null, mvData)
 
                     val firstType = CodePartUtil.getType(expr1)
                     val secondType = CodePartUtil.getType(expr2)
@@ -165,7 +165,7 @@ fun visit(ifStatement: IfStatement,
 
                     visitor.visitJumpInsn(check, lbl)
                 } else {
-                    visitorGenerator.generateTo(expr2.javaClass, expr2, extraData, null, mvData)
+                    visitorGenerator.generateTo(expr2::class.java, expr2, extraData, null, mvData)
 
                     visitor.visitJumpInsn(OperatorUtil.referenceToAsm(operation, isInverse), lbl)
                 }

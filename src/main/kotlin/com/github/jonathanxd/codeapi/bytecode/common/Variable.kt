@@ -55,7 +55,7 @@ data class Variable @JvmOverloads constructor(val name: String, val type: CodeTy
     }
 
     override fun toString(): String {
-        return ToStringBuilder.builder(this.javaClass)
+        return ToStringBuilder.builder(this::class.java)
                 .add("name", this.name)
                 .add("type", this.type)
                 .add("isTemp", this.isTemp)

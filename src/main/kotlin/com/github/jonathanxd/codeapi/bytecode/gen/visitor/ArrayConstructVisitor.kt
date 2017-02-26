@@ -36,7 +36,7 @@ import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.util.codeTypeToTypeDesc
 import org.objectweb.asm.Opcodes
 
 object ArrayConstructVisitor : VoidVisitor<ArrayConstructor, BytecodeClass, MVData> {
@@ -55,14 +55,14 @@ object ArrayConstructVisitor : VoidVisitor<ArrayConstructor, BytecodeClass, MVDa
 
         if (multi && !initialize) {
             dimensions.forEach {
-                visitorGenerator.generateTo(it.javaClass, it, extraData, null, additional)
+                visitorGenerator.generateTo(it::class.java, it, extraData, null, additional)
             }
 
-            mv.visitMultiANewArrayInsn(CodeTypeUtil.codeTypeToTypeDesc(component), dimensions.size)
+            mv.visitMultiANewArrayInsn(codeTypeToTypeDesc(component), dimensions.size)
         } else {
             val dimensionX = if (dimensions.isNotEmpty()) dimensions[0] else Literals.INT(0)
 
-            visitorGenerator.generateTo(dimensionX.javaClass, dimensionX, extraData, null, additional)
+            visitorGenerator.generateTo(dimensionX::class.java, dimensionX, extraData, null, additional)
 
             ArrayUtil.visitArrayStore(component, mv) // ANEWARRAY, ANEWARRAY T_INT, etc...
         }

@@ -45,7 +45,7 @@ object ArrayStoreVisitor : VoidVisitor<ArrayStore, BytecodeClass, MVData> {
 
         val index = t.index
 
-        visitorGenerator.generateTo(index.javaClass, index, extraData, null, additional)
+        visitorGenerator.generateTo(index::class.java, index, extraData, null, additional)
 
         var value = t.valueToStore
         val valueType = t.valueType
@@ -56,7 +56,7 @@ object ArrayStoreVisitor : VoidVisitor<ArrayStore, BytecodeClass, MVData> {
             value = CodeAPI.cast(valueType, arrayComponentType, value)
         }
 
-        visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
+        visitorGenerator.generateTo(value::class.java, value, extraData, null, additional)
 
         val opcode = CodeTypeUtil.getOpcodeForType(arrayComponentType, Opcodes.IASTORE)
 

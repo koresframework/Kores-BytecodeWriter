@@ -49,7 +49,7 @@ object ConcatVisitor : VoidVisitor<Concat, BytecodeClass, MVData> {
 
             if (concatenations.size == 1) {
 
-                visitorGenerator.generateTo(first.javaClass, first, extraData, additional)
+                visitorGenerator.generateTo(first::class.java, first, extraData, additional)
 
             } else if (concatenations.size == 2) {
 

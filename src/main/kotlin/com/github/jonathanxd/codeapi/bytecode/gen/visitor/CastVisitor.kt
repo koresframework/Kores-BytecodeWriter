@@ -53,21 +53,21 @@ object CastVisitor : VoidVisitor<Cast, BytecodeClass, MVData> {
 
         // No cast of void types.
         if(from != null && !from.`is`(to) && from.`is`(Types.VOID) || to.`is`(Types.VOID)) {
-            visitorGenerator.generateTo(castedPart.javaClass, castedPart, extraData, null, additional)
+            visitorGenerator.generateTo(castedPart::class.java, castedPart, extraData, null, additional)
             return
         }
 
         val autoboxing = if (from != null) autoboxing(from, to, castedPart) else null
 
         if (autoboxing != null && from != null) {
-            visitorGenerator.generateTo(autoboxing.javaClass, autoboxing, extraData, null, additional)
+            visitorGenerator.generateTo(autoboxing::class.java, autoboxing, extraData, null, additional)
 
             if (from.isPrimitive && !to.isPrimitive && from.wrapperType!!.canonicalName != to.canonicalName) {
                 mv.visitTypeInsn(Opcodes.CHECKCAST, CodeTypeUtil.codeTypeToBinaryName(to))
             }
 
         } else {
-            visitorGenerator.generateTo(castedPart.javaClass, castedPart, extraData, null, additional)
+            visitorGenerator.generateTo(castedPart::class.java, castedPart, extraData, null, additional)
 
             if (from != null && from != to) {
                 if (to.isPrimitive) {

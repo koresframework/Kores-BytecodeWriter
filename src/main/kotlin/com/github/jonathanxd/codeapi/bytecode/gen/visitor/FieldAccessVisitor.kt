@@ -61,7 +61,7 @@ object FieldAccessVisitor : VoidVisitor<FieldAccess, BytecodeClass, MVData> {
         localization = of.get()
 
         if (at !is Access || at.type != Access.Type.STATIC) {
-            visitorGenerator.generateTo(at.javaClass, at, extraData, null, additional)
+            visitorGenerator.generateTo(at::class.java, at, extraData, null, additional)
         }
 
         if (at is Access && at.type == Access.Type.STATIC) {

@@ -73,7 +73,7 @@ object SwitchVisitor : VoidVisitor<SwitchStatement, BytecodeClass, MVData> {
             val mv = additional.methodVisitor
             val value = aSwitch.value
 
-            visitorGenerator.generateTo(value.javaClass, value, extraData, additional)
+            visitorGenerator.generateTo(value::class.java, value, extraData, additional)
 
             val originCaseList = aSwitch.cases
             var filteredCaseList = originCaseList

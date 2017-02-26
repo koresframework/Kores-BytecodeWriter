@@ -35,7 +35,7 @@ import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
 import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
-import com.github.jonathanxd.codeapi.util.CodeTypeUtil
+import com.github.jonathanxd.codeapi.util.codeTypeToFullAsm
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.Opcodes
 
@@ -46,7 +46,7 @@ object AnnotationPropertyVisitor : VoidVisitor<AnnotationProperty, BytecodeClass
 
         val asmModifiers = Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT
 
-        val type = CodeTypeUtil.codeTypeToFullAsm(t.type)
+        val type = codeTypeToFullAsm(t.type)
         val name = t.name
         val value = t.value
 

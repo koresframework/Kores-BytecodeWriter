@@ -42,7 +42,7 @@ object ThrowExceptionVisitor : VoidVisitor<ThrowException, BytecodeClass, MVData
 
         val partToThrow = t.partToThrow
 
-        visitorGenerator.generateTo(partToThrow.javaClass, partToThrow, extraData, null, additional)
+        visitorGenerator.generateTo(partToThrow::class.java, partToThrow, extraData, null, additional)
 
         mv.visitInsn(Opcodes.ATHROW)
     }

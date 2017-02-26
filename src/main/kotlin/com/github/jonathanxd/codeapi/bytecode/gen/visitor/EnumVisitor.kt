@@ -51,7 +51,7 @@ object EnumVisitor : Visitor<EnumDeclaration, BytecodeClass, Any?> {
                 .withBody(source)
                 .build()
 
-        return visitorGenerator.generateTo(typeDeclaration.javaClass, typeDeclaration, extraData, additional)
+        return visitorGenerator.generateTo(typeDeclaration::class.java, typeDeclaration, extraData, additional)
     }
 
 }

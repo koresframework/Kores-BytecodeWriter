@@ -50,7 +50,7 @@ object AnnotationUtil {
         @Suppress("NAME_SHADOWING")
         var value = value
 
-        if (value.javaClass.isArray) {
+        if (value::class.java.isArray) {
             val values = ArrayUtil.toObjectArray(value)
 
             val annotationVisitor1 = annotationVisitor.visitArray(key)

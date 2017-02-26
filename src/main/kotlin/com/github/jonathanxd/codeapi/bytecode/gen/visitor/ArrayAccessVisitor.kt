@@ -38,7 +38,7 @@ object ArrayAccessVisitor : VoidVisitor<ArrayAccess, BytecodeClass, Any?> {
     override fun voidVisit(t: ArrayAccess, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: Any?) {
         val target = t.target
 
-        visitorGenerator.generateTo(target.javaClass, target, extraData, null, additional)
+        visitorGenerator.generateTo(target::class.java, target, extraData, null, additional)
     }
 
 }

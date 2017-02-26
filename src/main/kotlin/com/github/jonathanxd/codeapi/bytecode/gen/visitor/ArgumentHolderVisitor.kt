@@ -68,7 +68,7 @@ object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData
         if (!t.array) {
 
             for (argument in arguments) {
-                visitorGenerator.generateTo(argument.javaClass, argument, extraData, null, additional)
+                visitorGenerator.generateTo(argument::class.java, argument, extraData, null, additional)
             }
         } else {
             for (i in arguments.indices) {
@@ -77,7 +77,7 @@ object ArgumentHolderVisitor : VoidVisitor<ArgumentHolder, BytecodeClass, MVData
 
                 val argument = arguments[i]
 
-                visitorGenerator.generateTo(argument.javaClass, argument, extraData, null, additional)
+                visitorGenerator.generateTo(argument::class.java, argument, extraData, null, additional)
 
             }
         }

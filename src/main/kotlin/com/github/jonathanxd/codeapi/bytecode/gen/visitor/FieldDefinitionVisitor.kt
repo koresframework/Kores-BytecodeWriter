@@ -47,9 +47,9 @@ object FieldDefinitionVisitor : VoidVisitor<FieldDefinition, BytecodeClass, MVDa
         val variableType = t.type
         val opcode = if (target is Access && target.type == Access.Type.STATIC) Opcodes.PUTSTATIC else Opcodes.PUTFIELD
 
-        visitorGenerator.generateTo(target.javaClass, target, extraData, additional)
+        visitorGenerator.generateTo(target::class.java, target, extraData, additional)
 
-        visitorGenerator.generateTo(t.value.javaClass, t.value, extraData, additional)
+        visitorGenerator.generateTo(t.value::class.java, t.value, extraData, additional)
 
         additional.methodVisitor.visitFieldInsn(opcode, CodeTypeUtil.codeTypeToBinaryName(localization), variableName, CodeTypeUtil.toTypeDesc(variableType))
 

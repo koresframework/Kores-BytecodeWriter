@@ -62,15 +62,15 @@ object OperateVisitor : VoidVisitor<Operate, BytecodeClass, MVData> {
                     )
                     .build()
 
-            visitorGenerator.generateTo(desugar.javaClass, desugar, extraData, additional)
+            visitorGenerator.generateTo(desugar::class.java, desugar, extraData, additional)
 
             return
         }
 
-        visitorGenerator.generateTo(target.javaClass, target, extraData, additional)
+        visitorGenerator.generateTo(target::class.java, target, extraData, additional)
 
         if (value != null) {
-            visitorGenerator.generateTo(value.javaClass, value, extraData, additional)
+            visitorGenerator.generateTo(value::class.java, value, extraData, additional)
         }
 
         when (operation) {

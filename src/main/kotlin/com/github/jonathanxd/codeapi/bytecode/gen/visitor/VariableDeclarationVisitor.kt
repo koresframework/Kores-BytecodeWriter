@@ -48,7 +48,7 @@ object VariableDeclarationVisitor : VoidVisitor<VariableDeclaration, BytecodeCla
         val value = t.value
 
         if (value != null) {
-            visitorGenerator.generateTo(value.javaClass, value, extraData, null, additional)
+            visitorGenerator.generateTo(value::class.java, value, extraData, null, additional)
         }
 
         val `var` = additional.getVar(t.name, t.variableType)

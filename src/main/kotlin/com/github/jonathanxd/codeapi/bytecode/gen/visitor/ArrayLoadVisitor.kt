@@ -46,7 +46,7 @@ object ArrayLoadVisitor : VoidVisitor<ArrayLoad, BytecodeClass, MVData> {
 
         val index = t.index
 
-        visitorGenerator.generateTo(index.javaClass, index, extraData, null, additional)
+        visitorGenerator.generateTo(index::class.java, index, extraData, null, additional)
 
         val valueType = t.valueType
 
@@ -58,7 +58,7 @@ object ArrayLoadVisitor : VoidVisitor<ArrayLoad, BytecodeClass, MVData> {
 
         if (!arrayComponentType.`is`(valueType)) {
             val cast = CodeAPI.cast(valueType, arrayComponentType, Stack)
-            visitorGenerator.generateTo(cast.javaClass, cast, extraData, additional)
+            visitorGenerator.generateTo(cast::class.java, cast, extraData, additional)
         }
     }
 

@@ -75,7 +75,7 @@ object MethodDeclarationVisitor : VoidVisitor<MethodDeclaration, BytecodeClass, 
                         .inspect(typeDeclaration.body).isEmpty()
 
                 if (!any) {
-                    visitorGenerator.generateTo(bridgeMethod.javaClass, bridgeMethod, extraData, additional)
+                    visitorGenerator.generateTo(bridgeMethod::class.java, bridgeMethod, extraData, additional)
                 }
             }
         }

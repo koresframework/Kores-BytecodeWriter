@@ -128,7 +128,7 @@ object TryStatementVisitor : VoidVisitor<TryStatement, BytecodeClass, MVData> {
             mv.visitVarInsn(Opcodes.ASTORE, stackPos)
 
             if (fieldValue != null) {
-                visitorGenerator.generateTo(fieldValue.javaClass, fieldValue, extraData, null, additional)
+                visitorGenerator.generateTo(fieldValue::class.java, fieldValue, extraData, null, additional)
 
                 mv.visitVarInsn(Opcodes.ASTORE, stackPos)
             }

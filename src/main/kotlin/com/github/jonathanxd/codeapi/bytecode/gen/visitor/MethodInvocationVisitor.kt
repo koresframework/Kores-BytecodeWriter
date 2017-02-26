@@ -137,7 +137,7 @@ object MethodInvocationVisitor : Visitor<MethodInvocation, BytecodeClass, MVData
         }
 
         if (target !is CodeType) {
-            visitorGenerator.generateTo(target.javaClass, target, extraData, null, additional)
+            visitorGenerator.generateTo(target::class.java, target, extraData, null, additional)
         }
 
         visitorGenerator.generateTo(ArgumentHolder::class.java, methodInvocation, extraData, null, additional)

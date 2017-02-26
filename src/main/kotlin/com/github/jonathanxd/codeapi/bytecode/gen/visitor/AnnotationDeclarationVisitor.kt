@@ -61,7 +61,7 @@ object AnnotationDeclarationVisitor : Visitor<AnnotationDeclaration, BytecodeCla
                 .withBody(source)
                 .build()
 
-        return visitorGenerator.generateTo(typeDeclaration.javaClass, typeDeclaration, extraData, additional)
+        return visitorGenerator.generateTo(typeDeclaration::class.java, typeDeclaration, extraData, additional)
     }
 
 }

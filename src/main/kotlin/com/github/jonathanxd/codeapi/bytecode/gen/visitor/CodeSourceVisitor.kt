@@ -67,7 +67,7 @@ object CodeSourceVisitor : Visitor<CodeSource, BytecodeClass, Any?> {
 
             val codePart = t[i]
 
-            val aClass = codePart.javaClass
+            val aClass = codePart::class.java
 
             visitorGenerator.generateTo(aClass, codePart, extraData, Consumer {
                 appender.add(it)

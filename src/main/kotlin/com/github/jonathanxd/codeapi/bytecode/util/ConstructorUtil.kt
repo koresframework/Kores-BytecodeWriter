@@ -158,7 +158,7 @@ object ConstructorUtil {
                 // No visitor overhead.
                 mv.visitVarInsn(Opcodes.ALOAD, 0)
 
-                visitorGenerator.generateTo(value.javaClass, value, extraData, null, mvData)
+                visitorGenerator.generateTo(value::class.java, value, extraData, null, mvData)
 
                 // No visitor overhead.
                 mv.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), fieldDeclaration.name, CodeTypeUtil.toTypeDesc(fieldDeclaration.type))

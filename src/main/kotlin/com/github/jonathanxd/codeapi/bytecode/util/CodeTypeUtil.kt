@@ -37,11 +37,13 @@ import com.github.jonathanxd.codeapi.type.GenericType
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
-import com.github.jonathanxd.codeapi.util.CodeTypeUtil as BaseCodeTypeUtil
+import com.github.jonathanxd.codeapi.util.resolveInternalQualified as baseResolveInternalQualified
+import com.github.jonathanxd.codeapi.util.codeTypeToFullAsm as baseCodeTypeToFullAsm
+import com.github.jonathanxd.codeapi.util.primitiveCodeTypeToAsm as basePrimitiveCodeTypeToAsm
 
 object CodeTypeUtil {
 
-    fun resolveRealQualified(qualifiedName: String, outer: CodeType?): String = BaseCodeTypeUtil.resolveRealQualified(qualifiedName, outer)
+    fun resolveRealQualified(qualifiedName: String, outer: CodeType?): String = baseResolveInternalQualified(qualifiedName, outer)
 
     fun codeTypeToBinaryName(type: CodeType): String {
         return if (type.isPrimitive)
@@ -52,9 +54,9 @@ object CodeTypeUtil {
             toTypeDesc(type)
     }
 
-    fun toTypeDesc(type: CodeType): String = BaseCodeTypeUtil.codeTypeToFullAsm(type)
+    fun toTypeDesc(type: CodeType): String = baseCodeTypeToFullAsm(type)
 
-    fun primitiveToTypeDesc(type: CodeType): String = BaseCodeTypeUtil.primitiveCodeTypeToAsm(type)
+    fun primitiveToTypeDesc(type: CodeType): String = basePrimitiveCodeTypeToAsm(type)
 
     fun arrayToTypeDesc(codeType: CodeType): String =
             if (codeType.arrayDimension <= 1) {

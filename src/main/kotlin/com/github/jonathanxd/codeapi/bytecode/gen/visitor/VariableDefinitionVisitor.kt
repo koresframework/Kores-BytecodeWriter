@@ -56,7 +56,7 @@ object VariableDefinitionVisitor : VoidVisitor<VariableDefinition, BytecodeClass
         if (value is Operate && VariableOperateVisitor.visit(t, value, varPos, additional))
             return
 
-        visitorGenerator.generateTo(value.javaClass, value, extraData, additional)
+        visitorGenerator.generateTo(value::class.java, value, extraData, additional)
 
         val type = Type.getType(variableType.javaSpecName)
 
