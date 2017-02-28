@@ -50,7 +50,7 @@ data class Variable @JvmOverloads constructor(val name: String, val type: CodeTy
         if (other !is Variable)
             return false
 
-        return other.name == this.name && other.type.compareTo(this.type) == 0
+        return other.name == this.name && other.type.`is`(this.type)
 
     }
 

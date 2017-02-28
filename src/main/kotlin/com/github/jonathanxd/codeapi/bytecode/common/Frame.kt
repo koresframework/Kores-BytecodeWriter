@@ -78,7 +78,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
             return this.getVarByName(name)
         }
 
-        return this.variables.find { `var` -> `var`.isVisible && `var`.name == name && `var`.type.compareTo(type) == 0 }
+        return this.variables.find { `var` -> `var`.isVisible && `var`.name == name && `var`.type.`is`(type) }
     }
 
     /**
