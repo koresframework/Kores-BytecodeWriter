@@ -1,4 +1,4 @@
-md5: ee7116b75b04f3c8ba17c75404722af7
+md5: e5b5b7364f7df274ede692cb721ca2a4
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -95,7 +95,7 @@ public class fullName.TestLoopBytecode extends java.lang.Object {
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iload 3
         iconst_5
-        if_icmplt Label_9
+        if_icmpge Label_9
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.Integer
         dup

@@ -27,25 +27,60 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.gen.visitor
 
+import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MVData
 import com.github.jonathanxd.codeapi.common.Data
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.gen.visit.VoidVisitor
 import org.objectweb.asm.Label
+import org.objectweb.asm.Opcodes
 
 object IfStatementVisitor : VoidVisitor<IfStatement, BytecodeClass, MVData> {
 
     override fun voidVisit(t: IfStatement, extraData: Data, visitorGenerator: VisitorGenerator<BytecodeClass>, additional: MVData) {
         val startIfLabel = Label()
+        val ifBody = Label()
         val endIfLabel = Label()
+
+        val elseLabel = Label()
+
+        val elseStatement = t.elseStatement
+
+        val jumpLabel = if(t is SwitchVisitor.SwitchIfStatement) extraData.getRequired<Flow>(ConstantDatas.FLOW_TYPE_INFO).insideEnd else if(elseStatement.isNotEmpty) elseLabel else endIfLabel
 
         val methodVisitor = additional.methodVisitor
 
         methodVisitor.visitLabel(startIfLabel)
 
-        visit(t, startIfLabel, endIfLabel, false, false, extraData, visitorGenerator, additional)
+        visit(t.expressions, startIfLabel, ifBody, jumpLabel, false, extraData, visitorGenerator, additional)
+
+        val body = t.body
+
+        methodVisitor.visitLabel(ifBody)
+
+        additional.enterNewFrame()
+
+        visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, additional)
+
+        additional.exitFrame()
+
+        if (elseStatement.isNotEmpty) {
+            methodVisitor.visitJumpInsn(Opcodes.GOTO, endIfLabel)
+        }
+
+
+        if (elseStatement.isNotEmpty) {
+            methodVisitor.visitLabel(elseLabel)
+
+            additional.enterNewFrame()
+
+            visitorGenerator.generateTo(CodeSource::class.java, elseStatement, extraData, additional)
+
+            additional.exitFrame()
+        }
 
         methodVisitor.visitLabel(endIfLabel)
     }

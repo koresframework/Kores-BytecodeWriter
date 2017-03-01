@@ -71,7 +71,27 @@ object WhileStatementVisitor : VoidVisitor<WhileStatement, BytecodeClass, MVData
 
             mv.visitLabel(insideEnd)
 
-            visit(ifStatement, whileStart, outOfIf, true, true, extraData, visitorGenerator, additional)
+            val startIfLabel = Label()
+            val ifBody = Label()
+
+            val methodVisitor = additional.methodVisitor
+
+            methodVisitor.visitLabel(startIfLabel)
+
+            visit(ifStatement.expressions, whileStart, insideStart, outOfIf, true, extraData, visitorGenerator, additional)
+
+            val body = t.body
+
+            methodVisitor.visitLabel(ifBody)
+
+            additional.enterNewFrame()
+
+            visitorGenerator.generateTo(CodeSource::class.java, body, extraData, null, additional)
+
+            additional.exitFrame()
+
+            //visit(t, startIfLabel, endIfLabel, false, false, extraData, visitorGenerator, additional)
+            methodVisitor.visitLabel(outOfIf)
 
             mv.visitLabel(outsideEnd)
         } else if (t.type == WhileStatement.Type.WHILE) {
