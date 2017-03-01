@@ -90,7 +90,7 @@ object WhileStatementVisitor : VoidVisitor<WhileStatement, BytecodeClass, MVData
 
             additional.exitFrame()
 
-            //visit(t, startIfLabel, endIfLabel, false, false, extraData, visitorGenerator, additional)
+
             methodVisitor.visitLabel(outOfIf)
 
             mv.visitLabel(outsideEnd)
