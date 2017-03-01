@@ -1,0 +1,66 @@
+md5: 1c1750d3e37c5aa86e396b6f14361968
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: NewIf.cai
+
+public class com.NewIf extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    !parameter[name: x, access:  (0)]
+    public int test(int) {
+      desc: (I)I 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+       LINE 3 -> Label_0
+        iload 1
+        bipush 7
+        if_icmpeq Label_1
+        iload 1
+        bipush 9
+        if_icmpne Label_3
+      Label_1:
+       LINE 4 -> Label_1
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        iconst_0
+        ireturn
+      Label_2:
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
+        nop
+        nop
+        athrow
+      Label_3:
+       LINE 5 -> Label_3
+       FRAME[type: F_APPEND, locals: 2, local: {com.NewIf, integer}, stacks: 0, stack: {}]
+        iconst_1
+        ireturn
+      Label_4:
+      LocalVariables {
+        index: 1, name: x, start: Label_0, end: Label_4, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_4, type: com.NewIf, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.NewIf, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

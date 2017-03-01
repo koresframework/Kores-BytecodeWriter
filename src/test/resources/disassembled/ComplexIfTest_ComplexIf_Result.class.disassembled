@@ -1,0 +1,114 @@
+md5: 17d37886c4a27d04f371abbc8857828d
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: ComplexIf.cai
+
+public class test.ComplexIf extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    !parameter[name: h, access:  (0)]
+    !parameter[name: x, access:  (0)]
+    !parameter[name: y, access:  (0)]
+    !parameter[name: z, access:  (0)]
+    public void <init>(boolean, boolean, boolean, boolean) {
+      desc: (ZZZZ)V 
+      maxStack: 2, maxLocals: 7 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 3 -> Label_1
+        bipush 9
+        iconst_5
+        if_icmpge Label_3
+      Label_2:
+       LINE 7 -> Label_2
+        iconst_1
+        goto Label_4
+      Label_3:
+       LINE 8 -> Label_3
+       FRAME[type: F_FULL, locals: 5, local: {test.ComplexIf, integer, integer, integer, integer}, stacks: 0, stack: {}]
+        iconst_0
+      Label_4:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {integer}]
+        istore 5
+      Label_5:
+       LINE 4 -> Label_5
+        bipush 9
+        iconst_5
+        if_icmpge Label_7
+      Label_6:
+       LINE 9 -> Label_6
+        ldc "9 < 5"              // type: java.lang.String
+        goto Label_8
+      Label_7:
+       LINE 10 -> Label_7
+       FRAME[type: F_APPEND, locals: 1, local: {integer}, stacks: 0, stack: {}]
+        ldc "9 >= 5"              // type: java.lang.String
+      Label_8:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.String}]
+        astore 6
+      Label_9:
+       LINE 5 -> Label_9
+        bipush 9
+        iconst_5
+        if_icmpge Label_11
+      Label_10:
+       LINE 11 -> Label_10
+        ldc "9 < 5"              // type: java.lang.String
+        goto Label_12
+      Label_11:
+       LINE 12 -> Label_11
+       FRAME[type: F_APPEND, locals: 1, local: {java.lang.String}, stacks: 0, stack: {}]
+        ldc "9 >= 5"              // type: java.lang.String
+      Label_12:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.String}]
+        astore 6
+      Label_13:
+       LINE 6 -> Label_13
+        iload 1
+        ifeq Label_15
+        iload 2
+        ifeq Label_15
+        iload 3
+        ifne Label_14
+        iload 4
+        ifeq Label_15
+      Label_14:
+       LINE 13 -> Label_14
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "true"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        goto Label_16
+      Label_15:
+       LINE 14 -> Label_15
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "false"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_16:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        return
+      Label_17:
+      LocalVariables {
+        index: 6, name: b, start: Label_8, end: Label_17, type: java.lang.String, signature: null
+        index: 5, name: a, start: Label_4, end: Label_17, type: boolean, signature: null
+        index: 4, name: z, start: Label_0, end: Label_17, type: boolean, signature: null
+        index: 3, name: y, start: Label_0, end: Label_17, type: boolean, signature: null
+        index: 2, name: x, start: Label_0, end: Label_17, type: boolean, signature: null
+        index: 1, name: h, start: Label_0, end: Label_17, type: boolean, signature: null
+        index: 0, name: this, start: Label_0, end: Label_17, type: test.ComplexIf, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}
