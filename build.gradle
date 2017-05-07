@@ -4,7 +4,6 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
         maven { url "https://plugins.gradle.org/m2/" }
     }
 
@@ -18,13 +17,13 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '3.2.7-3.2.0'
+version '4.0.0-4.0.0'
 
 apply from: project(":CodeAPI").file("gradle/common.gradle")
 
 dependencies {
     compile project(":CodeAPI")
-    compile 'com.github.JonathanxD:BytecodeDisassembler:2.0.3-d'
+    compile 'com.github.JonathanxD:BytecodeDisassembler:2.0.3u'
     compile group: 'org.ow2.asm', name: 'asm-all', version: '5.2'
     testCompile project(path: ':CodeAPI', configuration: 'tests')
 }
