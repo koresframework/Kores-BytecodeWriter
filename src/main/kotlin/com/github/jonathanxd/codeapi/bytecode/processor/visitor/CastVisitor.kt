@@ -68,7 +68,7 @@ object CastVisitor : Processor<Cast> {
             codeProcessor.process(autoboxing::class.java, autoboxing, data)
 
             if (from.isPrimitive && !to.isPrimitive && from.wrapperType!!.canonicalName != to.canonicalName) {
-                mv.visitTypeInsn(Opcodes.CHECKCAST, CodeTypeUtil.codeTypeToBinaryName(to))
+                mv.visitTypeInsn(Opcodes.CHECKCAST, to.internalName)
             }
 
         } else {
@@ -80,9 +80,9 @@ object CastVisitor : Processor<Cast> {
                     return
                 }
 
-                mv.visitTypeInsn(Opcodes.CHECKCAST, CodeTypeUtil.codeTypeToBinaryName(to))
+                mv.visitTypeInsn(Opcodes.CHECKCAST, to.internalName)
             } else if (from == null) {
-                mv.visitTypeInsn(Opcodes.CHECKCAST, CodeTypeUtil.codeTypeToBinaryName(to))
+                mv.visitTypeInsn(Opcodes.CHECKCAST, to.internalName)
             }
         }
     }

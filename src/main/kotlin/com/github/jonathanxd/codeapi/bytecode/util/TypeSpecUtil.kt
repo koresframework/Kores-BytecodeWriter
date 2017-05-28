@@ -28,7 +28,6 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.base.TypeSpec
-import com.github.jonathanxd.codeapi.common.TypeSpec
 import com.github.jonathanxd.codeapi.util.typeDesc
 
 object TypeSpecUtil {
