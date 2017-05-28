@@ -27,12 +27,12 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.Stack
+import com.github.jonathanxd.codeapi.util.typeDesc
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -89,11 +89,11 @@ object LiteralUtil {
 
             val type = num.value as CodeType
 
-            if(type.isPrimitive) {
+            if (type.isPrimitive) {
                 val wrapperType = type.wrapperType ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version.")
 
                 val wrapperTypeSpec = CodeTypeUtil.codeTypeToBinaryName(wrapperType)
-                val classType = CodeTypeUtil.toTypeDesc(Types.CLASS)
+                val classType = Types.CLASS.typeDesc
 
                 mv.visitFieldInsn(Opcodes.GETSTATIC, wrapperTypeSpec, "TYPE", classType)
             } else {

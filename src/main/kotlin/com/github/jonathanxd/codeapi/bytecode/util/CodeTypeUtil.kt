@@ -28,43 +28,43 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.Types
-import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.CodeParameter
+import com.github.jonathanxd.codeapi.base.GenericSignatureHolder
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.common.CodeParameter
-import com.github.jonathanxd.codeapi.common.TypeSpec
+import com.github.jonathanxd.codeapi.base.TypeSpec
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.type.GenericType
+import com.github.jonathanxd.codeapi.util.*
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
-import com.github.jonathanxd.codeapi.util.resolveInternalQualified as baseResolveInternalQualified
-import com.github.jonathanxd.codeapi.util.codeTypeToFullAsm as baseCodeTypeToFullAsm
-import com.github.jonathanxd.codeapi.util.primitiveCodeTypeToAsm as basePrimitiveCodeTypeToAsm
+
+typealias ReflectType = java.lang.reflect.Type
 
 object CodeTypeUtil {
 
-    fun resolveRealQualified(qualifiedName: String, outer: CodeType?): String = baseResolveInternalQualified(qualifiedName, outer)
+    fun resolveRealQualified(qualifiedName: String, outer: CodeType?): String = resolveQualifiedName(qualifiedName, outer)
 
-    fun codeTypeToBinaryName(type: CodeType): String {
-        return if (type.isPrimitive)
-            primitiveToTypeDesc(type)
-        else if (!type.isArray)
-            type.type.replace('.', '/')
-        else
-            toTypeDesc(type)
+    fun codeTypeToBinaryName(type: ReflectType): String {
+        return type.codeType.let { type ->
+            if (type.isPrimitive)
+                primitiveToTypeDesc(type)
+            else if (!type.isArray)
+                type.type.replace('.', '/')
+            else
+                type.typeDesc
+        }
     }
 
-    fun toTypeDesc(type: CodeType): String = baseCodeTypeToFullAsm(type)
-
-    fun primitiveToTypeDesc(type: CodeType): String = basePrimitiveCodeTypeToAsm(type)
+    fun primitiveToTypeDesc(type: CodeType): String = primitiveCodeTypeToJvmName(type)
 
     fun arrayToTypeDesc(codeType: CodeType): String =
             if (codeType.arrayDimension <= 1) {
                 codeTypeToBinaryName(codeType)
-            } else toTypeDesc(codeType)
+            } else codeType.typeDesc
 
 
-    fun codeTypesToBinaryName(type: Iterable<CodeType>): String {
+    fun codeTypesToBinaryName(type: Iterable<ReflectType>): String {
         val sb = StringBuilder()
 
         for (codeType in type) {
@@ -74,19 +74,19 @@ object CodeTypeUtil {
         return sb.toString()
     }
 
-    fun codeTypesToTypeDesc(type: Iterable<CodeType>): String {
+    fun codeTypesToTypeDesc(type: Iterable<ReflectType>): String {
         val sb = StringBuilder()
 
         for (codeType in type) {
-            sb.append(toTypeDesc(codeType))
+            sb.append(codeType.typeDesc)
         }
 
         return sb.toString()
     }
 
     fun typeSpecToTypeDesc(typeSpec: TypeSpec): String {
-        return "(" + CodeTypeUtil.codeTypesToTypeDesc(typeSpec.parameterTypes) + ")" +
-                CodeTypeUtil.toTypeDesc(typeSpec.returnType)
+        return "(" + typeSpec.parameterTypes.typeDesc + ")" +
+                typeSpec.returnType.typeDesc
     }
 
     fun typeSpecToBinaryName(typeSpec: TypeSpec): String {
@@ -119,7 +119,7 @@ object CodeTypeUtil {
             }
 
         } else {
-            return GenericUtil.fixResult(toTypeDesc(codeType))
+            return GenericUtil.fixResult(codeType.typeDesc)
         }
     }
 
@@ -127,28 +127,31 @@ object CodeTypeUtil {
         return codeTypesToTypeDesc(codeParameters.map { it.type })
     }
 
-    fun parametersAndReturnToDesc(codeParameters: Collection<CodeParameter>, returnType: CodeType): String {
+    fun parametersAndReturnToDesc(codeParameters: Collection<CodeParameter>, returnType: ReflectType): String {
         return parametersTypeAndReturnToDesc(codeParameters.map { it.type }, returnType)
     }
 
-    fun parametersTypeAndReturnToDesc(parameterTypes: Collection<CodeType>, returnType: CodeType): String {
-        return "(${codeTypesToTypeDesc(parameterTypes)})${toTypeDesc(returnType)}"
+    fun parametersTypeAndReturnToDesc(parameterTypes: Collection<ReflectType>, returnType: ReflectType): String {
+        return "(${parameterTypes.typeDesc})${returnType.typeDesc}"
     }
 
     /**
      * Infer bound of generic types specified in [method declaration][method] or in [type declaration][owner].
      */
-    fun parametersAndReturnToInferredDesc(owner: TypeDeclaration, method: MethodDeclaration, codeParameters: Collection<CodeParameter>, returnType: CodeType): String {
+    fun parametersAndReturnToInferredDesc(owner: TypeDeclaration,
+                                          holder: GenericSignatureHolder,
+                                          codeParameters: Collection<CodeParameter>,
+                                          returnType: java.lang.reflect.Type): String {
 
         val genericSign = owner.genericSignature
-        val methodGenericSign = method.genericSignature
+        val methodGenericSign = holder.genericSignature
         val parameterTypes = codeParameters.map { it.type }
 
-        fun infer(codeType: CodeType): CodeType =
+        fun infer(codeType: java.lang.reflect.Type): CodeType =
                 if (codeType is GenericType && !codeType.isType) {
                     GenericUtil.find(methodGenericSign, codeType.name) ?: GenericUtil.find(genericSign, codeType.name) ?: codeType.codeType
                 } else {
-                    codeType
+                    codeType.codeType
                 }
 
         return parametersTypeAndReturnToDesc(parameterTypes.map(::infer), infer(returnType))
@@ -219,13 +222,13 @@ object CodeTypeUtil {
         }
     }
 
-    fun getOpcodeForType(type: CodeType, opcode: Int): Int {
+    fun getOpcodeForType(type: ReflectType, opcode: Int): Int {
         val asmType = Type.getType(type.javaSpecName)
 
         return asmType.getOpcode(opcode)
     }
 
-    fun convertToPrimitive(from: CodeType, to: CodeType, mv: MethodVisitor) {
+    fun convertToPrimitive(from: ReflectType, to: ReflectType, mv: MethodVisitor) {
         var opcode = -1
 
         if (!from.isArray && !to.isArray && from.isPrimitive && to.isPrimitive) {
@@ -233,8 +236,8 @@ object CodeTypeUtil {
             val toTypeChar = Character.toUpperCase(to.canonicalName[0])
 
             // Fixes Short, Byte & Char conversion to int
-            if(fromTypeChar == 'S' || fromTypeChar == 'B' || fromTypeChar == 'C') {
-                if(toTypeChar == 'I')
+            if (fromTypeChar == 'S' || fromTypeChar == 'B' || fromTypeChar == 'C') {
+                if (toTypeChar == 'I')
                     return
                 else
                     fromTypeChar = 'I'
@@ -243,7 +246,7 @@ object CodeTypeUtil {
             opcode = this.getOpcode(fromTypeChar, toTypeChar)
 
             if (opcode == -1) {
-                if(this.getOpcode(fromTypeChar, 'I') == -1 || this.getOpcode('I', toTypeChar) == -1) {
+                if (this.getOpcode(fromTypeChar, 'I') == -1 || this.getOpcode('I', toTypeChar) == -1) {
                     throw IllegalArgumentException("Can't cast from '$from' to '$to'.")
                 }
                 CodeTypeUtil.convertToPrimitive(from, Types.INT, mv)

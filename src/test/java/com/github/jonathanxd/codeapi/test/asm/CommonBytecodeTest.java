@@ -34,7 +34,7 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
@@ -61,16 +61,16 @@ public class CommonBytecodeTest {
     }
 
     public static @Named("Instance") <R> R test(Class<?> testClass, TypeDeclaration mainClass, CodeSource source, Function<Class<?>, R> function) {
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
+        bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
         BCLoader bcLoader = new BCLoader();
 
         BytecodeClass[] bytecodeClasses;
 
         try {
-            bytecodeClasses = bytecodeGenerator.gen(source);
+            bytecodeClasses = bytecodeProcessor.gen(source);
         } catch (ClassCheckException e) {
             bytecodeClasses = e.getBytecodeClasses();
         }

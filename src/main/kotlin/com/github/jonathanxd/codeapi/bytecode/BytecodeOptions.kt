@@ -37,6 +37,7 @@ import com.github.jonathanxd.iutils.option.Option
  * The Adapter is called after the visit ends because the CodeAPI let asm to calculate locals and
  * stack.
  */
+@JvmField
 val CHECK = Option(true)
 
 /**

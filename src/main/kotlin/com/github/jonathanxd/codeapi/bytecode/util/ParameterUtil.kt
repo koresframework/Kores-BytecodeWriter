@@ -27,8 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.base.CodeParameter
 import com.github.jonathanxd.codeapi.bytecode.common.Variable
-import com.github.jonathanxd.codeapi.common.CodeParameter
 import org.objectweb.asm.Label
 
 object ParameterUtil {
@@ -37,14 +37,14 @@ object ParameterUtil {
         if (parameters.isEmpty())
             return emptyList()
 
-        return parameters.map { d -> Variable(d.name, d.type, label, null) }
+        return parameters.map { Variable(it.name, it.type, label, null) }
     }
 
     fun parametersToVars(parameters: Collection<CodeParameter>, target: MutableCollection<Variable>, label: Label) {
         if (parameters.isEmpty())
             return
 
-        parameters.map { d -> Variable(d.name, d.type, label, null) }.forEach { target.add(it) }
+        parameters.mapTo(target) { Variable(it.name, it.type, label, null) }
     }
 
     fun parametersToMap(parameters: Collection<CodeParameter>, startAt: Int): Map<String, Int> {

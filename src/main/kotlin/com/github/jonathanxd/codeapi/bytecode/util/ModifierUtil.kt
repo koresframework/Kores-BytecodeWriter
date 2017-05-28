@@ -27,8 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.common.CodeModifier
 import org.objectweb.asm.Opcodes
 
 object ModifierUtil {
@@ -56,7 +56,13 @@ object ModifierUtil {
     }
 
     fun innerModifiersToAsm(typeDeclaration: TypeDeclaration): Int {
-        return ModifierUtil.modifiersToAsm(typeDeclaration.modifiers, typeDeclaration.isInterface)
+        val modifiers = typeDeclaration.modifiers.let {
+            if (!it.contains(CodeModifier.STATIC))
+                it + CodeModifier.STATIC
+            else it
+        }
+
+        return ModifierUtil.modifiersToAsm(modifiers, typeDeclaration.isInterface)
     }
 
     fun isClassOrMethod(elementType: Int): Boolean {
@@ -113,6 +119,9 @@ object ModifierUtil {
      */
     fun toAsmAccess(modifiers: Collection<CodeModifier>): Int {
         var end = 0
+
+        if (modifiers.isEmpty())
+            return Opcodes.ACC_PUBLIC
 
         for (modifier in modifiers) {
             val toAsmAccess = toAsmAccess(modifier)

@@ -35,7 +35,7 @@ import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.base.VariableAccess;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.InvokeType;
 import com.github.jonathanxd.codeapi.helper.Predefined;
@@ -123,9 +123,9 @@ public class TestLoopBytecode {
 
         codeSource.add(codeClass);
 
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        byte[] gen = bytecodeGenerator.gen(codeSource)[0].getBytecode();
+        byte[] gen = bytecodeProcessor.gen(codeSource)[0].getBytecode();
 
         ResultSaver.save(this.getClass(), gen);
 

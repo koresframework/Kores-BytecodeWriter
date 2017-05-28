@@ -29,27 +29,38 @@ package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.*
 import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder
 import com.github.jonathanxd.codeapi.builder.build
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.common.CodeParameter
-import com.github.jonathanxd.codeapi.common.TypeSpec
-import com.github.jonathanxd.codeapi.factory.constructor
-import com.github.jonathanxd.codeapi.factory.field
-import com.github.jonathanxd.codeapi.inspect.SourceInspect
+import com.github.jonathanxd.codeapi.common.getNewInnerName
+import com.github.jonathanxd.codeapi.common.getNewName
+import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.util.source.CodeArgumentUtil
-import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
-import java.util.*
+import com.github.jonathanxd.codeapi.type.Generic
+import com.github.jonathanxd.codeapi.util.Alias
+import com.github.jonathanxd.codeapi.util.conversion.access
+import java.util.ArrayList
+import java.util.Arrays
+import java.util.EnumSet
+import java.util.TreeSet
+import java.util.function.Predicate
 
 object EnumUtil {
+
+    /**
+     * Returns whether the [EnumEntry] requires a inner type.
+     */
+    val EnumEntry.requiresInnerType
+        get() = this.staticBlock.body.isNotEmpty
+                || this.fields.isNotEmpty()
+                || this.methods.isNotEmpty()
+                || this.constructorSpec != null
+                || this.innerTypes.isNotEmpty()
 
     fun getEnumModifiers(enumDeclaration: EnumDeclaration): Set<CodeModifier> {
         val modifiers = TreeSet(enumDeclaration.modifiers)
 
         modifiers.add(CodeModifier.ENUM)
 
-        if (enumDeclaration.entries.any { it.body.isNotEmpty }) {
+        if (enumDeclaration.entries.any { it.requiresInnerType }) {
             modifiers.add(CodeModifier.ABSTRACT)
         } else {
             modifiers.add(CodeModifier.FINAL)
@@ -58,116 +69,109 @@ object EnumUtil {
         return modifiers
     }
 
-    fun generateEnumClassSource(enumDeclaration: EnumDeclaration): CodeSource {
+    fun generateEnumClass(enumDeclaration: EnumDeclaration): TypeDeclaration {
         val fields = mutableListOf<FieldDeclaration>()
         val entries = enumDeclaration.entries
-        val innerClasses = mutableListOf<TypeDeclaration>()
-
-        val codeSource = MutableCodeSource()
+        val innerTypes = mutableListOf<TypeDeclaration>()
 
         for (i in entries.indices) {
             val enumEntry = entries[i]
             val value: CodePart
 
-            if (enumEntry.body.isNotEmpty) {
+            if (enumEntry.requiresInnerType) {
 
                 val typeDeclaration = EnumUtil.genEnumInnerClass(enumDeclaration, enumEntry)
 
-                innerClasses.add(typeDeclaration)
+                innerTypes.add(typeDeclaration)
 
                 value = EnumUtil.callConstructor(typeDeclaration, enumEntry, i)
             } else {
                 value = EnumUtil.callConstructor(enumDeclaration, enumEntry, i)
             }
 
-            fields.add(field(
-                    modifiers = EnumSet.of(CodeModifier.PUBLIC, CodeModifier.STATIC, CodeModifier.FINAL, CodeModifier.ENUM),
-                    type = enumDeclaration,
-                    name = enumEntry.name,
-                    value = value
-
-            ))
+            fields.add(FieldDeclaration.Builder.builder()
+                    .withModifiers(EnumSet.of(CodeModifier.PUBLIC, CodeModifier.STATIC, CodeModifier.FINAL, CodeModifier.ENUM))
+                    .withType(enumDeclaration)
+                    .withName(enumEntry.name)
+                    .withValue(value)
+                    .build())
         }
 
-        codeSource.addAll(fields)
+        // Constant enum values field unique name
+        val valuesFieldName = getNewName("\$VALUES", fields)
 
-        val valuesFieldName = CodeSourceUtil.getNewFieldName("\$VALUES", codeSource)
-
+        // Size of arary
         val fieldSize = fields.size
 
+        // Creates array
         val arrayType = enumDeclaration.toArray(1)
 
-        val arrayArguments = fields
-                .map { fieldDeclaration ->
-                    CodeAPI.accessStaticField(fieldDeclaration.type, fieldDeclaration.name)
-                }
+        val arrayArguments = fields.map { accessStaticField(type = it.type, name = it.name) }
 
-        val valuesField = field(
-                modifiers = EnumSet.of(CodeModifier.PRIVATE, CodeModifier.STATIC, CodeModifier.FINAL, CodeModifier.SYNTHETIC),
-                type = arrayType,
-                name = valuesFieldName,
-                value = CodeAPI.arrayConstruct(arrayType, arrayOf(Literals.INT(fieldSize)), arrayArguments))
+        val valuesField = FieldDeclaration.Builder.builder()
+                .withModifiers(EnumSet.of(CodeModifier.PRIVATE, CodeModifier.STATIC, CodeModifier.FINAL, CodeModifier.SYNTHETIC))
+                .withType(arrayType)
+                .withName(valuesFieldName)
+                .withValue(createArray(arrayType, listOf(Literals.INT(fieldSize)), arrayArguments))
+                .build()
 
-        codeSource.add(valuesField)
+        fields += valuesField
 
-        val source = enumDeclaration.body.toMutable()
-
-        // Gen methods
-        fixConstructor(source)
-
-        codeSource.addAll(source)
-
-        // Enum.values() method.
-        codeSource.add(CodeAPI.methodBuilder()
-                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
-                .withName("values")
-                .withReturnType(arrayType)
-                .withBody(CodeAPI.sourceOfParts(
-                        CodeAPI.returnValue(
-                                arrayType,
-                                CodeAPI.cast(
-                                        Types.OBJECT,
-                                        arrayType,
-                                        CodeAPI.invokeVirtual(
+        return ClassDeclaration.Builder.builder()
+                .withModifiers(getEnumModifiers(enumDeclaration))
+                .withQualifiedName(enumDeclaration.qualifiedName)
+                .withSuperClass(Generic.type(Types.ENUM).of(enumDeclaration))
+                .withImplementations(enumDeclaration.implementations)
+                .withConstructors(createConstructors(enumDeclaration))
+                .withFields(fields)
+                .withInnerTypes(innerTypes)
+                .withMethods(
+                        // Enum.values() method.
+                        MethodDeclaration.Builder.builder()
+                                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
+                                .withName("values")
+                                .withReturnType(arrayType)
+                                .withBody(CodeSource.fromPart(
+                                        returnValue(
                                                 arrayType,
-                                                CodeAPI.accessStaticField(valuesField.type, valuesField.name),
-                                                "clone",
-                                                CodeAPI.typeSpec(Types.OBJECT),
-                                                emptyList()
+                                                cast(
+                                                        Types.OBJECT,
+                                                        arrayType,
+                                                        invokeVirtual(
+                                                                arrayType,
+                                                                accessStaticField(type = valuesField.type, name = valuesField.name),
+                                                                "clone",
+                                                                typeSpec(Types.OBJECT),
+                                                                emptyList()
+                                                        )
+                                                )
                                         )
-                                )
-                        )
 
-                ))
-                .build())
-
-        // Enum.valueOf(String) method.
-        codeSource.add(CodeAPI.methodBuilder()
-                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
-                .withName("valueOf")
-                .withParameters(CodeAPI.parameter(Types.STRING, "name"))
-                .withReturnType(enumDeclaration)
-                .withBody(CodeAPI.sourceOfParts(
-                        CodeAPI.returnValue(Types.ENUM, CodeAPI.cast(Types.ENUM, enumDeclaration,
-                                CodeAPI.invokeStatic(Types.ENUM, "valueOf", CodeAPI.typeSpec(
-                                        Types.ENUM,
-                                        Types.CLASS,
-                                        Types.STRING),
-                                        listOf(
-                                                Literals.CLASS(enumDeclaration),
-                                                CodeAPI.accessLocalVariable(Types.STRING, "name")
-                                        )
                                 ))
-                        )
+                                .build(),
+                        // Enum.valueOf(String) method.
+                        MethodDeclaration.Builder.builder()
+                                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
+                                .withName("valueOf")
+                                .withParameters(parameter(type = Types.STRING, name = "name"))
+                                .withReturnType(enumDeclaration)
+                                .withBody(CodeSource.fromPart(
+                                        returnValue(Types.ENUM, cast(Types.ENUM, enumDeclaration,
+                                                invokeStatic(Types.ENUM, "valueOf", typeSpec(
+                                                        Types.ENUM,
+                                                        Types.CLASS,
+                                                        Types.STRING),
+                                                        listOf(
+                                                                Literals.CLASS(enumDeclaration),
+                                                                accessVariable(Types.STRING, "name")
+                                                        )
+                                                ))
+                                        )
 
-                ))
-                .build())
-
-        for (innerClass in innerClasses) {
-            codeSource.add(innerClass)
-        }
-
-        return codeSource
+                                ))
+                                .build()
+                )
+                .build()
     }
 
     private fun callConstructor(location: TypeDeclaration, enumEntry: EnumEntry, ordinal: Int): CodePart {
@@ -191,61 +195,51 @@ object EnumUtil {
             arguments.addAll(enumEntry.arguments)
         }
 
-        return CodeAPI.invokeConstructor(location, spec, arguments)
+        return invokeConstructor(location, spec, arguments)
     }
 
-    private fun fixConstructor(originalSource: MutableCodeSource) {
-        val inspect = SourceInspect.find { codePart -> codePart is ConstructorDeclaration }
-                .include { bodied -> bodied is CodeSource }
-                .includeSource(true)
-                .mapTo { codePart -> codePart as ConstructorDeclaration }
-                .inspect(originalSource)
+    private fun createConstructors(enumDeclaration: EnumDeclaration): List<ConstructorDeclaration> {
 
-        if (inspect.isEmpty()) {
+        val constructors = enumDeclaration.constructors.toMutableList()
 
-            originalSource.add(
-                    constructor(
-                            EnumSet.of(CodeModifier.PROTECTED, CodeModifier.SYNTHETIC),
-                            arrayOf(CodeAPI.parameter(Types.STRING, "name"), CodeAPI.parameter(Types.INT, "ordinal")),
-                            CodeSource.fromPart(
-                                    CodeAPI.invokeSuperConstructor(CodeAPI.constructorTypeSpec(Types.STRING, Types.INT),
-                                            listOf(
-                                                    CodeAPI.accessLocalVariable(Types.STRING, "name"),
-                                                    CodeAPI.accessLocalVariable(Types.INT, "ordinal")
-                                            ))
-                            )
-                    ))
-            // generate
-        } else {
-            // modify
-            for (constructorDeclaration in inspect) {
-                val parameters = constructorDeclaration.parameters.toMutableList()
+        if (constructors.isEmpty()) {
+            constructors.add(ConstructorDeclaration.Builder.builder()
+                    .withModifiers(EnumSet.of(CodeModifier.PROTECTED, CodeModifier.SYNTHETIC))
+                    .build())
+        }
 
-                val name = CodeSourceUtil.getNewName("\$name", parameters)
-                val ordinal = CodeSourceUtil.getNewName("\$ordinal", parameters)
+        return constructors.map {
+            val parameters = it.parameters.toMutableList()
 
-                parameters.addAll(0, Arrays.asList(
-                        CodeAPI.parameter(Types.STRING, name),
-                        CodeAPI.parameter(Types.INT, ordinal)))
+            val name = getNewName("\$name", parameters)
+            val ordinal = getNewName("\$ordinal", parameters)
 
-                val source = constructorDeclaration.body.toMutable()
+            parameters.addAll(0, listOf(
+                    parameter(type = Types.STRING, name = name),
+                    parameter(type = Types.INT, name = ordinal)
+            ))
 
-                source.add(0, CodeAPI.invokeSuperConstructor(
-                        Types.ENUM,
-                        TypeSpec(Types.VOID, listOf(Types.STRING, Types.INT)),
-                        listOf(CodeAPI.accessLocalVariable(Types.STRING, name),
-                                CodeAPI.accessLocalVariable(Types.INT, ordinal))
-                ))
-
-                originalSource.remove(constructorDeclaration)
+            val source = it.body.toMutable()
 
 
-                originalSource.add(ConstructorDeclarationBuilder(constructorDeclaration).build {
-                    this.body = source
-                    this.parameters = parameters
-                })
+            // super invocation in enum constructor is invalid
+            source.removeIf(Predicate {
+                it is MethodInvocation && it.target is Alias.SUPER && it.invokeType.isSpecial()
+            })
+
+            source.add(0, invokeSuperConstructor(
+                    Types.ENUM,
+                    TypeSpec(Types.VOID, listOf(Types.STRING, Types.INT)),
+                    listOf(accessVariable(Types.STRING, name),
+                            accessVariable(Types.INT, ordinal))
+            ))
+
+            ConstructorDeclaration.Builder.builder(it).build {
+                this.body = source
+                this.parameters = parameters
             }
         }
+
     }
 
     private fun genEnumInnerClass(enumDeclaration: EnumDeclaration, enumEntry: EnumEntry): TypeDeclaration {
@@ -257,43 +251,44 @@ object EnumUtil {
 
             val parameterTypes = ctrTypeSpec.parameterTypes
 
-            for (i in parameterTypes.indices) {
-                baseParameters.add(CodeAPI.parameter(parameterTypes[i], "$" + i))
-            }
+            parameterTypes.indices.mapTo(baseParameters) { parameter(type = parameterTypes[it], name = "$" + it) }
         }
 
-        val arguments = CodeArgumentUtil.argumentsFromParameters(baseParameters)
+        val arguments = baseParameters.access
 
-        val constructorSpec = CodeAPI.constructorTypeSpec(
+        val constructorSpec = constructorTypeSpec(
                 *baseParameters
                         .map { it.type }
                         .toTypedArray()
         )
 
-        val enumEntryName = CodeSourceUtil.getNewInnerName(enumEntry.name + "\$Inner", enumDeclaration)
+        val enumEntryName = getNewInnerName(enumEntry.name + "\$Inner", enumDeclaration)
 
-        val body = enumEntry.body.toMutable()
-
-        body.add(CodeAPI.constructorBuilder()
-                .withParameters(baseParameters)
-                .withBody(CodeAPI.sourceOfParts(
-                        CodeAPI.invokeSuperConstructor(constructorSpec, arguments)
-                ))
-                .build())
-
-        return CodeAPI.aClassBuilder()
+        return ClassDeclaration.Builder.builder()
                 .withOuterClass(enumDeclaration)
                 .withModifiers(CodeModifier.STATIC, CodeModifier.ENUM)
                 .withQualifiedName(enumEntryName)
                 .withSuperClass(enumDeclaration)
-                .withBody(body)
+                // Inner
+                .withStaticBlock(enumEntry.staticBlock)
+                .withFields(enumEntry.fields)
+                .withMethods(enumEntry.methods)
+                .withInnerTypes(enumEntry.innerTypes)
+                // Generated
+                .withConstructors(ConstructorDeclaration.Builder.builder()
+                        .withModifiers(CodeModifier.PROTECTED, CodeModifier.SYNCHRONIZED)
+                        .withBody(CodeSource.fromPart(
+                                invokeSuperConstructor(constructorSpec, arguments)
+                        ))
+                        .build())
                 .build()
     }
 
     private fun getEnumBaseParameters(name: String, ordinal: String): MutableList<CodeParameter> {
-        return ArrayList(Arrays.asList(
-                CodeAPI.parameter(Types.STRING, name),
-                CodeAPI.parameter(Types.INT, ordinal)))
+        return mutableListOf(
+                parameter(type = Types.STRING, name = name),
+                parameter(type = Types.INT, name = ordinal))
     }
 
 }
+

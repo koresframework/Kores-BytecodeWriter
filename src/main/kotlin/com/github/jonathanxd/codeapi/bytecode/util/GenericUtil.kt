@@ -28,6 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.base.MethodDeclarationBase
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.generic.GenericSignature
 import com.github.jonathanxd.codeapi.type.CodeType
@@ -179,40 +180,6 @@ object GenericUtil {
         }
     }
 
-    //"<T::Ljava/lang/CharSequence;>(Ljava/util/List<TT;>;Ljava/lang/String;)TT;
-    fun methodGenericSignature(methodDeclaration: MethodDeclaration): String? {
-
-        val returnType = methodDeclaration.returnType
-
-        val signatureBuilder = StringBuilder()
-
-        val methodSignature = methodDeclaration.genericSignature
-
-
-        val generateGenerics = methodSignature.isNotEmpty
-                || methodDeclaration.parameters.stream().anyMatch { parameter -> parameter.type is GenericType }
-                || returnType is GenericType
-
-
-        if (generateGenerics && methodSignature.isNotEmpty) {
-            signatureBuilder.append(genericTypesToAsmString(methodSignature.types))
-        }
-
-        if (generateGenerics) {
-            signatureBuilder.append('(')
-
-            methodDeclaration.parameters.stream().map { parameter -> CodeTypeUtil.toName(parameter.type) }.forEach { signatureBuilder.append(it) }
-
-            signatureBuilder.append(')')
-        }
-
-        if (generateGenerics) {
-            signatureBuilder.append(CodeTypeUtil.toName(returnType))
-        }
-
-        return if (signatureBuilder.isNotEmpty()) signatureBuilder.toString() else null
-
-    }
 
     fun find(genericSignature: GenericSignature, typeName: String): GenericType? =
             genericSignature.types.find { !it.isType && it.name == typeName }

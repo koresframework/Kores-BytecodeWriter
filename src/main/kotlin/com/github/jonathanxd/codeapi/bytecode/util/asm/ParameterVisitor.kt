@@ -27,10 +27,10 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util.asm
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import org.objectweb.asm.AnnotationVisitor
 
-class ParameterVisitor(val mvData: MVData, val pos: Int) {
+class ParameterVisitor(val mvData: MethodVisitorHelper, val pos: Int) {
 
     fun visitAnnotation(desc: String, isVisible: Boolean): AnnotationVisitor {
         return this.mvData.methodVisitor.visitParameterAnnotation(this.pos, desc, isVisible)

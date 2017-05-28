@@ -40,7 +40,7 @@ import com.github.jonathanxd.codeapi.base.VariableDeclaration;
 import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
 import com.github.jonathanxd.codeapi.builder.VariableDeclarationBuilder;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.common.InvokeType;
@@ -218,7 +218,7 @@ public class CodeAPITestBytecode {
         // Add method to body
         codeClassSource.add(method);
 
-        BytecodeGenerator generator = new BytecodeGenerator();
+        BytecodeProcessor generator = new BytecodeProcessor();
 
         byte[] bytes = generator.gen(mySource)[0].getBytecode();
 

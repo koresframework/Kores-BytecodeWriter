@@ -27,16 +27,16 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.base.TypeSpec
 import com.github.jonathanxd.codeapi.common.TypeSpec
+import com.github.jonathanxd.codeapi.util.typeDesc
 
 object TypeSpecUtil {
 
     fun typeSpecToAsm(typeSpec: TypeSpec): String {
-        val s = CodeTypeUtil.toTypeDesc(typeSpec.returnType)
+        val s = typeSpec.returnType.typeDesc
 
-        return "(" +
-                CodeTypeUtil.codeTypesToTypeDesc(typeSpec.parameterTypes) +
-                ")" + s
+        return "(${typeSpec.parameterTypes.typeDesc})$s"
     }
 
 }

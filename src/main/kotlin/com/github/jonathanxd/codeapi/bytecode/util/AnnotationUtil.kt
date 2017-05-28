@@ -30,11 +30,12 @@ package com.github.jonathanxd.codeapi.bytecode.util
 import com.github.jonathanxd.codeapi.base.Annotation
 import com.github.jonathanxd.codeapi.base.EnumValue
 import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.util.typeDesc
 import org.objectweb.asm.Type
 
 object AnnotationUtil {
     fun visitAnnotation(annotation: Annotation, annotationVisitorCapable: AnnotationVisitorCapable) {
-        val annotationTypeAsm = CodeTypeUtil.toTypeDesc(annotation.type)
+        val annotationTypeAsm = annotation.type.typeDesc
         val annotationVisitor = annotationVisitorCapable.visitAnnotation(annotationTypeAsm, annotation.visible)
 
         val values = annotation.values
@@ -65,13 +66,13 @@ object AnnotationUtil {
         }
 
         if (value is EnumValue) {
-            annotationVisitor.visitEnum(value.name, CodeTypeUtil.toTypeDesc(value.enumType), value.enumEntry)
+            annotationVisitor.visitEnum(value.name, value.enumType.typeDesc, value.enumEntry)
 
             return
         }
 
         if (value is Annotation) {
-            val asmType = CodeTypeUtil.toTypeDesc(value.type)
+            val asmType = value.type.typeDesc
 
             val visitor2 = annotationVisitor.visitAnnotation(key, asmType)
 
@@ -83,7 +84,7 @@ object AnnotationUtil {
         }
 
         if (value is CodeType) {
-            value = Type.getType(CodeTypeUtil.toTypeDesc(value))
+            value = Type.getType(value.typeDesc)
         }
 
         annotationVisitor.visit(key, value)

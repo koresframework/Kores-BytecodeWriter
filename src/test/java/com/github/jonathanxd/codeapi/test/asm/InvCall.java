@@ -31,7 +31,7 @@ import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.factory.ClassFactory;
 import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
@@ -72,9 +72,9 @@ public class InvCall {
         )));
 
 
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        byte[] gen = bytecodeGenerator.gen(source)[0].getBytecode();
+        byte[] gen = bytecodeProcessor.gen(source)[0].getBytecode();
 
         ResultSaver.save(this.getClass(), gen);
 

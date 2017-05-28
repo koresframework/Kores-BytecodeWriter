@@ -29,7 +29,9 @@ package com.github.jonathanxd.codeapi.bytecode.common
 
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.util.`is`
 import org.objectweb.asm.Label
+import java.lang.reflect.Type
 import java.util.*
 
 /**
@@ -47,7 +49,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      * @return Variable or [Optional.empty] if not present.
      */
     fun getVar(i: Int): Variable? {
-        if (i < 0 || i >= this.variables.size)
+        if (i !in this.variables.indices)
             return null
 
         if(!this.variables[i].isVisible)
@@ -73,7 +75,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      * @param type Type of the variable.
      * @return Variable or `null` if not present.
      */
-    fun getVar(name: String, type: CodeType?): Variable? {
+    fun getVar(name: String, type: Type?): Variable? {
         if (type == null) {
             return this.getVarByName(name)
         }
@@ -143,7 +145,9 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      * @return [OptionalInt] holding the position, or empty if failed to store.
      * @throws RuntimeException if variable is already defined.
      */
-    fun storeVar(name: String, type: CodeType, startLabel: Label, endLabel: Label?): OptionalInt {
+    fun storeVar(name: String, type: Type, startLabel: Label, endLabel: Label?): OptionalInt {
+        // normal var: isVisible = true, isTemp = false
+
         val variable = Variable(name, type, startLabel, endLabel ?: this.endLabel)
 
         for (i in this.variables.indices.reversed()) {
@@ -169,7 +173,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      *
      * Name generation could also be avoided using '#' symbol in the variable name.
      *
-     * Position of internal variables couldn't be getted by [.storeVar].
+     * Position of internal variables couldn't be retrieved by [storeVar].
      *
      * Internal variables could be freely redefined and has no restrictions about the redefinition.
      *
@@ -179,7 +183,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      * @param endLabel   End label (last usage of variable).
      * @return [OptionalInt] holding the position, or empty if failed to store.
      */
-    fun storeInternalVar(name: String, type: CodeType, startLabel: Label, endLabel: Label?): OptionalInt {
+    fun storeInternalVar(name: String, type: Type, startLabel: Label, endLabel: Label?): OptionalInt {
         val variable = Variable(name, type, startLabel, endLabel ?: this.endLabel, true)
 
         for (i in variables.indices.reversed()) {

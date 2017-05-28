@@ -27,9 +27,9 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
+import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.sugar.SugarEnvironment
 
-class MVDataSugarEnvironment(val mvData: MVData) : SugarEnvironment {
+class MVDataSugarEnvironment(val mvData: MethodVisitorHelper) : SugarEnvironment {
     override fun getVariableName(base: String): String = mvData.getUniqueVariableName(base)
 }

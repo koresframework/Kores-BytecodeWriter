@@ -27,10 +27,10 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.base.ClassDeclaration
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.util.codeType
 
 object TypeDeclarationUtil {
 
@@ -41,10 +41,10 @@ object TypeDeclarationUtil {
     fun getSuperClass(typeDeclaration: TypeDeclaration): CodeType {
 
         if (typeDeclaration is ClassDeclaration) {
-            return typeDeclaration.superClass ?: CodeAPI.getJavaType(Any::class.java)
+            return typeDeclaration.superClass.codeType
         }
 
-        return CodeAPI.getJavaType(Any::class.java)
+        return Any::class.java.codeType
     }
 
 }

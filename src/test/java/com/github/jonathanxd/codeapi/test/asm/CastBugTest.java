@@ -29,11 +29,10 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
-import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 
@@ -48,7 +47,6 @@ import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
 import static com.github.jonathanxd.codeapi.factory.ClassFactory.aClass;
 import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
 import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
-import static com.github.jonathanxd.codeapi.literal.Literals.STRING;
 
 public class CastBugTest {
 
@@ -67,9 +65,9 @@ public class CastBugTest {
 
         TypeDeclaration decl = aClass(EnumSet.of(PUBLIC), "com.MyClass", source);
 
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        BytecodeClass[] gen = bytecodeGenerator.gen(decl);
+        BytecodeClass[] gen = bytecodeProcessor.gen(decl);
 
         ResultSaver.save(this.getClass(), gen);
 

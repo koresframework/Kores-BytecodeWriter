@@ -27,33 +27,45 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.bytecode.common.MVData
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.common.Data
-import com.github.jonathanxd.codeapi.common.InvokeType
-import com.github.jonathanxd.codeapi.common.MethodType
-import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
-import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil
+import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
+import com.github.jonathanxd.codeapi.factory.setFieldValue
+import com.github.jonathanxd.codeapi.processor.CodeProcessor
+import com.github.jonathanxd.codeapi.util.Alias
+import com.github.jonathanxd.codeapi.util.internalName
+import com.github.jonathanxd.codeapi.util.typeDesc
+import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
+// Some operations calls directly asm MethodVisitor to avoid processor overhead, this does not
+// means that operation is faster or that processors will slow down the process (at this point
+// probably JVM already made a lot of optimizations which makes the code runs faster even
+// calling processors. But processors are designed to process values in an environment which
+// states can change the behavior and processors are designed to avoid code duplication, but for this
+// utility class, there is no reason to use processors, not only because of the overhead
+// but because some operations are constants (never change). In future we can change to
+// processor if needed, but at the moment, this is not required.
+
+/**
+ * Utilities method to find `super` and `this` call and field default values declaration.
+ */
 object ConstructorUtil {
 
     fun isInitForThat(methodInvocation: MethodInvocation): Boolean {
-        val any = methodInvocation.spec.methodType == MethodType.SUPER_CONSTRUCTOR
+        // Constructors requires a [New] target, super invocations does not have this target
+        val superInvocation = methodInvocation.target !is New
 
         val access = methodInvocation.target as? Access
 
         val accept = access != null
-                && (access.type == Access.Type.THIS || access.type == Access.Type.SUPER)
+                && (access == Access.THIS || access == Access.SUPER)
 
-        return any
+        return superInvocation
                 && accept
                 && methodInvocation.invokeType == InvokeType.INVOKE_SPECIAL
                 && methodInvocation.spec.methodName == "<init>"
@@ -77,7 +89,8 @@ object ConstructorUtil {
 
             }
 
-            if (codePart is CodeSource) { // Another CodeSource is part of the Enclosing Source
+            if (codePart is CodeSource) {
+                // Another CodeSource is part of the Enclosing Source
                 val searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codePart, includeChild, targetAccessPredicate, true)
 
                 if (searchResult.found)
@@ -86,7 +99,8 @@ object ConstructorUtil {
 
             if (codePart is MethodInvocation) {
 
-                if (codePart.spec.methodType == MethodType.SUPER_CONSTRUCTOR
+                // Constructors requires a [New] target, super invocations does not have this target
+                if (codePart.target !is New
                         && targetAccessPredicate(codePart.target)
                         && codePart.invokeType == InvokeType.INVOKE_SPECIAL
                         && codePart.spec.methodName == "<init>") {
@@ -99,9 +113,9 @@ object ConstructorUtil {
         return SearchResult.FALSE
     }
 
-    fun searchInitThis(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, validate: Boolean): Boolean {
+    fun searchInitThis(typeDeclaration: TypeDeclaration, codeParts: CodeSource, validate: Boolean): Boolean {
         var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
-            codePart != null && codePart is Access && codePart.type == Access.Type.THIS
+            codePart != null && codePart is Access && codePart == Access.THIS
         }, false)
 
         if (validate)
@@ -112,7 +126,7 @@ object ConstructorUtil {
 
     fun searchForSuper(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, validate: Boolean): Boolean {
         var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
-            codePart != null && codePart is Access && codePart.type == Access.Type.SUPER
+            codePart != null && codePart is Access && codePart == Access.THIS
         }, false)
 
         if (validate)
@@ -128,7 +142,7 @@ object ConstructorUtil {
         return searchResult
     }
 
-    fun <T> declareFinalFields(visitorGenerator: VisitorGenerator<T>, methodBody: CodeSource?, typeDeclaration: TypeDeclaration, mv: MethodVisitor, extraData: Data, mvData: MVData, validate: Boolean) {
+    fun declareFinalFields(codeProcessor: CodeProcessor<*>, methodBody: CodeSource, typeDeclaration: TypeDeclaration, mv: MethodVisitorHelper, data: TypedData, validate: Boolean) {
 
         if (ConstructorUtil.searchInitThis(typeDeclaration, methodBody, validate)) {
             return
@@ -137,31 +151,28 @@ object ConstructorUtil {
         /**
          * Declare variables
          */
-        val all = CodeSourceUtil.find<FieldDeclaration>(
-                typeDeclaration.body,
-                { codePart ->
-                    codePart is FieldDeclaration
-                            && !codePart.modifiers.contains(CodeModifier.STATIC)
-                            && codePart.value != null
-                }
-        ) { codePart -> codePart as FieldDeclaration }
+        val all = typeDeclaration.fields.filter {
+            it is FieldDeclaration
+                    && !it.modifiers.contains(CodeModifier.STATIC)
+                    && it.value != null
+        }
 
 
         val label = Label()
-        mv.visitLabel(label)
+        mv.methodVisitor.visitLabel(label)
 
         for (fieldDeclaration in all) {
 
             val value = fieldDeclaration.value
 
             if (value != null) {
-                // No visitor overhead.
-                mv.visitVarInsn(Opcodes.ALOAD, 0)
+                // No processor overhead.
+                mv.methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
 
-                visitorGenerator.generateTo(value::class.java, value, extraData, null, mvData)
+                codeProcessor.process(value::class.java, value, data)
 
-                // No visitor overhead.
-                mv.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), fieldDeclaration.name, CodeTypeUtil.toTypeDesc(fieldDeclaration.type))
+                // No processor overhead.
+                mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), fieldDeclaration.name, fieldDeclaration.type.typeDesc)
             }
 
         }
@@ -172,29 +183,22 @@ object ConstructorUtil {
 
         val superType = (typeDeclaration as SuperClassHolder).superClass
 
-        if (superType == null) {
-            // No visitor overhead.
-            mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
-        } else {
-            // No visitor overhead.
-            mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CodeTypeUtil.codeTypeToBinaryName(superType), "<init>", "()V", false)
-        }
+        // No processor overhead.
+        mv.visitMethodInsn(Opcodes.INVOKESPECIAL, superType.internalName, "<init>", "()V", false)
     }
 
-    fun generateFinalFields(classSource: CodeSource): CodeSource {
-        val codeSource = MutableCodeSource()
+    fun generateFinalFields(elementsHolder: ElementsHolder): CodeSource {
+        val codeSource = MutableCodeSource.create()
 
         /**
          * Declare variables
          */
-        val all = CodeSourceUtil.find<FieldDeclaration>(
-                classSource,
-                { codePart ->
-                    codePart is FieldDeclaration
-                            && !codePart.modifiers.contains(CodeModifier.STATIC)
-                            && codePart.value != null
-                }
-        ) { codePart -> codePart as FieldDeclaration }
+        val all = elementsHolder.fields.filter {
+            it is FieldDeclaration
+                    && !it.modifiers.contains(CodeModifier.STATIC)
+                    && it.value != null
+        }
+
 
         for (fieldDeclaration in all) {
 
@@ -203,7 +207,7 @@ object ConstructorUtil {
             val value = fieldDeclaration.value
 
             if (value != null) {
-                codeSource.add(CodeAPI.setThisField(type, name, value))
+                codeSource.add(setFieldValue(Alias.THIS, Access.THIS, type, name, value))
             }
         }
 

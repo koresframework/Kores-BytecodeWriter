@@ -32,10 +32,8 @@ import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.base.impl.MethodSpecificationImpl
 import com.github.jonathanxd.codeapi.builder.MethodInvocationBuilder
-import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.bytecode.gen.visitor.TypeVisitor
-import com.github.jonathanxd.codeapi.common.*
+import com.github.jonathanxd.codeapi.bytecode.processor.visitor.TypeVisitor
 import com.github.jonathanxd.codeapi.gen.visit.VisitorGenerator
 import com.github.jonathanxd.codeapi.util.source.CodeArgumentUtil
 import com.github.jonathanxd.codeapi.util.source.CodeSourceUtil

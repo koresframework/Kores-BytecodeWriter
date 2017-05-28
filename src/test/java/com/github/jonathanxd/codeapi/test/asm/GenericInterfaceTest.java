@@ -32,7 +32,7 @@ import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.Annotation;
 import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.common.CodeModifier;
 import com.github.jonathanxd.codeapi.factory.ClassFactory;
 import com.github.jonathanxd.codeapi.generic.GenericSignature;
@@ -55,11 +55,11 @@ public class GenericInterfaceTest {
                 GenericSignature.empty(),
                 new CodeType[]{Generic.type(CodeAPI.getJavaType(ArrayList.class)).of(Types.STRING)}
         );
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
         CodeSource codeSource = CodeAPI.sourceOfParts(codeClass);
 
-        byte[] gen = bytecodeGenerator.gen(codeSource)[0].getBytecode();
+        byte[] gen = bytecodeProcessor.gen(codeSource)[0].getBytecode();
         ResultSaver.save(this.getClass(), gen);
     }
 

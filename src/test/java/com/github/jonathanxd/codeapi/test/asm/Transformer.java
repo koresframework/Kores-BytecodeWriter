@@ -31,8 +31,8 @@ import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
-import com.github.jonathanxd.codeapi.bytecode.common.MVData;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.common.Data;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -74,11 +74,11 @@ public class Transformer {
         WrappedPrintStream wrappedPrintStream = new WrappedPrintStream(System.out);
         System.setOut(wrappedPrintStream);
 
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
+        bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
-        BytecodeClass[] bytecodeClasses = bytecodeGenerator.gen(InvocationsTest_.$()._2());
+        BytecodeClass[] bytecodeClasses = bytecodeProcessor.gen(InvocationsTest_.$()._2());
 
         byte[] bytes = bytecodeClasses[0].getBytecode();
 
@@ -142,7 +142,7 @@ public class Transformer {
 
     private static class FragmentTransformer extends MethodVisitor {
 
-        private final BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        private final BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
         public FragmentTransformer(int api, MethodVisitor mv) {
             super(api, mv);
@@ -152,15 +152,15 @@ public class Transformer {
         public void visitInsn(int opcode) {
 
             if (opcode == Opcodes.ARETURN) {
-                MVData mvData = new MVData(super.mv, new ArrayList<>());
+                MethodVisitorHelper methodVisitorHelper = new MethodVisitorHelper(super.mv, new ArrayList<>());
                 Data mapData = new Data();
 
                 super.visitInsn(Opcodes.POP);
 
-                bytecodeGenerator.gen(
+                bytecodeProcessor.gen(
                         CodeAPI.sourceOfParts(CodeAPI.returnValue(String.class, Literals.STRING("XSD"))),
                         mapData,
-                        mvData);
+                        methodVisitorHelper);
 
                 //bytecodeGenerator.gen
             }
@@ -171,7 +171,7 @@ public class Transformer {
 
     private static class MyVisitor extends MethodVisitor {
 
-        private final BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        private final BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
         public MyVisitor(int api, MethodVisitor mv) {
             super(api, mv);
@@ -185,12 +185,12 @@ public class Transformer {
         public void visitInsn(int opcode) {
 
             if (opcode == Opcodes.RETURN) {
-                MVData mvData = new MVData(super.mv, new ArrayList<>());
+                MethodVisitorHelper methodVisitorHelper = new MethodVisitorHelper(super.mv, new ArrayList<>());
 
-                bytecodeGenerator.gen(
+                bytecodeProcessor.gen(
                         CodeAPI.sourceOfParts(Predefined.invokePrintln(Literals.STRING("Inicializado!"))),
                         new Data(),
-                        mvData);
+                        methodVisitorHelper);
 
                 //bytecodeGenerator.gen
             }

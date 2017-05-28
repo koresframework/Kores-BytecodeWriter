@@ -31,7 +31,7 @@ import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -125,7 +125,7 @@ public class PrimitiveCast {
 
 
     public byte[] generate(CodeSource source) {
-        BytecodeGenerator generator = new BytecodeGenerator();
+        BytecodeProcessor generator = new BytecodeProcessor();
 
         byte[] bytes = generator.gen(source)[0].getBytecode();
 

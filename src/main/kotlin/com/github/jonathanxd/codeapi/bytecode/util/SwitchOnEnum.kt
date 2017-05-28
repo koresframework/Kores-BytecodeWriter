@@ -27,68 +27,65 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.CodeAPI
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.Types
-import com.github.jonathanxd.codeapi.base.EnumValue
-import com.github.jonathanxd.codeapi.base.SwitchStatement
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.base.impl.CatchStatementImpl
-import com.github.jonathanxd.codeapi.base.impl.StaticBlockImpl
-import com.github.jonathanxd.codeapi.builder.SwitchStatementBuilder
-import com.github.jonathanxd.codeapi.bytecode.gen.visitor.TypeVisitor
-import com.github.jonathanxd.codeapi.common.CodeModifier
-import com.github.jonathanxd.codeapi.common.Data
-import com.github.jonathanxd.codeapi.common.SwitchTypes
-import com.github.jonathanxd.codeapi.factory.aClass
-import com.github.jonathanxd.codeapi.factory.field
-import com.github.jonathanxd.codeapi.factory.variable
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.base.comment.Comments
+import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
+import com.github.jonathanxd.codeapi.bytecode.processor.add
+import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.codeType
-import java.util.*
+import com.github.jonathanxd.codeapi.util.typedKeyOf
+import com.github.jonathanxd.iutils.data.TypedData
 
+/**
+ * Switch on enum helper.
+ */
 object SwitchOnEnum {
 
     // SwitchOnEnum.Mapping
-    val MAPPINGS = "SWITCH_ON_ENUM_MAPPING"
+    val MAPPINGS = typedKeyOf<MutableList<SwitchOnEnum.Mapping>>("SWITCH_ON_ENUM_MAPPING")
 
-    fun mappings(switchStatement: SwitchStatement, data: Data): SwitchStatement {
+    fun mappings(switchStatement: SwitchStatement, data: TypedData): SwitchStatement {
 
-        val typeDeclaration: TypeDeclaration = data.getRequired(TypeVisitor.TYPE_DECLARATION_REPRESENTATION)
+        val typeDeclaration: TypeDeclaration = TYPE_DECLARATION.getOrNull(data)!!
 
-        val enumType = switchStatement.value.type
+        val enumType = switchStatement.value.type.codeType
 
         val name = "${typeDeclaration.canonicalName}\$${enumType.canonicalName.replace(".", "_")}\$SwitchOnEnum\$Mappings"
 
-        val allAsList = data.getAllAsList<Mapping>(MAPPINGS)
+        val allAsList = MAPPINGS.getOrSet(data, mutableListOf())
 
         val mapping = allAsList.firstOrNull { it.enumType == enumType }.let {
             return@let if (it == null) {
                 val mapping = Mapping(name, enumType)
-                data.registerData(MAPPINGS, mapping)
+                MAPPINGS.add(data, mapping)
                 mapping
             } else it
         }
 
         val value = switchStatement.value
 
-        val access = CodeAPI.getArrayValue(
-                Types.INT,
-                CodeAPI.accessStaticField(mapping.declaration, Types.INT.toArray(1), mapping.fieldName),
-                CodeAPI.invokeVirtual(
+        val access = accessArrayValue(
+                Types.INT.toArray(1),
+                accessStaticField(mapping.declaration, Types.INT.toArray(1), mapping.fieldName),
+                invokeVirtual(
                         Types.ENUM,
                         value,
                         "ordinal",
-                        CodeAPI.typeSpec(Types.INT),
+                        typeSpec(Types.INT),
                         listOf()
-                )
+                ),
+                Types.INT
         )
 
 
-        return SwitchStatementBuilder.builder()
-                .withSwitchType(SwitchTypes.NUMERIC)
+        // Requires update
+
+        return SwitchStatement.Builder.builder()
+                .withSwitchType(SwitchType.NUMERIC)
                 .withValue(access)
                 .withCases(
                         switchStatement.cases.map {
@@ -105,9 +102,10 @@ object SwitchOnEnum {
 
     class Mapping(val name: String, val enumType: CodeType) {
         //
-        val declaration = aClass(modifiers = EnumSet.of(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC),
-                qualifiedName = name,
-                source = MutableCodeSource())
+        val declaration = ClassDeclaration.Builder.builder()
+                .withModifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC)
+                .withSpecifiedName(name)
+                .build()
 
         val fieldName = "ENUM_MAP"
         private val mappings = mutableListOf<String>()
@@ -123,60 +121,58 @@ object SwitchOnEnum {
 
 
         fun buildClass(): TypeDeclaration {
-            val body = declaration.body as MutableCodeSource
+            val typeDeclarationBuilder = declaration.builder()
 
-            if (body.isNotEmpty) {
-                body.clear()
-            }
-
-            val accessValuesLength = CodeAPI.getArrayLength(CodeAPI.invokeStatic(
+            val accessValuesLength = arrayLength(enumType.toArray(1), invokeStatic(
                     enumType,
                     "values",
-                    CodeAPI.typeSpec(enumType.toArray(1)),
+                    typeSpec(enumType.toArray(1)),
                     listOf()
             ))
 
-            val field = field(
-                    modifiers = EnumSet.of(CodeModifier.PACKAGE_PRIVATE, CodeModifier.STATIC),
-                    type = Types.INT.toArray(1),
-                    name = fieldName,
-                    value = CodeAPI.arrayConstruct(Types.INT.toArray(1), arrayOf(accessValuesLength))
-            )
+            val field = FieldDeclaration.Builder.builder()
+                    .withModifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.STATIC)
+                    .withType(Types.INT.toArray(1))
+                    .withName(fieldName)
+                    .withValue(createArray(
+                            Types.INT.toArray(1),
+                            listOf(accessValuesLength),
+                            listOf()
+                    )).build()
 
-            body.add(field)
+            typeDeclarationBuilder.withFields(field)
 
-            val source = MutableCodeSource()
-            val staticBlock = StaticBlockImpl(source)
-
-            val catch = CatchStatementImpl(
+            val catch = CatchStatement(
                     exceptionTypes = listOf(NoSuchFieldError::class.java.codeType),
                     variable = variable(NoSuchFieldError::class.java.codeType, "ex"),
                     body = CodeSource.empty() // Ignore
             )
 
-            mappings.forEachIndexed { i, name ->
-                source.add(
-                        CodeAPI.tryStatement(
-                                CodeAPI.sourceOfParts(
-                                        CodeAPI.setArrayValue(
-                                                CodeAPI.accessField(field),
-                                                CodeAPI.invokeVirtual(
-                                                        Types.ENUM,
-                                                        CodeAPI.accessStaticField(enumType, enumType, name),
-                                                        "ordinal",
-                                                        CodeAPI.typeSpec(Types.INT),
-                                                        listOf()
-                                                ),
-                                                Literals.INT(i + 1)
+            val staticBlock = StaticBlock(Comments.Absent, emptyList(), CodeSource.fromIterable(mappings.mapIndexed { i, _ ->
 
-                                        )
-                                ),
-                                catch
-                        )
+                tryStatement(
+                        CodeSource.fromPart(
+                                setArrayValue(
+                                        Types.INT.toArray(1),
+                                        accessField(field.localization, field.target, field.type, field.name),
+                                        invokeVirtual(
+                                                Types.ENUM,
+                                                accessStaticField(enumType, enumType, name),
+                                                "ordinal",
+                                                typeSpec(Types.INT),
+                                                listOf()
+                                        ),
+                                        Types.INT,
+                                        Literals.INT(i + 1)
+
+                                )
+                        ),
+                        listOf(catch)
                 )
-            }
 
-            body.add(staticBlock)
+            }))
+
+            typeDeclarationBuilder.withStaticBlock(staticBlock)
 
             return declaration
         }

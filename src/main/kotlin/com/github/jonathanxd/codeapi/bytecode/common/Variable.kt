@@ -27,35 +27,27 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.common
 
-import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.ToStringBuilder
+import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.iutils.string.ToStringHelper
 import org.objectweb.asm.Label
-import java.util.*
+import java.lang.reflect.Type
+import java.util.Objects
 
 /**
  * Internal class undocumented.
  *
  * isVisible -> If false, this variable will be ignored by get operations.
  */
-data class Variable @JvmOverloads constructor(val name: String, val type: CodeType, val startLabel: Label, val endLabel: Label?, val isTemp: Boolean = false, val isVisible: Boolean = true) {
+data class Variable @JvmOverloads constructor(val name: String, val type: Type, val startLabel: Label, val endLabel: Label?, val isTemp: Boolean = false, val isVisible: Boolean = true) {
 
-    override fun hashCode(): Int {
-        return Objects.hash(this.name, this.type)
-    }
+    override fun hashCode(): Int =
+            Objects.hash(this.name, this.type)
 
-    override fun equals(other: Any?): Boolean {
-        if (other == null)
-            return false
-
-        if (other !is Variable)
-            return false
-
-        return other.name == this.name && other.type.`is`(this.type)
-
-    }
+    override fun equals(other: Any?): Boolean =
+            other is Variable && other.name == this.name && other.type.`is`(this.type)
 
     override fun toString(): String {
-        return ToStringBuilder.builder(this::class.java)
+        return ToStringHelper.defaultHelper(this::class.java.simpleName)
                 .add("name", this.name)
                 .add("type", this.type)
                 .add("isTemp", this.isTemp)

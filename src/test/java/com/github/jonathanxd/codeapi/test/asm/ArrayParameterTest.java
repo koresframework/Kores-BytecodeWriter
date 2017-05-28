@@ -30,7 +30,7 @@ package com.github.jonathanxd.codeapi.test.asm;
 import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.gen.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.common.CodeParameter;
 import com.github.jonathanxd.codeapi.factory.ClassFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
@@ -58,9 +58,9 @@ public class ArrayParameterTest {
                 ))
         ));
 
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        byte[] bytes = bytecodeGenerator.gen(sourceOfParts(codeClass))[0].getBytecode();
+        byte[] bytes = bytecodeProcessor.gen(sourceOfParts(codeClass))[0].getBytecode();
 
         ResultSaver.save(getClass(), bytes);
 
