@@ -31,6 +31,7 @@ import com.github.jonathanxd.codeapi.base.Annotation
 import com.github.jonathanxd.codeapi.base.EnumValue
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.typeDesc
+import com.github.jonathanxd.iutils.array.ArrayUtils
 import org.objectweb.asm.Type
 
 object AnnotationUtil {
@@ -52,7 +53,7 @@ object AnnotationUtil {
         var value = value
 
         if (value::class.java.isArray) {
-            val values = ArrayUtil.toObjectArray(value)
+            val values = ArrayUtils.toObjectArray(value)
 
             val annotationVisitor1 = annotationVisitor.visitArray(key)
 

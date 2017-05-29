@@ -27,23 +27,26 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
+import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
+import com.github.jonathanxd.codeapi.base.IfStatement;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
-import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
-import com.github.jonathanxd.codeapi.builder.IfStatementBuilder;
+import com.github.jonathanxd.codeapi.base.TypeSpec;
 import com.github.jonathanxd.codeapi.bytecode.extra.Dup;
 import com.github.jonathanxd.codeapi.bytecode.extra.Pop;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
-import com.github.jonathanxd.codeapi.common.TypeSpec;
+import com.github.jonathanxd.codeapi.common.Stack;
+import com.github.jonathanxd.codeapi.factory.Factories;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
-import com.github.jonathanxd.codeapi.util.Stack;
 
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.function.UnaryOperator;
 
 public class DupTest {
 
@@ -59,34 +62,35 @@ public class DupTest {
     public void dupTest() {
         TypeDeclaration getNull = gen("getNull");
 
-        CommonBytecodeTest.test(this.getClass(), getNull, CodeAPI.source(getNull));
+        CommonBytecodeTest.test(this.getClass(), getNull, UnaryOperator.identity());
 
         TypeDeclaration getNotNull = gen("getNotNull");
 
-        CommonBytecodeTest.test(this.getClass(), getNotNull, CodeAPI.source(getNotNull));
+        CommonBytecodeTest.test(this.getClass(), getNotNull, UnaryOperator.identity());
     }
 
     private TypeDeclaration gen(String methodName) {
-        return ClassDeclarationBuilder.builder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withQualifiedName("test.DupTest_" + methodName)
-                .withSuperClass(Types.OBJECT)
-                .withBody(CodeAPI.source(
-                        ConstructorDeclarationBuilder.builder()
-                                .withModifiers(CodeModifier.PUBLIC)
-                                .withBody(
-                                        CodeAPI.source(Predefined.invokePrintlnStr(
-                                                IfStatementBuilder.builder()
-                                                        .withExpressions(CodeAPI.checkNotNull(
-                                                                new Dup(CodeAPI.invokeStatic(DupTest.class, methodName, new TypeSpec(Types.STRING), Collections.emptyList()))
-                                                        ))
-                                                        .withBody(CodeAPI.source(Stack.INSTANCE))
-                                                        .withElseStatement(CodeAPI.source(Pop.INSTANCE, Literals.STRING("NULL")))
-                                                        .build()
+        Dup dup = new Dup(InvocationFactory.invokeStatic(DupTest.class, methodName, new TypeSpec(Types.STRING), Collections.emptyList()));
+
+        return ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("test.DupTest_" + methodName)
+                .superClass(Types.OBJECT)
+                .constructors(
+                        ConstructorDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .body(CodeSource.fromPart(Predefined.invokePrintlnStr(
+                                        IfStatement.Builder.builder()
+                                                .expressions(Factories.checkNotNull(
+                                                        dup
+                                                ))
+                                                .body(CodeSource.fromPart(Stack.INSTANCE))
+                                                .elseStatement(CodeSource.fromVarArgs(Pop.INSTANCE, Literals.STRING("NULL")))
+                                                .build()
                                         ))
                                 )
                                 .build()
-                ))
+                )
                 .build();
     }
 }

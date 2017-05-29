@@ -29,20 +29,26 @@ package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.util.typeDesc
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Array as ReflectArray
 
 
 object ArrayUtil {
-    fun toObjectArray(array: Any): Array<Any> {
 
-        return Array(
-                ReflectArray.getLength(array),
-                {
-                    ReflectArray.get(array, it)
-                }
-        )
+    fun arrayOpcodeFromType(codeType: CodeType): Int {
+        when (codeType.type) {
+            "int" -> return Opcodes.T_INT
+            "boolean" -> return Opcodes.T_BOOLEAN
+            "byte" -> return Opcodes.T_BYTE
+            "char" -> return Opcodes.T_CHAR
+            "double" -> return Opcodes.T_DOUBLE
+            "float" -> return Opcodes.T_FLOAT
+            "short" -> return Opcodes.T_SHORT
+            "long" -> return Opcodes.T_LONG
+            else -> return Integer.MIN_VALUE
+        }
     }
 
     fun getArrayType(opcode: Int): CodeType {
@@ -86,7 +92,7 @@ object ArrayUtil {
                 mv.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_LONG)
             }
             else -> {
-                mv.visitTypeInsn(Opcodes.ANEWARRAY, CodeTypeUtil.arrayToTypeDesc(arrayType))
+                mv.visitTypeInsn(Opcodes.ANEWARRAY, arrayType.internalName)
             }
         }
     }

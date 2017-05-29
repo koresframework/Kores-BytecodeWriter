@@ -28,35 +28,6 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.CodePart
-import com.github.jonathanxd.codeapi.base.Typed
 import com.github.jonathanxd.codeapi.literal.Literal
-import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.CodePartUtil as BaseCodePartUtil
 
-object CodePartUtil {
-
-    fun isPrimitive(codePart: CodePart): Boolean {
-        if (codePart is Literal) {
-            return Literals.isPrimitive(codePart)
-        } else if (codePart is Typed) {
-            return codePart.type.isPrimitive
-        } else {
-            throw RuntimeException("Cannot determine type of part '$codePart'!")
-        }
-
-    }
-
-    fun getTypeOrNull(codePart: CodePart): CodeType? = BaseCodePartUtil.getTypeOrNull(codePart)
-
-    fun getType(codePart: CodePart): CodeType = BaseCodePartUtil.getType(codePart)
-
-    fun isBoolean(part: CodePart): Boolean {
-        return part is Literals.BoolLiteral
-    }
-
-    fun getBooleanValue(part: CodePart): Boolean {
-        return (part as Literal).name.toBoolean()
-    }
-
-}
+val CodePart.booleanValue: Boolean get() = (this as Literal).name.toBoolean()

@@ -27,11 +27,11 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.extra
 
-import com.github.jonathanxd.codeapi.CodePart
+import com.github.jonathanxd.codeapi.CodeInstruction
 
 /**
  * CodeAPI-BytecodeWriter Pop part. This part will pop the stack value.
  *
  * This class is commonly used in else statements to clear value created by [Dup] instruction. See the 'DupTest' test class.
  */
-object Pop : CodePart
+object Pop : CodeInstruction

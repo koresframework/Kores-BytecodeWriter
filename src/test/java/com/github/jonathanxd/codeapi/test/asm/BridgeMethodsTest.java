@@ -27,15 +27,18 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.ForEachStatement;
+import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.generic.GenericSignature;
 import com.github.jonathanxd.codeapi.helper.Predefined;
@@ -50,6 +53,11 @@ import java.util.List;
 
 import kotlin.collections.CollectionsKt;
 
+import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
+import static com.github.jonathanxd.codeapi.factory.Factories.forEachIterable;
+import static com.github.jonathanxd.codeapi.factory.Factories.parameter;
+import static com.github.jonathanxd.codeapi.factory.Factories.typeSpec;
+
 public class BridgeMethodsTest {
 
     @Test
@@ -57,24 +65,24 @@ public class BridgeMethodsTest {
 
         BCLoader bcLoader = new BCLoader();
 
-        TypeDeclaration itfDeclaration = CodeAPI.anInterfaceBuilder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withQualifiedName("com.AB")
-                .withGenericSignature(GenericSignature.create(Generic.type("T").extends$(
-                        Generic.type(CodeAPI.getJavaType(Iterable.class)).of(Generic.wildcard())
+        TypeDeclaration itfDeclaration = InterfaceDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("com.AB")
+                .genericSignature(GenericSignature.create(Generic.type("T").extends$(
+                        Generic.type(Iterable.class).of(Generic.wildcard())
                 )))
-                .withBody(CodeAPI.sourceOfParts(
-                        CodeAPI.methodBuilder()
-                                .withModifiers(CodeModifier.PUBLIC, CodeModifier.ABSTRACT)
-                                .withName("iterate")
-                                .withReturnType(Types.VOID)
-                                .withParameters(CodeAPI.parameter(Generic.type("T"), "iter"))
-                                .withBody(CodeSource.empty())
+                .methods(
+                        MethodDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC, CodeModifier.ABSTRACT)
+                                .name("iterate")
+                                .returnType(Types.VOID)
+                                .parameters(parameter(Generic.type("T"), "iter"))
+                                .body(CodeSource.empty())
                                 .build()
-                ))
+                )
                 .build();
 
-        BytecodeClass bytecodeClass = new BytecodeProcessor().gen(itfDeclaration)[0];
+        BytecodeClass bytecodeClass = new BytecodeProcessor().process(itfDeclaration).get(0);
 
         byte[] bts = bytecodeClass.getBytecode();
 
@@ -84,43 +92,43 @@ public class BridgeMethodsTest {
 
         MethodDeclaration method;
 
-        TypeDeclaration typeDeclaration = CodeAPI.aClassBuilder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withQualifiedName("com.bridgeTest")
+        ForEachStatement forEachIterable = forEachIterable(VariableFactory.variable(Types.OBJECT, "obj"), accessVariable(List.class, "iter"),
+                CodeSource.fromPart(
+                        Predefined.invokePrintln(
+                                Predefined.invokeToString(accessVariable(Object.class, "obj"))
+                        )
+                ));
+
+        TypeDeclaration typeDeclaration = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("com.bridgeTest")
                 //.withImplementations(Generic.type(Helper.getJavaType(Iterate.class)).of(PredefinedTypes.LIST))
-                .withImplementations(Generic.type(itfDeclaration).of(Types.LIST))
-                .withBody(CodeAPI.sourceOfParts(
-                        method = CodeAPI.methodBuilder()
-                                .withModifiers(CodeModifier.PUBLIC)
-                                .withReturnType(Types.VOID)
-                                .withName("iterate")
-                                .withParameters(CodeAPI.parameter(List.class, "iter"))
-                                .withBody(CodeAPI.sourceOfParts(
-                                        CodeAPI.invokeInterface(List.class,
-                                                CodeAPI.accessLocalVariable(List.class, "iter"),
+                .implementations(Generic.type(itfDeclaration).of(Types.LIST))
+                .methods(
+                        method = MethodDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .returnType(Types.VOID)
+                                .name("iterate")
+                                .parameters(parameter(List.class, "iter"))
+                                .body(CodeSource.fromVarArgs(
+                                        InvocationFactory.invokeInterface(List.class,
+                                                accessVariable(List.class, "iter"),
                                                 "get",
-                                                CodeAPI.typeSpec(Object.class, Integer.TYPE),
+                                                typeSpec(Object.class, Integer.TYPE),
                                                 CollectionsKt.listOf(Literals.INT(0))),
-                                        CodeAPI.forEachIterable(VariableFactory.variable(Types.OBJECT, "obj"), CodeAPI.accessLocalVariable(List.class, "iter"),
-                                                CodeAPI.sourceOfParts(
-                                                        Predefined.invokePrintln(
-                                                                Predefined.toString(CodeAPI.accessLocalVariable(Object.class, "obj"))
-                                                        )
-                                                ))
+                                        forEachIterable
                                 ))
                                 .build()//,
                         //Helper.bridgeMethod(method, new FullMethodSpec(Iterate.class, Void.TYPE, "iterate", Iterable.class))
                         //Helper.bridgeMethod(method, new FullMethodSpec(itfDeclaration, PredefinedTypes.VOID, "iterate", Helper.getJavaType(Iterable.class)))
-                ))
+                )
                 .build();
-
-        CodeSource codeSource = CodeAPI.sourceOfParts(typeDeclaration);
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
         bytecodeProcessor.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
 
-        byte[] gen = bytecodeProcessor.gen(codeSource)[0].getBytecode();
+        byte[] gen = bytecodeProcessor.process(typeDeclaration).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), gen);
 

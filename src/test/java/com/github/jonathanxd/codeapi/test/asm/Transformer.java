@@ -27,16 +27,18 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
+import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.Data;
+import com.github.jonathanxd.codeapi.bytecode.processor.KeysKt;
+import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.test.InvocationsTest_;
+import com.github.jonathanxd.iutils.data.TypedData;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -78,9 +80,9 @@ public class Transformer {
 
         bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
-        BytecodeClass[] bytecodeClasses = bytecodeProcessor.gen(InvocationsTest_.$()._2());
+        List<? extends BytecodeClass> bytecodeClasses = bytecodeProcessor.process(InvocationsTest_.$());
 
-        byte[] bytes = bytecodeClasses[0].getBytecode();
+        byte[] bytes = bytecodeClasses.get(0).getBytecode();
 
         ClassReader cr = new ClassReader(bytes);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
@@ -130,7 +132,7 @@ public class Transformer {
                 return new MyVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions));
             }
 
-            if (name.contains("fragment$")) {
+            if (name.contains("lambda$")) {
                 if (desc.endsWith("Ljava/lang/String;")) {
                     return new FragmentTransformer(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions));
                 }
@@ -153,14 +155,15 @@ public class Transformer {
 
             if (opcode == Opcodes.ARETURN) {
                 MethodVisitorHelper methodVisitorHelper = new MethodVisitorHelper(super.mv, new ArrayList<>());
-                Data mapData = new Data();
+                TypedData data = new TypedData();
+
+                KeysKt.getMETHOD_VISITOR().set(data, methodVisitorHelper);
 
                 super.visitInsn(Opcodes.POP);
 
-                bytecodeProcessor.gen(
-                        CodeAPI.sourceOfParts(CodeAPI.returnValue(String.class, Literals.STRING("XSD"))),
-                        mapData,
-                        methodVisitorHelper);
+                bytecodeProcessor.process(
+                        CodeSource.fromPart(Factories.returnValue(String.class, Literals.STRING("XSD"))),
+                        data);
 
                 //bytecodeGenerator.gen
             }
@@ -187,10 +190,13 @@ public class Transformer {
             if (opcode == Opcodes.RETURN) {
                 MethodVisitorHelper methodVisitorHelper = new MethodVisitorHelper(super.mv, new ArrayList<>());
 
-                bytecodeProcessor.gen(
-                        CodeAPI.sourceOfParts(Predefined.invokePrintln(Literals.STRING("Inicializado!"))),
-                        new Data(),
-                        methodVisitorHelper);
+                TypedData data = new TypedData();
+
+                KeysKt.getMETHOD_VISITOR().set(data, methodVisitorHelper);
+
+                bytecodeProcessor.process(
+                        CodeSource.fromPart(Predefined.invokePrintln(Literals.STRING("Inicializado!"))),
+                        data);
 
                 //bytecodeGenerator.gen
             }

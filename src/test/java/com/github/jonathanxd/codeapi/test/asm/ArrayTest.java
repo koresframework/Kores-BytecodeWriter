@@ -27,18 +27,19 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.CommonGen;
 
 import org.junit.Test;
 
+import java.util.function.UnaryOperator;
+
 public class ArrayTest {
     @Test
     public void arrayTest() {
-        CodeSource gen = CommonGen.gen();
+        TypeDeclaration gen = CommonGen.gen();
 
-        Class<?> define = CommonBytecodeTest.test(this.getClass(), (TypeDeclaration) gen.get(0), gen, aClass -> aClass);
+        Class<?> define = CommonBytecodeTest.test(this.getClass(), gen, UnaryOperator.identity(), aClass -> aClass);
 
         try {
             define.newInstance();

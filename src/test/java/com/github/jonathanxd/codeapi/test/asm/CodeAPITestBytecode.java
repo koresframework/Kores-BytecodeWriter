@@ -27,30 +27,29 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
-import com.github.jonathanxd.codeapi.CodePart;
+import com.github.jonathanxd.codeapi.CodeInstruction;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.Access;
 import com.github.jonathanxd.codeapi.base.CatchStatement;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.IfStatement;
+import com.github.jonathanxd.codeapi.base.InvokeType;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
+import com.github.jonathanxd.codeapi.base.TypeSpec;
 import com.github.jonathanxd.codeapi.base.VariableDeclaration;
-import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
-import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
-import com.github.jonathanxd.codeapi.builder.VariableDeclarationBuilder;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
-import com.github.jonathanxd.codeapi.common.InvokeType;
-import com.github.jonathanxd.codeapi.common.TypeSpec;
+import com.github.jonathanxd.codeapi.factory.Factories;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.operator.Operators;
 import com.github.jonathanxd.codeapi.type.CodeType;
 import com.github.jonathanxd.codeapi.type.LoadedCodeType;
+import com.github.jonathanxd.codeapi.util.CodeTypes;
 
 import org.junit.Test;
 
@@ -58,6 +57,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -70,11 +70,11 @@ public class CodeAPITestBytecode {
     public final String b = "9";
 
     private static CodeSource rethrow(String variable) {
-        MutableCodeSource source = new MutableCodeSource();
+        MutableCodeSource source = MutableCodeSource.create();
 
         source.add(Predefined.invokePrintln(Literals.STRING("Rethrow from var '" + variable + "'!")));
 
-        source.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, Throwable.class, CodeAPI.accessLocalVariable(Throwable.class, variable),
+        source.add(InvocationFactory.invoke(InvokeType.INVOKE_VIRTUAL, Throwable.class, Factories.accessVariable(Throwable.class, variable),
                 "printStackTrace",
                 new TypeSpec(Types.VOID),
                 Collections.emptyList()));
@@ -88,11 +88,11 @@ public class CodeAPITestBytecode {
         return source;
     }
 
-    private static CodePart invokePrintlnMethod(CodePart varToPrint) {
-        return CodeAPI.invoke(
+    private static CodeInstruction invokePrintlnMethod(CodeInstruction varToPrint) {
+        return InvocationFactory.invoke(
                 InvokeType.INVOKE_VIRTUAL,
-                CodeAPI.getJavaType(PrintStream.class),
-                CodeAPI.accessField(CodeAPI.getJavaType(System.class), CodeAPI.accessStatic(), CodeAPI.getJavaType(PrintStream.class), "out"),
+                PrintStream.class,
+                Factories.accessField(System.class, Access.STATIC, PrintStream.class, "out"),
                 "println",
                 new TypeSpec(Types.VOID, CollectionsKt.listOf(Types.OBJECT)),
                 CollectionsKt.listOf(varToPrint));
@@ -100,70 +100,70 @@ public class CodeAPITestBytecode {
 
     private static MethodDeclaration createMethod() {
 
-        MutableCodeSource methodSource = new MutableCodeSource();
+        MutableCodeSource methodSource = MutableCodeSource.create();
 
         // Declare 'println' method
-        MethodDeclaration codeMethod = MethodDeclarationBuilder.builder()
-                .withName("println")
+        MethodDeclaration codeMethod = MethodDeclaration.Builder.builder()
+                .name("println")
                 // Add parameter 'Object msg'
-                .withParameters(Collections.singletonList(new CodeParameter(Types.OBJECT, "msg")))
+                .parameters(Collections.singletonList(Factories.parameter(Types.OBJECT, "msg")))
                 // Add 'public static' modifier
-                .withModifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
+                .modifiers(CodeModifier.PUBLIC, CodeModifier.STATIC)
                 // Set 'void' return type
-                .withReturnType(Types.VOID)
+                .returnType(Types.VOID)
                 // Set method source
-                .withBody(methodSource)
+                .body(methodSource)
                 .build();
 
-        LoadedCodeType<CodeAPITestBytecode> javaType = CodeAPI.getJavaType(CodeAPITestBytecode.class);
+        LoadedCodeType<CodeAPITestBytecode> javaType = CodeTypes.getCodeType(CodeAPITestBytecode.class);
 
-        methodSource.add(VariableFactory.variable(javaType, "test", CodeAPI.invokeConstructor(javaType)));
+        methodSource.add(VariableFactory.variable(javaType, "test", InvocationFactory.invokeConstructor(javaType)));
         methodSource.add(Predefined.invokePrintln(
-                CodeAPI.accessField(javaType, CodeAPI.accessLocalVariable(javaType, "test"), Types.STRING, "b")
+                Factories.accessField(javaType, Factories.accessVariable(javaType, "test"), Types.STRING, "b")
         ));
 
         // Create method body source
-        MutableCodeSource source = new MutableCodeSource();
+        MutableCodeSource source = MutableCodeSource.create();
 
-        IfStatement ifBlock = CodeAPI.ifStatement(
-                CodeAPI.check(CodeAPI.accessLocalVariable(Types.OBJECT, "msg"), Operators.NOT_EQUAL_TO, Literals.NULL),
-                CodeAPI.source(invokePrintlnMethod(CodeAPI.accessLocalVariable(Types.OBJECT, "msg")))
+        IfStatement ifBlock = Factories.ifStatement(
+                Factories.check(Factories.accessVariable(Types.OBJECT, "msg"), Operators.NOT_EQUAL_TO, Literals.NULL),
+                CodeSource.fromPart(invokePrintlnMethod(Factories.accessVariable(Types.OBJECT, "msg")))
         );
 
         source.add(ifBlock);
 
         // 'Localization' of the field
-        CodeType localization = CodeAPI.getJavaType(System.class);
+        CodeType localization = CodeTypes.getCodeType(System.class);
 
         // Access field in 'localization'
-        CodePart variable = CodeAPI.accessField(localization, CodeAPI.accessStatic(), CodeAPI.getJavaType(PrintStream.class), "out");
+        CodeInstruction variable = Factories.accessField(localization, Access.STATIC, PrintStream.class, "out");
 
         // ref local field
-        VariableDeclaration cf = VariableDeclarationBuilder.builder()
-                .withName("ref")
+        VariableDeclaration cf = VariableDeclaration.Builder.builder()
+                .name("ref")
                 // Type is Object
-                .withType(Types.OBJECT)
+                .type(Types.OBJECT)
                 // Value = variable (System.out)
-                .withValue(variable)
+                .value(variable)
                 .build();
 
         source.add(cf);
 
-        LoadedCodeType<IllegalStateException> exceptionType = CodeAPI.getJavaType(IllegalStateException.class);
+        LoadedCodeType<IllegalStateException> exceptionType = CodeTypes.getCodeType(IllegalStateException.class);
 
-        source.add(CodeAPI.throwException(
-                CodeAPI.invokeConstructor(
+        source.add(Factories.throwException(
+                InvocationFactory.invokeConstructor(
                         exceptionType,
-                        CodeAPI.constructorTypeSpec(Types.STRING),
+                        Factories.constructorTypeSpec(Types.STRING),
                         CollectionsKt.listOf(Literals.STRING("Error"))
                 )
         ));
 
         // Access Local Variable 'msg'
-        CodePart msgVar = CodeAPI.accessLocalVariable(Types.OBJECT, "msg");
+        CodeInstruction msgVar = Factories.accessVariable(Types.OBJECT, "msg");
 
         // Add Invocation of println method declared in 'System.out' ('variable')
-        source.add(CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, CodeAPI.getJavaType(PrintStream.class), variable,
+        source.add(InvocationFactory.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class, variable,
                 "println",
                 new TypeSpec(Types.VOID, CollectionsKt.listOf(Types.OBJECT)),
                 // with argument 'msgVar' (Method msg parameter)
@@ -171,20 +171,20 @@ public class CodeAPITestBytecode {
         );
 
 
-        List<CodeType> catchExceptions = Arrays.asList(CodeAPI.getJavaType(IllegalArgumentException.class), CodeAPI.getJavaType(IllegalStateException.class));
+        List<Type> catchExceptions = Arrays.asList(IllegalArgumentException.class, IllegalStateException.class);
 
-        List<CodeType> catchExceptions2 = Arrays.asList(CodeAPI.getJavaType(IOException.class), CodeAPI.getJavaType(ClassNotFoundException.class));
+        List<Type> catchExceptions2 = Arrays.asList(IOException.class, ClassNotFoundException.class);
 
         // Finally block
 
-        CodeSource finallySource = CodeAPI.source(Predefined.invokePrintln(Literals.STRING("Finally!")));
+        CodeSource finallySource = CodeSource.fromPart(Predefined.invokePrintln(Literals.STRING("Finally!")));
 
-        CatchStatement catchStatement = CodeAPI.catchStatement(catchExceptions, VariableFactory.variable(Types.THROWABLE, "thr"), rethrow("thr"));
+        CatchStatement catchStatement = Factories.catchStatement(catchExceptions, VariableFactory.variable(Types.THROWABLE, "thr"), rethrow("thr"));
 
-        CatchStatement catchStatement2 = CodeAPI.catchStatement(catchExceptions2, VariableFactory.variable(Types.THROWABLE, "tlr"), rethrow("tlr"));
+        CatchStatement catchStatement2 = Factories.catchStatement(catchExceptions2, VariableFactory.variable(Types.THROWABLE, "tlr"), rethrow("tlr"));
 
         // Surround 'source' with 'try-catch'
-        CodePart surround = CodeAPI.tryStatement(source, Arrays.asList(catchStatement,
+        CodeInstruction surround = Factories.tryStatement(source, Arrays.asList(catchStatement,
                 catchStatement2),
                 finallySource);
 
@@ -198,29 +198,18 @@ public class CodeAPITestBytecode {
     public void codeAPITest() {
 
 
-        // Create source of 'codeClass'
-        MutableCodeSource codeClassSource = new MutableCodeSource();
-
-        // Define a interface
-        ClassDeclaration codeClass = ClassDeclarationBuilder.builder()
-                .withQualifiedName("github.com." + this.getClass().getSimpleName())
+        // Define a class
+        ClassDeclaration codeClass = ClassDeclaration.Builder.builder()
+                .qualifiedName("github.com." + this.getClass().getSimpleName())
                 // Add 'public' modifier
-                .withModifiers(CodeModifier.PUBLIC)
-                // CodeClass Source
-                .withBody(codeClassSource)
+                .modifiers(CodeModifier.PUBLIC)
+                // Declare methods
+                .methods(createMethod())
                 .build();
-
-        // Create a list of CodePart (source)
-        CodeSource mySource = CodeAPI.sourceOfParts(codeClass);
-
-        MethodDeclaration method = createMethod();
-
-        // Add method to body
-        codeClassSource.add(method);
 
         BytecodeProcessor generator = new BytecodeProcessor();
 
-        byte[] bytes = generator.gen(mySource)[0].getBytecode();
+        byte[] bytes = generator.process(codeClass).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), bytes);
 

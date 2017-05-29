@@ -27,21 +27,21 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.OperateTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
-import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
+
+import java.util.function.UnaryOperator;
 
 public class OperateTest {
 
     @Test
     public void operateTest() {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = OperateTest_.$();
-        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> {
+        TypeDeclaration $ = OperateTest_.$();
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
             try {
                 aClass.getConstructor(Integer.TYPE).newInstance(2);
             } catch (Exception e) {

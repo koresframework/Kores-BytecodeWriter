@@ -27,23 +27,21 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.ForEachArray_;
-import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
-import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.UnaryOperator;
 
 public class ForEachArrayClassTest {
 
     @Test
     public void test() {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = ForEachArray_.$();
-        CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> {
+        TypeDeclaration $ = ForEachArray_.$();
+        CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
             try {
                 return aClass.getConstructor(String[].class).newInstance((Object) new String[]{"A", "B", "C", "D"});
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

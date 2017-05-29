@@ -27,12 +27,13 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
 
@@ -41,22 +42,19 @@ import org.junit.Test;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
-import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
-import static com.github.jonathanxd.codeapi.CodeAPI.invokeConstructor;
-import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
-import static com.github.jonathanxd.codeapi.CodeAPI.returnValue;
-import static com.github.jonathanxd.codeapi.CodeAPI.source;
 import static com.github.jonathanxd.codeapi.Types.BYTE;
 import static com.github.jonathanxd.codeapi.Types.INT;
 import static com.github.jonathanxd.codeapi.Types.LONG;
 import static com.github.jonathanxd.codeapi.Types.OBJECT;
 import static com.github.jonathanxd.codeapi.Types.STRING;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.STATIC;
-import static com.github.jonathanxd.codeapi.factory.ClassFactory.aClass;
-import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.STATIC;
+import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
+import static com.github.jonathanxd.codeapi.factory.Factories.cast;
+import static com.github.jonathanxd.codeapi.factory.Factories.constructorTypeSpec;
+import static com.github.jonathanxd.codeapi.factory.Factories.parameter;
+import static com.github.jonathanxd.codeapi.factory.Factories.returnValue;
 import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
 
 
@@ -69,40 +67,45 @@ public class PrimitiveCast {
 
         String name = this.getClass().getCanonicalName() + "_Generated";
 
-        ClassDeclaration codeClass = aClass(EnumSet.of(PUBLIC), name, source(
-                method(EnumSet.of(PUBLIC, STATIC), "printString", INT, new CodeParameter[]{parameter(STRING, "string")},
-                        source(
-                                Predefined.invokePrintln(accessLocalVariable(STRING, "string")),
+        ClassDeclaration codeClass = ClassDeclaration.Builder.builder()
+                .modifiers(PUBLIC)
+                .name(name)
+                .methods(
+                        MethodDeclaration.Builder.builder()
+                                .modifiers(PUBLIC, STATIC)
+                                .name("printString")
+                                .parameters(parameter(STRING, "string"))
+                                .body(CodeSource.fromVarArgs(
+                                        Predefined.invokePrintln(accessVariable(STRING, "string")),
 
-                                variable(OBJECT, "objectF", CodeAPI.cast(INT, OBJECT, Literals.INT(9))),
+                                        variable(OBJECT, "objectF", cast(INT, OBJECT, Literals.INT(9))),
 
-                                variable(OBJECT, "iF", CodeAPI.cast(INT, OBJECT, Literals.INT(9))),
+                                        variable(OBJECT, "iF", cast(INT, OBJECT, Literals.INT(9))),
 
-                                variable(INT, "IntegerBoxed", CodeAPI.cast(OBJECT, INT, CodeAPI.accessLocalVariable(OBJECT, "iF"))),
+                                        variable(INT, "IntegerBoxed", cast(OBJECT, INT, accessVariable(OBJECT, "iF"))),
 
-                                variable(INT, "IntegerBoxed2", CodeAPI.cast(OBJECT, INT, CodeAPI.accessLocalVariable(OBJECT, "iF"))),
+                                        variable(INT, "IntegerBoxed2", cast(OBJECT, INT, accessVariable(OBJECT, "iF"))),
 
-                                variable(INT, "int", Literals.INT(9)),
+                                        variable(INT, "int", Literals.INT(9)),
 
-                                variable(INT, "IntToInt", CodeAPI.cast(INT, INT, CodeAPI.accessLocalVariable(INT, "int"))),
+                                        variable(INT, "IntToInt", cast(INT, INT, accessVariable(INT, "int"))),
 
-                                variable(LONG, "Long", Literals.LONG(59855246879798L)),
-                                variable(BYTE, "LongToByte", CodeAPI.cast(LONG, BYTE, CodeAPI.accessLocalVariable(LONG, "Long"))),
-
-
-                                // Cast Integer to Int
-                                returnValue(int.class, CodeAPI.cast(Types.INTEGER_WRAPPER, Types.INT,
-                                        invokeConstructor(
-                                                Types.INTEGER_WRAPPER,
-                                                CodeAPI.constructorTypeSpec(int.class),
-                                                Collections.singletonList(Literals.INT(9)))))
-                        ))
-        ));
-
-        CodeSource mySource = CodeAPI.sourceOfParts(codeClass);
+                                        variable(LONG, "Long", Literals.LONG(59855246879798L)),
+                                        variable(BYTE, "LongToByte", cast(LONG, BYTE, accessVariable(LONG, "Long"))),
 
 
-        byte[] bytes = generate(mySource);
+                                        // Cast Integer to Int
+                                        returnValue(int.class, cast(Types.INTEGER_WRAPPER, Types.INT,
+                                                InvocationFactory.invokeConstructor(
+                                                        Types.INTEGER_WRAPPER,
+                                                        constructorTypeSpec(int.class),
+                                                        Collections.singletonList(Literals.INT(9)))))
+                                ))
+                                .build()
+                )
+                .build();
+
+        byte[] bytes = generate(codeClass);
 
         ResultSaver.save(this.getClass(), bytes);
 
@@ -124,10 +127,10 @@ public class PrimitiveCast {
     }
 
 
-    public byte[] generate(CodeSource source) {
+    public byte[] generate(TypeDeclaration declaration) {
         BytecodeProcessor generator = new BytecodeProcessor();
 
-        byte[] bytes = generator.gen(source)[0].getBytecode();
+        byte[] bytes = generator.process(declaration).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), bytes);
 

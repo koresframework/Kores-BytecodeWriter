@@ -29,31 +29,28 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.FieldDeclaration;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.factory.Factories;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 
 import org.junit.Test;
 
 import java.io.PrintStream;
-import java.util.EnumSet;
+import java.util.Collection;
+import java.util.List;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
-import static com.github.jonathanxd.codeapi.CodeAPI.accessStaticField;
-import static com.github.jonathanxd.codeapi.CodeAPI.invokeVirtual;
-import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
-import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
-import static com.github.jonathanxd.codeapi.CodeAPI.typeSpec;
 import static com.github.jonathanxd.codeapi.Types.VOID;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.FINAL;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PRIVATE;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
-import static com.github.jonathanxd.codeapi.factory.ClassFactory.aClass;
-import static com.github.jonathanxd.codeapi.factory.FieldFactory.field;
-import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
+import static com.github.jonathanxd.codeapi.factory.Factories.accessStaticField;
+import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
+import static com.github.jonathanxd.codeapi.factory.Factories.typeSpec;
 import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
 import static com.github.jonathanxd.codeapi.literal.Literals.STRING;
 import static kotlin.collections.CollectionsKt.listOf;
@@ -61,37 +58,49 @@ import static kotlin.collections.CollectionsKt.listOf;
 public class Wiki {
 
 
+    @SuppressWarnings("unchecked")
     @Test
     public void wiki() throws Throwable {
-        CodeSource source = sourceOfParts(
-                field(EnumSet.of(PRIVATE, FINAL), Types.STRING, "myField", STRING("Hello")),
-                method(EnumSet.of(PUBLIC), "test", VOID, new CodeParameter[]{parameter(String.class, "name")},
-                        sourceOfParts(
+
+        TypeDeclaration decl = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .fields(
+                        FieldDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PRIVATE, CodeModifier.FINAL)
+                                .type(Types.STRING)
+                                .name("myField")
+                                .value(STRING("Hello"))
+                                .build()
+                )
+                .methods(MethodDeclaration.Builder.builder()
+                        .modifiers(CodeModifier.PUBLIC)
+                        .name("test")
+                        .parameters(Factories.parameter(String.class, "name"))
+                        .body(CodeSource.fromVarArgs(
                                 variable(Types.STRING, "variable"),
                                 Predefined.invokePrintlnStr(STRING("Hello world")),
-                                Predefined.invokePrintlnStr(accessLocalVariable(String.class, "name")),
+                                Predefined.invokePrintlnStr(accessVariable(String.class, "name")),
                                 accessStaticField(System.class, PrintStream.class, "out"),
-                                invokeVirtual(
+                                InvocationFactory.invokeVirtual(
                                         PrintStream.class,
                                         accessStaticField(System.class, PrintStream.class, "out"),
                                         "println",
                                         typeSpec(VOID, Types.STRING),
                                         listOf(STRING("Hello")))
-                        )
+                        ))
+                        .build()
                 )
-        );
-
-        TypeDeclaration decl = aClass(EnumSet.of(PUBLIC), "com.MyClass", source);
+                .build();
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        BytecodeClass[] gen = bytecodeProcessor.gen(decl);
+        List<? extends BytecodeClass> gen = bytecodeProcessor.process(decl);
 
         ResultSaver.save(this.getClass(), gen);
 
         CodeClassLoader codeClassLoader = new CodeClassLoader();
 
-        Class<?> define = codeClassLoader.define(gen);
+        Class<?> define = codeClassLoader.define((Collection<BytecodeClass>) gen);
 
         define.getDeclaredMethod("test", String.class).invoke(define.newInstance(), "codeapi");
 

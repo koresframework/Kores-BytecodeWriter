@@ -28,14 +28,11 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.bytecode.processor.visitor.Util
+import com.github.jonathanxd.codeapi.bytecode.processor.processors.Util
 import com.github.jonathanxd.codeapi.common.MethodInvokeSpec
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.DescriptionHelper
-import com.github.jonathanxd.codeapi.util.TypeResolver
-import com.github.jonathanxd.codeapi.util.resolveUnknown
-import com.github.jonathanxd.codeapi.util.typeDesc
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.description.DescriptionUtil
 import org.objectweb.asm.Handle
@@ -62,14 +59,14 @@ object MethodInvocationUtil {
                 false)
 
         val objects = arrayOf(
-                Type.getType(CodeTypeUtil.typeSpecToTypeDesc(baseSam.typeSpec)),
+                Type.getType(baseSam.typeSpec.typeDesc),
                 Handle(/*Opcodes.H_INVOKEINTERFACE*/InvokeTypeUtil.toAsm_H(invokeType),
-                        CodeTypeUtil.codeTypeToBinaryName(localization),
+                        localization.internalName,
                         spec.methodName,
-                        TypeSpecUtil.typeSpecToAsm(spec.typeSpec),
+                        spec.typeSpec.typeDesc,
                         invokeType == InvokeType.INVOKE_INTERFACE),
 
-                Type.getType(CodeTypeUtil.typeSpecToTypeDesc(expectedTypes)))
+                Type.getType(expectedTypes.typeDesc))
 
         val local = "(${if (invokeType != InvokeType.INVOKE_STATIC) localization.typeDesc else ""})${baseSam.localization.typeDesc}"
 
@@ -80,7 +77,7 @@ object MethodInvocationUtil {
     fun visitBootstrapInvocation(bootstrap: InvokeDynamicBase, spec: MethodTypeSpec, data: TypedData, mv: MethodVisitor) {
         val handle = MethodInvocationUtil.toHandle(bootstrap, data)
 
-        mv.visitInvokeDynamicInsn(spec.methodName, TypeSpecUtil.typeSpecToAsm(spec.typeSpec), handle, *MethodInvocationUtil.toAsmArguments(bootstrap))
+        mv.visitInvokeDynamicInsn(spec.methodName, spec.typeSpec.typeDesc, handle, *MethodInvocationUtil.toAsmArguments(bootstrap))
     }
 
     fun toAsmArguments(bootstrap: InvokeDynamicBase): Array<Any> {
@@ -100,13 +97,13 @@ object MethodInvocationUtil {
                 val typeSpec = arg.methodTypeSpec
 
                 converted = Handle(InvokeTypeUtil.toAsm_H(arg.invokeType),
-                        CodeTypeUtil.codeTypeToBinaryName(typeSpec.localization),
+                        typeSpec.localization.internalName,
                         typeSpec.methodName,
-                        TypeSpecUtil.typeSpecToAsm(typeSpec.typeSpec),
+                        typeSpec.typeSpec.typeDesc,
                         arg.invokeType == InvokeType.INVOKE_INTERFACE)
             } else if (arg is TypeSpec) {
 
-                val toAsm = TypeSpecUtil.typeSpecToAsm(arg)
+                val toAsm = arg.typeDesc
 
                 converted = Type.getMethodType(toAsm)
             } else {
@@ -122,15 +119,15 @@ object MethodInvocationUtil {
 
     fun toHandle(bootstrap: InvokeDynamicBase, data: TypedData): Handle {
         val bootstrapMethodSpec = bootstrap.bootstrap
-        val btpInvokeType = bootstrap.invocation.invokeType
+        val btpInvokeType = bootstrap.bootstrap.invokeType
 
         val methodName = bootstrapMethodSpec.methodTypeSpec.methodName
         val bsmLocalization = Util.resolveType(bootstrapMethodSpec.methodTypeSpec.localization, data)
 
         return Handle(InvokeTypeUtil.toAsm_H(btpInvokeType),
-                CodeTypeUtil.codeTypeToBinaryName(bsmLocalization),
+                bsmLocalization.internalName,
                 methodName,
-                CodeTypeUtil.typeSpecToTypeDesc(bootstrapMethodSpec.methodTypeSpec.typeSpec),
+                bootstrapMethodSpec.methodTypeSpec.typeSpec.typeDesc,
                 btpInvokeType.isInterface())
     }
 
@@ -147,7 +144,7 @@ object MethodInvocationUtil {
                 MethodTypeSpec(
                         owner,
                         handle.name,
-                        TypeSpec(typeResolver.resolveUnknown(description.returnType), description.parameterTypes.map { typeResolver.resolveUnknown(it) })
+                        TypeSpec(typeResolver.resolveUnknown(description.type), description.parameterTypes.map { typeResolver.resolveUnknown(it) })
                 )
         )
     }
@@ -158,7 +155,7 @@ object MethodInvocationUtil {
 
         return InvokeDynamic(bootstrap = fullMethodSpec,
                 type = type,
-                invocation = methodInvocation.builder().withInvokeType(invokeType).build(),
+                invocation = methodInvocation.builder().invokeType(invokeType).build(),
                 args = MethodInvocationUtil.bsmArgsFromAsm(args, typeResolver))
     }
 

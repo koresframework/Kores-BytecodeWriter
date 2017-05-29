@@ -27,55 +27,50 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.operator.Operators;
 import com.github.jonathanxd.iutils.annotation.Named;
 
 import org.junit.Test;
 
-import java.util.EnumSet;
+import java.util.function.UnaryOperator;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
-import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
 import static com.github.jonathanxd.codeapi.Types.INT;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
-import static com.github.jonathanxd.codeapi.factory.ClassFactory.aClass;
-import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.classDec;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.methodDec;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.source;
 
 public class NewIfTest {
 
 
     @Test
     public void newIfTest() throws Throwable {
-        CodeSource source = sourceOfParts(
-                method(EnumSet.of(PUBLIC), "test", INT, new CodeParameter[]{
-                                parameter(Integer.TYPE, "x"),
-                        },
-                        sourceOfParts(
-                                CodeAPI.ifStatement(
-                                        CodeAPI.ifExprs(
-                                                CodeAPI.check(CodeAPI.accessLocalVariable(Integer.TYPE, "x"), Operators.EQUAL_TO, Literals.INT(7)),
-                                                Operators.OR,
-                                                CodeAPI.check(CodeAPI.accessLocalVariable(Integer.TYPE, "x"), Operators.EQUAL_TO, Literals.INT(9))
-                                        ),
-                                        CodeAPI.source(
-                                                CodeAPI.returnValue(INT, Literals.INT(0))
-                                        ),
-                                        CodeAPI.source(
-                                                CodeAPI.returnValue(INT, Literals.INT(1))
+        TypeDeclaration decl = classDec().modifiers(PUBLIC).name("com.NewIf")
+                .methods(
+                        methodDec().modifiers(PUBLIC).parameters(Factories.parameter(Integer.TYPE, "x")).name("test")
+                                .body(source(
+                                        Factories.ifStatement(
+                                                Factories.ifExprs(
+                                                        Factories.check(Factories.accessVariable(Integer.TYPE, "x"), Operators.EQUAL_TO, Literals.INT(7)),
+                                                        Operators.OR,
+                                                        Factories.check(Factories.accessVariable(Integer.TYPE, "x"), Operators.EQUAL_TO, Literals.INT(9))
+                                                ),
+                                                source(
+                                                        Factories.returnValue(INT, Literals.INT(0))
+                                                ),
+                                                source(
+                                                        Factories.returnValue(INT, Literals.INT(1))
+                                                )
                                         )
-                                )
-                        )
+                                ))
+                                .build()
                 )
-        );
+                .build();
 
-        TypeDeclaration decl = aClass(EnumSet.of(PUBLIC), "com.NewIf", source);
-
-        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), decl, CodeAPI.source(decl));
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), decl, UnaryOperator.identity());
 
         Class<?> define = test.getClass();
 

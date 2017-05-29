@@ -39,8 +39,8 @@ public class AnnotatedTest {
 
     @Test
     public void annotatedTest() {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = AnnotatedTest_.$();
-        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $._1(), $._2());
+        TypeDeclaration $ = AnnotatedTest_.$();
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $);
     }
 
 }

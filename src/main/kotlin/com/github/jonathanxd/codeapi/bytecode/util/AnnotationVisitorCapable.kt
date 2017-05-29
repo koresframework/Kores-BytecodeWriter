@@ -34,8 +34,8 @@ import org.objectweb.asm.*
  * Internal class. Universalise asm annotation visitors.
  */
 interface AnnotationVisitorCapable {
-    fun visitAnnotation(desc: String, visible: Boolean): AnnotationVisitor
 
+    fun visitAnnotation(desc: String, visible: Boolean): AnnotationVisitor
 
     fun visitTypeAnnotation(typeRef: Int,
                             typePath: TypePath, desc: String, visible: Boolean): AnnotationVisitor

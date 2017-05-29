@@ -27,25 +27,23 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
-import com.github.jonathanxd.codeapi.MutableCodeSource;
+import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
-import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
-import com.github.jonathanxd.codeapi.builder.ConstructorDeclarationBuilder;
+import com.github.jonathanxd.codeapi.base.FieldDeclaration;
+import com.github.jonathanxd.codeapi.base.InvokeType;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
-import com.github.jonathanxd.codeapi.common.InvokeType;
-import com.github.jonathanxd.codeapi.factory.FieldFactory;
+import com.github.jonathanxd.codeapi.factory.Factories;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
 
 import org.junit.Test;
 
 import java.io.PrintStream;
 import java.lang.invoke.MethodHandles;
-import java.util.EnumSet;
 
 import static java.util.Collections.singletonList;
 
@@ -53,45 +51,40 @@ public class TestHelloBytecode {
     @Test
     public void testBytecode() {
 
-        MutableCodeSource codeSource = new MutableCodeSource();
-
-        MutableCodeSource clSource = new MutableCodeSource();
-
-        ClassDeclaration codeClass = ClassDeclarationBuilder.builder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withQualifiedName("fullName." + this.getClass().getSimpleName())
-                .withSuperClass(Types.OBJECT)
-                .withBody(clSource)
+        ClassDeclaration codeClass = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("fullName." + this.getClass().getSimpleName())
+                .superClass(Types.OBJECT)
+                .fields(
+                        FieldDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC, CodeModifier.STATIC, CodeModifier.FINAL)
+                                .type(Types.INT)
+                                .name("DEFAULT_VALUE")
+                                .value(Literals.INT(17))
+                                .build()
+                )
+                .constructors(
+                        ConstructorDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .body(CodeSource.fromVarArgs(
+                                        // Chama um metodo Virtual (metodos de instancia) na Classe PrintStream
+                                        InvocationFactory.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
+                                                // Acessa uma field estatica 'out' com tipo PrintStream na classe System
+                                                Factories.accessStaticField(System.class, PrintStream.class, "out"),
+                                                // Especificação do metodo
+                                                // Informa que o metodo é println, e retorna um void
+                                                "println",
+                                                Factories.typeSpec(Types.VOID, Types.STRING),
+                                                singletonList(Literals.STRING("Hello World")))
+                                ))
+                                .build()
+                )
                 .build();
 
-        clSource.add(FieldFactory.field(EnumSet.of(CodeModifier.PUBLIC, CodeModifier.STATIC, CodeModifier.FINAL),
-                Types.INT,
-                "DEFAULT_VALUE",
-                Literals.INT(17)));
-
-        ConstructorDeclaration codeConstructor = ConstructorDeclarationBuilder.builder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withBody(CodeAPI.source(
-                        // Chama um metodo Virtual (metodos de instancia) na Classe PrintStream
-                        CodeAPI.invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
-                                // Acessa uma field estatica 'out' com tipo PrintStream na classe System
-                                CodeAPI.accessStaticField(System.class, PrintStream.class, "out"),
-                                // Especificação do metodo
-                                // Informa que o metodo é println, e retorna um void
-                                "println",
-                                CodeAPI.typeSpec(Types.VOID, Types.STRING),
-                                singletonList(Literals.STRING("Hello World")))
-                ))
-                .build();
-
-
-        clSource.add(codeConstructor);
-
-        codeSource.add(codeClass);
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        BytecodeClass bytecodeClass = bytecodeProcessor.gen(codeSource)[0];
+        BytecodeClass bytecodeClass = bytecodeProcessor.process(codeClass).get(0);
 
         byte[] gen = bytecodeClass.getBytecode();
 

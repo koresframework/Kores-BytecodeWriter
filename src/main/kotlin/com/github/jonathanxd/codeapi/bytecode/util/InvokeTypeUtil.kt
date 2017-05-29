@@ -27,8 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.codeapi.common.InvokeType
-import com.github.jonathanxd.codeapi.common.InvokeType.*
+import com.github.jonathanxd.codeapi.base.InvokeType
+import com.github.jonathanxd.codeapi.base.InvokeType.*
 import org.objectweb.asm.Opcodes.*
 
 object InvokeTypeUtil {
@@ -45,13 +45,12 @@ object InvokeTypeUtil {
             INVOKE_SPECIAL -> return INVOKESPECIAL
             INVOKE_VIRTUAL -> return INVOKEVIRTUAL
             INVOKE_STATIC -> return INVOKESTATIC
-            INVOKE_DYNAMIC -> return INVOKEDYNAMIC
             else -> throw RuntimeException("Cannot determine opcode of '$invokeType'")
         }
     }
 
     /**
-     * Convert [InvokeType] to asm [dynamic] invocation opcode.
+     * Convert [InvokeType] to asm dynamic invocation opcode.
      *
      * @param invokeType Type to convert
      * @return asm opcode corresponding to `invokeType` (dynamic).
@@ -62,7 +61,6 @@ object InvokeTypeUtil {
             INVOKE_SPECIAL -> return H_INVOKESPECIAL
             INVOKE_VIRTUAL -> return H_INVOKEVIRTUAL
             INVOKE_STATIC -> return H_INVOKESTATIC
-            INVOKE_DYNAMIC -> throw RuntimeException("Cannot invoke dynamic 'dynamic invocation'!")
             else -> throw RuntimeException("Cannot determine opcode of '$invokeType'")
         }
     }
@@ -79,7 +77,6 @@ object InvokeTypeUtil {
             INVOKESPECIAL -> return INVOKE_SPECIAL
             INVOKEVIRTUAL -> return INVOKE_VIRTUAL
             INVOKESTATIC -> return INVOKE_STATIC
-            INVOKEDYNAMIC -> return INVOKE_DYNAMIC
             else -> throw RuntimeException("Cannot determine InvokeType of opcode '$opcode'")
         }
     }

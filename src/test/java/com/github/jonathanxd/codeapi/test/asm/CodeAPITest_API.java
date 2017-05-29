@@ -28,28 +28,23 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
-import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
-import com.github.jonathanxd.codeapi.factory.ClassFactory;
-import com.github.jonathanxd.codeapi.factory.MethodFactory;
+import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 
 import org.junit.Test;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.util.EnumSet;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
-import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
-import static com.github.jonathanxd.codeapi.CodeAPI.source;
 import static com.github.jonathanxd.codeapi.Types.STRING;
 import static com.github.jonathanxd.codeapi.Types.VOID;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.STATIC;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.STATIC;
 
 @SuppressWarnings("Duplicates")
 public class CodeAPITest_API {
@@ -57,21 +52,21 @@ public class CodeAPITest_API {
     @Test
     public void codeAPITest() {
 
-        MutableCodeSource mySource = new MutableCodeSource();
-
         String name = this.getClass().getCanonicalName() + "_Generated";
 
-        ClassDeclaration codeClass = ClassFactory.aClass(EnumSet.of(PUBLIC), name, source(
-                MethodFactory.method(EnumSet.of(PUBLIC, STATIC), "printString", VOID, new CodeParameter[]{parameter(STRING, "string")},
-                        source(
-                                Predefined.invokePrintln(accessLocalVariable(STRING, "string"))
-                        ))
-        ));
+        ClassDeclaration codeClass = ClassDeclaration.Builder.builder()
+                .modifiers(PUBLIC)
+                .name(name)
+                .methods(MethodDeclaration.Builder.builder()
+                        .modifiers(PUBLIC, STATIC)
+                        .name("printString")
+                        .returnType(VOID)
+                        .parameters(Factories.parameter(STRING, "string"))
+                        .body(CodeSource.fromPart(Predefined.invokePrintln(Factories.accessVariable(STRING, "string"))))
+                        .build())
+                .build();
 
-        mySource.add(codeClass);
-
-
-        byte[] bytes = generate(mySource);
+        byte[] bytes = generate(codeClass);
 
         Class<?> define = new BCLoader().define(name, bytes);
         try {
@@ -87,10 +82,10 @@ public class CodeAPITest_API {
         }
     }
 
-    public byte[] generate(CodeSource source) {
+    public byte[] generate(TypeDeclaration declaration) {
         BytecodeProcessor generator = new BytecodeProcessor();
 
-        BytecodeClass bytecodeClass = generator.gen(source)[0];
+        BytecodeClass bytecodeClass = generator.process(declaration).get(0);
 
         byte[] bytes = bytecodeClass.getBytecode();
 

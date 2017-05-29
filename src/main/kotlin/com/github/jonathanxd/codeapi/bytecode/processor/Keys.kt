@@ -71,7 +71,7 @@ val ANNOTATION_VISITOR_CAPABLE = typedKeyOf<AnnotationVisitorCapable>("ANNOTATIO
 
 val IN_INVOKE_DYNAMIC = typedKeyOf<Unit>("IN_INVOKE_DYNAMIC")
 
-val LOCAL_CODES = typedKeyOf<MutableList<LocalCode>>("LOCAL_CODES")
+//val LOCAL_CODES = typedKeyOf<MutableList<LocalCode>>("LOCAL_CODES")
 
 fun <T> TypedKey<MutableList<T>>.add(data: TypedData, value: T) {
     this.getOrSet(data, mutableListOf<T>()).add(value)

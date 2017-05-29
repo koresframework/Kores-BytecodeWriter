@@ -27,11 +27,9 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.TestFeatures_;
 import com.github.jonathanxd.iutils.annotation.Named;
-import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
@@ -40,15 +38,16 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.function.UnaryOperator;
 
 @SuppressWarnings("Duplicates")
 public class TestBytecode {
 
     @Test
     public void testBytecode() {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = TestFeatures_.$();
+        TypeDeclaration $ = TestFeatures_.$();
 
-        @Named("Instance") Class<?> define = CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> aClass);
+        @Named("Instance") Class<?> define = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> aClass);
 
         System.out.println("Class -> " + Modifier.toString(define.getModifiers()) + " " + define);
 

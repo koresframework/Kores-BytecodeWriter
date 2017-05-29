@@ -32,6 +32,7 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
+import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.setFieldValue
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.util.Alias
@@ -115,7 +116,7 @@ object ConstructorUtil {
 
     fun searchInitThis(typeDeclaration: TypeDeclaration, codeParts: CodeSource, validate: Boolean): Boolean {
         var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
-            codePart != null && codePart is Access && codePart == Access.THIS
+            codePart != null && (codePart == Access.THIS || codePart == Alias.THIS)
         }, false)
 
         if (validate)
@@ -126,7 +127,7 @@ object ConstructorUtil {
 
     fun searchForSuper(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, validate: Boolean): Boolean {
         var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
-            codePart != null && codePart is Access && codePart == Access.THIS
+            codePart != null && (codePart == Access.SUPER || codePart == Alias.SUPER)
         }, false)
 
         if (validate)
@@ -154,7 +155,7 @@ object ConstructorUtil {
         val all = typeDeclaration.fields.filter {
             it is FieldDeclaration
                     && !it.modifiers.contains(CodeModifier.STATIC)
-                    && it.value != null
+                    && it.value != CodeNothing
         }
 
 
@@ -165,14 +166,14 @@ object ConstructorUtil {
 
             val value = fieldDeclaration.value
 
-            if (value != null) {
+            if (value != CodeNothing) {
                 // No processor overhead.
                 mv.methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
 
                 codeProcessor.process(value::class.java, value, data)
 
                 // No processor overhead.
-                mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, CodeTypeUtil.codeTypeToBinaryName(typeDeclaration), fieldDeclaration.name, fieldDeclaration.type.typeDesc)
+                mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, typeDeclaration.internalName, fieldDeclaration.name, fieldDeclaration.type.typeDesc)
             }
 
         }
@@ -196,7 +197,7 @@ object ConstructorUtil {
         val all = elementsHolder.fields.filter {
             it is FieldDeclaration
                     && !it.modifiers.contains(CodeModifier.STATIC)
-                    && it.value != null
+                    && it.value != CodeNothing
         }
 
 
@@ -206,7 +207,7 @@ object ConstructorUtil {
             val name = fieldDeclaration.name
             val value = fieldDeclaration.value
 
-            if (value != null) {
+            if (value != CodeNothing) {
                 codeSource.add(setFieldValue(Alias.THIS, Access.THIS, type, name, value))
             }
         }

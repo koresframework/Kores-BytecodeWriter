@@ -27,25 +27,24 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.SwitchTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
-import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.UnaryOperator;
 
 public class SwitchTest {
 
     @Test
     public void switchTest() {
 
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = SwitchTest_.$();
+        TypeDeclaration $ = SwitchTest_.$();
 
-        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> {
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
             try {
                 return aClass.getDeclaredConstructor(int.class, int.class, SwitchTest_.TestEnum.class, String.class, Object.class)
                         .newInstance(3, 10, SwitchTest_.TestEnum.B, "AHEAD", new MyObj());

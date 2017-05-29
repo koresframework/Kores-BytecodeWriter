@@ -27,39 +27,29 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
-import com.github.jonathanxd.codeapi.base.Annotation;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
-import com.github.jonathanxd.codeapi.factory.ClassFactory;
-import com.github.jonathanxd.codeapi.generic.GenericSignature;
-import com.github.jonathanxd.codeapi.type.CodeType;
 import com.github.jonathanxd.codeapi.type.Generic;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 
 public class GenericInterfaceTest {
 
     @Test
     public void genericInterface() {
-        InterfaceDeclaration codeClass = ClassFactory.anInterface(null,
-                new Annotation[0],
-                EnumSet.of(CodeModifier.PUBLIC),
-                "clv",
-                GenericSignature.empty(),
-                new CodeType[]{Generic.type(CodeAPI.getJavaType(ArrayList.class)).of(Types.STRING)}
-        );
+        InterfaceDeclaration codeClass = InterfaceDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .specifiedName("clv")
+                .implementations(Generic.type(ArrayList.class).of(Types.STRING))
+                .build();
+
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        CodeSource codeSource = CodeAPI.sourceOfParts(codeClass);
-
-        byte[] gen = bytecodeProcessor.gen(codeSource)[0].getBytecode();
+        byte[] gen = bytecodeProcessor.process(codeClass).get(0).getBytecode();
         ResultSaver.save(this.getClass(), gen);
     }
 

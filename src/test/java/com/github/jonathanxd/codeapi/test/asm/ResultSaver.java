@@ -35,6 +35,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 public final class ResultSaver {
 
@@ -55,6 +56,12 @@ public final class ResultSaver {
     }*/
     // Temporary disabled
     public static void save(Class<?> ofClass, BytecodeClass[] result) {
+        for (BytecodeClass bytecodeClass : result) {
+            save(ofClass, bytecodeClass.getType().getSimpleName(), bytecodeClass);
+        }
+    }
+
+    public static void save(Class<?> ofClass, List<? extends BytecodeClass> result) {
         for (BytecodeClass bytecodeClass : result) {
             save(ofClass, bytecodeClass.getType().getSimpleName(), bytecodeClass);
         }

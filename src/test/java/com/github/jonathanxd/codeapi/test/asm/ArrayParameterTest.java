@@ -27,40 +27,37 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
-import com.github.jonathanxd.codeapi.Types;
-import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
-import com.github.jonathanxd.codeapi.factory.ClassFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
+import com.github.jonathanxd.codeapi.test.PredefinedTest;
 
 import org.junit.Test;
 
-import java.util.EnumSet;
-
-import static com.github.jonathanxd.codeapi.CodeAPI.source;
-import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
-import static com.github.jonathanxd.codeapi.factory.ConstructorFactory.constructor;
+import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
+import static com.github.jonathanxd.codeapi.factory.Factories.cast;
+import static com.github.jonathanxd.codeapi.factory.Factories.parameter;
 
 public class ArrayParameterTest {
     final String name = getClass().getCanonicalName() + "_Generated";
 
     @Test
     public void arrayTest() {
+        PredefinedTest predefinedTest = PredefinedTest.create(name);
 
+        predefinedTest.constructor
+                .modifiers(CodeModifier.PUBLIC)
+                .parameters(parameter(Text[].class, "par"))
+                .body(CodeSource.fromVarArgs(
+                        VariableFactory.variable(Object.class, "cf", cast(Text[].class, Object.class, accessVariable(Text[].class, "par"))),
+                        VariableFactory.variable(Text[].class, "lt", cast(Object.class, Text[].class, accessVariable(Object.class, "cf")))
+                ));
 
-        ClassDeclaration codeClass = ClassFactory.aClass(EnumSet.of(PUBLIC), name, source(
-                constructor(EnumSet.of(PUBLIC), new CodeParameter[]{new CodeParameter(CodeAPI.getJavaType(Text[].class), "par")}, source(
-                        VariableFactory.variable(Types.OBJECT, "cf", CodeAPI.cast(CodeAPI.getJavaType(Text[].class), Types.OBJECT, CodeAPI.accessLocalVariable(Text[].class, "par"))),
-                        VariableFactory.variable(CodeAPI.getJavaType(Text[].class), "lt", CodeAPI.cast(Types.OBJECT, CodeAPI.getJavaType(Text[].class), CodeAPI.accessLocalVariable(Types.OBJECT, "cf")))
-                ))
-        ));
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        byte[] bytes = bytecodeProcessor.gen(sourceOfParts(codeClass))[0].getBytecode();
+        byte[] bytes = bytecodeProcessor.process(predefinedTest.build()).get(0).getBytecode();
 
         ResultSaver.save(getClass(), bytes);
 

@@ -27,53 +27,52 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
+import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 
 import org.junit.Test;
 
-import java.util.EnumSet;
-
-import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
-import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
-import static com.github.jonathanxd.codeapi.Types.VOID;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
-import static com.github.jonathanxd.codeapi.factory.ClassFactory.aClass;
-import static com.github.jonathanxd.codeapi.factory.MethodFactory.method;
-import static com.github.jonathanxd.codeapi.factory.VariableFactory.variable;
+import java.util.Collection;
+import java.util.List;
 
 public class CastBugTest {
 
 
+    @SuppressWarnings("unchecked")
     @Test
     public void castBugTest() throws Throwable {
-        CodeSource source = sourceOfParts(
-                method(EnumSet.of(PUBLIC), "test", VOID, new CodeParameter[]{
-                                parameter(Short.TYPE, "s"),
-                        },
-                        sourceOfParts(
-                                Predefined.invokePrintln(CodeAPI.cast(Short.TYPE, Integer.TYPE, CodeAPI.accessLocalVariable(Short.TYPE, "s")))
-                        )
+        TypeDeclaration decl = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .name("com.MyClass")
+                .methods(
+                        MethodDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .name("test")
+                                .parameters(Factories.parameter(Short.TYPE, "s"))
+                                .body(CodeSource.fromPart(
+                                        Predefined.invokePrintln(Factories.cast(Short.TYPE, Integer.TYPE, Factories.accessVariable(Short.TYPE, "s")))
+                                ))
+                                .build()
                 )
-        );
-
-        TypeDeclaration decl = aClass(EnumSet.of(PUBLIC), "com.MyClass", source);
+                .build();
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        BytecodeClass[] gen = bytecodeProcessor.gen(decl);
+        List<? extends BytecodeClass> gen = bytecodeProcessor.process(decl);
 
         ResultSaver.save(this.getClass(), gen);
 
         CodeClassLoader codeClassLoader = new CodeClassLoader();
 
-        Class<?> define = codeClassLoader.define(gen);
+        Class<?> define = codeClassLoader.define((Collection<BytecodeClass>) gen);
 
         define.getDeclaredMethod("test", Short.TYPE).invoke(define.newInstance(), (short) 55);
 

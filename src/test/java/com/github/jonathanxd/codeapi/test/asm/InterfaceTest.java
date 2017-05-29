@@ -27,53 +27,54 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeParameter;
-import com.github.jonathanxd.codeapi.factory.ClassFactory;
-import com.github.jonathanxd.codeapi.factory.MethodFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.operator.Operators;
 
 import org.junit.Test;
 
-import java.util.EnumSet;
-
-import static com.github.jonathanxd.codeapi.CodeAPI.emptySource;
-import static com.github.jonathanxd.codeapi.CodeAPI.parameter;
-import static com.github.jonathanxd.codeapi.CodeAPI.returnValue;
-import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
 import static com.github.jonathanxd.codeapi.Types.INT;
 import static com.github.jonathanxd.codeapi.Types.STRING;
-import static com.github.jonathanxd.codeapi.Types.VOID;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.factory.Factories.operateAndAssign;
+import static com.github.jonathanxd.codeapi.factory.Factories.parameter;
+import static com.github.jonathanxd.codeapi.factory.Factories.returnValue;
 
 public class InterfaceTest {
 
     @Test
     public void test() {
 
-        InterfaceDeclaration interfaceDeclaration;
-
-
-        CodeSource source = sourceOfParts(interfaceDeclaration = ClassFactory.anInterface(EnumSet.of(PUBLIC), "test.Impl", sourceOfParts(
-
-                MethodFactory.method(EnumSet.of(PUBLIC), "parse", VOID, new CodeParameter[]{parameter(STRING, "string")}, emptySource()),
-
-                MethodFactory.method(EnumSet.of(PUBLIC), "getI", INT, new CodeParameter[]{parameter(INT, "num")}, sourceOfParts(
-                        returnValue(INT, CodeAPI.operateAndAssign(VariableFactory.variable(INT, "num"), Operators.MULTIPLY, Literals.INT(9)))
-                ))
-
-        )));
+        InterfaceDeclaration interfaceDeclaration = InterfaceDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .name("test.Impl")
+                .methods(
+                        MethodDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .name("parse")
+                                .parameters(parameter(STRING, "string"))
+                                .build(),
+                        MethodDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .returnType(INT)
+                                .name("getI")
+                                .parameters(parameter(INT, "num"))
+                                .body(CodeSource.fromPart(
+                                        returnValue(INT, operateAndAssign(VariableFactory.variable(INT, "num"), Operators.MULTIPLY, Literals.INT(9)))
+                                ))
+                                .build()
+                )
+                .build();
 
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        byte[] gen = bytecodeProcessor.gen(source)[0].getBytecode();
+        byte[] gen = bytecodeProcessor.process(interfaceDeclaration).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), gen);
 

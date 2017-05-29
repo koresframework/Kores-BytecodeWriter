@@ -27,48 +27,46 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
-import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.Types;
+import com.github.jonathanxd.codeapi.base.Access;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
-import com.github.jonathanxd.codeapi.factory.ClassFactory;
-import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
-import com.github.jonathanxd.codeapi.factory.FieldFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
-import com.github.jonathanxd.codeapi.type.CodeType;
-import com.github.jonathanxd.codeapi.type.LoadedCodeType;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
 import org.junit.Test;
 
-import java.util.EnumSet;
+import java.util.function.UnaryOperator;
 
-import static com.github.jonathanxd.codeapi.common.CodeModifier.FINAL;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PRIVATE;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.FINAL;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.PRIVATE;
+import static com.github.jonathanxd.codeapi.base.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.factory.Factories.constructorTypeSpec;
+import static com.github.jonathanxd.codeapi.factory.InvocationFactory.invokeConstructor;
+import static com.github.jonathanxd.codeapi.factory.InvocationFactory.invokeSuperConstructor;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.classDec;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.constructorDec;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.fieldDec;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.source;
 import static kotlin.collections.CollectionsKt.listOf;
 
 public class FinalFieldWithThis {
 
-
     @Test
     public void finalFieldWithThis() {
-        MutableCodeSource codeSource = new MutableCodeSource();
+        ClassDeclaration testField = classDec().modifiers(PUBLIC).name("finalfieldwiththis.Test").superClass(TestBox.class)
+                .fields(
+                        fieldDec().modifiers(PRIVATE, FINAL).type(TestBox.class).name("testField")
+                                .value(invokeConstructor(TestBox.class, constructorTypeSpec(Types.OBJECT), listOf(Access.THIS)))
+                                .build()
+                )
+                .constructors(
+                        constructorDec().modifiers(PUBLIC).body(source(
+                                invokeSuperConstructor(TestBox.class, constructorTypeSpec(Types.OBJECT), listOf(Literals.NULL))
+                        )).build()
+                )
+                .build();
 
-        LoadedCodeType<TestBox> testBoxJavaType = CodeAPI.getJavaType(TestBox.class);
-
-        ClassDeclaration testField = ClassFactory.aClass(EnumSet.of(PUBLIC), "finalfieldwiththis.Test", testBoxJavaType, new CodeType[0],
-                CodeAPI.sourceOfParts(
-                        FieldFactory.field(EnumSet.of(PRIVATE, FINAL), testBoxJavaType, "testField",
-                                CodeAPI.invokeConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(CodeAPI.accessThis()))),
-                        ConstructorFactory.constructor(EnumSet.of(PUBLIC), CodeAPI.sourceOfParts(
-                                CodeAPI.invokeSuperConstructor(testBoxJavaType, CodeAPI.constructorTypeSpec(Types.OBJECT), listOf(Literals.NULL))
-                        ))
-                ));
-
-        codeSource.add(testField);
-
-        CommonBytecodeTest.test(this.getClass(), testField, codeSource, aClass -> {
+        CommonBytecodeTest.test(this.getClass(), testField, UnaryOperator.identity(), aClass -> {
             try {
                 return aClass.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {

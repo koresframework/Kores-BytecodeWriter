@@ -27,15 +27,15 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.common
 
-import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
-import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.type.GenericType
+import com.github.jonathanxd.codeapi.util.genericTypeToDescriptor
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.map.ListHashMap
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import java.lang.reflect.Type
-import java.util.*
+import java.util.Optional
+import java.util.OptionalInt
 
 /**
  * Internal class that holds a [MethodVisitor] and data about current stored variables (stack)
@@ -49,7 +49,7 @@ import java.util.*
  */
 class MethodVisitorHelper constructor(
         val methodVisitor: MethodVisitor,
-        variables: MutableList<Variable>)  {
+        variables: MutableList<Variable>) {
 
     private var variableHistory = ListHashMap<Int, Variable>()
 
@@ -64,14 +64,14 @@ class MethodVisitorHelper constructor(
     fun enterNewFrame() {
         val end = Label()
 
-/*
-        val start = this.frame.parent?.immutableVariableList?.size ?: 0
-        val endSize = this.frame.immutableVariableList.size
+        /*
+                val start = this.frame.parent?.immutableVariableList?.size ?: 0
+                val endSize = this.frame.immutableVariableList.size
 
-        val subList = this.frame.immutableVariableList.subList(start, endSize)
+                val subList = this.frame.immutableVariableList.subList(start, endSize)
 
-        this.variableHistory.addAll(subList)
-*/
+                this.variableHistory.addAll(subList)
+        */
 
         this.frame = Frame(this.frame, emptyList(), end)
     }
@@ -97,7 +97,7 @@ class MethodVisitorHelper constructor(
 
     private fun exitAllFrames() {
         var f = this.frame.parent
-        while(f != null) {
+        while (f != null) {
             exitFrame()
             f = this.frame.parent
         }
@@ -200,7 +200,7 @@ class MethodVisitorHelper constructor(
      * @param start Start of the method.
      * @param end   End of the method.
      */
-    fun visitVars(start: Label, end: Label) {
+    fun visitVars(end: Label) {
         this.exitAllFrames()
 
         this.frame.immutableVariableList.forEachIndexed { i, variable ->
@@ -215,11 +215,10 @@ class MethodVisitorHelper constructor(
         for (i in variables.keys.sorted().asReversed()) {
             val varis = variables[i]!!
 
-            for(variable in varis) {
-
+            varis.forEach { variable ->
                 if (!variable.isVisible || variable.isTemp || variable.name.contains("#"))
-                  // Internal variables
-                    continue
+                // Internal variables
+                    return@forEach
 
                 val varStart = variable.startLabel
                 val varEnd = variable.endLabel ?: end
@@ -229,11 +228,10 @@ class MethodVisitorHelper constructor(
                 var signature: String? = null
 
                 if (variable.type is GenericType) {
-                    signature = CodeTypeUtil.toName(variable.type)
+                    signature = variable.type.genericTypeToDescriptor()
                 }
 
                 methodVisitor.visitLocalVariable(variable.name, type, signature, varStart, varEnd, i)
-
             }
         }
     }

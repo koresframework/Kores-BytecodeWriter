@@ -27,25 +27,25 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
+import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
-import com.github.jonathanxd.codeapi.builder.ClassDeclarationBuilder;
-import com.github.jonathanxd.codeapi.builder.MethodDeclarationBuilder;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
+import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.Opcodes;
 
 import java.util.List;
 
@@ -54,40 +54,40 @@ public class LocalsReuseTest {
     @SuppressWarnings("unchecked")
     @Test
     public void test() {
-        ClassDeclaration declaration = ClassDeclarationBuilder.builder()
-                .withModifiers(CodeModifier.PUBLIC)
-                .withQualifiedName("codeapi.LocalsReuse")
-                .withBody(CodeAPI.sourceOfParts(
-                        MethodDeclarationBuilder.builder()
-                                .withModifiers(CodeModifier.PUBLIC)
-                                .withName("test")
-                                .withReturnType(Types.INT)
-                                .withParameters(CodeAPI.parameter(Types.BOOLEAN, "bool"))
-                                .withBody(CodeAPI.sourceOfParts(
-                                        CodeAPI.ifStatement(CodeAPI.checkTrue(CodeAPI.accessLocalVariable(Types.BOOLEAN, "bool")),
-                                                CodeAPI.sourceOfParts(
+        ClassDeclaration declaration = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("codeapi.LocalsReuse")
+                .methods(
+                        MethodDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .name("test")
+                                .returnType(Types.INT)
+                                .parameters(Factories.parameter(Types.BOOLEAN, "bool"))
+                                .body(CodeSource.fromPart(
+                                        Factories.ifStatement(Factories.checkTrue(Factories.accessVariable(Types.BOOLEAN, "bool")),
+                                                CodeSource.fromVarArgs(
                                                         VariableFactory.variable(Types.INT, "i", Literals.INT(10)),
-                                                        CodeAPI.returnValue(Types.INT, CodeAPI.accessLocalVariable(Types.INT, "i"))
+                                                        Factories.returnValue(Types.INT, Factories.accessVariable(Types.INT, "i"))
                                                 ),
-                                                CodeAPI.sourceOfParts(
+                                                CodeSource.fromVarArgs(
                                                         VariableFactory.variable(Types.INT, "i", Literals.INT(17)),
-                                                        CodeAPI.returnValue(Types.INT, CodeAPI.accessLocalVariable(Types.INT, "i"))
+                                                        Factories.returnValue(Types.INT, Factories.accessVariable(Types.INT, "i"))
                                                 ))
                                 ))
                                 .build()
 
-                ))
+                )
                 .build();
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
         bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
-        BytecodeClass[] gen = bytecodeProcessor.gen(declaration);
+        List<? extends BytecodeClass> gen = bytecodeProcessor.process(declaration);
 
         ResultSaver.save(this.getClass(), gen);
 
-        ClassReader cr = new ClassReader(gen[0].getBytecode());
+        ClassReader cr = new ClassReader(gen.get(0).getBytecode());
 
         ClassNode cn = new ClassNode(Opcodes.ASM5);
         cr.accept(cn, 0);

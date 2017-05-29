@@ -39,13 +39,14 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 public class ForEachClassTest {
 
     @Test
     public void test() {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = ForEach_.$();
-        CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> {
+        TypeDeclaration $ = ForEach_.$();
+        CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
             try {
                 return aClass.getConstructor(List.class).newInstance(Arrays.asList("A", "B", "C", "D"));
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

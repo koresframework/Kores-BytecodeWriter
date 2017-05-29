@@ -56,23 +56,46 @@ open class CodeClassLoader : ClassLoader() {
     /**
      * Define [classes][BytecodeClass] and inner classes.
      *
-     * Make sure that all elements in the `bytecodeClasses` is a inner type of element at
-     * index 0.
+     * Make sure that all elements in the `bytecodeClasses` is a inner type of first element.
      *
-     * @param bytecodeClasses Bytecode class (index 0) and inner classes (1..n).
+     * @param bytecodeClasses Bytecode class (first element) and inner classes (remaining).
      * @return First Defined Class.
      */
     open fun define(bytecodeClasses: Array<out BytecodeClass>): Class<*> {
-        if (bytecodeClasses.isEmpty()) {
+        return this.define(bytecodeClasses.iterator())
+    }
+
+    /**
+     * Define [classes][BytecodeClass] and inner classes.
+     *
+     * Make sure that all elements in the `bytecodeClasses` is a inner type of first element.
+     *
+     * @param bytecodeClasses Bytecode class (first element) and inner classes (remaining).
+     * @return First Defined Class.
+     */
+    open fun define(bytecodeClasses: Collection<BytecodeClass>): Class<*> {
+        return this.define(bytecodeClasses.iterator())
+    }
+
+    /**
+     * Define [classes][BytecodeClass] and inner classes.
+     *
+     * Make sure that all elements in the `bytecodeClasses` is a inner type of first element.
+     *
+     * @param bytecodeClasses Bytecode class (first element) and inner classes (remaining).
+     * @return First Defined Class.
+     */
+    open fun define(bytecodeClasses: Iterator<BytecodeClass>): Class<*> {
+        if (!bytecodeClasses.hasNext()) {
             throw IllegalArgumentException("Empty 'bytecodeClasses' array")
         }
 
-        val bytecodeClass = bytecodeClasses[0]
+        val bytecodeClass = bytecodeClasses.next()
 
         val define = this.define(bytecodeClass.type, bytecodeClass.bytecode)
 
-        for (i in 1..bytecodeClasses.size - 1) {
-            this.define(bytecodeClasses[i])
+        bytecodeClasses.forEach {
+            this.define(it)
         }
 
         return define

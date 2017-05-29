@@ -37,6 +37,7 @@ import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.codeType
+import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.codeapi.util.typedKeyOf
 import com.github.jonathanxd.iutils.data.TypedData
 
@@ -85,15 +86,15 @@ object SwitchOnEnum {
         // Requires update
 
         return SwitchStatement.Builder.builder()
-                .withSwitchType(SwitchType.NUMERIC)
-                .withValue(access)
-                .withCases(
+                .switchType(SwitchType.NUMERIC)
+                .value(access)
+                .cases(
                         switchStatement.cases.map {
                             return@map if (it.isDefault) {
                                 it
                             } else {
                                 val index = mapping.getIndex((it.value as EnumValue).name)
-                                it.builder().withValue(Literals.INT(index)).build()
+                                it.builder().value(Literals.INT(index)).build()
                             }
                         }
                 )
@@ -103,12 +104,13 @@ object SwitchOnEnum {
     class Mapping(val name: String, val enumType: CodeType) {
         //
         val declaration = ClassDeclaration.Builder.builder()
-                .withModifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC)
-                .withSpecifiedName(name)
+                .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC)
+                .specifiedName(name)
                 .build()
 
         val fieldName = "ENUM_MAP"
         private val mappings = mutableListOf<String>()
+        private var evaluated: Boolean = false
 
         fun getIndex(entry: String): Int {
             return mappings.indexOfFirst { it == entry }.let {
@@ -121,6 +123,11 @@ object SwitchOnEnum {
 
 
         fun buildClass(): TypeDeclaration {
+
+            if(evaluated)
+                throw IllegalStateException("SwitchOnEnum mapping already builded")
+
+            evaluated = true
             val typeDeclarationBuilder = declaration.builder()
 
             val accessValuesLength = arrayLength(enumType.toArray(1), invokeStatic(
@@ -131,16 +138,16 @@ object SwitchOnEnum {
             ))
 
             val field = FieldDeclaration.Builder.builder()
-                    .withModifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.STATIC)
-                    .withType(Types.INT.toArray(1))
-                    .withName(fieldName)
-                    .withValue(createArray(
+                    .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.STATIC)
+                    .type(Types.INT.toArray(1))
+                    .name(fieldName)
+                    .value(createArray(
                             Types.INT.toArray(1),
                             listOf(accessValuesLength),
                             listOf()
                     )).build()
 
-            typeDeclarationBuilder.withFields(field)
+            typeDeclarationBuilder.fields(field)
 
             val catch = CatchStatement(
                     exceptionTypes = listOf(NoSuchFieldError::class.java.codeType),
@@ -148,7 +155,8 @@ object SwitchOnEnum {
                     body = CodeSource.empty() // Ignore
             )
 
-            val staticBlock = StaticBlock(Comments.Absent, emptyList(), CodeSource.fromIterable(mappings.mapIndexed { i, _ ->
+            val staticBlock = StaticBlock(Comments.Absent, emptyList(), CodeSource.fromIterable(mappings.mapIndexed {
+                i, enumName ->
 
                 tryStatement(
                         CodeSource.fromPart(
@@ -157,7 +165,7 @@ object SwitchOnEnum {
                                         accessField(field.localization, field.target, field.type, field.name),
                                         invokeVirtual(
                                                 Types.ENUM,
-                                                accessStaticField(enumType, enumType, name),
+                                                accessStaticField(enumType, enumType, enumName),
                                                 "ordinal",
                                                 typeSpec(Types.INT),
                                                 listOf()
@@ -172,9 +180,9 @@ object SwitchOnEnum {
 
             }))
 
-            typeDeclarationBuilder.withStaticBlock(staticBlock)
+            typeDeclarationBuilder.staticBlock(staticBlock)
 
-            return declaration
+            return typeDeclarationBuilder.build()
         }
     }
 }

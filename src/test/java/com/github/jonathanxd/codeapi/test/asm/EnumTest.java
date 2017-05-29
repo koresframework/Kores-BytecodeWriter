@@ -36,6 +36,8 @@ import com.github.jonathanxd.iutils.object.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.function.UnaryOperator;
+
 public class EnumTest {
 
     public static void main(String[] args) {
@@ -45,9 +47,9 @@ public class EnumTest {
     @SuppressWarnings("unchecked")
     @Test
     public void test() {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = EnumTest_.$();
+        TypeDeclaration $ = EnumTest_.$();
 
-        @Named("Instance") Class<Enum> test = (Class<Enum>) CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> aClass);
+        @Named("Instance") Class<Enum> test = (Class<Enum>) CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> aClass);
 
         Enum a = Enum.valueOf(test, "A");
 

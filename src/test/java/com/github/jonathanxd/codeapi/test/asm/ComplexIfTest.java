@@ -27,23 +27,22 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.ComplexIfTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
-import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.UnaryOperator;
 
 public class ComplexIfTest {
 
     @Test
     public void testComplexIf() throws Exception {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = ComplexIfTest_.$();
+        TypeDeclaration $ = ComplexIfTest_.$();
 
-        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> {
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
             try {
                 return aClass.getConstructor(Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE)
                         .newInstance(true, true, false, true);

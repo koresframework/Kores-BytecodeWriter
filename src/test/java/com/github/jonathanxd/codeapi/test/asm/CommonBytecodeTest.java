@@ -27,7 +27,6 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
@@ -38,20 +37,30 @@ import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class CommonBytecodeTest {
 
-    public static @Named("Instance") Object test(Class<?> testClass, ClassDeclaration mainClass, CodeSource source) {
-        return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, source);
+    public static @Named("Instance") Object test(Class<?> testClass, TypeDeclaration mainClass) {
+        return CommonBytecodeTest.test(testClass, mainClass, UnaryOperator.identity());
     }
 
-    public static @Named("Instance") <R> R test(Class<?> testClass, ClassDeclaration mainClass, CodeSource source, Function<Class<?>, R> function) {
-        return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, source, function);
+    public static @Named("Instance") Object test(Class<?> testClass, ClassDeclaration mainClass) {
+        return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, UnaryOperator.identity());
     }
 
-    public static @Named("Instance") Object test(Class<?> testClass, TypeDeclaration mainClass, CodeSource source) {
-        return test(testClass, mainClass, source, aClass -> {
+    public static @Named("Instance") Object test(Class<?> testClass, ClassDeclaration mainClass, UnaryOperator<TypeDeclaration> modifier) {
+        return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, modifier);
+    }
+
+    public static @Named("Instance") <R> R test(Class<?> testClass, ClassDeclaration mainClass, UnaryOperator<TypeDeclaration> modifier, Function<Class<?>, R> function) {
+        return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, modifier, function);
+    }
+
+    public static @Named("Instance") Object test(Class<?> testClass, TypeDeclaration mainClass, UnaryOperator<TypeDeclaration> modifier) {
+        return test(testClass, mainClass, modifier, aClass -> {
             try {
                 return aClass.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
@@ -60,17 +69,22 @@ public class CommonBytecodeTest {
         });
     }
 
-    public static @Named("Instance") <R> R test(Class<?> testClass, TypeDeclaration mainClass, CodeSource source, Function<Class<?>, R> function) {
+    public static @Named("Instance") <R> R test(Class<?> testClass,
+                                                TypeDeclaration mainClass,
+                                                UnaryOperator<TypeDeclaration> modifier,
+                                                Function<Class<?>, R> function) {
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
         bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
         BCLoader bcLoader = new BCLoader();
 
-        BytecodeClass[] bytecodeClasses;
+        List<? extends BytecodeClass> bytecodeClasses;
+
+        mainClass = modifier.apply(mainClass);
 
         try {
-            bytecodeClasses = bytecodeProcessor.gen(source);
+            bytecodeClasses = bytecodeProcessor.process(mainClass);
         } catch (ClassCheckException e) {
             bytecodeClasses = e.getBytecodeClasses();
         }

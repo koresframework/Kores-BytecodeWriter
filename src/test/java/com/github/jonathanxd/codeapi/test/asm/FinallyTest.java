@@ -27,13 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
-import com.github.jonathanxd.codeapi.MutableCodeSource;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.common.CodeModifier;
-import com.github.jonathanxd.codeapi.factory.ClassFactory;
-import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -43,45 +38,52 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
+
+import static com.github.jonathanxd.codeapi.base.CodeModifier.PUBLIC;
+import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
+import static com.github.jonathanxd.codeapi.factory.Factories.catchStatement;
+import static com.github.jonathanxd.codeapi.factory.Factories.constructorTypeSpec;
+import static com.github.jonathanxd.codeapi.factory.Factories.throwException;
+import static com.github.jonathanxd.codeapi.factory.Factories.tryStatement;
+import static com.github.jonathanxd.codeapi.factory.InvocationFactory.invokeConstructor;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.classDec;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.constructorDec;
+import static com.github.jonathanxd.codeapi.factory.PartFactory.source;
 
 public class FinallyTest {
 
     @Test(expected = RuntimeException.class)
     public void test() {
-        MutableCodeSource codeSource = new MutableCodeSource();
-
-        TypeDeclaration codeInterface;
-
-        codeSource.add(codeInterface = ClassFactory.aClass(EnumSet.of(CodeModifier.PUBLIC), "test.Btc", CodeAPI.sourceOfParts(
-                ConstructorFactory.constructor(EnumSet.of(CodeModifier.PUBLIC), CodeAPI.sourceOfParts(
-                        CodeAPI.tryStatement(CodeAPI.sourceOfParts(
-                                CodeAPI.throwException(CodeAPI.invokeConstructor(CodeAPI.getJavaType(RuntimeException.class),
-                                        CodeAPI.constructorTypeSpec(String.class),
+        TypeDeclaration codeInterface = classDec().modifiers(PUBLIC).name("test.Btc")
+                .constructors(constructorDec().modifiers(PUBLIC).body(source(
+                        tryStatement(source(
+                                throwException(invokeConstructor(RuntimeException.class,
+                                        constructorTypeSpec(String.class),
                                         Collections.singletonList(Literals.STRING("EXCEPTION")))
                                 )),
                                 Collections.singletonList(
-                                        CodeAPI.catchStatement(Collections.singletonList(CodeAPI.getJavaType(Exception.class)),
+                                        catchStatement(Collections.singletonList(Exception.class),
                                                 VariableFactory.variable(Types.EXCEPTION, "ex"),
-                                                CodeAPI.source(
-                                                        CodeAPI.throwException(
-                                                                CodeAPI.invokeConstructor(
-                                                                        CodeAPI.getJavaType(RuntimeException.class),
-                                                                        CodeAPI.constructorTypeSpec(String.class, Throwable.class),
+                                                source(
+                                                        throwException(
+                                                                invokeConstructor(
+                                                                        RuntimeException.class,
+                                                                        constructorTypeSpec(String.class, Throwable.class),
                                                                         Arrays.asList(
                                                                                 Literals.STRING("Rethrow"),
-                                                                                CodeAPI.accessLocalVariable(Throwable.class, "ex")
+                                                                                accessVariable(Throwable.class, "ex")
                                                                         )
                                                                 ))
                                                 )
                                         )),
-                                CodeAPI.sourceOfParts(
+                                source(
                                         Predefined.invokePrintln(Literals.STRING("Finally"))
                                 ))
-                ))
-        )));
+                )).build())
+                .build();
 
-        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), codeInterface, codeSource);
+
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), codeInterface);
     }
 
 }

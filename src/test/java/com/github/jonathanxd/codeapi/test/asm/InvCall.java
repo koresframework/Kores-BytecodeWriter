@@ -27,28 +27,23 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeAPI;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.factory.ClassFactory;
-import com.github.jonathanxd.codeapi.factory.ConstructorFactory;
+import com.github.jonathanxd.codeapi.factory.Factories;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
-import com.github.jonathanxd.codeapi.type.CodeType;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
 import org.junit.Test;
 
-import java.util.EnumSet;
-
 import kotlin.collections.CollectionsKt;
 
-import static com.github.jonathanxd.codeapi.CodeAPI.accessLocalVariable;
-import static com.github.jonathanxd.codeapi.CodeAPI.sourceOfParts;
 import static com.github.jonathanxd.codeapi.Types.STRING;
-import static com.github.jonathanxd.codeapi.common.CodeModifier.PUBLIC;
 
 public class InvCall {
 
@@ -57,24 +52,27 @@ public class InvCall {
 
         ClassDeclaration codeClass;
 
-        CodeSource source = sourceOfParts(codeClass = ClassFactory.aClass(EnumSet.of(PUBLIC), "test.Impl", CodeAPI.getJavaType(My.class), new CodeType[0], sourceOfParts(
+        codeClass = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .specifiedName("test.Impl")
+                .superClass(My.class)
+                .constructors(ConstructorDeclaration.Builder.builder()
+                        .modifiers(CodeModifier.PUBLIC)
+                        .body(CodeSource.fromVarArgs(
+                                VariableFactory.variable(STRING, "blc", Literals.STRING("099")),
 
-                ConstructorFactory.constructor(EnumSet.of(PUBLIC), sourceOfParts(
-                        VariableFactory.variable(STRING, "blc", Literals.STRING("099")),
-
-                        CodeAPI.invokeSuperConstructor(
-                                CodeAPI.getJavaType(My.class),
-                                CodeAPI.constructorTypeSpec(STRING),
-                                CollectionsKt.listOf(accessLocalVariable(STRING, "blc")))
-
-                ))
-
-        )));
+                                InvocationFactory.invokeSuperConstructor(
+                                        My.class,
+                                        Factories.constructorTypeSpec(STRING),
+                                        CollectionsKt.listOf(Factories.accessVariable(STRING, "blc")))
+                        ))
+                        .build())
+                .build();
 
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
-        byte[] gen = bytecodeProcessor.gen(source)[0].getBytecode();
+        byte[] gen = bytecodeProcessor.process(codeClass).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), gen);
 

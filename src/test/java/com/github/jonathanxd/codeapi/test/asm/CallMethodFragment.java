@@ -27,11 +27,9 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.MethodFragment_;
 import com.github.jonathanxd.iutils.annotation.Named;
-import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
@@ -39,9 +37,9 @@ public class CallMethodFragment {
 
     @Test
     public void testMethodFragment() throws Exception {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = MethodFragment_.$();
+        TypeDeclaration $ = MethodFragment_.$();
 
-        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $._1(), $._2());
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $);
 
         test.getClass().getDeclaredMethod("test").invoke(test);
     }

@@ -35,12 +35,14 @@ import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
+import java.util.function.UnaryOperator;
+
 public class AnnotationTest {
 
     @Test
     public void annotatedTest() throws Throwable {
-        Pair<@Named("Main class") TypeDeclaration, @Named("Source") CodeSource> $ = AnnotationTest_.$();
-        @Named("Instance") Class<?> test = CommonBytecodeTest.test(this.getClass(), $._1(), $._2(), aClass -> aClass);
+        TypeDeclaration $ = AnnotationTest_.$();
+        @Named("Instance") Class<?> test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> aClass);
         System.out.println(test.isAnnotation());
 
         System.out.println(test.getMethod("ns").getDefaultValue());
