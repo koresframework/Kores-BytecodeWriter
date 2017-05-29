@@ -39,7 +39,7 @@ object ModifierUtil {
     var PARAMETER = 3
 
     fun modifiersToAsm(typeDeclaration: TypeDeclaration): Int {
-        val modifiers = java.util.ArrayList(typeDeclaration.modifiers)
+        val modifiers = typeDeclaration.modifiers.toMutableList()
 
         if (modifiers.contains(CodeModifier.STATIC))
             modifiers.remove(CodeModifier.STATIC)
@@ -118,20 +118,19 @@ object ModifierUtil {
      * @return ASM modifiers flags
      */
     fun toAsmAccess(modifiers: Collection<CodeModifier>): Int {
-        var end = 0
 
-        if (modifiers.isEmpty())
+        val mods = modifiers.toMutableList()
+
+        if (mods.isEmpty())
             return Opcodes.ACC_PUBLIC
 
-        for (modifier in modifiers) {
-            val toAsmAccess = toAsmAccess(modifier)
+        if(!mods.contains(CodeModifier.PACKAGE_PRIVATE) && !mods.contains(CodeModifier.PUBLIC))
+            mods.add(CodeModifier.PUBLIC)
 
-            if (toAsmAccess != 0) {
-                end += toAsmAccess
-            }
-        }
-
-        return end
+        return modifiers
+                .map { toAsmAccess(it) }
+                .filter { it != 0 }
+                .sum()
     }
 
 }

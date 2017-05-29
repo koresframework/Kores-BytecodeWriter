@@ -74,6 +74,7 @@ public class PrimitiveCast {
                         MethodDeclaration.Builder.builder()
                                 .modifiers(PUBLIC, STATIC)
                                 .name("printString")
+                                .returnType(INT)
                                 .parameters(parameter(STRING, "string"))
                                 .body(CodeSource.fromVarArgs(
                                         Predefined.invokePrintln(accessVariable(STRING, "string")),

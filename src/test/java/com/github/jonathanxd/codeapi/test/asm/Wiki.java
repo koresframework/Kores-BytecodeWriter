@@ -64,6 +64,7 @@ public class Wiki {
 
         TypeDeclaration decl = ClassDeclaration.Builder.builder()
                 .modifiers(CodeModifier.PUBLIC)
+                .name("com.MyClass")
                 .fields(
                         FieldDeclaration.Builder.builder()
                                 .modifiers(CodeModifier.PRIVATE, CodeModifier.FINAL)

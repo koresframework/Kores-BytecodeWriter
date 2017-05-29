@@ -27,10 +27,11 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
-import com.github.jonathanxd.codeapi.base.ElementsHolder
-import com.github.jonathanxd.codeapi.base.InnerTypesHolder
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.bytecode.processor.LOCATION
 import com.github.jonathanxd.codeapi.bytecode.processor.inContext
+import com.github.jonathanxd.codeapi.factory.constructorDec
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.iutils.data.TypedData
@@ -38,8 +39,6 @@ import com.github.jonathanxd.iutils.data.TypedData
 object ElementsHolderProcessor : Processor<ElementsHolder> {
 
     override fun process(part: ElementsHolder, data: TypedData, codeProcessor: CodeProcessor<*>) {
-
-        part.staticBlock.visitHolder(data, codeProcessor)
 
         part.fields.forEach {
             it.visitHolder(data, codeProcessor)
@@ -52,6 +51,16 @@ object ElementsHolderProcessor : Processor<ElementsHolder> {
         part.methods.forEach {
             it.visitHolder(data, codeProcessor)
         }
+
+        if(part is TypeDeclaration && !part.isInterface && part.constructors.isEmpty()) {
+            val defaultConstructor = constructorDec().build {
+                this.modifiers += CodeModifier.PUBLIC
+            }
+
+            codeProcessor.process(ConstructorDeclaration::class.java, defaultConstructor, data)
+        }
+
+        part.staticBlock.visitHolder(data, codeProcessor)
 
         codeProcessor.process(InnerTypesHolder::class.java, part, data)
     }

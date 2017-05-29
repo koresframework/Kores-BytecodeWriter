@@ -202,8 +202,17 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
             mvDataOpt.methodVisitor.visitLineNumber(line, label)
         }
 
+        val searchType = if(this.map.containsKey(type))
+            type
+        else if(type.superclass != Any::class.java && type.interfaces.isEmpty())
+            type.superclass
+        else if(type.interfaces.size == 1)
+            type.interfaces.single()
+        else type
+
         @Suppress("UNCHECKED_CAST")
-        val processor = this.map[type] as? Processor<T> ?: throw IllegalArgumentException("Cannot find processor of type '$type' and part '$part'. Data: {$data}")
+        val processor = this.map[searchType] as? Processor<T>
+                ?: throw IllegalArgumentException("Cannot find processor of type '$type' (searchType: '$searchType') and part '$part'. Data: {$data}")
 
         processor.process(part, data, this)
         processor.endProcess(part, data, this)

@@ -28,7 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.common
 
 import com.github.jonathanxd.codeapi.type.GenericType
-import com.github.jonathanxd.codeapi.util.genericTypeToDescriptor
+import com.github.jonathanxd.codeapi.util.descriptor
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.map.ListHashMap
 import org.objectweb.asm.Label
@@ -228,7 +228,7 @@ class MethodVisitorHelper constructor(
                 var signature: String? = null
 
                 if (variable.type is GenericType) {
-                    signature = variable.type.genericTypeToDescriptor()
+                    signature = variable.type.descriptor
                 }
 
                 methodVisitor.visitLocalVariable(variable.name, type, signature, varStart, varEnd, i)

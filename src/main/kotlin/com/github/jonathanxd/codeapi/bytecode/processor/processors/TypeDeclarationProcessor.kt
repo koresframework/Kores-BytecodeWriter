@@ -110,16 +110,6 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
 
         codeProcessor.process(ElementsHolder::class.java, part, data)
 
-        if(!part.isInterface) {
-            if (part.constructors.isEmpty()) {
-                val defaultConstructor = constructorDec().build {
-                    this.modifiers += CodeModifier.PUBLIC
-                }
-
-                codeProcessor.process(ConstructorDeclaration::class.java, defaultConstructor, data)
-            }
-        }
-
         if (part is AnnotationDeclaration) {
             part.properties.forEach {
                 codeProcessor.process(AnnotationProperty::class.java, it, data)
@@ -136,6 +126,10 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         }
 
         cw.visitEnd()
+
+        TYPE_DECLARATION.remove(data)
+        CLASS_VISITOR.remove(data)
+        SwitchOnEnum.MAPPINGS.remove(data)
 
         BYTECODE_CLASS_LIST.getOrSet(data.mainData, mutableListOf()).add(at, BytecodeClass(part, cw.toByteArray()))
     }
@@ -176,9 +170,7 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
     }
 
     override fun endProcess(part: TypeDeclaration, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        TYPE_DECLARATION.remove(data)
-        CLASS_VISITOR.remove(data)
-        SwitchOnEnum.MAPPINGS.remove(data)
+
         // Switch on enums is not required
     }
 

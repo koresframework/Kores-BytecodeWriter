@@ -31,11 +31,18 @@ import com.github.jonathanxd.codeapi.base.LocalCode
 import com.github.jonathanxd.codeapi.base.MethodDeclaration
 import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.common.getNewName
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.util.typedKeyOf
 import com.github.jonathanxd.iutils.data.TypedData
 
 object LocalCodeProcessor : Processor<LocalCode> {
+
+    /**
+     * Defines the mapping of LocalCode unknown names
+     */
+    val MAPPING = typedKeyOf<MutableMap<String, String>>("LOCAL_CODE_MAPPING")
 
     override fun process(part: LocalCode, data: TypedData, codeProcessor: CodeProcessor<*>) {
         val mvHelper = METHOD_VISITOR.getOrNull(data)
@@ -47,6 +54,7 @@ object LocalCodeProcessor : Processor<LocalCode> {
         }
 
         codeProcessor.process(MethodDeclaration::class.java, part.declaration, data)
+
         mvHelper?.let {
             METHOD_VISITOR.set(data, mvHelper)
         }

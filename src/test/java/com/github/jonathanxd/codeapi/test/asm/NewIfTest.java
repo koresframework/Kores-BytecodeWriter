@@ -50,7 +50,9 @@ public class NewIfTest {
     public void newIfTest() throws Throwable {
         TypeDeclaration decl = classDec().modifiers(PUBLIC).name("com.NewIf")
                 .methods(
-                        methodDec().modifiers(PUBLIC).parameters(Factories.parameter(Integer.TYPE, "x")).name("test")
+                        methodDec().modifiers(PUBLIC)
+                                .returnType(INT)
+                                .parameters(Factories.parameter(Integer.TYPE, "x")).name("test")
                                 .body(source(
                                         Factories.ifStatement(
                                                 Factories.ifExprs(

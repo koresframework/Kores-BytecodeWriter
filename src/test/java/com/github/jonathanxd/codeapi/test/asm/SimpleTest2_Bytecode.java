@@ -85,48 +85,49 @@ public class SimpleTest2_Bytecode {
                                 .name("myField")
                                 .build()
                 )
+                .constructors(
+                        // Cria um construtor para a classe 'codeClass' que criamos. CodeConstructor recebe CodeType
+                        // como parametro
+                        ConstructorDeclaration.Builder.builder()
+                                // Adiciona o modificador publico
+                                .modifiers(CodeModifier.PUBLIC)
+                                // Adiciona um parametro 'myField' do tipo String ao construtor
+                                .parameters(parameter(String.class, "myField"))
+                                .body(
+                                        // Define o corpo (codigo fonte) do metodo
+                                        // Classe Factories é usada pelo menos em 70% do código, ela ajuda em tarefas comuns.
+                                        CodeSource.fromVarArgs(
+                                                setFieldValue(Alias.THIS.INSTANCE, Access.THIS, String.class, "myField", accessVariable(String.class, "myField")),
+                                                ifStatement(
+                                                        check(accessVariable(String.class, "myField"), Operators.NOT_EQUAL_TO, Literals.NULL),
+                                                        CodeSource.fromVarArgs(
+                                                                invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
+                                                                        accessStaticField(System.class, PrintStream.class, "out"),
+                                                                        "println",
+                                                                        typeSpec(Types.VOID, Types.STRING),
+                                                                        Collections.singletonList(accessVariable(String.class, "myField"))
+                                                                )), CodeSource.fromVarArgs(
+                                                                invoke(
+                                                                        InvokeType.INVOKE_VIRTUAL,
+                                                                        PrintStream.class,
+                                                                        accessStaticField(System.class, PrintStream.class, "out"),
+                                                                        "println",
+                                                                        typeSpec(Types.VOID, Types.STRING),
+                                                                        Collections.singletonList(
+                                                                                cast(String.class, String.class, Literals.STRING("NULL VALUE"))
+                                                                        ))
+                                                        )),
+                                                ifStatement(
+                                                        ifExprs(check(Literals.LONG(5894567987L), Operators.LESS_THAN, Literals.LONG(89859845678798L))),
+                                                        CodeSource.fromPart(Predefined.invokePrintlnStr(Literals.STRING("First < Second"))),
+                                                        CodeSource.fromPart(Predefined.invokePrintlnStr(Literals.STRING("First >= Second")))
+                                                )
+                                        ))
+                                .build()
+                )
                 // Construo uma instancia
                 .build();
 
-
-        // Cria um construtor para a classe 'codeClass' que criamos. CodeConstructor recebe CodeType
-        // como parametro
-        ConstructorDeclaration codeConstructor = ConstructorDeclaration.Builder.builder()
-                // Adiciona o modificador publico
-                .modifiers(CodeModifier.PUBLIC)
-                // Adiciona um parametro 'myField' do tipo String ao construtor
-                .parameters(parameter(String.class, "myField"))
-                .body(
-                        // Define o corpo (codigo fonte) do metodo
-                        // Classe Factories é usada pelo menos em 70% do código, ela ajuda em tarefas comuns.
-                        CodeSource.fromVarArgs(
-                                setFieldValue(Alias.THIS.INSTANCE, Access.THIS, String.class, "myField", accessVariable(String.class, "myField")),
-                                ifStatement(
-                                        check(accessVariable(String.class, "myField"), Operators.NOT_EQUAL_TO, Literals.NULL),
-                                        CodeSource.fromVarArgs(
-                                                invoke(InvokeType.INVOKE_VIRTUAL, PrintStream.class,
-                                                        accessStaticField(System.class, PrintStream.class, "out"),
-                                                        "println",
-                                                        typeSpec(Types.VOID, Types.STRING),
-                                                        Collections.singletonList(accessVariable(String.class, "myField"))
-                                                )), CodeSource.fromVarArgs(
-                                                invoke(
-                                                        InvokeType.INVOKE_VIRTUAL,
-                                                        PrintStream.class,
-                                                        accessStaticField(System.class, PrintStream.class, "out"),
-                                                        "println",
-                                                        typeSpec(Types.VOID, Types.STRING),
-                                                        Collections.singletonList(
-                                                                cast(String.class, String.class, Literals.STRING("NULL VALUE"))
-                                                        ))
-                                        )),
-                                ifStatement(
-                                        ifExprs(check(Literals.LONG(5894567987L), Operators.LESS_THAN, Literals.LONG(89859845678798L))),
-                                        CodeSource.fromPart(Predefined.invokePrintlnStr(Literals.STRING("First < Second"))),
-                                        CodeSource.fromPart(Predefined.invokePrintlnStr(Literals.STRING("First >= Second")))
-                                )
-                        ))
-                .build();
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
         BytecodeClass bytecodeClass = bytecodeProcessor.process(codeClass).get(0);

@@ -36,7 +36,7 @@ import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.type.GenericType
-import com.github.jonathanxd.codeapi.util.genericTypeToDescriptor
+import com.github.jonathanxd.codeapi.util.descriptor
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 
@@ -46,7 +46,7 @@ object FieldDeclarationProcessor : Processor<FieldDeclaration> {
         val visitor = CLASS_VISITOR.getOrNull(data)!!
 
         val access = ModifierUtil.modifiersToAsm(part.modifiers)
-        val signature = (part.type as? GenericType)?.genericTypeToDescriptor()
+        val signature = (part.type as? GenericType)?.descriptor
 
         visitor.visitField(access, part.name, part.type.typeDesc, signature, null).let {
             ANNOTATION_VISITOR_CAPABLE.set(data, AnnotationVisitorCapable.FieldVisitorCapable(it))
