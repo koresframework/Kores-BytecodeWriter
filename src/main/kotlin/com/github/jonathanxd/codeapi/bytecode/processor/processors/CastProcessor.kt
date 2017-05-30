@@ -75,7 +75,7 @@ object CastProcessor : Processor<Cast> {
         } else {
             codeProcessor.process(castedPart::class.java, castedPart, data)
 
-            if (from != null && from != to) {
+            if (from != null && !from.`is`(to)) {
                 if (to.isPrimitive) {
                     CodeTypeUtil.convertToPrimitive(from, to, mv)
                     return

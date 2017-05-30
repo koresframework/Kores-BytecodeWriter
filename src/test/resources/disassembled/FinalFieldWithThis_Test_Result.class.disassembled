@@ -1,4 +1,4 @@
-md5: 5071ed00ace253849c3d1aa47a8115c6
+md5: a0d496537fcc7a0fa10281e764676868
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -15,12 +15,12 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.
       desc: ()V 
       maxStack: 4, maxLocals: 1 
       Label_0:
-       LINE 4 -> Label_0
+       LINE 1 -> Label_0
         aload 0
         aconst_null
         invokespecial com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
-       LINE 5 -> Label_1
+       LINE 2 -> Label_1
         aload 0
         new com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox
         dup

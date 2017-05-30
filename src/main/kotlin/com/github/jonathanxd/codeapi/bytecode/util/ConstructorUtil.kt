@@ -61,10 +61,11 @@ object ConstructorUtil {
         // Constructors requires a [New] target, super invocations does not have this target
         val superInvocation = methodInvocation.target !is New
 
-        val access = methodInvocation.target as? Access
+        val target = methodInvocation.target
 
-        val accept = access != null
-                && (access == Access.THIS || access == Access.SUPER)
+        val accept = (target is Access
+                && (target == Access.THIS || target == Access.SUPER))
+                || (target === Alias.SUPER || target === Alias.THIS)
 
         return superInvocation
                 && accept
