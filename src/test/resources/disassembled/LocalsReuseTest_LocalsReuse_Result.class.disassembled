@@ -1,4 +1,4 @@
-md5: c098631bfb3b1fc47c0ebd989b9005d7
+md5: 50c297dd43e16c5c24e663acc597016c
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,16 +13,16 @@ public class codeapi.LocalsReuse extends java.lang.Object {
       desc: (Z)I 
       maxStack: 1, maxLocals: 3 
       Label_0:
-       LINE 3 -> Label_0
+       LINE 1 -> Label_0
         iload 1
         ifeq Label_5
       Label_1:
-       LINE 4 -> Label_1
+       LINE 2 -> Label_1
         bipush 10
       Label_2:
         istore 2
       Label_3:
-       LINE 5 -> Label_3
+       LINE 3 -> Label_3
         iload 2
         ireturn
       Label_4:
@@ -31,13 +31,13 @@ public class codeapi.LocalsReuse extends java.lang.Object {
         nop
         athrow
       Label_5:
-       LINE 6 -> Label_5
+       LINE 4 -> Label_5
        FRAME[type: F_APPEND, locals: 2, local: {codeapi.LocalsReuse, integer}, stacks: 0, stack: {}]
         bipush 17
       Label_6:
         istore 2
       Label_7:
-       LINE 7 -> Label_7
+       LINE 5 -> Label_7
         iload 2
         ireturn
       Label_8:

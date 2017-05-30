@@ -1,4 +1,4 @@
-md5: 0aa2227287c8121f033f944e05f57b48
+md5: c9ecb9533917bf00a88d06e4a24d802a
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -15,7 +15,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
-       LINE 3 -> Label_1
+       LINE 1 -> Label_1
         new com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm
         dup
         invokespecial com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm.<init>()void (ownerIsInterface: false)
@@ -25,21 +25,20 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
       Label_3:
         astore 2
       Label_4:
-       LINE 4 -> Label_4
+       LINE 2 -> Label_4
         aload 1
         invokevirtual com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm.read()void (ownerIsInterface: false)
       Label_5:
-       LINE 5 -> Label_5
-       LINE 6 -> Label_5
+       LINE 3 -> Label_5
         aload 1
         ifnull Label_14
       Label_6:
-       LINE 8 -> Label_6
+       LINE 4 -> Label_6
         aload 2
         ifnull Label_13
       Label_7:
-       LINE 9 -> Label_7
-       LINE 10 -> Label_7
+       LINE 5 -> Label_7
+       LINE 6 -> Label_7
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
       Label_8:
@@ -48,43 +47,41 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
        FRAME[type: F_FULL, locals: 3, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null}, stacks: 1, stack: {java.lang.Throwable}]
         astore 3
       Label_10:
-       LINE 11 -> Label_10
+       LINE 7 -> Label_10
         aload 2
         aload 3
         invokevirtual java.lang.Throwable.addSuppressed(java.lang.Throwable)void (ownerIsInterface: false)
       Label_11:
-       LINE 12 -> Label_11
         goto Label_12
       Label_12:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         goto Label_14
       Label_13:
-       LINE 13 -> Label_13
+       LINE 8 -> Label_13
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
       Label_14:
-       LINE 7 -> Label_14
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         goto Label_28
       Label_15:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
         astore 3
       Label_16:
-       LINE 14 -> Label_16
+       LINE 9 -> Label_16
         aload 3
         astore 2
       Label_17:
-       LINE 15 -> Label_17
+       LINE 10 -> Label_17
         aload 1
         ifnull Label_26
       Label_18:
-       LINE 18 -> Label_18
+       LINE 12 -> Label_18
         aload 2
         ifnull Label_25
       Label_19:
-       LINE 19 -> Label_19
-       LINE 20 -> Label_19
+       LINE 13 -> Label_19
+       LINE 14 -> Label_19
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
       Label_20:
@@ -93,24 +90,22 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
        FRAME[type: F_FULL, locals: 4, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, java.lang.Throwable}, stacks: 1, stack: {java.lang.Throwable}]
         astore 4
       Label_22:
-       LINE 21 -> Label_22
+       LINE 15 -> Label_22
         aload 2
         aload 4
         invokevirtual java.lang.Throwable.addSuppressed(java.lang.Throwable)void (ownerIsInterface: false)
       Label_23:
-       LINE 22 -> Label_23
         goto Label_24
       Label_24:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         goto Label_26
       Label_25:
-       LINE 23 -> Label_25
+       LINE 16 -> Label_25
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
       Label_26:
-       LINE 16 -> Label_26
-       LINE 17 -> Label_26
+       LINE 11 -> Label_26
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 3
         athrow

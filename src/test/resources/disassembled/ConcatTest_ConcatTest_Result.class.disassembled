@@ -1,4 +1,4 @@
-md5: 2133a08bb1dbdcce33a4beb30ab13c53
+md5: 22920a18ab6c1bd7db3f8ec15644d93b
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -16,7 +16,7 @@ public class com.ConcatTest extends java.lang.Object {
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
-       LINE 3 -> Label_1
+       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.StringBuilder
         dup
@@ -31,17 +31,17 @@ public class com.ConcatTest extends java.lang.Object {
         invokevirtual java.lang.Object.toString()java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_2:
-       LINE 4 -> Label_2
+       LINE 2 -> Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc ""              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_3:
-       LINE 5 -> Label_3
+       LINE 3 -> Label_3
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_4:
-       LINE 6 -> Label_4
+       LINE 4 -> Label_4
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"              // type: java.lang.String
         ldc "B"              // type: java.lang.String

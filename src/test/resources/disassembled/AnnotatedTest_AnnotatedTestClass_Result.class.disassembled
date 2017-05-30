@@ -1,4 +1,4 @@
-md5: a638d0e479590ca90e71fbacec0b1cf9
+md5: 51137168d6d0d26c3cd6f9916dc90c31
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -16,7 +16,7 @@ public class test.AnnotatedTestClass extends java.lang.Object {
     !parameter[name: first, access:  (0)]
     !parametersAnnotations [
       [0] {
-        @java.lang.Deprecated()
+        @kotlin.Deprecated()
       }
     ]
     @java.lang.invoke.MethodHandle.PolymorphicSignature()
@@ -24,7 +24,7 @@ public class test.AnnotatedTestClass extends java.lang.Object {
       desc: (Ljava/lang/Object;)Ljava/lang/Object; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 4 -> Label_0
+       LINE 1 -> Label_0
         aconst_null
         areturn
       Label_1:
@@ -52,7 +52,7 @@ public class test.AnnotatedTestClass extends java.lang.Object {
       desc: ()V 
       maxStack: 1, maxLocals: 0 
       Label_0:
-       LINE 5 -> Label_0
+       LINE 2 -> Label_0
         aconst_null
         putstatic test.AnnotatedTestClass.field (type: java.lang.String)
         return

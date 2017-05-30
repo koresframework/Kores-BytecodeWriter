@@ -1,4 +1,4 @@
-md5: f7dcb191cea983c58c6aa79461b3ec94
+md5: 77dbc5840937ea67172b3062ed0a55c6
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -19,13 +19,12 @@ public class com.ForEach extends java.lang.Object {
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
-       LINE 4 -> Label_1
+       LINE 1 -> Label_1
         getstatic com.ForEach.stra (type: java.lang.String)
       Label_2:
         astore 2
       Label_3:
-       LINE 5 -> Label_3
-       LINE 6 -> Label_3
+       LINE 2 -> Label_3
         iconst_0
         istore 3
       Label_4:
@@ -35,19 +34,19 @@ public class com.ForEach extends java.lang.Object {
         arraylength
         if_icmpge Label_9
       Label_5:
-       LINE 7 -> Label_5
+       LINE 3 -> Label_5
         aload 1
         iload 3
         aaload
       Label_6:
         astore 4
       Label_7:
-       LINE 8 -> Label_7
+       LINE 4 -> Label_7
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 4
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_8:
-       LINE 9 -> Label_8
+       LINE 5 -> Label_8
         iinc 3 1
         goto Label_4
       Label_9:
@@ -67,7 +66,7 @@ public class com.ForEach extends java.lang.Object {
       desc: ()V 
       maxStack: 1, maxLocals: 0 
       Label_0:
-       LINE 10 -> Label_0
+       LINE 6 -> Label_0
         ldc "XA"              // type: java.lang.String
         putstatic com.ForEach.stra (type: java.lang.String)
         return

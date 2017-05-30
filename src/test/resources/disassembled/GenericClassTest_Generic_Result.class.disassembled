@@ -1,4 +1,4 @@
-md5: 3d478d1f9698be3410367220f21d60e2
+md5: 3b64e088a2cf9cc165db394afcc9a192
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -18,7 +18,7 @@ public class com.Generic extends java.lang.Object implements java.util.List {
       desc: (Ljava/util/List;)V 
       maxStack: 1, maxLocals: 2 
       Label_0:
-       LINE 4 -> Label_0
+       LINE 1 -> Label_0
         aconst_null
       Label_1:
         astore 1

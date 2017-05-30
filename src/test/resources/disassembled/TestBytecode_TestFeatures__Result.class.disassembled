@@ -1,4 +1,4 @@
-md5: 1e76a51da96ab2865220004f694b9d75
+md5: ddd6803193a576477d0ee0e0835c7583
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -26,12 +26,12 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         bipush 15
         putfield fullName.TestFeatures_.n (type: int)
       Label_1:
-       LINE 7 -> Label_1
+       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
-       LINE 8 -> Label_2
+       LINE 2 -> Label_2
         aload 0
         ldc "Oi"              // type: java.lang.String
         invokevirtual fullName.TestFeatures_.printIt(java.lang.Object)void (ownerIsInterface: false)
@@ -48,27 +48,27 @@ public class fullName.TestFeatures_ extends java.lang.Object {
       desc: (Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 3 
       Label_0:
-       LINE 9 -> Label_0
+       LINE 3 -> Label_0
         aload 1
         ifnull Label_2
       Label_1:
-       LINE 13 -> Label_1
+       LINE 7 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello :D"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
-       LINE 10 -> Label_2
+       LINE 4 -> Label_2
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         ldc "DingDong"              // type: java.lang.String
       Label_3:
         astore 2
       Label_4:
-       LINE 11 -> Label_4
+       LINE 5 -> Label_4
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 2
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_5:
-       LINE 12 -> Label_5
+       LINE 6 -> Label_5
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 1
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
@@ -87,7 +87,7 @@ public class fullName.TestFeatures_ extends java.lang.Object {
       desc: (I)Z 
       maxStack: 4, maxLocals: 2 
       Label_0:
-       LINE 14 -> Label_0
+       LINE 8 -> Label_0
         iload 1
         bipush 9
         if_icmpeq Label_1
@@ -95,12 +95,12 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         bipush 7
         if_icmpne Label_2
       Label_1:
-       LINE 17 -> Label_1
+       LINE 11 -> Label_1
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_0
         ireturn
       Label_2:
-       LINE 15 -> Label_2
+       LINE 9 -> Label_2
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.Integer
@@ -110,7 +110,7 @@ public class fullName.TestFeatures_ extends java.lang.Object {
         checkcast java.lang.Object
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_3:
-       LINE 16 -> Label_3
+       LINE 10 -> Label_3
         iconst_1
         ireturn
       Label_4:

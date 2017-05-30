@@ -1,4 +1,4 @@
-md5: 44acfae7fc8b91df9396cb446d6a949d
+md5: e08ea27d42aa5b04ebd1538910a162fa
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -26,12 +26,12 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         bipush 15
         putfield fullName.InvocationsTest__Generated.n (type: int)
       Label_1:
-       LINE 7 -> Label_1
+       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
-       LINE 8 -> Label_2
+       LINE 2 -> Label_2
         aload 0
         ldc "Oi"              // type: java.lang.String
         invokevirtual fullName.InvocationsTest__Generated.printIt(java.lang.Object)void (ownerIsInterface: false)
@@ -51,27 +51,27 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
       desc: (Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 3 
       Label_0:
-       LINE 9 -> Label_0
+       LINE 3 -> Label_0
         aload 1
         ifnull Label_2
       Label_1:
-       LINE 13 -> Label_1
+       LINE 7 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello :D"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
-       LINE 10 -> Label_2
+       LINE 4 -> Label_2
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         ldc "DingDong"              // type: java.lang.String
       Label_3:
         astore 2
       Label_4:
-       LINE 11 -> Label_4
+       LINE 5 -> Label_4
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 2
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_5:
-       LINE 12 -> Label_5
+       LINE 6 -> Label_5
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 1
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
@@ -90,65 +90,65 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
       desc: (I)Z 
       maxStack: 4, maxLocals: 7 
       Label_0:
-       LINE 14 -> Label_0
+       LINE 8 -> Label_0
         ldc "xy"              // type: java.lang.String
         ldc "yz"              // type: java.lang.String
         invokestatic com.github.jonathanxd.codeapi.test.InvocationsTest_.bmp(java.lang.String, java.lang.String)void (ownerIsInterface: false)
       Label_1:
-       LINE 15 -> Label_1
+       LINE 9 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Invoke Interface ->"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
-       LINE 16 -> Label_2
+       LINE 10 -> Label_2
         new com.github.jonathanxd.codeapi.test.WorldGreeter
         dup
         invokespecial com.github.jonathanxd.codeapi.test.WorldGreeter.<init>()void (ownerIsInterface: false)
       Label_3:
         astore 2
       Label_4:
-       LINE 17 -> Label_4
+       LINE 11 -> Label_4
         aload 2
         invokeinterface com.github.jonathanxd.codeapi.test.Greeter.hello()java.lang.String (ownerIsInterface: true)
       Label_5:
         astore 3
       Label_6:
-       LINE 18 -> Label_6
+       LINE 12 -> Label_6
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 3
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_7:
-       LINE 19 -> Label_7
+       LINE 13 -> Label_7
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Invoke Interface <-"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_8:
-       LINE 20 -> Label_8
+       LINE 14 -> Label_8
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Invoke Dynamic ->"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_9:
-       LINE 21 -> Label_9
+       LINE 15 -> Label_9
         invokedynamic get()java.util.function.Supplier [
           // Bootstrap method
           java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
             // Arguments
             ()Ljava/lang/Object;
-            fullName.InvocationsTest__Generated.fragment$$1()java.lang.String (tag: h_invokestatic, itf: false)
+            fullName.InvocationsTest__Generated.$$lambda$0()java.lang.String (tag: h_invokestatic, itf: false)
             ()Ljava/lang/String;
           ]
         ]
       Label_10:
         astore 4
       Label_11:
-       LINE 22 -> Label_11
+       LINE 16 -> Label_11
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 4
         invokeinterface java.util.function.Supplier.get()java.lang.Object (ownerIsInterface: true)
         checkcast java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_12:
-       LINE 23 -> Label_12
+       LINE 17 -> Label_12
         aload 2
         invokedynamic get(com.github.jonathanxd.codeapi.test.Greeter)java.util.function.Supplier [
           // Bootstrap method
@@ -162,29 +162,29 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
       Label_13:
         astore 5
       Label_14:
-       LINE 24 -> Label_14
+       LINE 18 -> Label_14
         aload 5
         invokeinterface java.util.function.Supplier.get()java.lang.Object (ownerIsInterface: true)
         checkcast java.lang.String
       Label_15:
         astore 6
       Label_16:
-       LINE 25 -> Label_16
+       LINE 19 -> Label_16
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 6
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_17:
-       LINE 26 -> Label_17
+       LINE 20 -> Label_17
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Invoke Dynamic <-"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_18:
-       LINE 27 -> Label_18
+       LINE 21 -> Label_18
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Invoke Dynamic Bootstrap ->"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_19:
-       LINE 28 -> Label_19
+       LINE 22 -> Label_19
         ldc "World"              // type: java.lang.String
         invokedynamic helloWorld(java.lang.String)void [
           // Bootstrap method
@@ -192,12 +192,12 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
           ]
         ]
       Label_20:
-       LINE 29 -> Label_20
+       LINE 23 -> Label_20
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Invoke Dynamic Bootstrap <-"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_21:
-       LINE 30 -> Label_21
+       LINE 24 -> Label_21
         iload 1
         bipush 9
         if_icmpeq Label_22
@@ -205,12 +205,12 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         bipush 7
         if_icmpne Label_23
       Label_22:
-       LINE 33 -> Label_22
+       LINE 28 -> Label_22
        FRAME[type: F_FULL, locals: 7, local: {fullName.InvocationsTest__Generated, integer, com.github.jonathanxd.codeapi.test.WorldGreeter, java.lang.String, java.util.function.Supplier, java.util.function.Supplier, java.lang.String}, stacks: 0, stack: {}]
         iconst_0
         ireturn
       Label_23:
-       LINE 31 -> Label_23
+       LINE 25 -> Label_23
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         new java.lang.Integer
@@ -220,7 +220,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         checkcast java.lang.Object
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_24:
-       LINE 32 -> Label_24
+       LINE 26 -> Label_24
         iconst_1
         ireturn
       Label_25:
@@ -236,11 +236,11 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
     }
     
     !access: ACC_PRIVATE, ACC_STATIC (10)
-    private static java.lang.String fragment$$1() {
+    private static java.lang.String $$lambda$0() {
       desc: ()Ljava/lang/String; 
       maxStack: 1, maxLocals: 0 
       Label_0:
-       LINE 34 -> Label_0
+       LINE 27 -> Label_0
         ldc "BRB"              // type: java.lang.String
         pop
         ldc "XSD"              // type: java.lang.String
