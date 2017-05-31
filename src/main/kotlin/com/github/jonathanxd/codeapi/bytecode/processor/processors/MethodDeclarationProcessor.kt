@@ -96,7 +96,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
         val desc = parametersAndReturnToInferredDesc(typeDeclaration, part, parameters, part.returnType)
 
-        val throws = if (part.throws.isEmpty()) null else part.throws.map { it.internalName }.toTypedArray()
+        val throws = if (part.throwsClause.isEmpty()) null else part.throwsClause.map { it.internalName }.toTypedArray()
 
         val mvHelper = MethodVisitorHelper(visitor.visitMethod(asmModifiers, part.name, desc, signature, throws), mutableListOf())
 
