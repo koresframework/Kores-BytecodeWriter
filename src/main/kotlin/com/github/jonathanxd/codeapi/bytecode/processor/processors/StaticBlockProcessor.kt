@@ -33,11 +33,15 @@ import com.github.jonathanxd.codeapi.base.Access
 import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.base.StaticBlock
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
-import com.github.jonathanxd.codeapi.bytecode.processor.*
+import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.setFieldValue
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.util.inContext
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 

@@ -31,7 +31,6 @@ import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.Concat
 import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.factory.constructorTypeSpec
 import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.factory.invokeVirtual
@@ -39,6 +38,7 @@ import com.github.jonathanxd.codeapi.factory.typeSpec
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 
 

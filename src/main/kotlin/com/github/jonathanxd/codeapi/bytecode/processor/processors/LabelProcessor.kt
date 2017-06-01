@@ -31,10 +31,10 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.add
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.util.add
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 import com.github.jonathanxd.codeapi.base.Label as CodeLabel

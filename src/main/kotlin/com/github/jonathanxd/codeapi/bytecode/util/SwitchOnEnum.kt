@@ -32,10 +32,10 @@ import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.base.comment.Comments
 import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
-import com.github.jonathanxd.codeapi.bytecode.processor.add
 import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.type.CodeType
+import com.github.jonathanxd.codeapi.util.add
 import com.github.jonathanxd.codeapi.util.codeType
 import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.codeapi.util.typedKeyOf

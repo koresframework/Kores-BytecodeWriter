@@ -46,6 +46,7 @@ import com.github.jonathanxd.codeapi.processor.CodeValidator
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.VoidValidator
 import com.github.jonathanxd.codeapi.sugar.SugarSyntaxProcessor
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.option.Options
 import org.objectweb.asm.ClassReader
@@ -202,11 +203,11 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
             mvDataOpt.methodVisitor.visitLineNumber(line, label)
         }
 
-        val searchType = if(this.map.containsKey(type))
+        val searchType = if (this.map.containsKey(type))
             type
-        else if(type.superclass != Any::class.java && type.interfaces.isEmpty())
+        else if (type.superclass != Any::class.java && type.interfaces.isEmpty())
             type.superclass
-        else if(type.interfaces.size == 1)
+        else if (type.interfaces.size == 1)
             type.interfaces.single()
         else type
 
@@ -219,7 +220,7 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
 
         val classes = BYTECODE_CLASS_LIST.getOrNull(data) ?: mutableListOf()
 
-        if(classes.isNotEmpty() && this.options.get(CHECK))
+        if (classes.isNotEmpty() && this.options.get(CHECK))
             check(classes)
 
         return classes

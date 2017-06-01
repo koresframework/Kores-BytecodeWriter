@@ -33,7 +33,6 @@ import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.Cast
 import com.github.jonathanxd.codeapi.base.TypeSpec
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.factory.cast
 import com.github.jonathanxd.codeapi.factory.constructorTypeSpec

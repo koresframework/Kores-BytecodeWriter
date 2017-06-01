@@ -32,12 +32,12 @@ import com.github.jonathanxd.codeapi.base.AnnotationProperty
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.processor.ANNOTATION_VISITOR_CAPABLE
 import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.inContext
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.util.inContext
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes

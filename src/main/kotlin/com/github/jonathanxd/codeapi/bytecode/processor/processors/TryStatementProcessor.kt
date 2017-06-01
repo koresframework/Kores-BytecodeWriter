@@ -30,14 +30,10 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
-import com.github.jonathanxd.codeapi.util.codeType
-import com.github.jonathanxd.codeapi.util.insertAfterOrEnd
-import com.github.jonathanxd.codeapi.util.insertBeforeOrEnd
-import com.github.jonathanxd.codeapi.util.internalName
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes

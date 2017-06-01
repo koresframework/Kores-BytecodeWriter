@@ -32,8 +32,6 @@ import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.add
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.bytecode.util.ReflectType
 import com.github.jonathanxd.codeapi.bytecode.util.SwitchOnEnum
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec

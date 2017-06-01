@@ -32,11 +32,11 @@ import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.base.SuperClassHolder
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.bytecode.util.ReflectType
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.Alias
 import com.github.jonathanxd.codeapi.util.codeType
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 
 object Util {

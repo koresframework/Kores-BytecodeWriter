@@ -73,20 +73,3 @@ val IN_INVOKE_DYNAMIC = typedKeyOf<Unit>("IN_INVOKE_DYNAMIC")
 
 //val LOCAL_CODES = typedKeyOf<MutableList<LocalCode>>("LOCAL_CODES")
 
-fun <T> TypedKey<MutableList<T>>.add(data: TypedData, value: T) {
-    this.getOrSet(data, mutableListOf<T>()).add(value)
-}
-
-fun <T> TypedKey<T>.require(data: TypedData): T = this.getOrNull(data)
-        ?: throw IllegalStateException("Data of key TypedKey[key=${this.key}, type=${this.type}] is required. Current data map: ${data.typedDataMap}.")
-
-/**
- * This value only lives in the [context], when the call of [context] finishes the key value is removed.
- *
- * Does not works with threads.
- */
-inline fun <T> TypedKey<T>.inContext(data: TypedData, value: T, context: () -> Unit) {
-    this.set(data, value)
-    context()
-    this.remove(data)
-}

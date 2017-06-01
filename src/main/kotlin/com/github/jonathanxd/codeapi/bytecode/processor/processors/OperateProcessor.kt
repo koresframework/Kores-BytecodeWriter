@@ -30,7 +30,6 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.Operate
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.bytecode.util.ReflectType
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.helper.OperateHelper
@@ -40,6 +39,7 @@ import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.javaSpecName
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
@@ -56,7 +56,7 @@ object OperateProcessor : Processor<Operate> {
 
         if (operation === Operators.UNARY_BITWISE_COMPLEMENT) {
             // ~
-            if(value == CodeNothing)
+            if (value == CodeNothing)
                 throw IllegalArgumentException("Value cannot be null if operation is '$operation'!")
 
             // Desugar

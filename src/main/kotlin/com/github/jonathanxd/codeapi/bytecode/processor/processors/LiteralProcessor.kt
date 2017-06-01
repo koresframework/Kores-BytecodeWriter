@@ -28,7 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.require
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.bytecode.util.LiteralUtil
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.processor.CodeProcessor

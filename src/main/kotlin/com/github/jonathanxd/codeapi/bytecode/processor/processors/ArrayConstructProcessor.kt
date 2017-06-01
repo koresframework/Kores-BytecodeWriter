@@ -30,13 +30,13 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.ArrayConstructor
 import com.github.jonathanxd.codeapi.base.ArrayStore
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.bytecode.util.ArrayUtil
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.arrayComponent
 import com.github.jonathanxd.codeapi.util.arrayDimension
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes

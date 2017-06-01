@@ -33,12 +33,12 @@ import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.base.New
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.require
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.internalName
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes

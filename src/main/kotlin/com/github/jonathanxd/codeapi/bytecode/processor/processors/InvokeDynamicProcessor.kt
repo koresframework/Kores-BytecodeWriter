@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.bytecode.processor.*
 import com.github.jonathanxd.codeapi.bytecode.util.MethodInvocationUtil
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import java.lang.reflect.Type
 
