@@ -41,11 +41,7 @@ import com.github.jonathanxd.codeapi.bytecode.processor.processors.*
 import com.github.jonathanxd.codeapi.common.Stack
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
-import com.github.jonathanxd.codeapi.processor.CodeValidator
-import com.github.jonathanxd.codeapi.processor.Processor
-import com.github.jonathanxd.codeapi.processor.VoidValidator
-import com.github.jonathanxd.codeapi.sugar.SugarSyntaxProcessor
+import com.github.jonathanxd.codeapi.processor.*
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.option.Options
@@ -54,10 +50,9 @@ import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.util.CheckClassAdapter
 
 class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclaration) -> String = { "${it.simpleName}.cai" }) //CodeAPI Instructions
-    : CodeProcessor<List<BytecodeClass>> {
+    : AbstractProcessor<List<BytecodeClass>>() {
 
     override val options: Options = Options()
-    private val map = mutableMapOf<Class<*>, Processor<*>>()
 
     override val validator: CodeValidator = VoidValidator
 
@@ -155,20 +150,6 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
         ))
     }
 
-    inline fun <reified T> registerProcessorOfTypes(processor: Processor<T>, types: Array<Class<out T>>) {
-        types.forEach {
-            registerProcessor(processor, it)
-        }
-    }
-
-    override fun <T> registerProcessor(processor: Processor<T>, type: Class<T>) {
-        this.map[type] = processor
-    }
-
-    override fun <T> registerSugarSyntaxProcessor(sugarSyntaxProcessor: SugarSyntaxProcessor<T>, type: Class<T>) {
-        this.map[type] = sugarSyntaxProcessor
-    }
-
 
     override fun createData(): TypedData {
         val data = TypedData()
@@ -203,17 +184,7 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
             mvDataOpt.methodVisitor.visitLineNumber(line, label)
         }
 
-        val searchType = if (this.map.containsKey(type))
-            type
-        else if (type.superclass != Any::class.java && type.interfaces.isEmpty())
-            type.superclass
-        else if (type.interfaces.size == 1)
-            type.interfaces.single()
-        else type
-
-        @Suppress("UNCHECKED_CAST")
-        val processor = this.map[searchType] as? Processor<T>
-                ?: throw IllegalArgumentException("Cannot find processor of type '$type' (searchType: '$searchType') and part '$part'. Data: {$data}")
+        val processor = getProcessorOf(type, part, data)
 
         processor.process(part, data, this)
         processor.endProcess(part, data, this)
