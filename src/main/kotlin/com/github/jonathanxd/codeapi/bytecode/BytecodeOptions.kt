@@ -29,6 +29,7 @@
 
 package com.github.jonathanxd.codeapi.bytecode
 
+import com.github.jonathanxd.codeapi.base.Line
 import com.github.jonathanxd.iutils.option.Option
 
 /**
@@ -96,5 +97,10 @@ enum class VisitLineType {
     /**
      * Follow Code Source indexes
      */
-    FOLLOW_CODE_SOURCE
+    FOLLOW_CODE_SOURCE,
+
+    /**
+     * Uses [Line] instructions. If this option is not set, [Line] instructions will be ignored.
+     */
+    LINE_INSTRUCTION
 }

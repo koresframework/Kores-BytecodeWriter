@@ -33,6 +33,7 @@ import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
@@ -42,10 +43,11 @@ object FieldDefinitionProcessor : Processor<FieldDefinition> {
     override fun process(part: FieldDefinition, data: TypedData, codeProcessor: CodeProcessor<*>) {
         val localization = Util.resolveType(part.localization, data)
         val target = part.target
+        val safeTarget = target.safeForComparison
 
         val variableName = part.name
         val variableType = part.type
-        val opcode = if (target is Access && target == Access.STATIC) Opcodes.PUTSTATIC else Opcodes.PUTFIELD
+        val opcode = if (safeTarget is Access && safeTarget == Access.STATIC) Opcodes.PUTSTATIC else Opcodes.PUTFIELD
 
         codeProcessor.process(target::class.java, target, data)
 

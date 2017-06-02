@@ -37,6 +37,7 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -46,10 +47,11 @@ object ReturnProcessor : Processor<Return> {
     override fun process(part: Return, data: TypedData, codeProcessor: CodeProcessor<*>) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
 
-        val tValue = part.value
+        val value = part.value
+        val safeValue = value.safeForComparison
 
-        if (tValue != Void && tValue != CodeNothing) {
-            codeProcessor.process(tValue::class.java, tValue, data)
+        if (safeValue != Void && safeValue != CodeNothing) {
+            codeProcessor.process(value::class.java, value, data)
         }
 
         val toRet = part.type

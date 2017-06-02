@@ -82,6 +82,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 && !modifiers.contains(CodeModifier.ABSTRACT)
                 && !modifiers.contains(CodeModifier.FINAL)
                 && !modifiers.contains(CodeModifier.DEFAULT)
+                && part.body.isEmpty
                 && typeDeclaration.value.isInterface) {
             modifiers.add(CodeModifier.ABSTRACT)
         }
@@ -155,7 +156,9 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                             val elementsHolder = typeDeclaration.value
 
                             methodSource = insertAfter(
-                                    { part -> part is MethodInvocation && ConstructorUtil.isInitForThat(part) },
+                                    { part -> val safe = part.safeForComparison
+                                        safe is MethodInvocation && ConstructorUtil.isInitForThat(safe)
+                                    },
                                     ConstructorUtil.generateFinalFields(elementsHolder),
                                     methodSource)
                         }

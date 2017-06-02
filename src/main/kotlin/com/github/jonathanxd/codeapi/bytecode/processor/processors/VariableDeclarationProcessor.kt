@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
@@ -46,8 +47,9 @@ object VariableDeclarationProcessor : Processor<VariableDeclaration> {
         val mv = mvHelper.methodVisitor
 
         val value = part.value
+        val safeValue = value.safeForComparison
 
-        if (value != CodeNothing) {
+        if (safeValue != CodeNothing) {
             codeProcessor.process(value::class.java, value, data)
         }
 
@@ -63,7 +65,7 @@ object VariableDeclarationProcessor : Processor<VariableDeclaration> {
         val i: Int = mvHelper.storeVar(part.name, part.type, i_label, null)
                 .orElseThrow({ mvHelper.failStore(part) })
 
-        if (part.value != CodeNothing) {
+        if (safeValue != CodeNothing) {
             val type = Type.getType(part.type.javaSpecName)
 
             val opcode = type.getOpcode(Opcodes.ISTORE) // ALOAD

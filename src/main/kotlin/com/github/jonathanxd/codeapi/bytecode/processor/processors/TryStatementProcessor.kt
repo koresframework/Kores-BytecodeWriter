@@ -105,8 +105,6 @@ object TryStatementProcessor : Processor<TryStatement> {
             val stackPos = mvHelper.storeVar(field.name, field.type.codeType, i_label, null)
                     .orElseThrow({ mvHelper.failStore(field.name) })
 
-            //additional.redefineVar(stackPos, field.name, field.variableType, label, endLabel)
-
             mv.visitVarInsn(Opcodes.ASTORE, stackPos)
 
             if (fieldValue != CodeNothing) {

@@ -39,6 +39,7 @@ import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
 
 
@@ -50,7 +51,7 @@ object ConcatProcessor : Processor<Concat> {
         val first = if (concatenations.isEmpty()) null else concatenations[0]
 
         val allIsEmpty = concatenations.isNotEmpty() && concatenations.all {
-            it is Literals.StringLiteral && it.original.isEmpty()
+            val safe = it.safeForComparison; safe is Literals.StringLiteral && safe.original.isEmpty()
         }
 
         if (first != null && !allIsEmpty) {

@@ -27,39 +27,28 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
-import com.github.jonathanxd.codeapi.base.Access
-import com.github.jonathanxd.codeapi.base.FieldAccess
+import com.github.jonathanxd.codeapi.base.Line
+import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
-import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.require
-import com.github.jonathanxd.codeapi.util.safeForComparison
-import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
-import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Label
 
-object FieldAccessProcessor : Processor<FieldAccess> {
+object LineProcessor : Processor<Line> {
 
-    override fun process(part: FieldAccess, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        val mv = METHOD_VISITOR.require(data).methodVisitor
+    override fun process(part: Line, data: TypedData, codeProcessor: CodeProcessor<*>) {
 
-        val localization: CodeType = Util.resolveType(part.localization, data)
+        if(codeProcessor.options[VISIT_LINES] == VisitLineType.LINE_INSTRUCTION) {
+            val mvHelper = METHOD_VISITOR.require(data)
 
-        val at = part.target
-        val safeAt = at.safeForComparison
-
-        if (safeAt !is Access || safeAt != Access.STATIC) {
-            codeProcessor.process(at::class.java, at, data)
+            val label = Label()
+            mvHelper.methodVisitor.visitLabel(label)
+            mvHelper.methodVisitor.visitLineNumber(part.line, label)
         }
 
-        if (safeAt is Access && safeAt == Access.STATIC) {
-            mv.visitFieldInsn(Opcodes.GETSTATIC, localization.internalName, part.name, part.type.typeDesc)
-        } else {
-            // THIS
-            mv.visitFieldInsn(Opcodes.GETFIELD, localization.internalName, part.name, part.type.typeDesc)
-        }
+        codeProcessor.process(part.value, data)
     }
-
-
 }

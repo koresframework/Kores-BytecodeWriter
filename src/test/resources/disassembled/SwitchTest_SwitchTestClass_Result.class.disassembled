@@ -1,4 +1,4 @@
-md5: eac670434952d5ac541d48868a8efc4b
+md5: 37f23f860389f755fe092a867cca6e8b
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -34,31 +34,31 @@ public class com.SwitchTestClass extends java.lang.Object {
             default: Label_7
         }
       Label_2:
-       LINE 6 -> Label_2
+       LINE 5 -> Label_2
        FRAME[type: F_FULL, locals: 6, local: {com.SwitchTestClass, integer, integer, com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, java.lang.String, java.lang.Object}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "1"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_3:
-       LINE 7 -> Label_3
+       LINE 6 -> Label_3
         goto Label_8
       Label_4:
-       LINE 8 -> Label_4
+       LINE 7 -> Label_4
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "3"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_5:
-       LINE 9 -> Label_5
+       LINE 8 -> Label_5
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "5"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_6:
-       LINE 10 -> Label_6
+       LINE 9 -> Label_6
         goto Label_8
       Label_7:
-       LINE 11 -> Label_7
+       LINE 10 -> Label_7
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "default"              // type: java.lang.String
@@ -74,34 +74,34 @@ public class com.SwitchTestClass extends java.lang.Object {
             default: Label_15
         }
       Label_9:
-       LINE 12 -> Label_9
+       LINE 11 -> Label_9
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "1"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_10:
-       LINE 13 -> Label_10
+       LINE 12 -> Label_10
         goto Label_16
       Label_11:
-       LINE 14 -> Label_11
+       LINE 13 -> Label_11
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "10"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_12:
-       LINE 15 -> Label_12
+       LINE 14 -> Label_12
         goto Label_16
       Label_13:
-       LINE 16 -> Label_13
+       LINE 15 -> Label_13
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "100"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_14:
-       LINE 17 -> Label_14
+       LINE 16 -> Label_14
         goto Label_16
       Label_15:
-       LINE 18 -> Label_15
+       LINE 17 -> Label_15
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "default"              // type: java.lang.String
@@ -119,22 +119,22 @@ public class com.SwitchTestClass extends java.lang.Object {
             default: Label_20
         }
       Label_17:
-       LINE 19 -> Label_17
+       LINE 18 -> Label_17
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_18:
-       LINE 20 -> Label_18
+       LINE 19 -> Label_18
         goto Label_21
       Label_19:
-       LINE 21 -> Label_19
+       LINE 20 -> Label_19
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "B"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_20:
-       LINE 22 -> Label_20
+       LINE 21 -> Label_20
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "B or default"              // type: java.lang.String
@@ -151,94 +151,70 @@ public class com.SwitchTestClass extends java.lang.Object {
             default: Label_31
         }
       Label_22:
-       LINE 23 -> Label_22
+       LINE 22 -> Label_22
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 4
         ldc "AH"              // type: java.lang.String
         invokevirtual java.lang.Object.equals(java.lang.Object)boolean (ownerIsInterface: false)
         ifeq Label_31
       Label_23:
-       LINE 24 -> Label_23
+       LINE 23 -> Label_23
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "AH"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_24:
-       LINE 25 -> Label_24
+       LINE 24 -> Label_24
         goto Label_32
       Label_25:
+       LINE 25 -> Label_25
        LINE 26 -> Label_25
-       LINE 27 -> Label_25
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 4
         ldc "XM"              // type: java.lang.String
         invokevirtual java.lang.Object.equals(java.lang.Object)boolean (ownerIsInterface: false)
         ifeq Label_31
       Label_26:
-       LINE 28 -> Label_26
+       LINE 27 -> Label_26
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "XM"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_27:
-       LINE 29 -> Label_27
+       LINE 28 -> Label_27
         goto Label_32
       Label_28:
+       LINE 29 -> Label_28
        LINE 30 -> Label_28
-       LINE 31 -> Label_28
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         aload 4
         ldc "AHEAD"              // type: java.lang.String
         invokevirtual java.lang.Object.equals(java.lang.Object)boolean (ownerIsInterface: false)
         ifeq Label_31
       Label_29:
-       LINE 32 -> Label_29
+       LINE 31 -> Label_29
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "AHEAD"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_30:
-       LINE 33 -> Label_30
+       LINE 32 -> Label_30
         goto Label_32
       Label_31:
+       LINE 33 -> Label_31
        LINE 34 -> Label_31
-       LINE 35 -> Label_31
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "default"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_32:
-       LINE 5 -> Label_32
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
-        aload 5
-        invokevirtual java.lang.Object.hashCode()int (ownerIsInterface: false)
-        lookupSwitch {
-            handler 0: Label_33
-            default: Label_35
-        }
-      Label_33:
-       LINE 36 -> Label_33
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
-        getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Zero"              // type: java.lang.String
-        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_34:
-       LINE 37 -> Label_34
-        goto Label_36
-      Label_35:
-       LINE 38 -> Label_35
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
-        getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "default"              // type: java.lang.String
-        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_36:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
-      Label_37:
+      Label_33:
       LocalVariables {
-        index: 5, name: o, start: Label_0, end: Label_37, type: java.lang.Object, signature: null
-        index: 4, name: str, start: Label_0, end: Label_37, type: java.lang.String, signature: null
-        index: 3, name: testEnum, start: Label_0, end: Label_37, type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, signature: null
-        index: 2, name: number2, start: Label_0, end: Label_37, type: int, signature: null
-        index: 1, name: number, start: Label_0, end: Label_37, type: int, signature: null
-        index: 0, name: this, start: Label_0, end: Label_37, type: com.SwitchTestClass, signature: null
+        index: 5, name: o, start: Label_0, end: Label_33, type: java.lang.Object, signature: null
+        index: 4, name: str, start: Label_0, end: Label_33, type: java.lang.String, signature: null
+        index: 3, name: testEnum, start: Label_0, end: Label_33, type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, signature: null
+        index: 2, name: number2, start: Label_0, end: Label_33, type: int, signature: null
+        index: 1, name: number, start: Label_0, end: Label_33, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_33, type: com.SwitchTestClass, signature: null
       }
     }
     

@@ -39,6 +39,7 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.internalName
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
@@ -56,6 +57,7 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
 
         val invokeType: InvokeType = part.invokeType
         val target = part.target
+        val safeTarget = target.safeForComparison
         val specification = part.spec
 
         // Throw exception in case of invalid invoke type
@@ -77,10 +79,10 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
             mv.visitVarInsn(Opcodes.ALOAD, 0)
         }
 
-        if (target !is CodeType && !part.isSuperConstructorInvocation) {
+        if (safeTarget !is CodeType && !part.isSuperConstructorInvocation) {
             codeProcessor.process(target::class.java, target, data)
 
-            if (target is New)
+            if (safeTarget is New)
                 mv.visitInsn(Opcodes.DUP) // New does not dup, it is intended
         }
 

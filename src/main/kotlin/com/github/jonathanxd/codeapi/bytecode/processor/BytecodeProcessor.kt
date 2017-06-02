@@ -102,6 +102,13 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
         ))
 
         registerProcessor(LabelProcessor, Label::class.java)
+
+        registerProcessorOfTypes(LineProcessor, arrayOf(
+                Line::class.java,
+                Line.NormalLine::class.java,
+                Line.TypedLine::class.java
+        ))
+
         registerProcessor(LiteralProcessor, Literal::class.java)
         registerProcessor(MethodDeclarationProcessor, MethodDeclaration::class.java)
         registerProcessor(LocalCodeProcessor, LocalCode::class.java)

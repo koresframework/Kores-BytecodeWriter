@@ -25,41 +25,33 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.processor.processors
+package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.base.Access
-import com.github.jonathanxd.codeapi.base.FieldAccess
-import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
-import com.github.jonathanxd.codeapi.processor.Processor
-import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.require
-import com.github.jonathanxd.codeapi.util.safeForComparison
-import com.github.jonathanxd.codeapi.util.typeDesc
-import com.github.jonathanxd.iutils.data.TypedData
-import org.objectweb.asm.Opcodes
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
+import com.github.jonathanxd.codeapi.test.LineTest_;
+import com.github.jonathanxd.iutils.annotation.Named;
 
-object FieldAccessProcessor : Processor<FieldAccess> {
+import org.junit.Test;
 
-    override fun process(part: FieldAccess, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        val mv = METHOD_VISITOR.require(data).methodVisitor
+import java.util.function.UnaryOperator;
 
-        val localization: CodeType = Util.resolveType(part.localization, data)
+public class LineTest {
 
-        val at = part.target
-        val safeAt = at.safeForComparison
-
-        if (safeAt !is Access || safeAt != Access.STATIC) {
-            codeProcessor.process(at::class.java, at, data)
-        }
-
-        if (safeAt is Access && safeAt == Access.STATIC) {
-            mv.visitFieldInsn(Opcodes.GETSTATIC, localization.internalName, part.name, part.type.typeDesc)
-        } else {
-            // THIS
-            mv.visitFieldInsn(Opcodes.GETFIELD, localization.internalName, part.name, part.type.typeDesc)
-        }
+    @Test
+    public void lineTest() {
+        TypeDeclaration $ = LineTest_.$();
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(),
+                aClass -> {
+                    try {
+                        return aClass.newInstance();
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }, bytecodeProcessor -> {
+                    bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.LINE_INSTRUCTION);
+                });
     }
-
 
 }

@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.CodeInstruction
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
@@ -37,6 +38,7 @@ import com.github.jonathanxd.codeapi.factory.setFieldValue
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.util.Alias
 import com.github.jonathanxd.codeapi.util.internalName
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -59,9 +61,10 @@ object ConstructorUtil {
 
     fun isInitForThat(methodInvocation: MethodInvocation): Boolean {
         // Constructors requires a [New] target, super invocations does not have this target
-        val superInvocation = methodInvocation.target !is New
+        val safeTarget = methodInvocation.target.safeForComparison
+        val superInvocation = safeTarget !is New
 
-        val target = methodInvocation.target
+        val target = safeTarget
 
         val accept = (target is Access
                 && (target == Access.THIS || target == Access.SUPER))
@@ -74,26 +77,24 @@ object ConstructorUtil {
 
     }
 
-    fun searchForInitTo(typeDeclaration: TypeDeclaration, codeParts: CodeSource, targetAccessPredicate: (CodePart?) -> Boolean): SearchResult {
-        return ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, true, targetAccessPredicate, false)
+    fun searchForInitTo(typeDeclaration: TypeDeclaration,
+                        source: CodeSource,
+                        targetAccessPredicate: (CodeInstruction) -> Boolean): SearchResult {
+        return ConstructorUtil.searchForInitTo(typeDeclaration, source, true, targetAccessPredicate, false)
     }
 
-    fun searchForInitTo(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, includeChild: Boolean, targetAccessPredicate: (CodePart?) -> Boolean, isSub: Boolean): SearchResult {
+    fun searchForInitTo(typeDeclaration: TypeDeclaration,
+                        codeParts: CodeSource?,
+                        includeChild: Boolean,
+                        targetAccessPredicate: (CodeInstruction) -> Boolean, isSub: Boolean): SearchResult {
         if (codeParts == null)
             return SearchResult.FALSE
 
         for (codePart in codeParts) {
-            if (codePart is BodyHolder && includeChild) {
-                val searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codePart.body, includeChild, targetAccessPredicate, true)
+            val safe = codePart.safeForComparison
 
-                if (searchResult.found)
-                    return searchResult
-
-            }
-
-            if (codePart is CodeSource) {
-                // Another CodeSource is part of the Enclosing Source
-                val searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codePart, includeChild, targetAccessPredicate, true)
+            if (safe is BodyHolder && includeChild) {
+                val searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, safe.body, includeChild, targetAccessPredicate, true)
 
                 if (searchResult.found)
                     return searchResult
@@ -102,8 +103,8 @@ object ConstructorUtil {
             if (codePart is MethodInvocation) {
 
                 // Constructors requires a [New] target, super invocations does not have this target
-                if (codePart.target !is New
-                        && targetAccessPredicate(codePart.target)
+                if (codePart.target.safeForComparison !is New
+                        && targetAccessPredicate(codePart.target.safeForComparison)
                         && codePart.invokeType == InvokeType.INVOKE_SPECIAL
                         && codePart.spec.methodName == "<init>") {
                     return SearchResult(true, isSub)
@@ -116,8 +117,8 @@ object ConstructorUtil {
     }
 
     fun searchInitThis(typeDeclaration: TypeDeclaration, codeParts: CodeSource, validate: Boolean): Boolean {
-        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
-            codePart != null && (codePart == Access.THIS || codePart == Alias.THIS)
+        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { instruction ->
+            instruction == Access.THIS || instruction == Alias.THIS
         }, false)
 
         if (validate)
@@ -127,8 +128,8 @@ object ConstructorUtil {
     }
 
     fun searchForSuper(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, validate: Boolean): Boolean {
-        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { codePart ->
-            codePart != null && (codePart == Access.SUPER || codePart == Alias.SUPER)
+        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { instruction ->
+            instruction == Access.SUPER || instruction == Alias.SUPER
         }, false)
 
         if (validate)
@@ -144,7 +145,12 @@ object ConstructorUtil {
         return searchResult
     }
 
-    fun declareFinalFields(codeProcessor: CodeProcessor<*>, methodBody: CodeSource, typeDeclaration: TypeDeclaration, mv: MethodVisitorHelper, data: TypedData, validate: Boolean) {
+    fun declareFinalFields(codeProcessor: CodeProcessor<*>,
+                           methodBody: CodeSource,
+                           typeDeclaration: TypeDeclaration,
+                           mv: MethodVisitorHelper,
+                           data: TypedData,
+                           validate: Boolean) {
 
         if (ConstructorUtil.searchInitThis(typeDeclaration, methodBody, validate)) {
             return
@@ -174,7 +180,10 @@ object ConstructorUtil {
                 codeProcessor.process(value::class.java, value, data)
 
                 // No processor overhead.
-                mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, typeDeclaration.internalName, fieldDeclaration.name, fieldDeclaration.type.typeDesc)
+                mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD,
+                        typeDeclaration.internalName,
+                        fieldDeclaration.name,
+                        fieldDeclaration.type.typeDesc)
             }
 
         }
@@ -208,7 +217,7 @@ object ConstructorUtil {
             val name = fieldDeclaration.name
             val value = fieldDeclaration.value
 
-            if (value != CodeNothing) {
+            if (value.safeForComparison != CodeNothing) {
                 codeSource.add(setFieldValue(Alias.THIS, Access.THIS, type, name, value))
             }
         }

@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -48,6 +49,7 @@ object VariableDefinitionProcessor : Processor<VariableDefinition> {
         val variableType = part.type
 
         val value = part.value
+        val safeValue = value.safeForComparison
 
         val variable = mvHelper.getVar(variableName, variableType)
 
@@ -57,7 +59,7 @@ object VariableDefinitionProcessor : Processor<VariableDefinition> {
         val varPos = mvHelper.getVarPos(variable.get()).asInt
 
         // Try to optimize the VariableDefinition of a operation
-        if (value is Operate && VariableOperateProcessor.visit(part, value, varPos, mvHelper))
+        if (safeValue is Operate && VariableOperateProcessor.visit(part, safeValue, value, varPos, mvHelper))
             return
 
         codeProcessor.process(value::class.java, value, data)

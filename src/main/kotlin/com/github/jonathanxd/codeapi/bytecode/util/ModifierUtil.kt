@@ -28,6 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.base.CodeModifier
+import com.github.jonathanxd.codeapi.base.ModifierType
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import org.objectweb.asm.Opcodes
 
@@ -124,7 +125,7 @@ object ModifierUtil {
         if (mods.isEmpty())
             return Opcodes.ACC_PUBLIC
 
-        if(!mods.contains(CodeModifier.PACKAGE_PRIVATE) && !mods.contains(CodeModifier.PUBLIC))
+        if(mods.none { it.modifierType == ModifierType.VISIBILITY })
             mods.add(CodeModifier.PUBLIC)
 
         return modifiers

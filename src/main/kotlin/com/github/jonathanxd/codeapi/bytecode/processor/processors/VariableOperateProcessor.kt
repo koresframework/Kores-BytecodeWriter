@@ -27,6 +27,8 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
+import com.github.jonathanxd.codeapi.CodeInstruction
+import com.github.jonathanxd.codeapi.base.Line
 import com.github.jonathanxd.codeapi.base.Operate
 import com.github.jonathanxd.codeapi.base.VariableAccess
 import com.github.jonathanxd.codeapi.base.VariableDefinition
@@ -34,6 +36,7 @@ import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.util.`is`
+import org.objectweb.asm.Label
 
 object VariableOperateProcessor {
 
@@ -41,8 +44,8 @@ object VariableOperateProcessor {
      * Improve the operation and assign of a variable, returns true if this class improved
      * the operation, false otherwise.
      */
-    fun visit(t: VariableDefinition, operate: Operate, varPos: Int, additional: MethodVisitorHelper): Boolean {
-        val mv = additional.methodVisitor
+    fun visit(t: VariableDefinition, operate: Operate, part: CodeInstruction, varPos: Int, mvHelper: MethodVisitorHelper): Boolean {
+        val mv = mvHelper.methodVisitor
 
         val target = operate.target
 
@@ -69,17 +72,30 @@ object VariableOperateProcessor {
 
         val isIncrementOne = constant == 1
 
+        fun visitLine() {
+            if(part is Line) {
+                Label().let {
+                    mv.visitLabel(it)
+                    mv.visitLineNumber(part.line, it)
+                }
+            }
+        }
+
         return if (operation === Operators.ADD && isIncrementOne) {
+            visitLine()
             mv.visitIincInsn(varPos, 1)
             true
         } else if (operation === Operators.SUBTRACT && isIncrementOne) {
+            visitLine()
             mv.visitIincInsn(varPos, -1)
             true
         } else if (constantVal) {
             if (operation === Operators.ADD) {
+                visitLine()
                 mv.visitIincInsn(varPos, constant)
                 true
             } else if (operation === Operators.SUBTRACT) {
+                visitLine()
                 mv.visitIincInsn(varPos, -constant)
                 true
             } else {

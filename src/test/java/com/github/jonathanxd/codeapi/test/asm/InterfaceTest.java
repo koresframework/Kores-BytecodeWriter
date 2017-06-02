@@ -32,6 +32,7 @@ import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -41,6 +42,8 @@ import org.junit.Test;
 
 import static com.github.jonathanxd.codeapi.Types.INT;
 import static com.github.jonathanxd.codeapi.Types.STRING;
+import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
+import static com.github.jonathanxd.codeapi.factory.Factories.operate;
 import static com.github.jonathanxd.codeapi.factory.Factories.operateAndAssign;
 import static com.github.jonathanxd.codeapi.factory.Factories.parameter;
 import static com.github.jonathanxd.codeapi.factory.Factories.returnValue;
@@ -65,7 +68,7 @@ public class InterfaceTest {
                                 .name("getI")
                                 .parameters(parameter(INT, "num"))
                                 .body(CodeSource.fromPart(
-                                        returnValue(INT, operateAndAssign(VariableFactory.variable(INT, "num"), Operators.MULTIPLY, Literals.INT(9)))
+                                        returnValue(INT, operate(accessVariable(INT, "num"), Operators.MULTIPLY, Literals.INT(9)))
                                 ))
                                 .build()
                 )
@@ -73,7 +76,6 @@ public class InterfaceTest {
 
 
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
-
         byte[] gen = bytecodeProcessor.process(interfaceDeclaration).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), gen);

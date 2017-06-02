@@ -1,0 +1,51 @@
+md5: 36c8d51f3220b97b76ed9c0de7aea88e
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: SynchronizedTest.cai
+
+public class test.SynchronizedTest extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 1 -> Label_1
+        aload 0
+        dup
+        astore 1
+        monitorenter
+      Label_2:
+       LINE 2 -> Label_2
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Synchronized"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_3:
+       LINE 3 -> Label_3
+        aload 1
+      Label_4:
+       LINE 4 -> Label_4
+        monitorexit
+        goto Label_5
+      Label_5:
+       FRAME[type: F_FULL, locals: 2, local: {test.SynchronizedTest, test.SynchronizedTest}, stacks: 0, stack: {}]
+        return
+      Label_6:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_6, type: test.SynchronizedTest, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

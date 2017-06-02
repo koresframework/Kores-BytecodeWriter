@@ -64,7 +64,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
 
                 // Special handling
                 val generate = when(switchType) {
-                    SwitchType.OBJECT, SwitchType.STRING -> ObjectSwitchGenerator.generate(aSwitch)
+                    SwitchType.STRING -> ObjectSwitchGenerator.generate(aSwitch)
                     SwitchType.ENUM -> EnumSwitchGenerator.generate(aSwitch)
                     else -> NumericSwitchGenerator.generate(aSwitch)
                 }
@@ -166,7 +166,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
      */
     private fun fill(min: Int, max: Int, caseList: List<Case>): List<Case> {
 
-        val filledCases = java.util.ArrayList<Case>()
+        val filledCases = mutableListOf<Case>()
 
         for (i in min..max + 1 - 1) {
             val aCase = this.getCase(caseList, i)
@@ -181,30 +181,23 @@ object SwitchProcessor : Processor<SwitchStatement> {
         return filledCases
     }
 
-    private fun getCase(caseList: List<Case>, i: Int): Case? {
-        for (aCase in caseList) {
-            if (this.getInt(aCase) == i)
-                return aCase
-        }
+    private fun getCase(caseList: List<Case>, i: Int): Case? =
+        caseList.firstOrNull { this.getInt(it) == i }
 
-        return null
-    }
 
-    private fun getMin(caseList: List<Case>): Int {
-        val last = caseList
+    private fun getMin(caseList: List<Case>): Int =
+        caseList
                 .filterNot(Case::isDefault)
-                .map { it.value as Literals.IntLiteral }
+                .map { it.value.safeForComparison as Literals.IntLiteral }
                 .map { Integer.parseInt(it.name) }
                 .min()
                 ?: Integer.MAX_VALUE
 
-        return last
-    }
 
     private fun getMax(caseList: List<Case>): Int {
         val last = caseList
                 .filterNot(Case::isDefault)
-                .map { it.value as Literals.IntLiteral }
+                .map { it.value.safeForComparison as Literals.IntLiteral }
                 .map { Integer.parseInt(it.name) }
                 .max()
                 ?: 0
@@ -278,7 +271,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
         if (aCase.isDefault)
             return -1
 
-        return Integer.parseInt((aCase.value as Literals.IntLiteral).name)
+        return Integer.parseInt((aCase.value.safeForComparison as Literals.IntLiteral).name)
     }
 
 
@@ -336,7 +329,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
             if (aCase.type.`is`(Types.INT))
                 return aCase
 
-            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value, lazy { aSwitch }))).build()
+            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison, lazy { aSwitch }))).build()
         }
 
 
@@ -367,7 +360,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
             if (aCase.isDefault)
                 return aCase
 
-            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value, lazy { aSwitch }))).build()
+            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison, lazy { aSwitch }))).build()
         }
 
         private fun translate(aSwitch: SwitchStatement): SwitchStatement {

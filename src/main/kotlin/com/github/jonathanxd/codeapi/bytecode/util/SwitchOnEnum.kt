@@ -35,10 +35,7 @@ import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.add
-import com.github.jonathanxd.codeapi.util.codeType
-import com.github.jonathanxd.codeapi.util.type
-import com.github.jonathanxd.codeapi.util.typedKeyOf
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 
 /**
@@ -93,7 +90,7 @@ object SwitchOnEnum {
                             return@map if (it.isDefault) {
                                 it
                             } else {
-                                val index = mapping.getIndex((it.value as EnumValue).name)
+                                val index = mapping.getIndex((it.value.safeForComparison as EnumValue).name)
                                 it.builder().value(Literals.INT(index)).build()
                             }
                         }

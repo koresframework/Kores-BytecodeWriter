@@ -38,6 +38,7 @@ import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
@@ -73,10 +74,18 @@ public class CommonBytecodeTest {
                                                 TypeDeclaration mainClass,
                                                 UnaryOperator<TypeDeclaration> modifier,
                                                 Function<Class<?>, R> function) {
+        return test(testClass, mainClass, modifier, function, bytecodeProcessor -> {});
+    }
+
+    public static @Named("Instance") <R> R test(Class<?> testClass,
+                                                TypeDeclaration mainClass,
+                                                UnaryOperator<TypeDeclaration> modifier,
+                                                Function<Class<?>, R> function,
+                                                Consumer<BytecodeProcessor> bytecodeProcessorConsumer) {
         BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
 
         bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
-
+        bytecodeProcessorConsumer.accept(bytecodeProcessor);
         BCLoader bcLoader = new BCLoader();
 
         List<? extends BytecodeClass> bytecodeClasses;

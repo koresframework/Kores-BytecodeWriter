@@ -40,6 +40,7 @@ import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
@@ -53,10 +54,11 @@ object OperateProcessor : Processor<Operate> {
         val operation = part.operation
 
         val value = part.value
+        val safeValue = value.safeForComparison
 
         if (operation === Operators.UNARY_BITWISE_COMPLEMENT) {
             // ~
-            if (value == CodeNothing)
+            if (safeValue == CodeNothing)
                 throw IllegalArgumentException("Value cannot be null if operation is '$operation'!")
 
             // Desugar
@@ -75,7 +77,7 @@ object OperateProcessor : Processor<Operate> {
 
         codeProcessor.process(target::class.java, target, data)
 
-        if (value != CodeNothing) {
+        if (safeValue != CodeNothing) {
             codeProcessor.process(value::class.java, value, data)
         }
 
@@ -90,7 +92,7 @@ object OperateProcessor : Processor<Operate> {
             -> {
                 val type = target.type
 
-                operateVisit(type, operation, value == CodeNothing, METHOD_VISITOR.require(data))
+                operateVisit(type, operation, safeValue == CodeNothing, METHOD_VISITOR.require(data))
             }
             else -> throw RuntimeException("Cannot handle operation: '$operation'!")
         }

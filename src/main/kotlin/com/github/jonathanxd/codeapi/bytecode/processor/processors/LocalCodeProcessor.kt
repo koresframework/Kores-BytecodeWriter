@@ -39,11 +39,6 @@ import com.github.jonathanxd.iutils.data.TypedData
 
 object LocalCodeProcessor : Processor<LocalCode> {
 
-    /**
-     * Defines the mapping of LocalCode unknown names
-     */
-    val MAPPING = typedKeyOf<MutableMap<String, String>>("LOCAL_CODE_MAPPING")
-
     override fun process(part: LocalCode, data: TypedData, codeProcessor: CodeProcessor<*>) {
         val mvHelper = METHOD_VISITOR.getOrNull(data)
 
@@ -61,16 +56,5 @@ object LocalCodeProcessor : Processor<LocalCode> {
 
 
     }
-
-    /*@JvmStatic
-    fun visitFragmentsGeneration(data: TypedData, codeProcessor: CodeProcessor<*>) {
-        val all = LOCAL_CODES.getOrNull(data)
-
-        if (all != null && !all.isEmpty()) {
-            all.forEach {
-                codeProcessor.process(LocalCode::class.java, it, data)
-            }
-        }
-    }*/
 
 }

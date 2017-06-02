@@ -39,6 +39,7 @@ import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.util.add
 import com.github.jonathanxd.codeapi.util.require
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
@@ -57,7 +58,7 @@ object ForStatementProcessor : Processor<ForStatement> {
 
         val init = part.forInit
 
-        if (init != CodeNothing) {
+        if (init.safeForComparison != CodeNothing) {
             codeProcessor.process(init::class.java, init, data)
         }
 
@@ -82,7 +83,7 @@ object ForStatementProcessor : Processor<ForStatement> {
 
             val update = part.forUpdate
 
-            if (update != CodeNothing) {
+            if (update.safeForComparison != CodeNothing) {
                 codeProcessor.process(update::class.java, update, data)
             }
 

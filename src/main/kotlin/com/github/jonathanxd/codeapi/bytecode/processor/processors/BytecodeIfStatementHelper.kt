@@ -32,18 +32,22 @@ import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.IfExpr
 import com.github.jonathanxd.codeapi.base.IfGroup
+import com.github.jonathanxd.codeapi.base.Line
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.util.IfUtil
 import com.github.jonathanxd.codeapi.bytecode.util.OperatorUtil
 import com.github.jonathanxd.codeapi.bytecode.util.booleanValue
+import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.cast
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.processor.CodeProcessor
+import com.github.jonathanxd.codeapi.processor.processAs
 import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.isPrimitive
+import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -65,11 +69,13 @@ fun visit(expressions: List<CodeInstruction>,
 
     fun hasOr() =
             index + 1 < expressions.size
-                    && expressions.slice((index + 1)..(expressions.size - 1)).takeWhile { it !is IfGroup }.any { it is Operator && it.name == Operators.OR.name }
+                    && expressions.slice((index + 1)..(expressions.size - 1))
+                    .takeWhile { it.safeForComparison !is IfGroup }
+                    .any { val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name }
 
     fun nextIsOr() =
             if (index + 1 < expressions.size)
-                (expressions[index + 1]).let { it is Operator && it.name == Operators.OR.name }
+                (expressions[index + 1]).let { val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name }
             else nextIsOr // fix for ifGroup
 
     var orLabel: Label? = null
@@ -86,19 +92,27 @@ fun visit(expressions: List<CodeInstruction>,
             orLabel
         } else if (isWhile) ifStart else if (inverse) outOfIf else ifBody
 
-        if (expr is IfExpr) {
-            if (index - 1 > 0 && expressions[index - 1].let { it is Operator && it.name == Operators.OR.name })
-                orLabel?.let { visitor.visitLabel(it) }
+        if(expr is Line) { // Line require explicit visit here
+            codeProcessor.processAs<Line>(Line.NormalLine(expr.line, CodeNothing), data)
+        }
 
-            val expr1 = expr.expr1
-            val operation = expr.operation
-            val expr2 = expr.expr2
+        val safeExpr = expr.safeForComparison
+
+        if (safeExpr is IfExpr) {
+            if (index - 1 > 0 && expressions[index - 1].let {
+                val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name
+            }) orLabel?.let { visitor.visitLabel(it) }
+
+
+            val expr1 = safeExpr.expr1
+            val operation = safeExpr.operation
+            val expr2 = safeExpr.expr2
 
             genBranch(expr1, expr2, operation, jumpLabel, inverse, data, codeProcessor, mvHelper)
         }
 
-        if (expr is IfGroup) {
-            visit(expr.expressions, ifStart, ifBody, outOfIf, isWhile, data, codeProcessor, mvHelper, nextIsOr())
+        if (safeExpr is IfGroup) {
+            visit(safeExpr.expressions, ifStart, ifBody, outOfIf, isWhile, data, codeProcessor, mvHelper, nextIsOr())
         }
 
         ++index
@@ -112,12 +126,14 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
 
     var expr1 = expr1_
     var expr2 = expr2_
+    var safeExpr1 = expr1.safeForComparison
+    var safeExpr2 = expr2.safeForComparison
 
     val isBoolean = { it: CodeInstruction -> it.isPrimitive && it is Literal && it.type.`is`(Types.BOOLEAN) }
 
-    if (isBoolean(expr1) || isBoolean(expr2)) {
+    if (isBoolean(safeExpr1) || isBoolean(safeExpr2)) {
         val operatorIsEq = operation === Operators.EQUAL_TO
-        val value = if (isBoolean(expr1)) expr1.booleanValue else expr2.booleanValue
+        val value = if (isBoolean(safeExpr1)) safeExpr1.booleanValue else safeExpr2.booleanValue
         var opcode = IfUtil.getIfNeEqOpcode(value)
 
         if (!operatorIsEq)
@@ -126,7 +142,7 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
         if (inverse)
             opcode = IfUtil.invertIfNeEqOpcode(opcode)
 
-        if (isBoolean(expr1)) {
+        if (isBoolean(safeExpr1)) {
             codeProcessor.process(expr2::class.java, expr2, data)
             mvHelper.methodVisitor.visitJumpInsn(opcode, target)
         } else {
@@ -135,37 +151,39 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
         }
 
     } else {
-        if (expr1.isPrimitive != expr2.isPrimitive) {
+        if (safeExpr1.isPrimitive != safeExpr2.isPrimitive) {
 
-            if (expr2.isPrimitive) {
-                expr1 = cast(expr1.type, expr2.type, expr1)
+            if (safeExpr2.isPrimitive) {
+                expr1 = cast(safeExpr1.type, safeExpr2.type, expr1)
+                safeExpr1 = expr1.safeForComparison
             } else {
-                expr2 = cast(expr2.type, expr1.type, expr2)
+                expr2 = cast(safeExpr2.type, safeExpr1.type, expr2)
+                safeExpr2 = expr2.safeForComparison
             }
         }
 
         codeProcessor.process(expr1::class.java, expr1, data)
 
-        if (expr2 === Literals.NULL) {
+        if (safeExpr2 === Literals.NULL) {
             mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.nullCheckToAsm(operation, inverse), target)
-        } else if (expr1.isPrimitive && expr2.isPrimitive) {
+        } else if (safeExpr1.isPrimitive && safeExpr2.isPrimitive) {
             codeProcessor.process(expr2::class.java, expr2, data)
 
-            val firstType = expr1.type
-            val secondType = expr2.type
+            val firstType = safeExpr1.type
+            val secondType = safeExpr2.type
 
             if (!firstType.`is`(secondType))
                 throw IllegalArgumentException("'$expr1' and '$expr2' have different types, cast it to correct type.")
 
             var generateCMPCheck = false
 
-            if (expr1.type.`is`(Types.LONG)) {
+            if (safeExpr1.type.`is`(Types.LONG)) {
                 mvHelper.methodVisitor.visitInsn(Opcodes.LCMP)
                 generateCMPCheck = true
-            } else if (expr1.type.`is`(Types.DOUBLE)) {
+            } else if (safeExpr1.type.`is`(Types.DOUBLE)) {
                 mvHelper.methodVisitor.visitInsn(Opcodes.DCMPG)
                 generateCMPCheck = true
-            } else if (expr1.type.`is`(Types.FLOAT)) {
+            } else if (safeExpr1.type.`is`(Types.FLOAT)) {
                 mvHelper.methodVisitor.visitInsn(Opcodes.FCMPG)
                 generateCMPCheck = true
             }
