@@ -127,8 +127,7 @@ object SwitchOnEnum {
             evaluated = true
             val typeDeclarationBuilder = declaration.builder()
 
-            val accessValuesLength = arrayLength(enumType.toArray(1), invokeStatic(
-                    enumType,
+            val accessValuesLength = arrayLength(enumType.toArray(1), enumType.invokeStatic(
                     "values",
                     typeSpec(enumType.toArray(1)),
                     listOf()
