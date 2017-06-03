@@ -159,7 +159,7 @@ object EnumUtil {
                                 .returnType(enumDeclaration)
                                 .body(CodeSource.fromPart(
                                         returnValue(Types.ENUM, cast(Types.ENUM, enumDeclaration,
-                                                invokeStatic(Types.ENUM, "valueOf", typeSpec(
+                                                Types.ENUM.invokeStatic("valueOf", typeSpec(
                                                         Types.ENUM,
                                                         Types.CLASS,
                                                         Types.STRING),
@@ -197,7 +197,7 @@ object EnumUtil {
             arguments.addAll(enumEntry.arguments)
         }
 
-        return invokeConstructor(location, spec, arguments)
+        return location.invokeConstructor(spec, arguments)
     }
 
     private fun createConstructors(enumDeclaration: EnumDeclaration): List<ConstructorDeclaration> {

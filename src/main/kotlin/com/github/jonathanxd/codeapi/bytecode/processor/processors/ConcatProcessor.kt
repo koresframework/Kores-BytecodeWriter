@@ -69,8 +69,7 @@ object ConcatProcessor : Processor<Concat> {
                 codeProcessor.process(MethodInvocation::class.java, stringConcat, data)
             } else {
 
-                var strBuilder = invokeConstructor(
-                        Types.STRING_BUILDER,
+                var strBuilder = Types.STRING_BUILDER.invokeConstructor(
                         constructorTypeSpec(String::class.java),
                         listOf(first)
                 )

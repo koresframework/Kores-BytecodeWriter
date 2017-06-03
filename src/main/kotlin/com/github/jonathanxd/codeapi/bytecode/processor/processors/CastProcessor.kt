@@ -100,7 +100,7 @@ object CastProcessor : Processor<Cast> {
 
         if (from.isPrimitive && !to.isPrimitive) {
 
-            translate = invokeConstructor(from.wrapperType!!, constructorTypeSpec(from), listOf(casted))
+            translate = from.wrapperType!!.invokeConstructor(constructorTypeSpec(from), listOf(casted))
 
         } else if (!from.isPrimitive && to.isPrimitive) {
 
