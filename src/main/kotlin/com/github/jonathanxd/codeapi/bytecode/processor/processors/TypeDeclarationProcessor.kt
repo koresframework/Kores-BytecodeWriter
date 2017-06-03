@@ -37,6 +37,7 @@ import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.type.GenericType
+import com.github.jonathanxd.codeapi.util.add
 import com.github.jonathanxd.codeapi.util.codeType
 import com.github.jonathanxd.codeapi.util.genericTypesToDescriptor
 import com.github.jonathanxd.codeapi.util.parametersAndReturnToInferredDesc
@@ -55,6 +56,11 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         val location: InnerTypesHolder? = LOCATION.getOrNull(data)
         val outerVisitor: ClassVisitor? = CLASS_VISITOR.getOrNull(data)
         val at = BYTECODE_CLASS_LIST.getOrSet(data, mutableListOf()).size
+
+        if(TYPES.getOrNull(data).orEmpty().contains(part))
+            throw IllegalStateException("Revisiting type '$part'. Accidental recursive type visiting")
+
+        TYPES.add(data, part)
         // Data parameter because each type has your own Data.
         @Suppress("NAME_SHADOWING")
         val data = TypedData(data)
@@ -132,6 +138,7 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         SwitchOnEnum.MAPPINGS.remove(data)
 
         BYTECODE_CLASS_LIST.getOrSet(data.mainData, mutableListOf()).add(at, BytecodeClass(part, cw.toByteArray()))
+        TYPES.getOrNull(data)?.clear()
     }
 
     fun visitInner(innerType: TypeDeclaration, classVisitor: ClassVisitor, outerClassName: String?) {

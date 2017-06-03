@@ -71,5 +71,7 @@ val ANNOTATION_VISITOR_CAPABLE = typedKeyOf<AnnotationVisitorCapable>("ANNOTATIO
 
 val IN_INVOKE_DYNAMIC = typedKeyOf<Unit>("IN_INVOKE_DYNAMIC")
 
+val TYPES = typedKeyOf<MutableList<TypeDeclaration>>("TYPES_VISIT")
+
 //val LOCAL_CODES = typedKeyOf<MutableList<LocalCode>>("LOCAL_CODES")
 
