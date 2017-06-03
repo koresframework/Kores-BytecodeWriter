@@ -103,14 +103,22 @@ object SwitchProcessor : Processor<SwitchStatement> {
                 var min = this.getMin(filteredCaseList)
                 var max = this.getMax(filteredCaseList)
 
-                filteredCaseList = this.fill(min, max, filteredCaseList)
+                if(min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
+                        || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE)
+                    throw IllegalStateException("Too much table entries to generate: ${min..max}")
+
+                filteredCaseList = this.fill(min.toInt(), max.toInt(), filteredCaseList)
 
                 labels = this.toLabel(filteredCaseList, defaultLabel)
 
                 min = this.getMin(filteredCaseList)
                 max = this.getMax(filteredCaseList)
 
-                mv.visitTableSwitchInsn(min, max, defaultLabel, *labels)
+                if(min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
+                        || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE)
+                    throw IllegalStateException("Too much table entries to generate: ${min..max}")
+
+                mv.visitTableSwitchInsn(min.toInt(), max.toInt(), defaultLabel, *labels)
 
             } else {
                 labels = this.toLabel(filteredCaseList, defaultLabel)
@@ -185,31 +193,29 @@ object SwitchProcessor : Processor<SwitchStatement> {
         caseList.firstOrNull { this.getInt(it) == i }
 
 
-    private fun getMin(caseList: List<Case>): Int =
+    private fun getMin(caseList: List<Case>): Long =
         caseList
                 .filterNot(Case::isDefault)
                 .map { it.value.safeForComparison as Literals.IntLiteral }
-                .map { Integer.parseInt(it.name) }
-                .min()
-                ?: Integer.MAX_VALUE
+                .map { it.name.toLong() }
+                .min() ?: 0L
 
 
-    private fun getMax(caseList: List<Case>): Int {
-        val last = caseList
+    private fun getMax(caseList: List<Case>): Long =
+        caseList
                 .filterNot(Case::isDefault)
                 .map { it.value.safeForComparison as Literals.IntLiteral }
-                .map { Integer.parseInt(it.name) }
-                .max()
-                ?: 0
+                .map { it.name.toLong() }
+                .max() ?: 0L
 
-        return last
-    }
-
-    private fun getCasesToFill(caseList: List<Case>): Int {
+    private fun getCasesToFill(caseList: List<Case>): Long {
         val min = this.getMin(caseList)
         val max = this.getMax(caseList)
 
         val size = caseList.size - 1
+
+        val range = (min + size)..max
+        range.count()
 
         return max - (min + size)
     }
