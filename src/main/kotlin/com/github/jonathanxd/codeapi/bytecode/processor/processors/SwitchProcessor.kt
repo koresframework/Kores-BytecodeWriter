@@ -214,9 +214,6 @@ object SwitchProcessor : Processor<SwitchStatement> {
 
         val size = caseList.size - 1
 
-        val range = (min + size)..max
-        range.count()
-
         return max - (min + size)
     }
 
@@ -228,7 +225,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
         val casesToFill = this.getCasesToFill(caseList)
         val labels = caseList.size
 
-        val tableSpaceCost = (4 * casesToFill).toLong()
+        val tableSpaceCost = (4 * casesToFill)
         val tableTimeCost = 3
         val lookupSpaceCost = (3 + 2 * labels).toLong()
 
