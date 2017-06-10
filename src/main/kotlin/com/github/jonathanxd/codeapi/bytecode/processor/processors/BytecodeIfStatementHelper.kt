@@ -28,7 +28,6 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodeInstruction
-import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.IfExpr
 import com.github.jonathanxd.codeapi.base.IfGroup
@@ -92,7 +91,8 @@ fun visit(expressions: List<CodeInstruction>,
             orLabel
         } else if (isWhile) ifStart else if (inverse) outOfIf else ifBody
 
-        if(expr is Line) { // Line require explicit visit here
+        if (expr is Line) {
+            // Line require explicit visit here
             codeProcessor.processAs<Line>(Line.NormalLine(expr.line, CodeNothing), data)
         }
 
