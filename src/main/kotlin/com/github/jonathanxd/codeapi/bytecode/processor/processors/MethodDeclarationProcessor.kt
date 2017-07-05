@@ -156,7 +156,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                             val elementsHolder = typeDeclaration.value
 
                             methodSource = insertAfter(
-                                    { part -> val safe = part.safeForComparison
+                                    { testPart -> val safe = testPart.safeForComparison
                                         safe is MethodInvocation && ConstructorUtil.isInitForThat(safe)
                                     },
                                     ConstructorUtil.generateFinalFields(elementsHolder),

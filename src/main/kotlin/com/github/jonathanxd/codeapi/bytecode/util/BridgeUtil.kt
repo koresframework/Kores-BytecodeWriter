@@ -93,7 +93,7 @@ object BridgeUtil {
     private fun findIn(generic: Generic, methodSpec: MethodTypeSpec): MethodTypeSpec? {
 
         if (generic.isType) {
-            val codeType = generic.codeType
+            val codeType = generic.resolvedType
 
             if (codeType is LoadedCodeType<*>) {
                 val loadedType = codeType.loadedType
@@ -198,7 +198,7 @@ object BridgeUtil {
 
 
             if (returnType.isType)
-                newReturnType = returnType.codeType
+                newReturnType = returnType.resolvedType
             else
                 newReturnType = Objects.requireNonNull(
                         if (genericSignature != null)

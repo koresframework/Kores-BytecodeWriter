@@ -77,14 +77,14 @@ object ForStatementProcessor : Processor<ForStatement> {
 
         FLOWS.add(data, flow)
 
-        val instructionCodePart = InstructionCodePart.create { _, data, codeProcessor ->
+        val instructionCodePart = InstructionCodePart.create { _, instructionData, iCodeProcessor ->
 
             mv.visitLabel(whileEnd)
 
             val update = part.forUpdate
 
             if (update.safeForComparison != CodeNothing) {
-                codeProcessor.process(update::class.java, update, data)
+                iCodeProcessor.process(update::class.java, update, instructionData)
             }
 
             mv.visitJumpInsn(Opcodes.GOTO, whileStart)
