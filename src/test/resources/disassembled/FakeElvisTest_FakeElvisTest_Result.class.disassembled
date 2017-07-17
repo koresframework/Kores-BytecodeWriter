@@ -1,0 +1,67 @@
+md5: 4d4f10551f6b76a3e89ed1c151fce604
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: FakeElvisTest.cai
+
+public class com.FakeElvisTest extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    !parameter[name: a, access:  (0)]
+    public com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass test(java.lang.String) {
+      desc: (Ljava/lang/String;)Lcom/github/jonathanxd/codeapi/test/FakeElvisTest_$TestClass; 
+      maxStack: 3, maxLocals: 2 
+      Label_0:
+       LINE 1 -> Label_0
+        new com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass
+        dup
+        aload 1
+        ifnonnull Label_3
+      Label_1:
+       LINE 2 -> Label_1
+        invokestatic com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.noti()void (ownerIsInterface: false)
+      Label_2:
+       LINE 3 -> Label_2
+        ldc ""              // type: java.lang.String
+        goto Label_5
+      Label_3:
+       LINE 4 -> Label_3
+       FRAME[type: F_FULL, locals: 2, local: {com.FakeElvisTest, java.lang.String}, stacks: 2, stack: {org.objectweb.asm.tree.LabelNode@26794848, org.objectweb.asm.tree.LabelNode@26794848}]
+        invokestatic com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.noti2()void (ownerIsInterface: false)
+      Label_4:
+       LINE 5 -> Label_4
+        aload 1
+      Label_5:
+       FRAME[type: F_FULL, locals: 2, local: {com.FakeElvisTest, java.lang.String}, stacks: 3, stack: {org.objectweb.asm.tree.LabelNode@26794848, org.objectweb.asm.tree.LabelNode@26794848, java.lang.String}]
+        invokespecial com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.<init>(java.lang.String)void (ownerIsInterface: false)
+        areturn
+      Label_6:
+      LocalVariables {
+        index: 1, name: a, start: Label_0, end: Label_6, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_6, type: com.FakeElvisTest, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.FakeElvisTest, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

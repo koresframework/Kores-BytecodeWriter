@@ -60,7 +60,9 @@ fun visit(expressions: List<CodeInstruction>,
           data: TypedData,
           codeProcessor: CodeProcessor<*>,
           mvHelper: MethodVisitorHelper,
-          nextIsOr: Boolean = false) {
+          nextIsOr: Boolean = false,
+          nextBitwise: Operator? = null,
+          lastBitwise: Operator? = null) {
 
     val visitor = mvHelper.methodVisitor
 
@@ -76,6 +78,32 @@ fun visit(expressions: List<CodeInstruction>,
             if (index + 1 < expressions.size)
                 (expressions[index + 1]).let { val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name }
             else nextIsOr // fix for ifGroup
+
+    fun nextBitwise() =
+            if (index + 1 < expressions.size)
+                (expressions[index + 1]).let {
+                    val safe = it.safeForComparison
+                    if(safe is Operator
+                            && (safe.name == Operators.BITWISE_AND.name
+                            || safe.name == Operators.BITWISE_EXCLUSIVE_OR.name
+                            || safe.name == Operators.BITWISE_INCLUSIVE_OR.name))
+                        safe
+                    else null
+                }
+            else nextBitwise // fix for ifGroup
+
+    fun lastBitwise() =
+            if (index - 1 > -1)
+                (expressions[index - 1]).let {
+                    val safe = it.safeForComparison
+                    if(safe is Operator
+                        && (safe.name == Operators.BITWISE_AND.name
+                        || safe.name == Operators.BITWISE_EXCLUSIVE_OR.name
+                        || safe.name == Operators.BITWISE_INCLUSIVE_OR.name))
+                        safe
+                    else null
+                }
+            else lastBitwise // fix for ifGroup
 
     var orLabel: Label? = null
 
@@ -103,16 +131,27 @@ fun visit(expressions: List<CodeInstruction>,
                 val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name
             }) orLabel?.let { visitor.visitLabel(it) }
 
-
             val expr1 = safeExpr.expr1
             val operation = safeExpr.operation
             val expr2 = safeExpr.expr2
 
-            genBranch(expr1, expr2, operation, jumpLabel, inverse, data, codeProcessor, mvHelper)
+            val lastBitwiseVar = lastBitwise()
+
+            genBranch(expr1, expr2, operation, jumpLabel, inverse, data, codeProcessor, mvHelper,
+                    lastBitwiseVar == null && nextBitwise() == null)
+
+            if (lastBitwiseVar != null) {
+                val type = expr1.safeForComparison.type
+                OperateProcessor.operateVisit(type, lastBitwiseVar, false, mvHelper)
+                mvHelper.methodVisitor.visitJumpInsn(Opcodes.IFEQ, jumpLabel)
+            }
         }
 
         if (safeExpr is IfGroup) {
-            visit(safeExpr.expressions, ifStart, ifBody, outOfIf, isWhile, data, codeProcessor, mvHelper, nextIsOr())
+            visit(safeExpr.expressions, ifStart, ifBody, outOfIf, isWhile, data, codeProcessor, mvHelper,
+                    nextIsOr(),
+                    nextBitwise(),
+                    lastBitwise())
         }
 
         ++index
@@ -122,7 +161,8 @@ fun visit(expressions: List<CodeInstruction>,
 
 fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Operator.Conditional,
               target: Label, inverse: Boolean, data: TypedData, codeProcessor: CodeProcessor<*>,
-              mvHelper: MethodVisitorHelper) {
+              mvHelper: MethodVisitorHelper,
+              shouldJump: Boolean) {
 
     var expr1 = expr1_
     var expr2 = expr2_
@@ -144,10 +184,10 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
 
         if (isBoolean(safeExpr1)) {
             codeProcessor.process(expr2::class.java, expr2, data)
-            mvHelper.methodVisitor.visitJumpInsn(opcode, target)
+            if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(opcode, target)
         } else {
             codeProcessor.process(expr1::class.java, expr1, data)
-            mvHelper.methodVisitor.visitJumpInsn(opcode, target)
+            if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(opcode, target)
         }
 
     } else {
@@ -165,7 +205,7 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
         codeProcessor.process(expr1::class.java, expr1, data)
 
         if (safeExpr2 === Literals.NULL) {
-            mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.nullCheckToAsm(operation, inverse), target)
+            if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.nullCheckToAsm(operation, inverse), target)
         } else if (safeExpr1.isPrimitive && safeExpr2.isPrimitive) {
             codeProcessor.process(expr2::class.java, expr2, data)
 
@@ -178,13 +218,13 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
             var generateCMPCheck = false
 
             if (safeExpr1.type.`is`(Types.LONG)) {
-                mvHelper.methodVisitor.visitInsn(Opcodes.LCMP)
+                if (shouldJump)mvHelper.methodVisitor.visitInsn(Opcodes.LCMP)
                 generateCMPCheck = true
             } else if (safeExpr1.type.`is`(Types.DOUBLE)) {
-                mvHelper.methodVisitor.visitInsn(Opcodes.DCMPG)
+                if (shouldJump) mvHelper.methodVisitor.visitInsn(Opcodes.DCMPG)
                 generateCMPCheck = true
             } else if (safeExpr1.type.`is`(Types.FLOAT)) {
-                mvHelper.methodVisitor.visitInsn(Opcodes.FCMPG)
+                if (shouldJump) mvHelper.methodVisitor.visitInsn(Opcodes.FCMPG)
                 generateCMPCheck = true
             }
 
@@ -194,11 +234,11 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
                 check = OperatorUtil.convertToSimpleIf(check)
             }
 
-            mvHelper.methodVisitor.visitJumpInsn(check, target)
+            if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(check, target)
         } else {
             codeProcessor.process(expr2::class.java, expr2, data)
 
-            mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.referenceToAsm(operation, inverse), target)
+            if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.referenceToAsm(operation, inverse), target)
         }
     }
 }

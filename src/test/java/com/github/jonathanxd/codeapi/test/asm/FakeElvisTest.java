@@ -25,16 +25,35 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.util
+package com.github.jonathanxd.codeapi.test.asm;
 
-import org.objectweb.asm.Opcodes
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.test.FakeElvisTest_;
+import com.github.jonathanxd.codeapi.test.InstanceOf_;
+import com.github.jonathanxd.iutils.annotation.Named;
+import com.github.jonathanxd.iutils.exception.RethrowException;
 
-object IfUtil {
+import org.junit.Assert;
+import org.junit.Test;
 
-    fun getIfNeEqOpcode(value: Boolean): Int =
-            if (value) Opcodes.IFNE else Opcodes.IFEQ
+public class FakeElvisTest {
 
-    fun invertIfNeEqOpcode(opcode: Int): Int =
-            if (opcode == Opcodes.IFNE) Opcodes.IFEQ else Opcodes.IFNE
+    @Test
+    public void fakeElvisTest() {
+        TypeDeclaration $ = FakeElvisTest_.$();
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $);
+        try {
+            FakeElvisTest_.TestClass testClass = (FakeElvisTest_.TestClass) test.getClass()
+                    .getDeclaredMethod("test", String.class).invoke(test, (Object) null);
+
+            FakeElvisTest_.TestClass testClass2 = (FakeElvisTest_.TestClass) test.getClass()
+                    .getDeclaredMethod("test", String.class).invoke(test, "X");
+
+            Assert.assertEquals("", testClass.getS());
+            Assert.assertEquals("X", testClass2.getS());
+        } catch (Exception e) {
+            throw new RethrowException(e);
+        }
+    }
 
 }
