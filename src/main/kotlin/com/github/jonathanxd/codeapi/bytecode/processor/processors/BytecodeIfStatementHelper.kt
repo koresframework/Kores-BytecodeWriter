@@ -28,9 +28,11 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodeInstruction
+import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.IfExpr
 import com.github.jonathanxd.codeapi.base.IfGroup
+import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.base.Line
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.util.IfUtil
@@ -83,7 +85,7 @@ fun visit(expressions: List<CodeInstruction>,
             if (index + 1 < expressions.size)
                 (expressions[index + 1]).let {
                     val safe = it.safeForComparison
-                    if(safe is Operator
+                    if (safe is Operator
                             && (safe.name == Operators.BITWISE_AND.name
                             || safe.name == Operators.BITWISE_EXCLUSIVE_OR.name
                             || safe.name == Operators.BITWISE_INCLUSIVE_OR.name))
@@ -96,10 +98,10 @@ fun visit(expressions: List<CodeInstruction>,
             if (index - 1 > -1)
                 (expressions[index - 1]).let {
                     val safe = it.safeForComparison
-                    if(safe is Operator
-                        && (safe.name == Operators.BITWISE_AND.name
-                        || safe.name == Operators.BITWISE_EXCLUSIVE_OR.name
-                        || safe.name == Operators.BITWISE_INCLUSIVE_OR.name))
+                    if (safe is Operator
+                            && (safe.name == Operators.BITWISE_AND.name
+                            || safe.name == Operators.BITWISE_EXCLUSIVE_OR.name
+                            || safe.name == Operators.BITWISE_INCLUSIVE_OR.name))
                         safe
                     else null
                 }
@@ -135,16 +137,32 @@ fun visit(expressions: List<CodeInstruction>,
             val operation = safeExpr.operation
             val expr2 = safeExpr.expr2
 
+            val nextBitwiseVar = nextBitwise()
             val lastBitwiseVar = lastBitwise()
+            val isBoolean = isBooleanTrue(expr1, operation, expr2)
 
-            genBranch(expr1, expr2, operation, jumpLabel, inverse, data, codeProcessor, mvHelper,
-                    lastBitwiseVar == null && nextBitwise() == null)
+            if ((nextBitwiseVar != null || lastBitwiseVar != null)
+                    && !isBoolean) {
+                // Bit of desugar for BitWise
+                val stm = IfStatement(listOf(IfExpr(expr1, operation, expr2)),
+                        CodeSource.fromVarArgs(Literals.INT(1)),
+                        CodeSource.fromVarArgs(Literals.INT(0)))
+
+                codeProcessor.process(stm, data)
+            } else {
+                genBranch(expr1, expr2, operation, jumpLabel, inverse, data, codeProcessor, mvHelper,
+                        lastBitwiseVar == null && nextBitwise() == null)
+            }
+
+            // Bitwise section
 
             if (lastBitwiseVar != null) {
                 val type = expr1.safeForComparison.type
                 OperateProcessor.operateVisit(type, lastBitwiseVar, false, mvHelper)
                 mvHelper.methodVisitor.visitJumpInsn(Opcodes.IFEQ, jumpLabel)
             }
+
+            // /Bitwise section
         }
 
         if (safeExpr is IfGroup) {
@@ -218,7 +236,7 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
             var generateCMPCheck = false
 
             if (safeExpr1.type.`is`(Types.LONG)) {
-                if (shouldJump)mvHelper.methodVisitor.visitInsn(Opcodes.LCMP)
+                if (shouldJump) mvHelper.methodVisitor.visitInsn(Opcodes.LCMP)
                 generateCMPCheck = true
             } else if (safeExpr1.type.`is`(Types.DOUBLE)) {
                 if (shouldJump) mvHelper.methodVisitor.visitInsn(Opcodes.DCMPG)
@@ -243,3 +261,20 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
     }
 }
 
+fun CodeInstruction.isBoolean(): Boolean =
+        this.safeForComparison.let {
+            it.isPrimitive && it is Literal && it.type.`is`(Types.BOOLEAN)
+        }
+
+fun isBooleanTrue(expr1_: CodeInstruction, operator: Operator, expr2_: CodeInstruction): Boolean {
+    val expr1Boolean = expr1_.isBoolean()
+    val expr2Boolean = expr2_.isBoolean()
+
+    if(expr1Boolean || expr2Boolean) {
+        val value = if(expr1Boolean) expr1_.booleanValue else expr2_.booleanValue
+        return (operator == Operators.EQUAL_TO && value)
+                || (operator == Operators.NOT_EQUAL_TO && !value)
+    }
+
+    return false
+}
