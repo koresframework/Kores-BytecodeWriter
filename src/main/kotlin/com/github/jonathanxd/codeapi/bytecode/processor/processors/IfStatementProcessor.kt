@@ -31,8 +31,8 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -40,7 +40,7 @@ import org.objectweb.asm.Opcodes
 
 object IfStatementProcessor : Processor<IfStatement> {
 
-    override fun process(part: IfStatement, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: IfStatement, data: TypedData, processorManager: ProcessorManager<*>) {
         val mvHelper = METHOD_VISITOR.require(data)
 
         val startIfLabel = Label()
@@ -57,7 +57,7 @@ object IfStatementProcessor : Processor<IfStatement> {
 
         methodVisitor.visitLabel(startIfLabel)
 
-        visit(part.expressions, startIfLabel, ifBody, jumpLabel, false, data, codeProcessor, mvHelper)
+        visit(part.expressions, startIfLabel, ifBody, jumpLabel, false, data, processorManager, mvHelper)
 
         val body = part.body
 
@@ -65,7 +65,7 @@ object IfStatementProcessor : Processor<IfStatement> {
 
         mvHelper.enterNewFrame()
 
-        codeProcessor.process(CodeSource::class.java, body, data)
+        processorManager.process(CodeSource::class.java, body, data)
 
         mvHelper.exitFrame()
 
@@ -79,7 +79,7 @@ object IfStatementProcessor : Processor<IfStatement> {
 
             mvHelper.enterNewFrame()
 
-            codeProcessor.process(CodeSource::class.java, elseStatement, data)
+            processorManager.process(CodeSource::class.java, elseStatement, data)
 
             mvHelper.exitFrame()
         }

@@ -31,8 +31,8 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.common.CodeNothing
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -40,7 +40,7 @@ import org.objectweb.asm.Opcodes
 
 object TryStatementProcessor : Processor<TryStatement> {
 
-    override fun process(part: TryStatement, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: TryStatement, data: TypedData, processorManager: ProcessorManager<*>) {
         val mvHelper = METHOD_VISITOR.require(data)
         val mv = mvHelper.methodVisitor
 
@@ -78,7 +78,7 @@ object TryStatementProcessor : Processor<TryStatement> {
             }, finallySource, body)
         }
 
-        codeProcessor.process(CodeSource::class.java, body, data)
+        processorManager.process(CodeSource::class.java, body, data)
 
         mvHelper.exitFrame()
 
@@ -108,7 +108,7 @@ object TryStatementProcessor : Processor<TryStatement> {
             mv.visitVarInsn(Opcodes.ASTORE, stackPos)
 
             if (fieldValue != CodeNothing) {
-                codeProcessor.process(fieldValue::class.java, fieldValue, data)
+                processorManager.process(fieldValue::class.java, fieldValue, data)
 
                 mv.visitVarInsn(Opcodes.ASTORE, stackPos)
             }
@@ -119,7 +119,7 @@ object TryStatementProcessor : Processor<TryStatement> {
                 it is ThrowException || it is Return || it is ControlFlow
             }, finallySource, codeSource1)
 
-            codeProcessor.process(CodeSource::class.java, codeSource1, data)
+            processorManager.process(CodeSource::class.java, codeSource1, data)
 
             mvHelper.exitFrame()
 

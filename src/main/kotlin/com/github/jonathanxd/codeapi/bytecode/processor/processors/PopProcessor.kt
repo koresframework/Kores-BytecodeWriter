@@ -29,15 +29,15 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.bytecode.extra.Pop
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 
 object PopProcessor : Processor<Pop> {
 
-    override fun process(part: Pop, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Pop, data: TypedData, processorManager: ProcessorManager<*>) {
         METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.POP)
     }
 

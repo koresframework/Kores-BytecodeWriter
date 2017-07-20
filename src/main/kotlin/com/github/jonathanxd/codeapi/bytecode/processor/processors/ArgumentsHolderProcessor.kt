@@ -32,8 +32,8 @@ import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.InsnUtil
 import com.github.jonathanxd.codeapi.factory.cast
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.codeType
 import com.github.jonathanxd.codeapi.util.isPrimitive
 import com.github.jonathanxd.codeapi.util.require
@@ -42,7 +42,7 @@ import com.github.jonathanxd.iutils.data.TypedData
 
 object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
 
-    override fun process(part: ArgumentsHolder, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: ArgumentsHolder, data: TypedData, processorManager: ProcessorManager<*>) {
         // MUST be retrieved here to avoid the data to be removed too late
         val isInInvokeDynamic = IN_INVOKE_DYNAMIC.getOrNull(data) != null
 
@@ -76,7 +76,7 @@ object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
 
             for (argument in arguments) {
 
-                codeProcessor.process(argument::class.java, argument, data)
+                processorManager.process(argument::class.java, argument, data)
             }
         } else {
             for (i in arguments.indices) {
@@ -85,7 +85,7 @@ object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
 
                 val argument = arguments[i]
 
-                codeProcessor.process(argument::class.java, argument, data)
+                processorManager.process(argument::class.java, argument, data)
 
             }
         }

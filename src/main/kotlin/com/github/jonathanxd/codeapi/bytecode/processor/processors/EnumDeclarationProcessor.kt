@@ -30,14 +30,14 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.EnumDeclaration
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.util.EnumUtil
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 object EnumDeclarationProcessor : Processor<EnumDeclaration> {
 
-    override fun process(part: EnumDeclaration, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        codeProcessor.process(TypeDeclaration::class.java, EnumUtil.generateEnumClass(part), data)
+    override fun process(part: EnumDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
+        processorManager.process(TypeDeclaration::class.java, EnumUtil.generateEnumClass(part), data)
     }
 
 }

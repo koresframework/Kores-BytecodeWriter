@@ -30,8 +30,8 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.common.CodeNothing
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.safeForComparison
@@ -42,7 +42,7 @@ import org.objectweb.asm.Type
 
 object VariableDeclarationProcessor : Processor<VariableDeclaration> {
 
-    override fun process(part: VariableDeclaration, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: VariableDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
         val mvHelper = METHOD_VISITOR.require(data)
         val mv = mvHelper.methodVisitor
 
@@ -50,7 +50,7 @@ object VariableDeclarationProcessor : Processor<VariableDeclaration> {
         val safeValue = value.safeForComparison
 
         if (safeValue != CodeNothing) {
-            codeProcessor.process(value::class.java, value, data)
+            processorManager.process(value::class.java, value, data)
         }
 
         val `var` = mvHelper.getVar(part.name, part.variableType)

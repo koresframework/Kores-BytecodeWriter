@@ -31,25 +31,25 @@ import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.bytecode.processor.LOCATION
 import com.github.jonathanxd.codeapi.factory.constructorDec
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.inContext
 import com.github.jonathanxd.iutils.data.TypedData
 
 object ElementsHolderProcessor : Processor<ElementsHolder> {
 
-    override fun process(part: ElementsHolder, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: ElementsHolder, data: TypedData, processorManager: ProcessorManager<*>) {
 
         part.fields.forEach {
-            it.visitHolder(data, codeProcessor)
+            it.visitHolder(data, processorManager)
         }
 
         part.constructors.forEach {
-            it.visitHolder(data, codeProcessor)
+            it.visitHolder(data, processorManager)
         }
 
         part.methods.forEach {
-            it.visitHolder(data, codeProcessor)
+            it.visitHolder(data, processorManager)
         }
 
         if (part is TypeDeclaration && !part.isInterface && part.constructors.isEmpty()) {
@@ -57,28 +57,28 @@ object ElementsHolderProcessor : Processor<ElementsHolder> {
                 this.modifiers += CodeModifier.PUBLIC
             }
 
-            codeProcessor.process(ConstructorDeclaration::class.java, defaultConstructor, data)
+            processorManager.process(ConstructorDeclaration::class.java, defaultConstructor, data)
         }
 
-        part.staticBlock.visitHolder(data, codeProcessor)
+        part.staticBlock.visitHolder(data, processorManager)
 
-        codeProcessor.process(InnerTypesHolder::class.java, part, data)
+        processorManager.process(InnerTypesHolder::class.java, part, data)
     }
 
 
-    inline fun <reified T : InnerTypesHolder> T.visitHolder(data: TypedData, codeProcessor: CodeProcessor<*>) {
-        codeProcessor.process(InnerTypesHolder::class.java, this, data)
-        codeProcessor.process(T::class.java, this, data)
+    inline fun <reified T : InnerTypesHolder> T.visitHolder(data: TypedData, processorManager: ProcessorManager<*>) {
+        processorManager.process(InnerTypesHolder::class.java, this, data)
+        processorManager.process(T::class.java, this, data)
     }
 
 }
 
 
 object InnerTypesHolderProcessor : Processor<InnerTypesHolder> {
-    override fun process(part: InnerTypesHolder, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: InnerTypesHolder, data: TypedData, processorManager: ProcessorManager<*>) {
         LOCATION.inContext(data, part) {
             part.innerTypes.forEach {
-                codeProcessor.process(it::class.java, it, data)
+                processorManager.process(it::class.java, it, data)
             }
         }
     }

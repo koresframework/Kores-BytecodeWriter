@@ -44,7 +44,7 @@ import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.processor.processAs
 import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.isPrimitive
@@ -60,7 +60,7 @@ fun visit(expressions: List<CodeInstruction>,
           outOfIf: Label,
           isWhile: Boolean,
           data: TypedData,
-          codeProcessor: CodeProcessor<*>,
+          processorManager: ProcessorManager<*>,
           mvHelper: MethodVisitorHelper,
           nextIsOr: Boolean = false,
           nextBitwise: Operator? = null,
@@ -123,7 +123,7 @@ fun visit(expressions: List<CodeInstruction>,
 
         if (expr is Line) {
             // Line require explicit visit here
-            codeProcessor.processAs<Line>(Line.NormalLine(expr.line, CodeNothing), data)
+            processorManager.processAs<Line>(Line.NormalLine(expr.line, CodeNothing), data)
         }
 
         val safeExpr = expr.safeForComparison
@@ -148,9 +148,9 @@ fun visit(expressions: List<CodeInstruction>,
                         CodeSource.fromVarArgs(Literals.INT(1)),
                         CodeSource.fromVarArgs(Literals.INT(0)))
 
-                codeProcessor.process(stm, data)
+                processorManager.process(stm, data)
             } else {
-                genBranch(expr1, expr2, operation, jumpLabel, inverse, data, codeProcessor, mvHelper,
+                genBranch(expr1, expr2, operation, jumpLabel, inverse, data, processorManager, mvHelper,
                         lastBitwiseVar == null && nextBitwise() == null)
             }
 
@@ -166,7 +166,7 @@ fun visit(expressions: List<CodeInstruction>,
         }
 
         if (safeExpr is IfGroup) {
-            visit(safeExpr.expressions, ifStart, ifBody, outOfIf, isWhile, data, codeProcessor, mvHelper,
+            visit(safeExpr.expressions, ifStart, ifBody, outOfIf, isWhile, data, processorManager, mvHelper,
                     nextIsOr(),
                     nextBitwise(),
                     lastBitwise())
@@ -178,7 +178,7 @@ fun visit(expressions: List<CodeInstruction>,
 }
 
 fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Operator.Conditional,
-              target: Label, inverse: Boolean, data: TypedData, codeProcessor: CodeProcessor<*>,
+              target: Label, inverse: Boolean, data: TypedData, processorManager: ProcessorManager<*>,
               mvHelper: MethodVisitorHelper,
               shouldJump: Boolean) {
 
@@ -201,10 +201,10 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
             opcode = IfUtil.invertIfNeEqOpcode(opcode)
 
         if (isBoolean(safeExpr1)) {
-            codeProcessor.process(expr2::class.java, expr2, data)
+            processorManager.process(expr2::class.java, expr2, data)
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(opcode, target)
         } else {
-            codeProcessor.process(expr1::class.java, expr1, data)
+            processorManager.process(expr1::class.java, expr1, data)
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(opcode, target)
         }
 
@@ -220,12 +220,12 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
             }
         }
 
-        codeProcessor.process(expr1::class.java, expr1, data)
+        processorManager.process(expr1::class.java, expr1, data)
 
         if (safeExpr2 === Literals.NULL) {
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.nullCheckToAsm(operation, inverse), target)
         } else if (safeExpr1.isPrimitive && safeExpr2.isPrimitive) {
-            codeProcessor.process(expr2::class.java, expr2, data)
+            processorManager.process(expr2::class.java, expr2, data)
 
             val firstType = safeExpr1.type
             val secondType = safeExpr2.type
@@ -254,7 +254,7 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
 
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(check, target)
         } else {
-            codeProcessor.process(expr2::class.java, expr2, data)
+            processorManager.process(expr2::class.java, expr2, data)
 
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.referenceToAsm(operation, inverse), target)
         }
@@ -270,8 +270,8 @@ fun isBooleanTrue(expr1_: CodeInstruction, operator: Operator, expr2_: CodeInstr
     val expr1Boolean = expr1_.isBoolean()
     val expr2Boolean = expr2_.isBoolean()
 
-    if(expr1Boolean || expr2Boolean) {
-        val value = if(expr1Boolean) expr1_.booleanValue else expr2_.booleanValue
+    if (expr1Boolean || expr2Boolean) {
+        val value = if (expr1Boolean) expr1_.booleanValue else expr2_.booleanValue
         return (operator == Operators.EQUAL_TO && value)
                 || (operator == Operators.NOT_EQUAL_TO && !value)
     }

@@ -29,15 +29,15 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.Annotable
 import com.github.jonathanxd.codeapi.base.Annotation
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 object AnnotableProcessor : Processor<Annotable> {
 
-    override fun process(part: Annotable, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Annotable, data: TypedData, processorManager: ProcessorManager<*>) {
         part.annotations.forEach {
-            codeProcessor.process(Annotation::class.java, it, data)
+            processorManager.process(Annotation::class.java, it, data)
         }
     }
 

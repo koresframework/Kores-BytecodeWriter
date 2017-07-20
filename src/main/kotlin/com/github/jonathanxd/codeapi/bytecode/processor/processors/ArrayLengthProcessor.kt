@@ -30,16 +30,16 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.ArrayAccess
 import com.github.jonathanxd.codeapi.base.ArrayLength
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 
 object ArrayLengthProcessor : Processor<ArrayLength> {
 
-    override fun process(part: ArrayLength, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        codeProcessor.process(ArrayAccess::class.java, part, data)
+    override fun process(part: ArrayLength, data: TypedData, processorManager: ProcessorManager<*>) {
+        processorManager.process(ArrayAccess::class.java, part, data)
 
         METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.ARRAYLENGTH)
     }

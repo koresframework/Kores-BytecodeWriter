@@ -33,7 +33,7 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
 
@@ -81,11 +81,11 @@ public class CommonBytecodeTest {
                                                 TypeDeclaration mainClass,
                                                 UnaryOperator<TypeDeclaration> modifier,
                                                 Function<Class<?>, R> function,
-                                                Consumer<BytecodeProcessor> bytecodeProcessorConsumer) {
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+                                                Consumer<BytecodeGenerator> bytecodeProcessorConsumer) {
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
-        bytecodeProcessorConsumer.accept(bytecodeProcessor);
+        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
+        bytecodeProcessorConsumer.accept(bytecodeGenerator);
         BCLoader bcLoader = new BCLoader();
 
         List<? extends BytecodeClass> bytecodeClasses;
@@ -93,7 +93,7 @@ public class CommonBytecodeTest {
         mainClass = modifier.apply(mainClass);
 
         try {
-            bytecodeClasses = bytecodeProcessor.process(mainClass);
+            bytecodeClasses = bytecodeGenerator.process(mainClass);
         } catch (ClassCheckException e) {
             bytecodeClasses = e.getBytecodeClasses();
         }

@@ -33,6 +33,7 @@ import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.operator.Operators;
 import com.github.jonathanxd.iutils.annotation.Named;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.function.UnaryOperator;
@@ -44,7 +45,6 @@ import static com.github.jonathanxd.codeapi.factory.PartFactory.methodDec;
 import static com.github.jonathanxd.codeapi.factory.PartFactory.source;
 
 public class NewIfTest {
-
 
     @Test
     public void newIfTest() throws Throwable {
@@ -61,10 +61,10 @@ public class NewIfTest {
                                                         Factories.check(Factories.accessVariable(Integer.TYPE, "x"), Operators.EQUAL_TO, Literals.INT(9))
                                                 ),
                                                 source(
-                                                        Factories.returnValue(INT, Literals.INT(0))
+                                                        Factories.returnValue(INT, Literals.INT(0)) // x == 7 || x == 9
                                                 ),
                                                 source(
-                                                        Factories.returnValue(INT, Literals.INT(1))
+                                                        Factories.returnValue(INT, Literals.INT(1)) // x != 7 && x != 9
                                                 )
                                         )
                                 ))
@@ -77,9 +77,10 @@ public class NewIfTest {
         Class<?> define = test.getClass();
 
         int result = (int) define.getDeclaredMethod("test", Integer.TYPE).invoke(test, 7);
+        int result2 = (int) define.getDeclaredMethod("test", Integer.TYPE).invoke(test, 8);
 
-        System.out.println(result);
-
-
+        Assert.assertEquals(0, result);
+        Assert.assertEquals(1, result2);
     }
+
 }

@@ -28,19 +28,19 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodeInstruction
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 internal interface InstructionCodePart : CodeInstruction {
 
-    fun apply(value: Any, data: TypedData, codeProcessor: CodeProcessor<*>)
+    fun apply(value: Any, data: TypedData, codeProcessor: ProcessorManager<*>)
 
     companion object {
-        inline fun create(crossinline func: (value: Any, data: TypedData, codeProcessor: CodeProcessor<*>) -> Unit): InstructionCodePart {
+        inline fun create(crossinline func: (value: Any, data: TypedData, processorManager: ProcessorManager<*>) -> Unit): InstructionCodePart {
             return object : InstructionCodePart {
-                override fun apply(value: Any, data: TypedData, codeProcessor: CodeProcessor<*>) {
-                    func(value, data, codeProcessor)
+                override fun apply(value: Any, data: TypedData, processorManager: ProcessorManager<*>) {
+                    func(value, data, processorManager)
                 }
             }
         }
@@ -48,8 +48,8 @@ internal interface InstructionCodePart : CodeInstruction {
 
     object InstructionCodePartVisitor : Processor<InstructionCodePart> {
 
-        override fun process(part: InstructionCodePart, data: TypedData, codeProcessor: CodeProcessor<*>) {
-            part.apply(part, data, codeProcessor)
+        override fun process(part: InstructionCodePart, data: TypedData, processorManager: ProcessorManager<*>) {
+            part.apply(part, data, processorManager)
         }
 
     }

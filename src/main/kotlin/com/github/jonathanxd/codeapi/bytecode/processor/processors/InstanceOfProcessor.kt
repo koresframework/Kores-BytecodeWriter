@@ -29,8 +29,8 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.InstanceOfCheck
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.internalName
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
@@ -38,13 +38,13 @@ import org.objectweb.asm.Opcodes
 
 object InstanceOfProcessor : Processor<InstanceOfCheck> {
 
-    override fun process(part: InstanceOfCheck, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: InstanceOfCheck, data: TypedData, processorManager: ProcessorManager<*>) {
         val visitor = METHOD_VISITOR.require(data).methodVisitor
 
         val checkPart = part.part
         val codeType = part.checkType
 
-        codeProcessor.process(checkPart::class.java, checkPart, data)
+        processorManager.process(checkPart::class.java, checkPart, data)
 
         visitor.visitTypeInsn(Opcodes.INSTANCEOF, codeType.internalName)
     }

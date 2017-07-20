@@ -31,17 +31,17 @@ import com.github.jonathanxd.codeapi.base.Line
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 
 object LineProcessor : Processor<Line> {
 
-    override fun process(part: Line, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Line, data: TypedData, processorManager: ProcessorManager<*>) {
 
-        if(codeProcessor.options[VISIT_LINES] == VisitLineType.LINE_INSTRUCTION) {
+        if (processorManager.options[VISIT_LINES] == VisitLineType.LINE_INSTRUCTION) {
             val mvHelper = METHOD_VISITOR.require(data)
 
             val label = Label()
@@ -49,6 +49,6 @@ object LineProcessor : Processor<Line> {
             mvHelper.methodVisitor.visitLineNumber(part.line, label)
         }
 
-        codeProcessor.process(part.value, data)
+        processorManager.process(part.value, data)
     }
 }

@@ -30,8 +30,8 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.Operate
 import com.github.jonathanxd.codeapi.base.VariableDefinition
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.safeForComparison
@@ -41,7 +41,7 @@ import org.objectweb.asm.Type
 
 object VariableDefinitionProcessor : Processor<VariableDefinition> {
 
-    override fun process(part: VariableDefinition, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: VariableDefinition, data: TypedData, processorManager: ProcessorManager<*>) {
 
         val mvHelper = METHOD_VISITOR.require(data)
 
@@ -62,7 +62,7 @@ object VariableDefinitionProcessor : Processor<VariableDefinition> {
         if (safeValue is Operate && VariableOperateProcessor.visit(part, safeValue, value, varPos, mvHelper))
             return
 
-        codeProcessor.process(value::class.java, value, data)
+        processorManager.process(value::class.java, value, data)
 
         val type = Type.getType(variableType.javaSpecName)
 

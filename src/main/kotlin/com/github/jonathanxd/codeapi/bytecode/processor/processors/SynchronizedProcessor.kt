@@ -36,8 +36,8 @@ import com.github.jonathanxd.codeapi.bytecode.extra.Dup
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.factory.accessVariable
 import com.github.jonathanxd.codeapi.factory.variable
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typeOrNull
 import com.github.jonathanxd.iutils.data.TypedData
@@ -45,7 +45,7 @@ import org.objectweb.asm.Opcodes
 
 object SynchronizedProcessor : Processor<Synchronized> {
 
-    override fun process(part: Synchronized, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Synchronized, data: TypedData, processorManager: ProcessorManager<*>) {
 
         val mvHelper = METHOD_VISITOR.require(data)
         val visitor = mvHelper.methodVisitor
@@ -55,7 +55,7 @@ object SynchronizedProcessor : Processor<Synchronized> {
 
         val variable = variable(type, name, Dup(part.instruction))
 
-        codeProcessor.process(VariableDeclaration::class.java, variable, data)
+        processorManager.process(VariableDeclaration::class.java, variable, data)
 
         visitor.visitInsn(Opcodes.MONITORENTER)
 
@@ -68,7 +68,7 @@ object SynchronizedProcessor : Processor<Synchronized> {
                         }
                 ))
                 .build().let {
-            codeProcessor.process(TryStatement::class.java, it, data)
+            processorManager.process(TryStatement::class.java, it, data)
         }
     }
 }

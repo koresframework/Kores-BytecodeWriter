@@ -38,8 +38,8 @@ import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.setFieldValue
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.inContext
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
@@ -47,7 +47,7 @@ import org.objectweb.asm.Opcodes
 
 object StaticBlockProcessor : Processor<StaticBlock> {
 
-    override fun process(part: StaticBlock, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: StaticBlock, data: TypedData, processorManager: ProcessorManager<*>) {
 
         val cw = CLASS_VISITOR.require(data)
 
@@ -84,9 +84,9 @@ object StaticBlockProcessor : Processor<StaticBlock> {
 
 
             if (body.isNotEmpty)
-                codeProcessor.process(CodeSource::class.java, body, data)
+                processorManager.process(CodeSource::class.java, body, data)
 
-            codeProcessor.process(CodeSource::class.java, part.body, data)
+            processorManager.process(CodeSource::class.java, part.body, data)
         }
 
         mv.visitInsn(Opcodes.RETURN)

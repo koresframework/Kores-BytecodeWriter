@@ -49,12 +49,12 @@ import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.util.CheckClassAdapter
 
-class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclaration) -> String = { "${it.simpleName}.cai" }) //CodeAPI Instructions
-    : AbstractProcessor<List<BytecodeClass>>() {
+class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclaration) -> String = { "${it.simpleName}.cai" }) //CodeAPI Instructions
+    : AbstractProcessorManager<List<BytecodeClass>>() {
 
     override val options: Options = Options()
 
-    override val validator: CodeValidator = VoidValidator
+    override val validatorManager: ValidatorManager = VoidValidatorManager
 
     init {
         registerProcessor(AccessProcessor, Access::class.java)
@@ -157,6 +157,9 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
         ))
     }
 
+    // Will not be called because here we use void validator.
+    override fun printFailMessage(message: String) {
+    }
 
     override fun createData(): TypedData {
         val data = TypedData()
@@ -196,6 +199,16 @@ class BytecodeProcessor @JvmOverloads constructor(val sourceFile: (TypeDeclarati
         processor.process(part, data, this)
         processor.endProcess(part, data, this)
 
+        val classes = BYTECODE_CLASS_LIST.getOrNull(data) ?: mutableListOf()
+
+        if (classes.isNotEmpty() && this.options.get(CHECK))
+            check(classes)
+
+        return classes
+    }
+
+    // Will not be called because of overriden version above
+    override fun getFinalValue(data: TypedData): List<BytecodeClass> {
         val classes = BYTECODE_CLASS_LIST.getOrNull(data) ?: mutableListOf()
 
         if (classes.isNotEmpty() && this.options.get(CHECK))

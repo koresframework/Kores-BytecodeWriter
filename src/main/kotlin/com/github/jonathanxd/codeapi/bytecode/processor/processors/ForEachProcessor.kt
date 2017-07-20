@@ -35,15 +35,15 @@ import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.operator.Operators
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.iutils.data.TypedData
 
 object ForEachProcessor : Processor<ForEachStatement> {
 
-    override fun process(part: ForEachStatement, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: ForEachStatement, data: TypedData, processorManager: ProcessorManager<*>) {
 
         val mvHelper = METHOD_VISITOR.require(data)
 
@@ -139,7 +139,7 @@ object ForEachProcessor : Processor<ForEachStatement> {
         }
 
         mvHelper.enterNewFrame()
-        codeProcessor.process(stm::class.java, stm, data)
+        processorManager.process(stm::class.java, stm, data)
         mvHelper.exitFrame()
 
     }

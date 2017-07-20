@@ -30,17 +30,18 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.InvokeDynamicBase
 import com.github.jonathanxd.codeapi.base.LocalCode
 import com.github.jonathanxd.codeapi.base.MethodInvocation
-import com.github.jonathanxd.codeapi.bytecode.processor.*
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
+import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.MethodInvocationUtil
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import java.lang.reflect.Type
 
 object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
 
-    override fun process(part: InvokeDynamicBase, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: InvokeDynamicBase, data: TypedData, processorManager: ProcessorManager<*>) {
 
         val mvHelper = METHOD_VISITOR.require(data)
 
@@ -49,7 +50,7 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
         val localization: Type = Util.resolveType(invocation.localization, data)
 
         IN_INVOKE_DYNAMIC.set(data, Unit, true)
-        codeProcessor.process(MethodInvocation::class.java, invocation, data)
+        processorManager.process(MethodInvocation::class.java, invocation, data)
 
         val specification = invocation.spec
 
@@ -58,7 +59,7 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
 
             val spec = if (part is InvokeDynamicBase.LambdaLocalCodeBase) {
                 // Register fragment to gen
-                codeProcessor.process(LocalCode::class.java, part.localCode, data)
+                processorManager.process(LocalCode::class.java, part.localCode, data)
 
                 specification.builder().withMethodName(part.localCode.declaration.name).build()
             } else specification

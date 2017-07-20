@@ -36,8 +36,8 @@ import com.github.jonathanxd.codeapi.helper.OperateHelper
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.safeForComparison
@@ -48,7 +48,7 @@ import org.objectweb.asm.Type
 
 object OperateProcessor : Processor<Operate> {
 
-    override fun process(part: Operate, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Operate, data: TypedData, processorManager: ProcessorManager<*>) {
         val target = part.target
 
         val operation = part.operation
@@ -70,15 +70,15 @@ object OperateProcessor : Processor<Operate> {
                     )
                     .build()
 
-            codeProcessor.process(desugar::class.java, desugar, data)
+            processorManager.process(desugar::class.java, desugar, data)
 
             return
         }
 
-        codeProcessor.process(target::class.java, target, data)
+        processorManager.process(target::class.java, target, data)
 
         if (safeValue != CodeNothing) {
-            codeProcessor.process(value::class.java, value, data)
+            processorManager.process(value::class.java, value, data)
         }
 
         when (operation) {

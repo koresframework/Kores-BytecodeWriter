@@ -37,7 +37,7 @@ import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.generic.GenericSignature;
@@ -82,7 +82,7 @@ public class BridgeMethodsTest {
                 )
                 .build();
 
-        BytecodeClass bytecodeClass = new BytecodeProcessor().process(itfDeclaration).get(0);
+        BytecodeClass bytecodeClass = new BytecodeGenerator().process(itfDeclaration).get(0);
 
         byte[] bts = bytecodeClass.getBytecode();
 
@@ -124,11 +124,11 @@ public class BridgeMethodsTest {
                 )
                 .build();
 
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        bytecodeProcessor.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
+        bytecodeGenerator.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
 
-        byte[] gen = bytecodeProcessor.process(typeDeclaration).get(0).getBytecode();
+        byte[] gen = bytecodeGenerator.process(typeDeclaration).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), gen);
 

@@ -28,13 +28,13 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.builder.build
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.processor.*
-import com.github.jonathanxd.codeapi.bytecode.util.*
-import com.github.jonathanxd.codeapi.factory.constructorDec
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
+import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
+import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
+import com.github.jonathanxd.codeapi.bytecode.util.SwitchOnEnum
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.type.GenericType
 import com.github.jonathanxd.codeapi.util.add
@@ -51,13 +51,13 @@ import org.objectweb.asm.Opcodes
  */
 object TypeDeclarationProcessor : Processor<TypeDeclaration> {
 
-    override fun process(part: TypeDeclaration, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: TypeDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
         val outerType: TypeDeclaration? = TYPE_DECLARATION.getOrNull(data)
         val location: InnerTypesHolder? = LOCATION.getOrNull(data)
         val outerVisitor: ClassVisitor? = CLASS_VISITOR.getOrNull(data)
         val at = BYTECODE_CLASS_LIST.getOrSet(data, mutableListOf()).size
 
-        if(TYPES.getOrNull(data).orEmpty().contains(part))
+        if (TYPES.getOrNull(data).orEmpty().contains(part))
             throw IllegalStateException("Revisiting type '$part'. Accidental recursive type visiting")
 
         TYPES.add(data, part)
@@ -112,13 +112,13 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         // ***************************************************************************************** //
 
         ANNOTATION_VISITOR_CAPABLE.set(data, AnnotationVisitorCapable.ClassVisitorVisitorCapable(cw), true)
-        codeProcessor.process(Annotable::class.java, part, data)
+        processorManager.process(Annotable::class.java, part, data)
 
-        codeProcessor.process(ElementsHolder::class.java, part, data)
+        processorManager.process(ElementsHolder::class.java, part, data)
 
         if (part is AnnotationDeclaration) {
             part.properties.forEach {
-                codeProcessor.process(AnnotationProperty::class.java, it, data)
+                processorManager.process(AnnotationProperty::class.java, it, data)
             }
         }
 
@@ -128,7 +128,7 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
             // Why here and not in SwitchOnEnum?
             // The reason is simple: SwitchOnEnum mappings grows as the code accesses the enum fields.
             // Then only at this point all mappings will be available
-            codeProcessor.process(TypeDeclaration::class.java, it.buildClass(), data)
+            processorManager.process(TypeDeclaration::class.java, it.buildClass(), data)
         }
 
         cw.visitEnd()
@@ -176,9 +176,7 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
 
     }
 
-    override fun endProcess(part: TypeDeclaration, data: TypedData, codeProcessor: CodeProcessor<*>) {
-
-        // Switch on enums is not required
+    override fun endProcess(part: TypeDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
     }
 
 }

@@ -27,7 +27,9 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
-import com.github.jonathanxd.codeapi.*
+import com.github.jonathanxd.codeapi.CodeInstruction
+import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
@@ -40,15 +42,15 @@ import com.github.jonathanxd.codeapi.factory.defaultCase
 import com.github.jonathanxd.codeapi.factory.invokeVirtual
 import com.github.jonathanxd.codeapi.factory.typeSpec
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 
 object SwitchProcessor : Processor<SwitchStatement> {
 
-    override fun process(part: SwitchStatement, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: SwitchStatement, data: TypedData, processorManager: ProcessorManager<*>) {
         val switchType = part.switchType
         var aSwitch: SwitchStatement = part
         val mvHelper = METHOD_VISITOR.require(data)
@@ -58,24 +60,24 @@ object SwitchProcessor : Processor<SwitchStatement> {
             if (switchType === SwitchType.ENUM) {
                 val newSwitch = SwitchOnEnum.mappings(part, data)
 
-                codeProcessor.process(SwitchStatement::class.java, newSwitch, data)
+                processorManager.process(SwitchStatement::class.java, newSwitch, data)
             } else {
                 aSwitch = this.insertEqualityCheck(aSwitch)
 
                 // Special handling
-                val generate = when(switchType) {
+                val generate = when (switchType) {
                     SwitchType.STRING -> ObjectSwitchGenerator.generate(aSwitch)
                     SwitchType.ENUM -> EnumSwitchGenerator.generate(aSwitch)
                     else -> NumericSwitchGenerator.generate(aSwitch)
                 }
 
-                codeProcessor.process(SwitchStatement::class.java, generate, data)
+                processorManager.process(SwitchStatement::class.java, generate, data)
             }
         } else {
             val mv = mvHelper.methodVisitor
             val value = aSwitch.value
 
-            codeProcessor.process(value::class.java, value, data)
+            processorManager.process(value::class.java, value, data)
 
             val originCaseList = aSwitch.cases
             var filteredCaseList = originCaseList
@@ -103,7 +105,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
                 var min = this.getMin(filteredCaseList)
                 var max = this.getMax(filteredCaseList)
 
-                if(min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
+                if (min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
                         || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE)
                     throw IllegalStateException("Too much table entries to generate: ${min..max}")
 
@@ -114,7 +116,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
                 min = this.getMin(filteredCaseList)
                 max = this.getMax(filteredCaseList)
 
-                if(min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
+                if (min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
                         || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE)
                     throw IllegalStateException("Too much table entries to generate: ${min..max}")
 
@@ -138,7 +140,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
                 if (!aCase.body.contains(SwitchMarker)) {
                     mv.visitLabel(label)
 
-                    codeProcessor.process(CodeSource::class.java, aCase.body, data)
+                    processorManager.process(CodeSource::class.java, aCase.body, data)
                 }
             }
 
@@ -153,7 +155,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
 
             val codeSource = aDefault.body
 
-            codeProcessor.process(CodeSource::class.java, codeSource, data)
+            processorManager.process(CodeSource::class.java, codeSource, data)
 
 
             mv.visitLabel(outsideEnd)
@@ -190,23 +192,23 @@ object SwitchProcessor : Processor<SwitchStatement> {
     }
 
     private fun getCase(caseList: List<Case>, i: Int): Case? =
-        caseList.firstOrNull { this.getInt(it) == i }
+            caseList.firstOrNull { this.getInt(it) == i }
 
 
     private fun getMin(caseList: List<Case>): Long =
-        caseList
-                .filterNot(Case::isDefault)
-                .map { it.value.safeForComparison as Literals.IntLiteral }
-                .map { it.name.toLong() }
-                .min() ?: 0L
+            caseList
+                    .filterNot(Case::isDefault)
+                    .map { it.value.safeForComparison as Literals.IntLiteral }
+                    .map { it.name.toLong() }
+                    .min() ?: 0L
 
 
     private fun getMax(caseList: List<Case>): Long =
-        caseList
-                .filterNot(Case::isDefault)
-                .map { it.value.safeForComparison as Literals.IntLiteral }
-                .map { it.name.toLong() }
-                .max() ?: 0L
+            caseList
+                    .filterNot(Case::isDefault)
+                    .map { it.value.safeForComparison as Literals.IntLiteral }
+                    .map { it.name.toLong() }
+                    .max() ?: 0L
 
     private fun getCasesToFill(caseList: List<Case>): Long {
         val min = this.getMin(caseList)
@@ -281,7 +283,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
     object SwitchMarker : CodeInstruction
 
     object SwitchMarkerProcessor : Processor<SwitchMarker> {
-        override fun process(part: SwitchMarker, data: TypedData, codeProcessor: CodeProcessor<*>) {
+        override fun process(part: SwitchMarker, data: TypedData, processorManager: ProcessorManager<*>) {
         }
 
     }
@@ -332,7 +334,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
             if (aCase.type.`is`(Types.INT))
                 return aCase
 
-            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison, lazy { aSwitch }))).build()
+            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison))).build()
         }
 
 
@@ -363,7 +365,7 @@ object SwitchProcessor : Processor<SwitchStatement> {
             if (aCase.isDefault)
                 return aCase
 
-            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison, lazy { aSwitch }))).build()
+            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison))).build()
         }
 
         private fun translate(aSwitch: SwitchStatement): SwitchStatement {

@@ -34,8 +34,8 @@ import com.github.jonathanxd.codeapi.bytecode.processor.ANNOTATION_VISITOR_CAPAB
 import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.inContext
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typeDesc
@@ -44,7 +44,7 @@ import org.objectweb.asm.Opcodes
 
 object AnnotationPropertyProcessor : Processor<AnnotationProperty> {
 
-    override fun process(part: AnnotationProperty, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: AnnotationProperty, data: TypedData, processorManager: ProcessorManager<*>) {
         val cw = CLASS_VISITOR.require(data)
 
         val asmModifiers = Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT
@@ -67,7 +67,7 @@ object AnnotationPropertyProcessor : Processor<AnnotationProperty> {
         val helper = MethodVisitorHelper(mv, mutableListOf())
 
         ANNOTATION_VISITOR_CAPABLE.inContext(data, AnnotationVisitorCapable.MethodVisitorCapable(helper.methodVisitor)) {
-            codeProcessor.process(Annotable::class.java, part, data)
+            processorManager.process(Annotable::class.java, part, data)
         }
 
         mv.visitEnd()

@@ -31,8 +31,8 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.add
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
@@ -41,7 +41,7 @@ import com.github.jonathanxd.codeapi.base.Label as CodeLabel
 
 object LabelProcessor : Processor<CodeLabel> {
 
-    override fun process(part: CodeLabel, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: CodeLabel, data: TypedData, processorManager: ProcessorManager<*>) {
         val visitor = METHOD_VISITOR.require(data).methodVisitor
         val start = Label()
         val end = Label()
@@ -52,7 +52,7 @@ object LabelProcessor : Processor<CodeLabel> {
 
         FLOWS.add(data, flow)
 
-        codeProcessor.process(CodeSource::class.java, part.body, data)
+        processorManager.process(CodeSource::class.java, part.body, data)
 
         FLOWS.require(data).remove(flow)
 

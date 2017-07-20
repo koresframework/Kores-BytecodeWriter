@@ -33,19 +33,19 @@ import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.factory.ifExprs
 import com.github.jonathanxd.codeapi.factory.ifStatement
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 object IfExprProcessor : Processor<IfExpr> {
 
-    override fun process(part: IfExpr, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: IfExpr, data: TypedData, processorManager: ProcessorManager<*>) {
         ifStatement(ifExprs(part), CodeSource.fromPart(
                 Literals.BOOLEAN(true)
         ), CodeSource.fromPart(
                 Literals.BOOLEAN(false)
         )).let {
-            codeProcessor.process(IfStatement::class.java, it, data)
+            processorManager.process(IfStatement::class.java, it, data)
         }
     }
 

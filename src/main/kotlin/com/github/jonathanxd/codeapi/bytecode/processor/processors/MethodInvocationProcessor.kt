@@ -34,8 +34,8 @@ import com.github.jonathanxd.codeapi.base.New
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.internalName
 import com.github.jonathanxd.codeapi.util.require
@@ -47,7 +47,7 @@ import java.lang.reflect.Type
 
 object MethodInvocationProcessor : Processor<MethodInvocation> {
 
-    override fun process(part: MethodInvocation, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: MethodInvocation, data: TypedData, processorManager: ProcessorManager<*>) {
         // MUST be retrieved here to avoid the data to be removed too late
         val isInInvokeDynamic = IN_INVOKE_DYNAMIC.getOrNull(data) != null
 
@@ -80,7 +80,7 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         }
 
         if (safeTarget !is CodeType && !part.isSuperConstructorInvocation) {
-            codeProcessor.process(target::class.java, target, data)
+            processorManager.process(target::class.java, target, data)
 
             if (safeTarget is New)
                 mv.visitInsn(Opcodes.DUP) // New does not dup, it is intended
@@ -89,7 +89,7 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         if (isInInvokeDynamic)
             IN_INVOKE_DYNAMIC.set(data, Unit, true)
 
-        codeProcessor.process(ArgumentsHolder::class.java, part, data)
+        processorManager.process(ArgumentsHolder::class.java, part, data)
 
         if (!isInInvokeDynamic) {
             mv.visitMethodInsn(

@@ -29,17 +29,14 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.LocalCode
 import com.github.jonathanxd.codeapi.base.MethodDeclaration
-import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.common.getNewName
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
-import com.github.jonathanxd.codeapi.util.typedKeyOf
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 object LocalCodeProcessor : Processor<LocalCode> {
 
-    override fun process(part: LocalCode, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: LocalCode, data: TypedData, processorManager: ProcessorManager<*>) {
         val mvHelper = METHOD_VISITOR.getOrNull(data)
 
         //codeProcessor.process(MethodInvocation::class.java, part.createInvocation(), data)
@@ -48,7 +45,7 @@ object LocalCodeProcessor : Processor<LocalCode> {
             METHOD_VISITOR.remove(data)
         }
 
-        codeProcessor.process(MethodDeclaration::class.java, part.declaration, data)
+        processorManager.process(MethodDeclaration::class.java, part.declaration, data)
 
         mvHelper?.let {
             METHOD_VISITOR.set(data, mvHelper)

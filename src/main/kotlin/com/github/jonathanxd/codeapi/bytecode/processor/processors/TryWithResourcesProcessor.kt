@@ -33,19 +33,19 @@ import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 
 object TryWithResourcesProcessor : Processor<TryWithResources> {
 
-    override fun process(part: TryWithResources, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: TryWithResources, data: TypedData, processorManager: ProcessorManager<*>) {
         val mvHelper = METHOD_VISITOR.require(data)
         val vari = part.variable
 
         // Generate try-catch initialize field
-        codeProcessor.process(VariableDeclaration::class.java, vari, data)
+        processorManager.process(VariableDeclaration::class.java, vari, data)
 
         val throwableFieldName = mvHelper.getUniqueVariableName("\$throwable_")
 
@@ -55,7 +55,7 @@ object TryWithResourcesProcessor : Processor<TryWithResources> {
                 type = Types.THROWABLE,
                 value = Literals.NULL)
 
-        codeProcessor.process(VariableDeclaration::class.java, throwableVariable, data)
+        processorManager.process(VariableDeclaration::class.java, throwableVariable, data)
 
         // Generate try block
         val catch_ = mvHelper.getUniqueVariableName("\$catch_")
@@ -114,7 +114,7 @@ object TryWithResourcesProcessor : Processor<TryWithResources> {
                 ) + part.finallyStatement
         )
 
-        codeProcessor.process(TryStatement::class.java, tryCatchStatement, data)
+        processorManager.process(TryStatement::class.java, tryCatchStatement, data)
     }
 
 

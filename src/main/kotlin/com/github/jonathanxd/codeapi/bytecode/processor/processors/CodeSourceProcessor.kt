@@ -31,8 +31,8 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.typedKeyOf
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -41,10 +41,10 @@ object CodeSourceProcessor : Processor<CodeSource> {
 
     val OFFSET = typedKeyOf<Int>("LINE_OFFSET")
 
-    override fun process(part: CodeSource, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: CodeSource, data: TypedData, processorManager: ProcessorManager<*>) {
         val max = part.size - 1
 
-        val visit = codeProcessor.options.get(VISIT_LINES)
+        val visit = processorManager.options.get(VISIT_LINES)
 
         val offset = OFFSET.getOrSet(data, 0)
 
@@ -65,7 +65,7 @@ object CodeSourceProcessor : Processor<CodeSource> {
 
             val codePart = part[i]
 
-            codeProcessor.process(codePart::class.java, codePart, data)
+            processorManager.process(codePart::class.java, codePart, data)
 
         }
 

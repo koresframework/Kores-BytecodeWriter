@@ -30,15 +30,15 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.ControlFlow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 
 object ControlFlowProcessor : Processor<ControlFlow> {
 
-    override fun process(part: ControlFlow, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: ControlFlow, data: TypedData, processorManager: ProcessorManager<*>) {
         val flows = FLOWS.require(data)
 
         val flow = if (part.at == null) flows.last() else flows.findLast { it.label != null && part.at!!.name == it.label.name }!!

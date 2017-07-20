@@ -29,14 +29,14 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.common.Stack
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 
 object StackProcessor : Processor<Stack> {
 
-    override fun process(part: Stack, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Stack, data: TypedData, processorManager: ProcessorManager<*>) {
         METHOD_VISITOR.require(data)
     }
 

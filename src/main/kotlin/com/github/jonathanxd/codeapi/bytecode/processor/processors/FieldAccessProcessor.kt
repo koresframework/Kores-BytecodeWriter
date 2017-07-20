@@ -30,8 +30,8 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.Access
 import com.github.jonathanxd.codeapi.base.FieldAccess
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.safeForComparison
@@ -41,7 +41,7 @@ import org.objectweb.asm.Opcodes
 
 object FieldAccessProcessor : Processor<FieldAccess> {
 
-    override fun process(part: FieldAccess, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: FieldAccess, data: TypedData, processorManager: ProcessorManager<*>) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
 
         val localization: CodeType = Util.resolveType(part.localization, data)
@@ -50,7 +50,7 @@ object FieldAccessProcessor : Processor<FieldAccess> {
         val safeAt = at.safeForComparison
 
         if (safeAt !is Access || safeAt != Access.STATIC) {
-            codeProcessor.process(at::class.java, at, data)
+            processorManager.process(at::class.java, at, data)
         }
 
         if (safeAt is Access && safeAt == Access.STATIC) {

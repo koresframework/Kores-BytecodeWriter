@@ -36,7 +36,7 @@ import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.base.FieldDeclaration;
 import com.github.jonathanxd.codeapi.base.InvokeType;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.operator.Operators;
@@ -129,8 +129,8 @@ public class SimpleTest2_Bytecode {
                 .build();
 
 
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
-        BytecodeClass bytecodeClass = bytecodeProcessor.process(codeClass).get(0);
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        BytecodeClass bytecodeClass = bytecodeGenerator.process(codeClass).get(0);
 
         byte[] bytes = bytecodeClass.getBytecode();
 

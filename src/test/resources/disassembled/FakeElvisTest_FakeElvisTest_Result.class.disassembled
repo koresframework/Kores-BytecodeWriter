@@ -27,13 +27,13 @@ public class com.FakeElvisTest extends java.lang.Object {
         goto Label_5
       Label_3:
        LINE 4 -> Label_3
-       FRAME[type: F_FULL, locals: 2, local: {com.FakeElvisTest, java.lang.String}, stacks: 2, stack: {org.objectweb.asm.tree.LabelNode@4c9f8c13, org.objectweb.asm.tree.LabelNode@4c9f8c13}]
+       FRAME[type: F_FULL, locals: 2, local: {com.FakeElvisTest, java.lang.String}, stacks: 2, stack: {org.objectweb.asm.tree.LabelNode@3c19aaa5, org.objectweb.asm.tree.LabelNode@3c19aaa5}]
         invokestatic com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.noti2()void (ownerIsInterface: false)
       Label_4:
        LINE 5 -> Label_4
         aload 1
       Label_5:
-       FRAME[type: F_FULL, locals: 2, local: {com.FakeElvisTest, java.lang.String}, stacks: 3, stack: {org.objectweb.asm.tree.LabelNode@4c9f8c13, org.objectweb.asm.tree.LabelNode@4c9f8c13, java.lang.String}]
+       FRAME[type: F_FULL, locals: 2, local: {com.FakeElvisTest, java.lang.String}, stacks: 3, stack: {org.objectweb.asm.tree.LabelNode@3c19aaa5, org.objectweb.asm.tree.LabelNode@3c19aaa5, java.lang.String}]
         invokespecial com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.<init>(java.lang.String)void (ownerIsInterface: false)
         areturn
       Label_6:

@@ -38,8 +38,8 @@ import com.github.jonathanxd.codeapi.factory.cast
 import com.github.jonathanxd.codeapi.factory.constructorTypeSpec
 import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.factory.invokeVirtual
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
@@ -48,7 +48,7 @@ import java.lang.reflect.Type
 
 object CastProcessor : Processor<Cast> {
 
-    override fun process(part: Cast, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Cast, data: TypedData, processorManager: ProcessorManager<*>) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
 
         val from = part.originalType
@@ -58,21 +58,21 @@ object CastProcessor : Processor<Cast> {
 
         // No cast of void types.
         if (from != null && !from.`is`(to) && from.`is`(Types.VOID) || to.`is`(Types.VOID)) {
-            codeProcessor.process(castedPart::class.java, castedPart, data)
+            processorManager.process(castedPart::class.java, castedPart, data)
             return
         }
 
         val autoboxing = if (from != null) autoboxing(from, to, castedPart) else null
 
         if (autoboxing != null && from != null) {
-            codeProcessor.process(autoboxing::class.java, autoboxing, data)
+            processorManager.process(autoboxing::class.java, autoboxing, data)
 
             if (from.isPrimitive && !to.isPrimitive && from.wrapperType!!.canonicalName != to.canonicalName) {
                 mv.visitTypeInsn(Opcodes.CHECKCAST, to.internalName)
             }
 
         } else {
-            codeProcessor.process(castedPart::class.java, castedPart, data)
+            processorManager.process(castedPart::class.java, castedPart, data)
 
             if (from != null && !from.`is`(to)) {
                 if (to.isPrimitive) {

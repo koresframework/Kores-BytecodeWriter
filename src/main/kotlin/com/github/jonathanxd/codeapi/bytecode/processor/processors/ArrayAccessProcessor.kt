@@ -28,16 +28,16 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.ArrayAccess
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 object ArrayAccessProcessor : Processor<ArrayAccess> {
 
-    override fun process(part: ArrayAccess, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: ArrayAccess, data: TypedData, processorManager: ProcessorManager<*>) {
         val target = part.target
 
-        codeProcessor.process(target::class.java, target, data)
+        processorManager.process(target::class.java, target, data)
     }
 
 }

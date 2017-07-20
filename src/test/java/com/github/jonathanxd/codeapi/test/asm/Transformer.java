@@ -32,7 +32,7 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.bytecode.processor.KeysKt;
 import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.helper.Predefined;
@@ -76,11 +76,11 @@ public class Transformer {
         WrappedPrintStream wrappedPrintStream = new WrappedPrintStream(System.out);
         System.setOut(wrappedPrintStream);
 
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
+        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
-        List<? extends BytecodeClass> bytecodeClasses = bytecodeProcessor.process(InvocationsTest_.$());
+        List<? extends BytecodeClass> bytecodeClasses = bytecodeGenerator.process(InvocationsTest_.$());
 
         byte[] bytes = bytecodeClasses.get(0).getBytecode();
 
@@ -144,7 +144,7 @@ public class Transformer {
 
     private static class FragmentTransformer extends MethodVisitor {
 
-        private final BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+        private final BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
         public FragmentTransformer(int api, MethodVisitor mv) {
             super(api, mv);
@@ -161,7 +161,7 @@ public class Transformer {
 
                 super.visitInsn(Opcodes.POP);
 
-                bytecodeProcessor.process(
+                bytecodeGenerator.process(
                         CodeSource.fromPart(Factories.returnValue(String.class, Literals.STRING("XSD"))),
                         data);
 
@@ -174,7 +174,7 @@ public class Transformer {
 
     private static class MyVisitor extends MethodVisitor {
 
-        private final BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+        private final BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
         public MyVisitor(int api, MethodVisitor mv) {
             super(api, mv);
@@ -194,7 +194,7 @@ public class Transformer {
 
                 KeysKt.getMETHOD_VISITOR().set(data, methodVisitorHelper);
 
-                bytecodeProcessor.process(
+                bytecodeGenerator.process(
                         CodeSource.fromPart(Predefined.invokePrintln(Literals.STRING("Inicializado!"))),
                         data);
 

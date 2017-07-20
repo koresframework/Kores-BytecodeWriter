@@ -32,9 +32,7 @@ import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
-import com.github.jonathanxd.codeapi.factory.VariableFactory;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.operator.Operators;
 
@@ -75,8 +73,8 @@ public class InterfaceTest {
                 .build();
 
 
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
-        byte[] gen = bytecodeProcessor.process(interfaceDeclaration).get(0).getBytecode();
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        byte[] gen = bytecodeGenerator.process(interfaceDeclaration).get(0).getBytecode();
 
         ResultSaver.save(this.getClass(), gen);
 

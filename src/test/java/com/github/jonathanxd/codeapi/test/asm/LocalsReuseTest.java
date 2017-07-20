@@ -35,7 +35,7 @@ import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -79,11 +79,11 @@ public class LocalsReuseTest {
                 )
                 .build();
 
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        bytecodeProcessor.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
+        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
 
-        List<? extends BytecodeClass> gen = bytecodeProcessor.process(declaration);
+        List<? extends BytecodeClass> gen = bytecodeGenerator.process(declaration);
 
         ResultSaver.save(this.getClass(), gen);
 

@@ -32,8 +32,8 @@ import com.github.jonathanxd.codeapi.base.ArrayStore
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.factory.cast
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.arrayComponent
 import com.github.jonathanxd.codeapi.util.require
@@ -42,12 +42,12 @@ import org.objectweb.asm.Opcodes
 
 object ArrayStoreProcessor : Processor<ArrayStore> {
 
-    override fun process(part: ArrayStore, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        codeProcessor.process(ArrayAccess::class.java, part, data)
+    override fun process(part: ArrayStore, data: TypedData, processorManager: ProcessorManager<*>) {
+        processorManager.process(ArrayAccess::class.java, part, data)
 
         val index = part.index
 
-        codeProcessor.process(index::class.java, index, data)
+        processorManager.process(index::class.java, index, data)
 
         var value = part.valueToStore
         val valueType = part.valueType
@@ -59,7 +59,7 @@ object ArrayStoreProcessor : Processor<ArrayStore> {
             value = cast(valueType, arrayComponentType, value)
         }
 
-        codeProcessor.process(value::class.java, value, data)
+        processorManager.process(value::class.java, value, data)
 
         val opcode = CodeTypeUtil.getOpcodeForType(arrayComponentType, Opcodes.IASTORE)
 

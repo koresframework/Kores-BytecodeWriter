@@ -35,8 +35,8 @@ import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.common.CodeNothing
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.add
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.safeForComparison
@@ -46,7 +46,7 @@ import org.objectweb.asm.Opcodes
 
 object ForStatementProcessor : Processor<ForStatement> {
 
-    override fun process(part: ForStatement, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: ForStatement, data: TypedData, processorManager: ProcessorManager<*>) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
 
         val outsideStart = Label()
@@ -59,7 +59,7 @@ object ForStatementProcessor : Processor<ForStatement> {
         val init = part.forInit
 
         if (init.safeForComparison != CodeNothing) {
-            codeProcessor.process(init::class.java, init, data)
+            processorManager.process(init::class.java, init, data)
         }
 
 
@@ -92,7 +92,7 @@ object ForStatementProcessor : Processor<ForStatement> {
 
         source.add(instructionCodePart)
 
-        codeProcessor.process(IfStatement::class.java, ifStatement, data)
+        processorManager.process(IfStatement::class.java, ifStatement, data)
 
         FLOWS.require(data).remove(flow)
 

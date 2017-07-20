@@ -29,14 +29,19 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.bytecode.*
+import com.github.jonathanxd.codeapi.bytecode.GENERATE_BRIDGE_METHODS
+import com.github.jonathanxd.codeapi.bytecode.VALIDATE_SUPER
+import com.github.jonathanxd.codeapi.bytecode.VALIDATE_THIS
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.common.Variable
-import com.github.jonathanxd.codeapi.bytecode.processor.*
+import com.github.jonathanxd.codeapi.bytecode.processor.ANNOTATION_VISITOR_CAPABLE
+import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.bytecode.util.*
 import com.github.jonathanxd.codeapi.bytecode.util.asm.ParameterVisitor
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -44,10 +49,10 @@ import org.objectweb.asm.Opcodes
 
 object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
-    override fun process(part: MethodDeclarationBase, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        val validateSuper = codeProcessor.options.getOrElse(VALIDATE_SUPER, true)
-        val validateThis = codeProcessor.options.getOrElse(VALIDATE_THIS, true)
-        val genBridge = codeProcessor.options.getOrElse(GENERATE_BRIDGE_METHODS, false)
+    override fun process(part: MethodDeclarationBase, data: TypedData, processorManager: ProcessorManager<*>) {
+        val validateSuper = processorManager.options.getOrElse(VALIDATE_SUPER, true)
+        val validateThis = processorManager.options.getOrElse(VALIDATE_THIS, true)
+        val genBridge = processorManager.options.getOrElse(GENERATE_BRIDGE_METHODS, false)
 
         val isConstructor = part is ConstructorDeclaration
 
@@ -68,7 +73,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 }
 
                 if (!any) {
-                    codeProcessor.process(bridgeMethod::class.java, bridgeMethod, data)
+                    processorManager.process(bridgeMethod::class.java, bridgeMethod, data)
                 }
             }
 
@@ -102,7 +107,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
         val mvHelper = MethodVisitorHelper(visitor.visitMethod(asmModifiers, part.name, desc, signature, throws), mutableListOf())
 
         ANNOTATION_VISITOR_CAPABLE.inContext(data, AnnotationVisitorCapable.MethodVisitorCapable(mvHelper.methodVisitor)) {
-            codeProcessor.process(Annotable::class.java, part, data)
+            processorManager.process(Annotable::class.java, part, data)
         }
 
         for (i in parameters.indices) {
@@ -111,7 +116,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
             mvHelper.methodVisitor.visitParameter(codeParameter.name, 0)
 
             ANNOTATION_VISITOR_CAPABLE.inContext(data, AnnotationVisitorCapable.ParameterVisitorCapable(ParameterVisitor(mvHelper, i))) {
-                codeProcessor.process(Annotable::class.java, codeParameter, data)
+                processorManager.process(Annotable::class.java, codeParameter, data)
             }
         }
 
@@ -150,13 +155,14 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                     }
 
                     if (isGenerated) {
-                        ConstructorUtil.declareFinalFields(codeProcessor, methodSource, typeDeclaration.value, mvHelper, data, validateThis)
+                        ConstructorUtil.declareFinalFields(processorManager, methodSource, typeDeclaration.value, mvHelper, data, validateThis)
                     } else {
                         if (!initThis) {
                             val elementsHolder = typeDeclaration.value
 
                             methodSource = insertAfter(
-                                    { testPart -> val safe = testPart.safeForComparison
+                                    { testPart ->
+                                        val safe = testPart.safeForComparison
                                         safe is MethodInvocation && ConstructorUtil.isInitForThat(safe)
                                     },
                                     ConstructorUtil.generateFinalFields(elementsHolder),
@@ -165,7 +171,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                     }
                 }
 
-                codeProcessor.process(CodeSource::class.java, methodSource, data)
+                processorManager.process(CodeSource::class.java, methodSource, data)
 
                 val returnType = part.returnType.typeDesc
 

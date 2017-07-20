@@ -30,7 +30,7 @@ package com.github.jonathanxd.codeapi.test.asm;
 import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.type.Generic;
 
 import org.junit.Test;
@@ -47,9 +47,9 @@ public class GenericInterfaceTest {
                 .implementations(Generic.type(ArrayList.class).of(Types.STRING))
                 .build();
 
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        byte[] gen = bytecodeProcessor.process(codeClass).get(0).getBytecode();
+        byte[] gen = bytecodeGenerator.process(codeClass).get(0).getBytecode();
         ResultSaver.save(this.getClass(), gen);
     }
 

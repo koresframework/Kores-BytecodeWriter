@@ -30,13 +30,13 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.Annotation
 import com.github.jonathanxd.codeapi.bytecode.processor.ANNOTATION_VISITOR_CAPABLE
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
 object AnnotationProcessor : Processor<Annotation> {
 
-    override fun process(part: Annotation, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Annotation, data: TypedData, processorManager: ProcessorManager<*>) {
         val visitor = ANNOTATION_VISITOR_CAPABLE.getOrNull(data)!!
 
         AnnotationUtil.visitAnnotation(part, visitor)

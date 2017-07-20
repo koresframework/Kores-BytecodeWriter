@@ -28,14 +28,13 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.CodeInstruction
-import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.setFieldValue
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.Alias
 import com.github.jonathanxd.codeapi.util.internalName
 import com.github.jonathanxd.codeapi.util.safeForComparison
@@ -145,7 +144,7 @@ object ConstructorUtil {
         return searchResult
     }
 
-    fun declareFinalFields(codeProcessor: CodeProcessor<*>,
+    fun declareFinalFields(processorManager: ProcessorManager<*>,
                            methodBody: CodeSource,
                            typeDeclaration: TypeDeclaration,
                            mv: MethodVisitorHelper,
@@ -160,8 +159,7 @@ object ConstructorUtil {
          * Declare variables
          */
         val all = typeDeclaration.fields.filter {
-            it is FieldDeclaration
-                    && !it.modifiers.contains(CodeModifier.STATIC)
+            !it.modifiers.contains(CodeModifier.STATIC)
                     && it.value != CodeNothing
         }
 
@@ -177,7 +175,7 @@ object ConstructorUtil {
                 // No processor overhead.
                 mv.methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
 
-                codeProcessor.process(value::class.java, value, data)
+                processorManager.process(value::class.java, value, data)
 
                 // No processor overhead.
                 mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD,

@@ -32,8 +32,8 @@ import com.github.jonathanxd.codeapi.base.ArrayStore
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.ArrayUtil
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.arrayComponent
 import com.github.jonathanxd.codeapi.util.arrayDimension
 import com.github.jonathanxd.codeapi.util.require
@@ -43,7 +43,7 @@ import org.objectweb.asm.Opcodes
 
 object ArrayConstructProcessor : Processor<ArrayConstructor> {
 
-    override fun process(part: ArrayConstructor, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: ArrayConstructor, data: TypedData, processorManager: ProcessorManager<*>) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
         val arguments = part.arguments
 
@@ -57,14 +57,14 @@ object ArrayConstructProcessor : Processor<ArrayConstructor> {
 
         if (multi && !initialize) {
             dimensions.forEach {
-                codeProcessor.process(it::class.java, it, data)
+                processorManager.process(it::class.java, it, data)
             }
 
             mv.visitMultiANewArrayInsn(component.typeDesc, dimensions.size)
         } else {
             val dimensionX = if (dimensions.isNotEmpty()) dimensions[0] else Literals.INT(0)
 
-            codeProcessor.process(dimensionX::class.java, dimensionX, data)
+            processorManager.process(dimensionX::class.java, dimensionX, data)
 
             ArrayUtil.visitArrayStore(component, mv) // ANEWARRAY, ANEWARRAY T_INT, etc...
         }
@@ -74,7 +74,7 @@ object ArrayConstructProcessor : Processor<ArrayConstructor> {
 
             for (arrayStore in part.arrayValues) {
                 mv.visitInsn(Opcodes.DUP)
-                codeProcessor.process(ArrayStore::class.java, arrayStore, data)
+                processorManager.process(ArrayStore::class.java, arrayStore, data)
             }
         }
     }

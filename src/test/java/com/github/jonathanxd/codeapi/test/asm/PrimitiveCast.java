@@ -32,7 +32,7 @@ import com.github.jonathanxd.codeapi.Types;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -129,7 +129,7 @@ public class PrimitiveCast {
 
 
     public byte[] generate(TypeDeclaration declaration) {
-        BytecodeProcessor generator = new BytecodeProcessor();
+        BytecodeGenerator generator = new BytecodeGenerator();
 
         byte[] bytes = generator.process(declaration).get(0).getBytecode();
 

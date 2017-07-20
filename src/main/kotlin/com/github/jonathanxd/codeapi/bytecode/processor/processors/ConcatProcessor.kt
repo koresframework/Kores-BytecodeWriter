@@ -36,8 +36,8 @@ import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.factory.invokeVirtual
 import com.github.jonathanxd.codeapi.factory.typeSpec
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
@@ -45,7 +45,7 @@ import com.github.jonathanxd.iutils.data.TypedData
 
 object ConcatProcessor : Processor<Concat> {
 
-    override fun process(part: Concat, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Concat, data: TypedData, processorManager: ProcessorManager<*>) {
         val concatenations = part.concatenations
 
         val first = if (concatenations.isEmpty()) null else concatenations[0]
@@ -58,7 +58,7 @@ object ConcatProcessor : Processor<Concat> {
 
             if (concatenations.size == 1) {
 
-                codeProcessor.process(first::class.java, first, data)
+                processorManager.process(first::class.java, first, data)
 
             } else if (concatenations.size == 2) {
 
@@ -66,7 +66,7 @@ object ConcatProcessor : Processor<Concat> {
                         typeSpec(String::class.java, String::class.java),
                         listOf(concatenations[1]))
 
-                codeProcessor.process(MethodInvocation::class.java, stringConcat, data)
+                processorManager.process(MethodInvocation::class.java, stringConcat, data)
             } else {
 
                 var strBuilder = Types.STRING_BUILDER.invokeConstructor(
@@ -82,7 +82,7 @@ object ConcatProcessor : Processor<Concat> {
 
                 strBuilder = invokeVirtual(Types.OBJECT, strBuilder, "toString", typeSpec(Types.STRING), emptyList())
 
-                codeProcessor.process(MethodInvocation::class.java, strBuilder, data)
+                processorManager.process(MethodInvocation::class.java, strBuilder, data)
             }
         } else {
             // If the concatenations is empty or if all concat is empty only put a empty string on stack

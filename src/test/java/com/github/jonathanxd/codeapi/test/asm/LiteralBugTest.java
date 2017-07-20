@@ -34,7 +34,7 @@ import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
 
@@ -60,9 +60,9 @@ public class LiteralBugTest {
                         .build())
                 .build();
 
-        BytecodeProcessor bytecodeProcessor = new BytecodeProcessor();
+        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        List<? extends BytecodeClass> gen = bytecodeProcessor.process(decl);
+        List<? extends BytecodeClass> gen = bytecodeGenerator.process(decl);
 
         ResultSaver.save(this.getClass(), gen);
 

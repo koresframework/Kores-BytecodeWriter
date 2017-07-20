@@ -28,16 +28,16 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.bytecode.util.LiteralUtil
 import com.github.jonathanxd.codeapi.literal.Literal
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 
 object LiteralProcessor : Processor<Literal> {
 
-    override fun process(part: Literal, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: Literal, data: TypedData, processorManager: ProcessorManager<*>) {
         LiteralUtil.visitLiteral(part, METHOD_VISITOR.require(data).methodVisitor)
     }
 

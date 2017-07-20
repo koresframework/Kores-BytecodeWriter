@@ -33,8 +33,8 @@ import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.common.Stack
 import com.github.jonathanxd.codeapi.factory.cast
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.arrayComponent
 import com.github.jonathanxd.codeapi.util.require
@@ -43,12 +43,12 @@ import org.objectweb.asm.Opcodes
 
 object ArrayLoadProcessor : Processor<ArrayLoad> {
 
-    override fun process(part: ArrayLoad, data: TypedData, codeProcessor: CodeProcessor<*>) {
-        codeProcessor.process(ArrayAccess::class.java, part, data)
+    override fun process(part: ArrayLoad, data: TypedData, processorManager: ProcessorManager<*>) {
+        processorManager.process(ArrayAccess::class.java, part, data)
 
         val index = part.index
 
-        codeProcessor.process(index::class.java, index, data)
+        processorManager.process(index::class.java, index, data)
 
         val valueType = part.valueType
 
@@ -60,7 +60,7 @@ object ArrayLoadProcessor : Processor<ArrayLoad> {
 
         if (!arrayComponentType.`is`(valueType)) {
             val cast = cast(valueType, arrayComponentType, Stack)
-            codeProcessor.process(cast::class.java, cast, data)
+            processorManager.process(cast::class.java, cast, data)
         }
 
     }

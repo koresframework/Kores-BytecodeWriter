@@ -33,8 +33,8 @@ import com.github.jonathanxd.codeapi.base.WhileStatement
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.processor.CodeProcessor
 import com.github.jonathanxd.codeapi.processor.Processor
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.add
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
@@ -43,7 +43,7 @@ import org.objectweb.asm.Opcodes
 
 object WhileStatementProcessor : Processor<WhileStatement> {
 
-    override fun process(part: WhileStatement, data: TypedData, codeProcessor: CodeProcessor<*>) {
+    override fun process(part: WhileStatement, data: TypedData, processorManager: ProcessorManager<*>) {
         val mvHelper = METHOD_VISITOR.require(data)
         val mv = mvHelper.methodVisitor
 
@@ -67,9 +67,9 @@ object WhileStatementProcessor : Processor<WhileStatement> {
             mv.visitLabel(insideStart)
 
 
-            codeProcessor.process(IfStatement::class.java, ifStatement, data)
+            processorManager.process(IfStatement::class.java, ifStatement, data)
 
-            codeProcessor.process(CodeSource::class.java, part.body, data)
+            processorManager.process(CodeSource::class.java, part.body, data)
 
             mv.visitLabel(insideEnd)
 
@@ -80,7 +80,7 @@ object WhileStatementProcessor : Processor<WhileStatement> {
 
             methodVisitor.visitLabel(startIfLabel)
 
-            visit(ifStatement.expressions, whileStart, insideStart, outOfIf, true, data, codeProcessor, mvHelper)
+            visit(ifStatement.expressions, whileStart, insideStart, outOfIf, true, data, processorManager, mvHelper)
 
             val body = part.body
 
@@ -88,7 +88,7 @@ object WhileStatementProcessor : Processor<WhileStatement> {
 
             mvHelper.enterNewFrame()
 
-            codeProcessor.process(CodeSource::class.java, body, data)
+            processorManager.process(CodeSource::class.java, body, data)
 
             mvHelper.exitFrame()
 
@@ -111,7 +111,7 @@ object WhileStatementProcessor : Processor<WhileStatement> {
 
             mv.visitLabel(insideStart)
 
-            codeProcessor.process(IfStatement::class.java, ifStatement, data)
+            processorManager.process(IfStatement::class.java, ifStatement, data)
 
 
             mv.visitLabel(outsideEnd) // break;

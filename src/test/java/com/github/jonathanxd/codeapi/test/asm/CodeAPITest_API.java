@@ -32,7 +32,7 @@ import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeProcessor;
+import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 
@@ -83,7 +83,7 @@ public class CodeAPITest_API {
     }
 
     public byte[] generate(TypeDeclaration declaration) {
-        BytecodeProcessor generator = new BytecodeProcessor();
+        BytecodeGenerator generator = new BytecodeGenerator();
 
         BytecodeClass bytecodeClass = generator.process(declaration).get(0);
 
