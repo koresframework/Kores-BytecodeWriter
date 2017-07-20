@@ -203,8 +203,7 @@ object ConstructorUtil {
          * Declare variables
          */
         val all = elementsHolder.fields.filter {
-            it is FieldDeclaration
-                    && !it.modifiers.contains(CodeModifier.STATIC)
+            !it.modifiers.contains(CodeModifier.STATIC)
                     && it.value != CodeNothing
         }
 
