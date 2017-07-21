@@ -79,6 +79,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
 
         registerProcessor(ConcatProcessor, Concat::class.java)
         registerProcessor(ControlFlowProcessor, ControlFlow::class.java)
+        registerProcessor(ConstructorsHolderProcessor, ConstructorsHolder::class.java)
         registerProcessor(ElementsHolderProcessor, ElementsHolder::class.java)
         registerProcessor(InnerTypesHolderProcessor, InnerTypesHolder::class.java)
         registerProcessor(EnumDeclarationProcessor, EnumDeclaration::class.java)
@@ -117,6 +118,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
         registerProcessor(NewProcessor, New::class.java)
         registerProcessor(OperateProcessor, Operate::class.java)
         registerProcessor(ReturnProcessor, Return::class.java)
+        registerProcessor(ScopeAccessProcessor, ScopeAccess::class.java)
         registerProcessor(StaticBlockProcessor, StaticBlock::class.java)
 
         registerProcessor(SwitchProcessor, SwitchStatement::class.java)

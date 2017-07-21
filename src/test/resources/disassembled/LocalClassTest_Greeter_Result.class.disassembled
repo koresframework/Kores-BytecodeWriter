@@ -1,4 +1,4 @@
-md5: d56ae8b0c617094ed1deafad01069288
+md5: 22e124fca367e8edfe27076f64701266
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -11,9 +11,31 @@ outerMethodDesc: ()void
 
 public class test.LocalClass$Greeter extends java.lang.Object {
 
-    !access: PACKAGE_PRIVATE (8)
-     test.LocalClass.Greeter -> test.LocalClass$Greeter
+    !access: ACC_PUBLIC (1)
+    public test.LocalClass.Greeter -> test.LocalClass$Greeter
 
+    !access: ACC_PRIVATE, ACC_FINAL (18)
+    private final test.LocalClass outer$
+
+    !access: ACC_PUBLIC (1)
+    !parameter[name: outer$, access:  (0)]
+    public void <init>(test.LocalClass) {
+      desc: (Ltest/LocalClass;)V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        aload 0
+        aload 1
+        putfield test.LocalClass$Greeter.outer$ (type: test.LocalClass)
+        return
+      Label_1:
+      LocalVariables {
+        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.LocalClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.LocalClass$Greeter, signature: null
+      }
+    }
+    
     !access: ACC_PUBLIC (1)
     public void greet() {
       desc: ()V 
@@ -23,20 +45,6 @@ public class test.LocalClass$Greeter extends java.lang.Object {
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-        return
-      Label_1:
-      LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.LocalClass$Greeter, signature: null
-      }
-    }
-    
-    !access: ACC_PUBLIC (1)
-    public void <init>() {
-      desc: ()V 
-      maxStack: 1, maxLocals: 1 
-      Label_0:
-        aload 0
-        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         return
       Label_1:
       LocalVariables {

@@ -28,6 +28,9 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.test.ComplexInnerClassTest_;
+import com.github.jonathanxd.codeapi.test.ComplexStatic1InnerClassTest_;
+import com.github.jonathanxd.codeapi.test.ComplexStatic2InnerClassTest_;
 import com.github.jonathanxd.codeapi.test.InnerClassTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
 
@@ -39,7 +42,34 @@ public class InnerClassTest {
     public void innerClass() {
         TypeDeclaration $ = InnerClassTest_.$();
         @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $);
+        for (Class<?> aClass : test.getClass().getDeclaredClasses()) {
+            System.out.println(aClass);
+        }
+    }
 
+
+    @Test
+    public void complexInnerClass() {
+        TypeDeclaration $ = ComplexInnerClassTest_.$();
+        @Named("Instance") Object test = CommonBytecodeTest.test(ComplexInnerClassTest_.class, $);
+        for (Class<?> aClass : test.getClass().getDeclaredClasses()) {
+            System.out.println(aClass);
+        }
+    }
+
+    @Test
+    public void complexStatic1InnerClass() {
+        TypeDeclaration $ = ComplexStatic1InnerClassTest_.$();
+        @Named("Instance") Object test = CommonBytecodeTest.test(ComplexStatic1InnerClassTest_.class, $);
+        for (Class<?> aClass : test.getClass().getDeclaredClasses()) {
+            System.out.println(aClass);
+        }
+    }
+
+    @Test
+    public void complexStatic2InnerClass() {
+        TypeDeclaration $ = ComplexStatic2InnerClassTest_.$();
+        @Named("Instance") Object test = CommonBytecodeTest.test(ComplexStatic2InnerClassTest_.class, $);
         for (Class<?> aClass : test.getClass().getDeclaredClasses()) {
             System.out.println(aClass);
         }

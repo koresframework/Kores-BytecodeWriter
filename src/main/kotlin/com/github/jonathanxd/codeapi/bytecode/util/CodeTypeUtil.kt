@@ -28,10 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.Types
-import com.github.jonathanxd.codeapi.base.CodeParameter
-import com.github.jonathanxd.codeapi.base.GenericSignatureHolder
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
-import com.github.jonathanxd.codeapi.base.TypeSpec
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.type.GenericType
 import com.github.jonathanxd.codeapi.util.*
@@ -133,4 +130,45 @@ object CodeTypeUtil {
             throw IllegalArgumentException("Cannot cast '$from' to '$to'!")
     }
 
+}
+
+
+fun TypeDeclaration.allInnerTypes(): List<TypeDeclaration> {
+    val list = mutableListOf<TypeDeclaration>()
+    return this.allInnerTypes(list)
+}
+
+private fun TypeDeclaration.allInnerTypes(list: MutableList<TypeDeclaration>): List<TypeDeclaration> {
+    val func = { it: InnerTypesHolder ->
+        list.addAll(it.innerTypes)
+        it.innerTypes.forEach {
+            it.allInnerTypes(list)
+        }
+    }
+
+    func(this)
+
+    if (this is ConstructorsHolder) {
+        this.constructors.forEach {
+            func(it)
+        }
+    }
+
+    this.methods.forEach {
+        func(it)
+    }
+
+    this.fields.forEach {
+        func(it)
+    }
+
+    func(this.staticBlock)
+
+    if (this is EnumDeclaration) {
+        this.entries.forEach {
+            func(it)
+        }
+    }
+
+    return list
 }

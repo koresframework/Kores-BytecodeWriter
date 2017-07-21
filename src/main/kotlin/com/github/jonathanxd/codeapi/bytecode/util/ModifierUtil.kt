@@ -57,11 +57,11 @@ object ModifierUtil {
     }
 
     fun innerModifiersToAsm(typeDeclaration: TypeDeclaration): Int {
-        val modifiers = typeDeclaration.modifiers.let {
+        val modifiers = typeDeclaration.modifiers/*.let {
             if (!it.contains(CodeModifier.STATIC))
-                it + CodeModifier.STATIC
+                it + CodeModifier.STATIC // TODO: Remove
             else it
-        }
+        }*/
 
         return ModifierUtil.modifiersToAsm(modifiers, typeDeclaration.isInterface)
     }

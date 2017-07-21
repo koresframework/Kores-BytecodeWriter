@@ -33,6 +33,11 @@ import com.github.jonathanxd.codeapi.bytecode.processor.*
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
 import com.github.jonathanxd.codeapi.bytecode.util.SwitchOnEnum
+import com.github.jonathanxd.codeapi.common.FieldRef
+import com.github.jonathanxd.codeapi.common.getNewNames
+import com.github.jonathanxd.codeapi.common.getNewNamesBaseOnNameList
+import com.github.jonathanxd.codeapi.factory.accessVariable
+import com.github.jonathanxd.codeapi.factory.parameter
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
@@ -45,17 +50,21 @@ import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
+import javax.lang.model.element.Modifier
 
 /**
  * This class requires a strict debugging because `data` is recreated
  */
 object TypeDeclarationProcessor : Processor<TypeDeclaration> {
 
+    val baseOuterName = "outer\$"
+
     override fun process(part: TypeDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
         val outerType: TypeDeclaration? = TYPE_DECLARATION.getOrNull(data)
         val location: InnerTypesHolder? = LOCATION.getOrNull(data)
         val outerVisitor: ClassVisitor? = CLASS_VISITOR.getOrNull(data)
         val at = BYTECODE_CLASS_LIST.getOrSet(data, mutableListOf()).size
+        var tmpPart = part
 
         if (TYPES.getOrNull(data).orEmpty().contains(part))
             throw IllegalStateException("Revisiting type '$part'. Accidental recursive type visiting")
@@ -65,18 +74,92 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         @Suppress("NAME_SHADOWING")
         val data = TypedData(data)
 
+        outerVisitor?.also {
+            // NOTE: Inner transformation
+            // - Adds outer class fields with unique names
+            // - Adds a constructor with outer parameters
+            // or map constructors and add outer parameters with unique names
+            // - Or add static modifier if the type does not have constructors
+            outerType ?: throw IllegalStateException("Found outer visitor but not found outer type")
+
+            val isStatic = part.modifiers.contains(CodeModifier.STATIC)
+
+            if (!isStatic) {
+                val get = getTypes(part, data)
+
+                if (!isStatic && get.isEmpty() && !outerType.modifiers.contains(CodeModifier.STATIC))
+                    throw IllegalStateException("Outer types are not registered in TYPES")
+
+                val localLocalPart = tmpPart
+                if (localLocalPart is ConstructorsHolder && !isStatic && !outerType.isInterface) {
+
+                    val allNames = localLocalPart.fields.map { it.name } + localLocalPart.constructors.flatMap {
+                        it.parameters.map { it.name }
+                    }
+
+                    val names = getNewNamesBaseOnNameList(baseOuterName, get.size, allNames)
+
+                    val outerFields = names.mapIndexed { i, it ->
+                        FieldDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PRIVATE, CodeModifier.FINAL)
+                                .type(get[i])
+                                .name(it)
+                                // ConstructorUtil will add final fields value to constructor after super() or this()
+                                // or at the start.
+                                // So there is no problem
+                                .value(accessVariable(get[i], names[i]))
+                                .build()
+                    }
+
+                    val newFields = outerFields + localLocalPart.fields
+
+                    val newCtrs =
+                            if (localLocalPart.constructors.isNotEmpty()) {
+                                localLocalPart.constructors.map {
+                                    val newParams = get.indices.map {
+                                        parameter(type = get[it], name = names[it])
+                                    } + it.parameters
+
+
+                                    it.builder()
+                                            .parameters(newParams)
+                                            .build()
+                                }
+                            } else {
+                                listOf(ConstructorDeclaration.Builder.builder()
+                                        .parameters(get.indices.map {
+                                            parameter(type = get[it], name = names[it])
+                                        })
+                                        .build())
+                            }
+
+                    tmpPart = tmpPart.builder().fields(newFields).build()
+                    tmpPart = (tmpPart as ConstructorsHolder).builder().constructors(newCtrs).build()
+                            as TypeDeclaration
+
+                    OUTER_TYPES_FIELDS.add(data, OuterClassFields(tmpPart, outerFields.map {
+                        FieldRef(it.localization, it.target, it.type, it.name)
+                    }))
+                } else if ((tmpPart !is ConstructorsHolder && !isStatic) || outerType.isInterface) {
+                    tmpPart = tmpPart.builder().modifiers(tmpPart.modifiers + CodeModifier.STATIC).build()
+                }
+            }
+        }
+
+        val localPart = tmpPart
+
         val cw = ClassWriter(ClassWriter.COMPUTE_MAXS or ClassWriter.COMPUTE_FRAMES)
 
-        TYPE_DECLARATION.set(data, part)
+        TYPE_DECLARATION.set(data, localPart)
         CLASS_VISITOR.set(data, cw)
 
         val version = CLASS_VERSION.getOrSet(data, VERSION)
 
-        val name = part.internalName
-        val implementations: List<CodeType> = (part as? ImplementationHolder)?.let { it.implementations.map { it.codeType } } ?: emptyList()
-        val superClass = ((part as? SuperClassHolder)?.superClass ?: Any::class.java).codeType
+        val name = localPart.internalName
+        val implementations: List<CodeType> = (localPart as? ImplementationHolder)?.let { it.implementations.map { it.codeType } } ?: emptyList()
+        val superClass = ((localPart as? SuperClassHolder)?.superClass ?: Any::class.java).codeType
 
-        val genericRepresentation = genericTypesToDescriptor(part, superClass,
+        val genericRepresentation = genericTypesToDescriptor(localPart, superClass,
                 implementations,
                 superClass is GenericType,
                 implementations.any { it is GenericType })
@@ -85,18 +168,18 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
 
         outerVisitor?.let {
             outerType ?: throw IllegalStateException("Found outer visitor but not found outer type")
-            visitInner(part, cw, outerType.internalName)
-            visitInner(part, it, outerType.internalName)
+            visitInner(localPart, cw, outerType.internalName)
+            visitInner(localPart, it, outerType.internalName)
         }
 
-        if (part.outerClass != null) {
-            visitOuter(part, cw, location)
+        if (localPart.outerClass != null) {
+            visitOuter(localPart, cw, location)
         }
 
         // ***************************************************************************************** //
 
-        val modifiers = ModifierUtil.modifiersToAsm(part).let {
-            if (part is AnnotationDeclaration)
+        val modifiers = ModifierUtil.modifiersToAsm(localPart).let {
+            if (localPart is AnnotationDeclaration)
                 it + Opcodes.ACC_ANNOTATION
             it
         }
@@ -108,16 +191,16 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
                 superClass.internalName,
                 implementations.map { it.internalName }.toTypedArray())
 
-        cw.visitSource(SOURCE_FILE_FUNCTION.getOrSet(data, { "${Util.getOwner(it).simpleName}.cai" })(part), null)
+        cw.visitSource(SOURCE_FILE_FUNCTION.getOrSet(data, { "${Util.getOwner(it).simpleName}.cai" })(localPart), null)
         // ***************************************************************************************** //
 
         ANNOTATION_VISITOR_CAPABLE.set(data, AnnotationVisitorCapable.ClassVisitorVisitorCapable(cw), true)
-        processorManager.process(Annotable::class.java, part, data)
+        processorManager.process(Annotable::class.java, localPart, data)
 
-        processorManager.process(ElementsHolder::class.java, part, data)
+        processorManager.process(ElementsHolder::class.java, localPart, data)
 
-        if (part is AnnotationDeclaration) {
-            part.properties.forEach {
+        if (localPart is AnnotationDeclaration) {
+            localPart.properties.forEach {
                 processorManager.process(AnnotationProperty::class.java, it, data)
             }
         }
@@ -137,9 +220,11 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         CLASS_VISITOR.remove(data)
         SwitchOnEnum.MAPPINGS.remove(data)
 
-        BYTECODE_CLASS_LIST.getOrSet(data.mainData, mutableListOf()).add(at, BytecodeClass(part, cw.toByteArray()))
-        TYPES.getOrNull(data)?.clear()
+        BYTECODE_CLASS_LIST.getOrSet(data.mainData, mutableListOf()).add(at, BytecodeClass(localPart, cw.toByteArray()))
+        TYPES.getOrNull(data)?.removeAll { it.`is`(localPart) }
+        OUTER_TYPES_FIELDS.getOrNull(data)?.removeAll { it.typeDeclaration.`is`(localPart) }
     }
+
 
     fun visitInner(innerType: TypeDeclaration, classVisitor: ClassVisitor, outerClassName: String?) {
         val name = if (innerType !is AnonymousClass) innerType.specifiedName else null

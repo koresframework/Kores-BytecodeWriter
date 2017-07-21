@@ -34,9 +34,11 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
+import com.github.jonathanxd.codeapi.common.FieldRef
 import com.github.jonathanxd.codeapi.util.typedKeyOf
 import com.github.jonathanxd.iutils.`object`.TypedKey
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.iutils.map.ListHashMap
 import org.objectweb.asm.ClassVisitor
 
 /** Version of Java class to generate
@@ -72,6 +74,13 @@ val ANNOTATION_VISITOR_CAPABLE = typedKeyOf<AnnotationVisitorCapable>("ANNOTATIO
 val IN_INVOKE_DYNAMIC = typedKeyOf<Unit>("IN_INVOKE_DYNAMIC")
 
 val TYPES = typedKeyOf<MutableList<TypeDeclaration>>("TYPES_VISIT")
+
+/**
+ * Keep track of outer fields added to inner class.
+ */
+val OUTER_TYPES_FIELDS = typedKeyOf<MutableList<OuterClassFields>>("OUTER_TYPE_FIELDS")
+
+data class OuterClassFields(val typeDeclaration: TypeDeclaration, val fields: List<FieldRef>)
 
 //val LOCAL_CODES = typedKeyOf<MutableList<LocalCode>>("LOCAL_CODES")
 

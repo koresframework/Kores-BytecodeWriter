@@ -1,4 +1,4 @@
-md5: 37f23f860389f755fe092a867cca6e8b
+md5: eb22561d5823f0c3080a7f926b565add
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -7,7 +7,7 @@ source: SwitchTestClass.cai
 
 public class com.SwitchTestClass extends java.lang.Object {
 
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4104)
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
      com.SwitchTestClass.com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
 
     !access: ACC_PUBLIC (1)

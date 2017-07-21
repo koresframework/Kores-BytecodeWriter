@@ -33,6 +33,7 @@ import com.github.jonathanxd.codeapi.bytecode.processor.LOCATION
 import com.github.jonathanxd.codeapi.factory.constructorDec
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.processor.processAs
 import com.github.jonathanxd.codeapi.util.inContext
 import com.github.jonathanxd.iutils.data.TypedData
 
@@ -44,15 +45,16 @@ object ElementsHolderProcessor : Processor<ElementsHolder> {
             it.visitHolder(data, processorManager)
         }
 
-        part.constructors.forEach {
-            it.visitHolder(data, processorManager)
+        if (part is ConstructorsHolder) {
+            processorManager.processAs<ConstructorsHolder>(part, data)
         }
 
         part.methods.forEach {
             it.visitHolder(data, processorManager)
         }
 
-        if (part is TypeDeclaration && !part.isInterface && part.constructors.isEmpty()) {
+        if (part is TypeDeclaration && part is ConstructorsHolder
+                && !part.isInterface && part.constructors.isEmpty()) {
             val defaultConstructor = constructorDec().build {
                 this.modifiers += CodeModifier.PUBLIC
             }
@@ -65,14 +67,21 @@ object ElementsHolderProcessor : Processor<ElementsHolder> {
         processorManager.process(InnerTypesHolder::class.java, part, data)
     }
 
+}
 
-    inline fun <reified T : InnerTypesHolder> T.visitHolder(data: TypedData, processorManager: ProcessorManager<*>) {
-        processorManager.process(InnerTypesHolder::class.java, this, data)
-        processorManager.process(T::class.java, this, data)
+inline fun <reified T : InnerTypesHolder> T.visitHolder(data: TypedData, processorManager: ProcessorManager<*>) {
+    processorManager.process(InnerTypesHolder::class.java, this, data)
+    processorManager.process(T::class.java, this, data)
+}
+
+object ConstructorsHolderProcessor : Processor<ConstructorsHolder> {
+    override fun process(part: ConstructorsHolder, data: TypedData, processorManager: ProcessorManager<*>) {
+        part.constructors.forEach {
+            it.visitHolder(data, processorManager)
+        }
     }
 
 }
-
 
 object InnerTypesHolderProcessor : Processor<InnerTypesHolder> {
     override fun process(part: InnerTypesHolder, data: TypedData, processorManager: ProcessorManager<*>) {

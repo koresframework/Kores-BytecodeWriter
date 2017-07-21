@@ -27,17 +27,23 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
-import com.github.jonathanxd.codeapi.base.ImplementationHolder
-import com.github.jonathanxd.codeapi.base.MethodInvocation
-import com.github.jonathanxd.codeapi.base.SuperClassHolder
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.CodeInstruction
+import com.github.jonathanxd.codeapi.CodePart
+import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.OUTER_TYPES_FIELDS
+import com.github.jonathanxd.codeapi.bytecode.processor.TYPES
 import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.bytecode.util.ReflectType
+import com.github.jonathanxd.codeapi.bytecode.util.allInnerTypes
+import com.github.jonathanxd.codeapi.factory.accessField
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.Alias
+import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.codeType
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
+import java.lang.reflect.Type
 
 object Util {
 
@@ -74,3 +80,69 @@ object Util {
 }
 
 val MethodInvocation.isSuperConstructorInvocation get() = this.spec.methodName == "<init>" && this.target == Alias.SUPER
+
+fun getTypes(current: TypeDeclaration, data: TypedData): List<TypeDeclaration> {
+    val list = mutableListOf<TypeDeclaration>()
+    var parent: TypedData? = data
+    var found = false
+
+    while(parent != null) {
+        TYPES.getOrNull(parent)?.let {
+            it.forEach {
+                if (it.modifiers.contains(CodeModifier.STATIC)) {
+                    if (!found && !it.`is`(current))
+                        throw IllegalStateException("Found static outer class before finding the current class.")
+                    if (found) list.add(it)
+                    return list
+                } else {
+                    if (found) list.add(it)
+                }
+
+                if (!found && it.`is`(current))
+                    found = true
+            }
+
+        }
+
+        parent = parent.parent
+    }
+
+    return list
+}
+
+/**
+ * Gets arguments to be used to construct an inner type.
+ *
+ * [typeToFind] is the type of the inner class
+ */
+fun getInnerSpec(typeToFind: Type, data: TypedData): InnerConstructorSpec? {
+    val type = TYPE_DECLARATION.getOrNull(data)
+
+    val all = type.allInnerTypes()
+
+    val first = all.firstOrNull { it.`is`(typeToFind) }
+
+    if (first != null) {
+        val argTypes = mutableListOf<Type>()
+        val args = mutableListOf<CodeInstruction>()
+
+        if (first.modifiers.contains(CodeModifier.STATIC))
+            return null
+
+        val outer = OUTER_TYPES_FIELDS.getOrNull(data)?.firstOrNull { it.typeDeclaration.`is`(type) }
+
+        outer?.fields?.mapTo(args) {
+            argTypes += it.type
+            accessField(Alias.THIS, Access.THIS, it.type, it.name)
+        }
+
+        argTypes += type
+        args += Access.THIS
+
+        return InnerConstructorSpec(argTypes, args)
+    }
+
+    return null
+}
+
+data class InnerConstructorSpec(val argTypes: List<Type>, val args: List<CodeInstruction>)

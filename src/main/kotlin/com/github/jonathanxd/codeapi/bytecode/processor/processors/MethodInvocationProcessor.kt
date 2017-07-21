@@ -27,20 +27,17 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
-import com.github.jonathanxd.codeapi.base.ArgumentsHolder
-import com.github.jonathanxd.codeapi.base.InvokeType
-import com.github.jonathanxd.codeapi.base.MethodInvocation
-import com.github.jonathanxd.codeapi.base.New
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.TYPES
+import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
+import com.github.jonathanxd.codeapi.bytecode.util.allInnerTypes
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.internalName
-import com.github.jonathanxd.codeapi.util.require
-import com.github.jonathanxd.codeapi.util.safeForComparison
-import com.github.jonathanxd.codeapi.util.typeDesc
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Type
@@ -72,7 +69,7 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
 
         if (!part.isSuperConstructorInvocation) {
             // Invoke constructor
-            // NOT REQUIRED, SEE NEW PROCESSOR
+            // NOT REQUIRED, SEE 'NewProcessor'
             //mv.visitTypeInsn(Opcodes.NEW, localization.internalName)
             //mv.visitInsn(Opcodes.DUP)
         } else {
@@ -89,14 +86,34 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         if (isInInvokeDynamic)
             IN_INVOKE_DYNAMIC.set(data, Unit, true)
 
-        processorManager.process(ArgumentsHolder::class.java, part, data)
+        // Inner transformation
+
+        var newSpecification = specification
+        var newPart = part
+
+        if (invokeType.isSpecial() && !part.isSuperConstructorInvocation) {
+            val innerSpec = getInnerSpec(localization, data)
+
+            if (innerSpec != null) {
+                newSpecification = newSpecification.copy(typeSpec = newSpecification.typeSpec.copy(
+                        parameterTypes = innerSpec.argTypes + newSpecification.typeSpec.parameterTypes
+                ))
+                newPart = newPart.builder()
+                        .spec(newSpecification)
+                        .arguments(innerSpec.args + newPart.arguments).build()
+            }
+        }
+
+        // /Inner transformation
+
+        processorManager.process(ArgumentsHolder::class.java, newPart, data)
 
         if (!isInInvokeDynamic) {
             mv.visitMethodInsn(
                     /*Type like invokestatic*/InvokeTypeUtil.toAsm(invokeType),
                     /*Localization*/localization.internalName,
-                    /*Method name*/specification.methodName,
-                    /*(ARGUMENT)RETURN*/specification.typeSpec.typeDesc,
+                    /*Method name*/newSpecification.methodName,
+                    /*(ARGUMENT)RETURN*/newSpecification.typeSpec.typeDesc,
                     invokeType.isInterface())
         }
     }
