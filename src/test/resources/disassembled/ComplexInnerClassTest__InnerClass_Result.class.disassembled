@@ -1,4 +1,4 @@
-md5: e129d5d4bf912bd81cc673a5fa19b278
+md5: d41f26f43446f4960d01166f2de502e0
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -16,7 +16,7 @@ public class test.InnerClass extends java.lang.Object {
     !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
-      maxStack: 5, maxLocals: 1 
+      maxStack: 3, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
@@ -28,10 +28,7 @@ public class test.InnerClass extends java.lang.Object {
         new test.InnerClass$Inner
         dup
         aload 0
-        new test.InnerClass$Inner$$
-        dup
-        invokespecial test.InnerClass$Inner$$.<init>()void (ownerIsInterface: false)
-        invokespecial test.InnerClass$Inner.<init>(test.InnerClass, test.InnerClass$Inner$$)void (ownerIsInterface: false)
+        invokespecial test.InnerClass$Inner.<init>(test.InnerClass)void (ownerIsInterface: false)
         invokevirtual test.InnerClass$Inner.call()java.lang.String (ownerIsInterface: false)
         return
       Label_2:

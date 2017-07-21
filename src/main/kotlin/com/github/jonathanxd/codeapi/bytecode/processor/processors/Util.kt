@@ -35,7 +35,6 @@ import com.github.jonathanxd.codeapi.bytecode.processor.*
 import com.github.jonathanxd.codeapi.bytecode.util.ReflectType
 import com.github.jonathanxd.codeapi.bytecode.util.allInnerTypes
 import com.github.jonathanxd.codeapi.bytecode.util.allTypes
-import com.github.jonathanxd.codeapi.common.FieldRef
 import com.github.jonathanxd.codeapi.common.getNewName
 import com.github.jonathanxd.codeapi.common.getNewNameBasedOnNameList
 import com.github.jonathanxd.codeapi.factory.*
@@ -143,7 +142,8 @@ data class InnerConstructorSpec(val argTypes: List<Type>, val args: List<CodeIns
 fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): MemberAccess? {
     val type = TYPE_DECLARATION.getOrNull(data)
 
-    val top = getTopLevelOuter(data)
+    val top = getTopLevelOuter(data) ?: return null
+
     val all = top.allTypes()
 
     val target = all.firstOrNull { it.`is`(memberOwner) }
@@ -176,7 +176,8 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
                             method
                         else if (accessor.invokeType == InvokeType.INVOKE_SPECIAL
                                 && (ctr != null && ctr.modifiers.contains(CodeModifier.PRIVATE))
-                                || (target as? ConstructorsHolder)?.constructors.orEmpty().isEmpty())
+                                || ((target as? ConstructorsHolder)?.constructors.orEmpty().isEmpty()
+                                && target.modifiers.contains(CodeModifier.PRIVATE)))
                             ctr
                         else null
                     } else null
@@ -266,7 +267,7 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
     return null
 }
 
-fun getTopLevelOuter(data: TypedData): TypeDeclaration {
+fun getTopLevelOuter(data: TypedData): TypeDeclaration? {
     var parent: TypedData? = data
     var last: TypeDeclaration? = null
 
@@ -278,7 +279,7 @@ fun getTopLevelOuter(data: TypedData): TypeDeclaration {
         parent = parent.parent
     }
 
-    return last ?: throw IllegalStateException("Cannot find top level outer type in Data: {$data}")
+    return last
 }
 
 fun getConstructors(part: TypeDeclaration): List<ConstructorDeclaration> {

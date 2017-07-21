@@ -1,4 +1,4 @@
-md5: c5d1fdc142ec3de1c051d4c406c9e3f7
+md5: 266f8789a4e00f825e1f4c1cb8412b03
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -11,8 +11,6 @@ public class test.InnerClass$Inner extends java.lang.Object {
     public test.InnerClass.Inner -> test.InnerClass$Inner
     !access: ACC_PUBLIC (1)
     public test.InnerClass$Inner.Inner2 -> test.InnerClass$Inner$Inner2
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4104)
-     test.InnerClass$Inner.$ -> test.InnerClass$Inner$$
 
     !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
     protected final test.InnerClass outer$
@@ -96,26 +94,6 @@ public class test.InnerClass$Inner extends java.lang.Object {
       desc: ()V 
       maxStack: 0, maxLocals: 0 
         return
-    }
-    
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-    !parameter[name: outer$, access:  (0)]
-    !parameter[name: access$, access:  (0)]
-     void <init>(test.InnerClass, test.InnerClass$Inner$$) {
-      desc: (Ltest/InnerClass;Ltest/InnerClass$Inner$$;)V 
-      maxStack: 2, maxLocals: 3 
-      Label_0:
-       LINE 5 -> Label_0
-        aload 0
-        aload 1
-        invokespecial test.InnerClass$Inner.<init>(test.InnerClass)void (ownerIsInterface: false)
-        return
-      Label_1:
-      LocalVariables {
-        index: 2, name: access$, start: Label_0, end: Label_1, type: test.InnerClass$Inner$$, signature: null
-        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
-      }
     }
     
 }

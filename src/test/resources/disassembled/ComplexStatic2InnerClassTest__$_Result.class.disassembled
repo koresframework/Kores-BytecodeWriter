@@ -1,0 +1,38 @@
+md5: a199d7f7381888a171d34c9f55763534
+
+version: Java 8 (52)
+access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
+
+source: Inner.cai
+
+outerClass: test.InnerClass$Inner
+outerMethod: <init>
+outerMethodDesc: (test.InnerClass, test.InnerClass$Inner$$)void
+
+ class test.InnerClass$Inner$$ extends java.lang.Object {
+
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4104)
+     test.InnerClass$Inner.$ -> test.InnerClass$Inner$$
+
+    !access: PACKAGE_PRIVATE (0)
+     void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner$$, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}
