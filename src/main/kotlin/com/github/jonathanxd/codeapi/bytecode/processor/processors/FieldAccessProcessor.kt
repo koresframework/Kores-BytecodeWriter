@@ -49,17 +49,24 @@ object FieldAccessProcessor : Processor<FieldAccess> {
         val at = part.target
         val safeAt = at.safeForComparison
 
-        if (safeAt !is Access || safeAt != Access.STATIC) {
-            processorManager.process(at::class.java, at, data)
-        }
+        val access = accessMemberOfType(localization, part, data)
 
-        if (safeAt is Access && safeAt == Access.STATIC) {
-            mv.visitFieldInsn(Opcodes.GETSTATIC, localization.internalName, part.name, part.type.typeDesc)
+        if (access != null) {
+            val invk = access.createInvokeToNewElement(at, emptyList())
+            processorManager.process(invk, data)
         } else {
-            // THIS
-            mv.visitFieldInsn(Opcodes.GETFIELD, localization.internalName, part.name, part.type.typeDesc)
+
+            if (safeAt !is Access || safeAt != Access.STATIC) {
+                processorManager.process(at::class.java, at, data)
+            }
+
+            if (safeAt is Access && safeAt == Access.STATIC) {
+                mv.visitFieldInsn(Opcodes.GETSTATIC, localization.internalName, part.name, part.type.typeDesc)
+            } else {
+                // THIS
+                mv.visitFieldInsn(Opcodes.GETFIELD, localization.internalName, part.name, part.type.typeDesc)
+            }
         }
     }
-
 
 }

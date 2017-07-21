@@ -27,18 +27,16 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor
 
-import com.github.jonathanxd.codeapi.base.InnerTypesHolder
-import com.github.jonathanxd.codeapi.base.LocalCode
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.CodeElement
+import com.github.jonathanxd.codeapi.CodeInstruction
+import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.common.FieldRef
+import com.github.jonathanxd.codeapi.factory.invoke
 import com.github.jonathanxd.codeapi.util.typedKeyOf
-import com.github.jonathanxd.iutils.`object`.TypedKey
-import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.iutils.map.ListHashMap
 import org.objectweb.asm.ClassVisitor
 
 /** Version of Java class to generate
@@ -46,6 +44,11 @@ import org.objectweb.asm.ClassVisitor
  * This can be changed via [version][CLASS_VERSION] key
  */
 const val VERSION = 52
+
+/**
+ * Indexes known inner classes to avoid name conflicts.
+ */
+val INNER_CLASSES = typedKeyOf<MutableList<TypeDeclaration>>("INNER_CLASSES")
 
 val SOURCE_FILE_FUNCTION = typedKeyOf<(TypeDeclaration) -> String>("SOURCE_FILE_FUNCTION")
 
@@ -78,9 +81,25 @@ val TYPES = typedKeyOf<MutableList<TypeDeclaration>>("TYPES_VISIT")
 /**
  * Keep track of outer fields added to inner class.
  */
-val OUTER_TYPES_FIELDS = typedKeyOf<MutableList<OuterClassFields>>("OUTER_TYPE_FIELDS")
+val OUTER_TYPE_FIELD = typedKeyOf<OuterClassField>("OUTER_TYPE_FIELD")
 
-data class OuterClassFields(val typeDeclaration: TypeDeclaration, val fields: List<FieldRef>)
+data class OuterClassField(val typeDeclaration: TypeDeclaration, val field: FieldRef)
 
-//val LOCAL_CODES = typedKeyOf<MutableList<LocalCode>>("LOCAL_CODES")
+val MEMBER_ACCESSES = typedKeyOf<MutableList<MemberAccess>>("MEMBER_ACCESSES")
 
+data class MemberAccess(val from: TypeDeclaration,
+                        val member: CodeElement,
+                        val owner: TypeDeclaration,
+                        val newElementToAccess: MethodDeclarationBase) {
+
+    fun createInvokeToNewElement(target: CodeInstruction, args: List<CodeInstruction>) = invoke(
+            if (newElementToAccess is ConstructorDeclaration) InvokeType.INVOKE_SPECIAL
+            else InvokeType.INVOKE_STATIC,
+            owner,
+            target,
+            newElementToAccess.name,
+            newElementToAccess.typeSpec,
+            args
+    )
+
+}

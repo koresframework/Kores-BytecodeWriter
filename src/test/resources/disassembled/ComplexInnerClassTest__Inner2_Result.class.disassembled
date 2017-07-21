@@ -1,4 +1,4 @@
-md5: 5bc4760179c033915c8daa114772ef6c
+md5: 43085cd279588f5ec298d7c9bf15329e
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -9,54 +9,56 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
     public test.InnerClass$Inner.Inner2 -> test.InnerClass$Inner$Inner2
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4104)
+     test.InnerClass$Inner$Inner2.$ -> test.InnerClass$Inner$Inner2$$
 
-    !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final test.InnerClass$Inner outer$
-    !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final test.InnerClass outer$0
+    !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
+    protected final test.InnerClass$Inner outer$
 
-    !access: ACC_PUBLIC (1)
+    !access: ACC_PRIVATE (2)
     !parameter[name: outer$, access:  (0)]
-    !parameter[name: outer$0, access:  (0)]
-    public void <init>(test.InnerClass$Inner, test.InnerClass) {
-      desc: (Ltest/InnerClass$Inner;Ltest/InnerClass;)V 
-      maxStack: 2, maxLocals: 3 
+    private void <init>(test.InnerClass$Inner) {
+      desc: (Ltest/InnerClass$Inner;)V 
+      maxStack: 2, maxLocals: 2 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
         aload 0
         aload 1
         putfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
-        aload 0
-        aload 2
-        putfield test.InnerClass$Inner$Inner2.outer$0 (type: test.InnerClass)
         return
       Label_1:
       LocalVariables {
-        index: 2, name: outer$0, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
         index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
         index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2, signature: null
       }
     }
     
-    !access: ACC_PROTECTED (4)
-    protected java.lang.String call2() {
+    !access: ACC_PRIVATE (2)
+    private java.lang.String call2() {
       desc: ()Ljava/lang/String; 
       maxStack: 2, maxLocals: 1 
       Label_0:
        LINE 1 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
-        getfield test.InnerClass$Inner$Inner2.outer$0 (type: test.InnerClass)
-        getfield test.InnerClass.field (type: java.lang.String)
+        getfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
+        getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
+        invokestatic test.InnerClass.accessor$(test.InnerClass)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
        LINE 2 -> Label_1
+        aload 0
+        getfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
+        getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
+        invokevirtual test.InnerClass.mm()void (ownerIsInterface: false)
+      Label_2:
+       LINE 3 -> Label_2
         ldc "A"              // type: java.lang.String
         areturn
-      Label_2:
+      Label_3:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_2, type: test.InnerClass$Inner$Inner2, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: test.InnerClass$Inner$Inner2, signature: null
       }
     }
     
@@ -65,6 +67,42 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
       desc: ()V 
       maxStack: 0, maxLocals: 0 
         return
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
+    !parameter[name: outer$, access:  (0)]
+    !parameter[name: access$, access:  (0)]
+     void <init>(test.InnerClass$Inner, test.InnerClass$Inner$Inner2$$) {
+      desc: (Ltest/InnerClass$Inner;Ltest/InnerClass$Inner$Inner2$$;)V 
+      maxStack: 2, maxLocals: 3 
+      Label_0:
+       LINE 4 -> Label_0
+        aload 0
+        aload 1
+        invokespecial test.InnerClass$Inner$Inner2.<init>(test.InnerClass$Inner)void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 2, name: access$, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2$$, signature: null
+        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC, ACC_SYNTHETIC (4104)
+    !parameter[name: this, access:  (0)]
+    static java.lang.String accessor$(test.InnerClass$Inner$Inner2) {
+      desc: (Ltest/InnerClass$Inner$Inner2;)Ljava/lang/String; 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+       LINE 5 -> Label_0
+        aload 0
+        invokevirtual test.InnerClass$Inner$Inner2.call2()java.lang.String (ownerIsInterface: false)
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2, signature: null
+      }
     }
     
 }

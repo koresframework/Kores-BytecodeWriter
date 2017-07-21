@@ -1,4 +1,4 @@
-md5: 7e6287b09da57b0b88404bfa1ad614f2
+md5: 406275285826c3e798983bac3258bc41
 
 version: Java 8 (52)
 access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
@@ -10,14 +10,14 @@ source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$
     !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
      com.SwitchTestClass.com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
 
-    !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final com.SwitchTestClass outer$
+    !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
+    protected final com.SwitchTestClass outer$
     !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static int[] ENUM_MAP
 
-    !access: ACC_PUBLIC (1)
+    !access: PACKAGE_PRIVATE (0)
     !parameter[name: outer$, access:  (0)]
-    public void <init>(com.SwitchTestClass) {
+     void <init>(com.SwitchTestClass) {
       desc: (Lcom/SwitchTestClass;)V 
       maxStack: 2, maxLocals: 2 
       Label_0:

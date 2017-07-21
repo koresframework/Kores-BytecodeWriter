@@ -172,3 +172,43 @@ private fun TypeDeclaration.allInnerTypes(list: MutableList<TypeDeclaration>): L
 
     return list
 }
+
+fun TypeDeclaration.allTypes(): List<TypeDeclaration> {
+    val list = mutableListOf<TypeDeclaration>()
+    return this.allTypes(list)
+}
+
+private fun TypeDeclaration.allTypes(list: MutableList<TypeDeclaration>): List<TypeDeclaration> {
+    val func = { it: InnerTypesHolder ->
+        (it as? TypeDeclaration)?.let { list.add(it) }
+        it.innerTypes.forEach {
+            it.allTypes(list)
+        }
+    }
+
+    func(this)
+
+    if (this is ConstructorsHolder) {
+        this.constructors.forEach {
+            func(it)
+        }
+    }
+
+    this.methods.forEach {
+        func(it)
+    }
+
+    this.fields.forEach {
+        func(it)
+    }
+
+    func(this.staticBlock)
+
+    if (this is EnumDeclaration) {
+        this.entries.forEach {
+            func(it)
+        }
+    }
+
+    return list
+}

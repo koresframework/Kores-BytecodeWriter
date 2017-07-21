@@ -1,4 +1,4 @@
-md5: bab76a9d5359a02b0846f6d3b7433d82
+md5: 2a150429268a8b179c2ffab2c8f784f1
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -10,8 +10,8 @@ public class test.InnerClass$Inner extends java.lang.Object {
     !access: ACC_PUBLIC (1)
     public test.InnerClass.Inner -> test.InnerClass$Inner
 
-    !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final test.InnerClass outer$
+    !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
+    protected final test.InnerClass outer$
     !access: ACC_PUBLIC (1)
     public test.InnerClass a
 

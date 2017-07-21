@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.bytecode.processor.TYPES
 import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.allInnerTypes
+import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
@@ -52,46 +53,12 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
 
         val localization: Type = Util.resolveType(part.localization, data)
 
-        val invokeType: InvokeType = part.invokeType
-        val target = part.target
-        val safeTarget = target.safeForComparison
-        val specification = part.spec
-
-        // Throw exception in case of invalid invoke type
-        if (invokeType == InvokeType.INVOKE_VIRTUAL || invokeType == InvokeType.INVOKE_INTERFACE) {
-
-            val correctInvokeType = InvokeType.get(localization)
-
-            if (invokeType != correctInvokeType) {
-                throw IllegalStateException("Invalid invocation type '$invokeType' for CodeType: '$localization' (correct invoke type: '$correctInvokeType')")
-            }
-        }
-
-        if (!part.isSuperConstructorInvocation) {
-            // Invoke constructor
-            // NOT REQUIRED, SEE 'NewProcessor'
-            //mv.visitTypeInsn(Opcodes.NEW, localization.internalName)
-            //mv.visitInsn(Opcodes.DUP)
-        } else {
-            mv.visitVarInsn(Opcodes.ALOAD, 0)
-        }
-
-        if (safeTarget !is CodeType && !part.isSuperConstructorInvocation) {
-            processorManager.process(target::class.java, target, data)
-
-            if (safeTarget is New)
-                mv.visitInsn(Opcodes.DUP) // New does not dup, it is intended
-        }
-
-        if (isInInvokeDynamic)
-            IN_INVOKE_DYNAMIC.set(data, Unit, true)
-
         // Inner transformation
 
-        var newSpecification = specification
+        var newSpecification = part.spec
         var newPart = part
 
-        if (invokeType.isSpecial() && !part.isSuperConstructorInvocation) {
+        if (part.invokeType.isSpecial() && !part.isSuperConstructorInvocation) {
             val innerSpec = getInnerSpec(localization, data)
 
             if (innerSpec != null) {
@@ -105,6 +72,59 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         }
 
         // /Inner transformation
+
+        // Synthetic accessor redirection
+        var syntheticPart = part
+
+        val access = accessMemberOfType(localization, newPart, data)
+
+        // RETURN AT END OF IF
+        if (access != null) {
+            val args = if (access.newElementToAccess is ConstructorDeclaration) {
+                newPart.arguments + access.newElementToAccess.parameters.last().type.invokeConstructor()
+            } else newPart.arguments
+
+            val invk = access.createInvokeToNewElement(newPart.target, args)
+
+            syntheticPart = invk
+            newPart = syntheticPart
+            newSpecification = syntheticPart.spec
+        }
+
+        // /Synthetic accessor redirection
+
+        val invokeType: InvokeType = syntheticPart.invokeType
+        val target = syntheticPart.target
+        val safeTarget = target.safeForComparison
+
+        // Throw exception in case of invalid invoke type
+        if (invokeType == InvokeType.INVOKE_VIRTUAL || invokeType == InvokeType.INVOKE_INTERFACE) {
+
+            val correctInvokeType = InvokeType.get(localization)
+
+            if (invokeType != correctInvokeType) {
+                throw IllegalStateException("Invalid invocation type '$invokeType' for CodeType: '$localization' (correct invoke type: '$correctInvokeType')")
+            }
+        }
+
+        if (!syntheticPart.isSuperConstructorInvocation) {
+            // Invoke constructor
+            // NOT REQUIRED, SEE 'NewProcessor'
+            //mv.visitTypeInsn(Opcodes.NEW, localization.internalName)
+            //mv.visitInsn(Opcodes.DUP)
+        } else {
+            mv.visitVarInsn(Opcodes.ALOAD, 0)
+        }
+
+        if (safeTarget !is CodeType && !syntheticPart.isSuperConstructorInvocation) {
+            processorManager.process(target::class.java, target, data)
+
+            if (safeTarget is New)
+                mv.visitInsn(Opcodes.DUP) // New does not dup, it is intended
+        }
+
+        if (isInInvokeDynamic)
+            IN_INVOKE_DYNAMIC.set(data, Unit, true)
 
         processorManager.process(ArgumentsHolder::class.java, newPart, data)
 

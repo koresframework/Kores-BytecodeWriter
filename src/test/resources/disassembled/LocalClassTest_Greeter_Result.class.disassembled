@@ -1,4 +1,4 @@
-md5: 22e124fca367e8edfe27076f64701266
+md5: a4f50e490bd54664715658b914ea85ca
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -14,8 +14,8 @@ public class test.LocalClass$Greeter extends java.lang.Object {
     !access: ACC_PUBLIC (1)
     public test.LocalClass.Greeter -> test.LocalClass$Greeter
 
-    !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final test.LocalClass outer$
+    !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
+    protected final test.LocalClass outer$
 
     !access: ACC_PUBLIC (1)
     !parameter[name: outer$, access:  (0)]

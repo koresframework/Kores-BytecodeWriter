@@ -56,7 +56,7 @@ object ElementsHolderProcessor : Processor<ElementsHolder> {
         if (part is TypeDeclaration && part is ConstructorsHolder
                 && !part.isInterface && part.constructors.isEmpty()) {
             val defaultConstructor = constructorDec().build {
-                this.modifiers += CodeModifier.PUBLIC
+                this.modifiers = part.modifiers.filter { it.modifierType == ModifierType.VISIBILITY }.toSet()
             }
 
             processorManager.process(ConstructorDeclaration::class.java, defaultConstructor, data)

@@ -83,6 +83,15 @@ val VALIDATE_SUPER = Option(true)
 @JvmField
 val GENERATE_BRIDGE_METHODS = Option(false)
 
+/**
+ * Automatically generate synthetic accessors for private members in private inner classes.
+ * Synthetic accessors will be only generated for private members which are accessed.
+ *
+ * An anonymous synthetic class may be generated for private constructors.
+ */
+@JvmField
+val GENERATE_SYNTHETIC_ACCESS = Option(true)
+
 enum class VisitLineType {
     /**
      * Disable line visit
