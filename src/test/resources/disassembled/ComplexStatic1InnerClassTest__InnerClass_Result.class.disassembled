@@ -1,4 +1,4 @@
-md5: f1a7bb8d7f0ccd756ab4ede83f03a431
+md5: 7b0e0f7f8269ae918892127eaaebe55d
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -7,7 +7,7 @@ source: InnerClass.cai
 
 public class test.InnerClass extends java.lang.Object {
 
-    !access: ACC_PUBLIC (1)
+    !access: ACC_PUBLIC (9)
     public test.InnerClass.Inner -> test.InnerClass$Inner
 
     !access: ACC_PROTECTED (4)
@@ -16,7 +16,7 @@ public class test.InnerClass extends java.lang.Object {
     !access: ACC_PUBLIC (1)
     public void <init>() {
       desc: ()V 
-      maxStack: 3, maxLocals: 1 
+      maxStack: 2, maxLocals: 1 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
@@ -27,8 +27,7 @@ public class test.InnerClass extends java.lang.Object {
        LINE 1 -> Label_1
         new test.InnerClass$Inner
         dup
-        aload 0
-        invokespecial test.InnerClass$Inner.<init>(test.InnerClass)void (ownerIsInterface: false)
+        invokespecial test.InnerClass$Inner.<init>()void (ownerIsInterface: false)
         invokevirtual test.InnerClass$Inner.call()java.lang.String (ownerIsInterface: false)
         return
       Label_2:
