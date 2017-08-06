@@ -34,7 +34,7 @@ import com.github.jonathanxd.iutils.data.TypedData
 
 internal interface InstructionCodePart : CodeInstruction {
 
-    fun apply(value: Any, data: TypedData, codeProcessor: ProcessorManager<*>)
+    fun apply(value: Any, data: TypedData, processorManager: ProcessorManager<*>)
 
     companion object {
         inline fun create(crossinline func: (value: Any, data: TypedData, processorManager: ProcessorManager<*>) -> Unit): InstructionCodePart {

@@ -203,7 +203,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         if_icmpne Label_23
       Label_22:
        LINE 28 -> Label_22
-       FRAME[type: F_FULL, locals: 7, local: {fullName.InvocationsTest__Generated, integer, com.github.jonathanxd.codeapi.test.WorldGreeter, java.lang.String, java.util.function.Supplier, java.util.function.Supplier, java.lang.String}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 7, local: {Reference[fullName.InvocationsTest__Generated], Primitive[integer], Reference[com.github.jonathanxd.codeapi.test.WorldGreeter], Reference[java.lang.String], Reference[java.util.function.Supplier], Reference[java.util.function.Supplier], Reference[java.lang.String]}, stacks: 0, stack: {}]
         iconst_0
         ireturn
       Label_23:

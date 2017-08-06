@@ -25,17 +25,47 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode
+package com.github.jonathanxd.codeapi.bytecode.util
 
-import com.github.jonathanxd.bytecodedisassembler.Disassembler
-import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 
-class BytecodeClass constructor(val type: TypeDeclaration, private val bytecode_: ByteArray) {
+fun BytecodeClass.save(directory: Path, disassemble: Boolean = false, alternativeDir: Boolean = false) {
 
-    val disassembledCode: String by lazy {
-        Disassembler.disassemble(bytes = this.bytecode, appendHash = true)
+    val targetPath = this.toPath(directory)
+
+    Files.createDirectories(targetPath)
+
+    val classPath = targetPath.resolve("${this.type.simpleName}.class")
+
+    if(Files.exists(classPath))
+        Files.deleteIfExists(classPath)
+
+    Files.write(classPath, this.bytecode, StandardOpenOption.CREATE)
+
+    if (disassemble) {
+        val base = if (alternativeDir) this.toPath(directory.resolve("disassembled")) else targetPath
+
+        Files.createDirectories(base)
+        val disassembledPath = base.resolve("${this.type.simpleName}.class.dissassembled")
+
+        if(Files.exists(disassembledPath))
+            Files.deleteIfExists(disassembledPath)
+
+        Files.write(disassembledPath, this.disassembledCode.toByteArray(), StandardOpenOption.CREATE)
     }
-
-    val bytecode get() = bytecode_.clone()
-
 }
+
+fun BytecodeClass.toPath(base: Path): Path =
+        this.type.packageName
+                .split('.')
+                .fold(base) { acc, s -> acc.resolve(s) }
+
+
+fun BytecodeClass.toPathWithName(base: Path): Path =
+        this.toPath(base).resolve(this.type.simpleName)
+
+fun BytecodeClass.toPathWithNameAnd(base: Path, str: String): Path =
+        this.toPath(base).resolve("${this.type.simpleName}$str")

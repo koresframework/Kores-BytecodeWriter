@@ -28,7 +28,7 @@ public class com.ForEach extends java.lang.Object {
         iconst_0
         istore 3
       Label_4:
-       FRAME[type: F_FULL, locals: 4, local: {com.ForEach, java.lang.String[], java.lang.String, integer}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 4, local: {Reference[com.ForEach], Reference[java.lang.String[]], Reference[java.lang.String], Primitive[integer]}, stacks: 0, stack: {}]
         iload 3
         aload 1
         arraylength

@@ -25,13 +25,13 @@ public class test.DupTest_getNotNull extends java.lang.Object {
         goto Label_5
       Label_3:
        LINE 3 -> Label_3
-       FRAME[type: F_FULL, locals: 1, local: {test.DupTest_getNotNull}, stacks: 2, stack: {java.io.PrintStream, java.lang.String}]
+       FRAME[type: F_FULL, locals: 1, local: {Reference[test.DupTest_getNotNull]}, stacks: 2, stack: {Reference[java.io.PrintStream], Reference[java.lang.String]}]
         pop
       Label_4:
        LINE 4 -> Label_4
         ldc "NULL"              // type: java.lang.String
       Label_5:
-       FRAME[type: F_FULL, locals: 1, local: {test.DupTest_getNotNull}, stacks: 2, stack: {java.io.PrintStream, java.lang.String}]
+       FRAME[type: F_FULL, locals: 1, local: {Reference[test.DupTest_getNotNull]}, stacks: 2, stack: {Reference[java.io.PrintStream], Reference[java.lang.String]}]
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
       Label_6:

@@ -23,7 +23,7 @@ apply from: project(":CodeAPI").file("gradle/common.gradle")
 
 dependencies {
     compile project(":CodeAPI")
-    compile 'com.github.JonathanxD:BytecodeDisassembler:2.0.3u'
+    compile 'com.github.JonathanxD:BytecodeDisassembler:2.0.4b'
     compile group: 'org.ow2.asm', name: 'asm-all', version: '5.2'
     testCompile project(path: ':CodeAPI', configuration: 'tests')
 }

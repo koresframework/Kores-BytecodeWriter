@@ -23,10 +23,10 @@ public class test.LineTest extends java.lang.Object {
         ldc "9 < 5"              // type: java.lang.String
         goto Label_3
       Label_2:
-       FRAME[type: F_FULL, locals: 1, local: {test.LineTest}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 1, local: {Reference[test.LineTest]}, stacks: 0, stack: {}]
         ldc "9 >= 5"              // type: java.lang.String
       Label_3:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.String}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.String]}]
         astore 1
         return
       Label_4:

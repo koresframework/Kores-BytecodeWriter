@@ -52,13 +52,27 @@ object AnnotationUtil {
         @Suppress("NAME_SHADOWING")
         var value = value
 
-        if (value::class.java.isArray) {
+        if (value::class.java.isArray) { // Legacy, but I will keep this here until CodeAPI-JavaValidator is not ready.
             val values = ArrayUtils.toObjectArray(value)
 
             val annotationVisitor1 = annotationVisitor.visitArray(key)
 
             for (o in values) {
                 AnnotationUtil.visitAnnotationValue(annotationVisitor1, "", o)
+            }
+
+            annotationVisitor1.visitEnd()
+
+            return
+        }
+
+        if (value is List<*>) {
+            val annotationVisitor1 = annotationVisitor.visitArray(key)
+
+            for (o in value) {
+                if (o != null) {
+                    AnnotationUtil.visitAnnotationValue(annotationVisitor1, "", o)
+                }
             }
 
             annotationVisitor1.visitEnd()

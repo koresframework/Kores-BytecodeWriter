@@ -26,13 +26,13 @@ public class codeapi.LocalsReuse extends java.lang.Object {
         iload 2
         ireturn
       Label_4:
-       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         nop
         nop
         athrow
       Label_5:
        LINE 4 -> Label_5
-       FRAME[type: F_APPEND, locals: 2, local: {codeapi.LocalsReuse, integer}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 2, local: {Reference[codeapi.LocalsReuse], Primitive[integer]}, stacks: 0, stack: {}]
         bipush 17
       Label_6:
         istore 2

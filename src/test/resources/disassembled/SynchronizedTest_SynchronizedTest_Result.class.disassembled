@@ -33,7 +33,7 @@ public class test.SynchronizedTest extends java.lang.Object {
         monitorexit
         goto Label_5
       Label_5:
-       FRAME[type: F_FULL, locals: 2, local: {test.SynchronizedTest, test.SynchronizedTest}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 2, local: {Reference[test.SynchronizedTest], Reference[test.SynchronizedTest]}, stacks: 0, stack: {}]
         return
       Label_6:
       LocalVariables {

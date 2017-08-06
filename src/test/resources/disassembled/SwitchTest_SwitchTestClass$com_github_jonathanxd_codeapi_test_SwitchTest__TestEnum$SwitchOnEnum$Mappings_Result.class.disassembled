@@ -55,7 +55,7 @@ source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$
       Label_2:
         goto Label_4
       Label_3:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.NoSuchFieldError}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.NoSuchFieldError]}]
         astore 0
         goto Label_4
       Label_4:
@@ -70,7 +70,7 @@ source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$
       Label_5:
         goto Label_7
       Label_6:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.NoSuchFieldError}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.NoSuchFieldError]}]
         astore 0
         goto Label_7
       Label_7:

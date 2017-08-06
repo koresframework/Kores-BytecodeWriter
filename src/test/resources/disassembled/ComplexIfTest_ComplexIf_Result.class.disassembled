@@ -29,10 +29,10 @@ public class test.ComplexIf extends java.lang.Object {
         goto Label_4
       Label_3:
        LINE 5 -> Label_3
-       FRAME[type: F_FULL, locals: 5, local: {test.ComplexIf, integer, integer, integer, integer}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 5, local: {Reference[test.ComplexIf], Primitive[integer], Primitive[integer], Primitive[integer], Primitive[integer]}, stacks: 0, stack: {}]
         iconst_0
       Label_4:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {integer}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         istore 5
       Label_5:
        LINE 2 -> Label_5
@@ -45,10 +45,10 @@ public class test.ComplexIf extends java.lang.Object {
         goto Label_8
       Label_7:
        LINE 7 -> Label_7
-       FRAME[type: F_APPEND, locals: 1, local: {integer}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 1, local: {Primitive[integer]}, stacks: 0, stack: {}]
         ldc "9 >= 5"              // type: java.lang.String
       Label_8:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.String}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.String]}]
         astore 6
       Label_9:
        LINE 3 -> Label_9
@@ -62,7 +62,7 @@ public class test.ComplexIf extends java.lang.Object {
         ifeq Label_11
       Label_10:
        LINE 8 -> Label_10
-       FRAME[type: F_APPEND, locals: 1, local: {java.lang.String}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 1, local: {Reference[java.lang.String]}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)

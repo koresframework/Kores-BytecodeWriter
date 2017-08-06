@@ -22,7 +22,7 @@ public class com.ForEach extends java.lang.Object {
         invokeinterface java.lang.Iterable.iterator()java.util.Iterator (ownerIsInterface: true)
         astore 2
       Label_2:
-       FRAME[type: F_FULL, locals: 3, local: {com.ForEach, java.util.List, java.util.Iterator}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 3, local: {Reference[com.ForEach], Reference[java.util.List], Reference[java.util.Iterator]}, stacks: 0, stack: {}]
         aload 2
         invokeinterface java.util.Iterator.hasNext()boolean (ownerIsInterface: true)
         ifeq Label_7

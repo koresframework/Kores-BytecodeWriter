@@ -44,7 +44,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
       Label_8:
         goto Label_12
       Label_9:
-       FRAME[type: F_FULL, locals: 3, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null}, stacks: 1, stack: {java.lang.Throwable}]
+       FRAME[type: F_FULL, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         astore 3
       Label_10:
        LINE 7 -> Label_10
@@ -65,7 +65,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         goto Label_28
       Label_15:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         astore 3
       Label_16:
        LINE 9 -> Label_16
@@ -87,7 +87,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
       Label_20:
         goto Label_24
       Label_21:
-       FRAME[type: F_FULL, locals: 4, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, java.lang.Throwable, java.lang.Throwable}, stacks: 1, stack: {java.lang.Throwable}]
+       FRAME[type: F_FULL, locals: 4, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm], Reference[java.lang.Throwable], Reference[java.lang.Throwable]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         astore 4
       Label_22:
        LINE 15 -> Label_22
@@ -110,12 +110,12 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
         aload 3
         athrow
       Label_27:
-       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         nop
         nop
         athrow
       Label_28:
-       FRAME[type: F_APPEND, locals: 3, local: {test.TryWithResourcesTestClass, com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm, null}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.codeapi.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 0, stack: {}]
         return
       Label_29:
       TryCatchBlocks {

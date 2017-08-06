@@ -46,10 +46,10 @@ public class test.InstanceOf extends java.lang.Object {
         goto Label_8
       Label_7:
        LINE 9 -> Label_7
-       FRAME[type: F_APPEND, locals: 1, local: {integer}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 1, local: {Primitive[integer]}, stacks: 0, stack: {}]
         iconst_0
       Label_8:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {integer}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         istore 2
       Label_9:
        LINE 4 -> Label_9
@@ -71,10 +71,10 @@ public class test.InstanceOf extends java.lang.Object {
         goto Label_14
       Label_13:
        LINE 11 -> Label_13
-       FRAME[type: F_APPEND, locals: 2, local: {integer, java.lang.Integer}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 2, local: {Primitive[integer], Reference[java.lang.Integer]}, stacks: 0, stack: {}]
         iconst_0
       Label_14:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {integer}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         istore 4
         return
       Label_15:

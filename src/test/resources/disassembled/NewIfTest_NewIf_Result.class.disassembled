@@ -26,13 +26,13 @@ public class com.NewIf extends java.lang.Object {
         iconst_0
         ireturn
       Label_2:
-       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {java.lang.Throwable}]
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         nop
         nop
         athrow
       Label_3:
        LINE 3 -> Label_3
-       FRAME[type: F_APPEND, locals: 2, local: {com.NewIf, integer}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 2, local: {Reference[com.NewIf], Primitive[integer]}, stacks: 0, stack: {}]
         iconst_1
         ireturn
       Label_4:
