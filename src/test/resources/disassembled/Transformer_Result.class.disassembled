@@ -1,4 +1,4 @@
-md5: e08ea27d42aa5b04ebd1538910a162fa
+md5: 6f85f13ffc1d21ae4b96db30d79ec0b6
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -135,7 +135,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
             // Arguments
             ()Ljava/lang/Object;
             fullName.InvocationsTest__Generated.$$lambda$0()java.lang.String (tag: h_invokestatic, itf: false)
-            ()Ljava/lang/String;
+            ()Ljava/lang/Object;
           ]
         ]
       Label_10:

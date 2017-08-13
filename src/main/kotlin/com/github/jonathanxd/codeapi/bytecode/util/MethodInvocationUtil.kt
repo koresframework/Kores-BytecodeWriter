@@ -67,7 +67,6 @@ object MethodInvocationUtil {
                         invokeType == InvokeType.INVOKE_INTERFACE),
 
                 Type.getType(expectedTypes.typeDesc))
-        // TODO: LOCAL VAR ACCESS HERE
 
         val additionalArguments = if (baseSam.typeSpec.parameterTypes.size !=
                                           lambdaDynamic.invocation.spec.typeSpec.parameterTypes.size) {
@@ -79,11 +78,6 @@ object MethodInvocationUtil {
 
         val local = "(${if (invokeType != InvokeType.INVOKE_STATIC) localization.typeDesc else ""}" +
                 "${additionalArguments.typeDesc})${baseSam.localization.typeDesc}"
-        // Additional arguments in the front of bootstrap description (local)
-        // And them appears as the first arguments of function
-        // Example b -> accept(b, x); // x = int
-        // The parameter x appears in synthetic method as first parameter:
-        // lambda$0(int, String)
         mv.visitInvokeDynamicInsn(baseSam.methodName, local, metafactory, *objects)
 
     }
