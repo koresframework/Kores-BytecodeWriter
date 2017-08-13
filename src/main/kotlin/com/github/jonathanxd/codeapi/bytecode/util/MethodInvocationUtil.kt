@@ -67,9 +67,23 @@ object MethodInvocationUtil {
                         invokeType == InvokeType.INVOKE_INTERFACE),
 
                 Type.getType(expectedTypes.typeDesc))
+        // TODO: LOCAL VAR ACCESS HERE
 
-        val local = "(${if (invokeType != InvokeType.INVOKE_STATIC) localization.typeDesc else ""})${baseSam.localization.typeDesc}"
+        val additionalArguments = if (baseSam.typeSpec.parameterTypes.size !=
+                                          lambdaDynamic.invocation.spec.typeSpec.parameterTypes.size) {
+            val samSpec = baseSam.typeSpec
+            val invkSpec = lambdaDynamic.invocation.spec.typeSpec
 
+            invkSpec.parameterTypes.subList(0, (invkSpec.parameterTypes.size - samSpec.parameterTypes.size))
+        } else emptyList()
+
+        val local = "(${if (invokeType != InvokeType.INVOKE_STATIC) localization.typeDesc else ""}" +
+                "${additionalArguments.typeDesc})${baseSam.localization.typeDesc}"
+        // Additional arguments in the front of bootstrap description (local)
+        // And them appears as the first arguments of function
+        // Example b -> accept(b, x); // x = int
+        // The parameter x appears in synthetic method as first parameter:
+        // lambda$0(int, String)
         mv.visitInvokeDynamicInsn(baseSam.methodName, local, metafactory, *objects)
 
     }
@@ -84,7 +98,7 @@ object MethodInvocationUtil {
 
         val asmArgs = arrayOfNulls<Any>(bootstrap.args.size)
 
-        for (i in 0..bootstrap.args.size - 1) {
+        for (i in 0 until bootstrap.args.size) {
             val arg = bootstrap.args[i]
             val converted: Any
 

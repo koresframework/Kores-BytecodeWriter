@@ -50,6 +50,7 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
         val localization: Type = Util.resolveType(invocation.localization, data)
 
         IN_INVOKE_DYNAMIC.set(data, Unit, true)
+
         processorManager.process(MethodInvocation::class.java, invocation, data)
 
         val specification = invocation.spec

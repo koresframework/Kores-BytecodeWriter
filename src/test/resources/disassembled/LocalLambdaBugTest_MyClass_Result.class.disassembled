@@ -1,0 +1,91 @@
+md5: 1902429bacefe229619b0cc326da1a4f
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: MyClass.cai
+
+public class com.MyClass extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    !parameter[name: s, access:  (0)]
+    public java.lang.String test(short) {
+      desc: (S)Ljava/lang/String; 
+      maxStack: 2, maxLocals: 3 
+      Label_0:
+        aload 0
+        iload 1
+        invokedynamic apply(com.MyClass, short)java.util.function.Function [
+          // Bootstrap method
+          java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+            // Arguments
+            (Ljava/lang/Object;)Ljava/lang/Object;
+            com.MyClass.lambda(short, java.lang.String)java.lang.String (tag: h_invokevirtual, itf: false)
+            (Ljava/lang/String;)Ljava/lang/String;
+          ]
+        ]
+      Label_1:
+        astore 2
+        aload 2
+        ldc "A"              // type: java.lang.String
+        invokeinterface java.util.function.Function.apply(java.lang.Object)java.lang.Object (ownerIsInterface: true)
+        checkcast java.lang.String
+        areturn
+      Label_2:
+      LocalVariables {
+        index: 2, name: func, start: Label_1, end: Label_2, type: java.util.function.Function, signature: null
+        index: 1, name: s, start: Label_0, end: Label_2, type: short, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: com.MyClass, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    !parameter[name: s, access:  (0)]
+    !parameter[name: value, access:  (0)]
+    public java.lang.String lambda(short, java.lang.String) {
+      desc: (SLjava/lang/String;)Ljava/lang/String; 
+      maxStack: 3, maxLocals: 3 
+      Label_0:
+        new java.lang.StringBuilder
+        dup
+        ldc "Short: "              // type: java.lang.String
+        invokespecial java.lang.StringBuilder.<init>(java.lang.String)void (ownerIsInterface: false)
+        iload 1
+        invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
+        invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
+        ldc ". S: "              // type: java.lang.String
+        invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
+        aload 2
+        invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
+        invokevirtual java.lang.Object.toString()java.lang.String (ownerIsInterface: false)
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 2, name: value, start: Label_0, end: Label_1, type: java.lang.String, signature: null
+        index: 1, name: s, start: Label_0, end: Label_1, type: short, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.MyClass, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.MyClass, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}
