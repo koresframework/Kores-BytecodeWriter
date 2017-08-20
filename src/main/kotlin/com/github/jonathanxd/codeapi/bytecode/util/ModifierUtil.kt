@@ -108,6 +108,9 @@ object ModifierUtil {
             CodeModifier.ANNOTATION -> Opcodes.ACC_ANNOTATION
             CodeModifier.ENUM -> Opcodes.ACC_ENUM
             CodeModifier.MANDATED -> Opcodes.ACC_MANDATED
+            CodeModifier.OPEN -> Opcodes.ACC_OPEN
+            CodeModifier.TRANSITIVE -> Opcodes.ACC_TRANSITIVE
+            CodeModifier.STATIC_PHASE -> Opcodes.ACC_STATIC_PHASE
             else -> 0
         }
     }

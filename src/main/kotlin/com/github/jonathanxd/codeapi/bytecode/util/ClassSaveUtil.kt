@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.util
 
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 import java.nio.file.Files
 import java.nio.file.Path
@@ -38,7 +39,9 @@ fun BytecodeClass.save(directory: Path, disassemble: Boolean = false, alternativ
 
     Files.createDirectories(targetPath)
 
-    val classPath = targetPath.resolve("${this.type.simpleName}.class")
+    val name = (this.declaration as? TypeDeclaration)?.simpleName ?: this.declaration.name
+
+    val classPath = targetPath.resolve("$name.class")
 
     if(Files.exists(classPath))
         Files.deleteIfExists(classPath)
@@ -49,7 +52,7 @@ fun BytecodeClass.save(directory: Path, disassemble: Boolean = false, alternativ
         val base = if (alternativeDir) this.toPath(directory.resolve("disassembled")) else targetPath
 
         Files.createDirectories(base)
-        val disassembledPath = base.resolve("${this.type.simpleName}.class.dissassembled")
+        val disassembledPath = base.resolve("$name.class.dissassembled")
 
         if(Files.exists(disassembledPath))
             Files.deleteIfExists(disassembledPath)
@@ -59,13 +62,14 @@ fun BytecodeClass.save(directory: Path, disassemble: Boolean = false, alternativ
 }
 
 fun BytecodeClass.toPath(base: Path): Path =
-        this.type.packageName
+        ((this.declaration as? TypeDeclaration)?.packageName ?: this.declaration.name)
                 .split('.')
                 .fold(base) { acc, s -> acc.resolve(s) }
 
 
+
 fun BytecodeClass.toPathWithName(base: Path): Path =
-        this.toPath(base).resolve(this.type.simpleName)
+        this.toPath(base).resolve((this.declaration as? TypeDeclaration)?.simpleName ?: this.declaration.name)
 
 fun BytecodeClass.toPathWithNameAnd(base: Path, str: String): Path =
-        this.toPath(base).resolve("${this.type.simpleName}$str")
+        this.toPath(base).resolve("${(this.declaration as? TypeDeclaration)?.simpleName ?: this.declaration.name}$str")

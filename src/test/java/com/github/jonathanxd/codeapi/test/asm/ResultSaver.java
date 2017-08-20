@@ -28,6 +28,7 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.bytecodedisassembler.Disassembler;
+import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.iutils.array.PrimitiveArrayConverter;
 
@@ -51,25 +52,21 @@ public final class ResultSaver {
         }
     }
 
-    /*public static void save(Class<?> ofClass, String tag, byte[] result) {
-
-    }*/
-    // Temporary disabled
     public static void save(Class<?> ofClass, BytecodeClass[] result) {
-        for (BytecodeClass bytecodeClass : result) {
-            save(ofClass, bytecodeClass.getType().getSimpleName(), bytecodeClass);
+        for (BytecodeClass bytecodeClass : result) { // TODO: Support modules
+            save(ofClass, ((TypeDeclaration) bytecodeClass.getDeclaration()).getSimpleName(), bytecodeClass);
         }
     }
 
     public static void save(Class<?> ofClass, List<? extends BytecodeClass> result) {
-        for (BytecodeClass bytecodeClass : result) {
-            save(ofClass, bytecodeClass.getType().getSimpleName(), bytecodeClass);
+        for (BytecodeClass bytecodeClass : result) { // TODO: Support modules
+            save(ofClass, ((TypeDeclaration) bytecodeClass.getDeclaration()).getSimpleName(), bytecodeClass);
         }
     }
 
     public static void save(Class<?> ofClass, String tag, BytecodeClass[] result) {
-        for (BytecodeClass bytecodeClass : result) {
-            save(ofClass, tag + "_" + bytecodeClass.getType().getSimpleName(), bytecodeClass);
+        for (BytecodeClass bytecodeClass : result) { // TODO: Support modules
+            save(ofClass, tag + "_" + ((TypeDeclaration) bytecodeClass.getDeclaration()).getSimpleName(), bytecodeClass);
         }
     }
 

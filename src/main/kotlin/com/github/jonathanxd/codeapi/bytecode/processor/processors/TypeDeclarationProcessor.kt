@@ -179,7 +179,13 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
                 superClass.internalName,
                 implementations.map { it.internalName }.toTypedArray())
 
-        cw.visitSource(SOURCE_FILE_FUNCTION.getOrSet(data, { "${Util.getOwner(it).simpleName}.cai" })(localPart), null)
+        cw.visitSource(SOURCE_FILE_FUNCTION.getOrSet(data, {
+            when (it) {
+                is TypeDeclaration -> "${Util.getOwner(it).simpleName}.cai"
+                is ModuleDeclaration -> "module-info.cai" // Maybe module-info_${it.name}.cai ?
+                else -> it.name
+            }
+        })(localPart), null)
         // ***************************************************************************************** //
 
         ANNOTATION_VISITOR_CAPABLE.set(data, AnnotationVisitorCapable.ClassVisitorVisitorCapable(cw), true)

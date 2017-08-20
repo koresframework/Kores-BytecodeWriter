@@ -27,14 +27,13 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.AnnotationTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
-import com.github.jonathanxd.iutils.object.Pair;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
 public class AnnotationTest {
@@ -45,7 +44,7 @@ public class AnnotationTest {
         @Named("Instance") Class<?> test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> aClass);
         System.out.println(test.isAnnotation());
 
-        System.out.println(test.getMethod("ns").getDefaultValue());
+        System.out.println(Arrays.toString((int[]) test.getMethod("ns").getDefaultValue()));
     }
 
 }

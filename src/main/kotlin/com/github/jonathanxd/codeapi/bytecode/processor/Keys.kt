@@ -31,6 +31,7 @@ import com.github.jonathanxd.codeapi.CodeElement
 import com.github.jonathanxd.codeapi.CodeInstruction
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
+import com.github.jonathanxd.codeapi.bytecode.BytecodeModule
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
@@ -49,7 +50,7 @@ import org.objectweb.asm.ClassVisitor
  *
  * This can be changed via [version][CLASS_VERSION] key.
  *
- * Note that no compatibility is guarantee. Depending on features that you use,
+ * Note that no compatibility is guaranteed. Depending on features that you use,
  * the generated class may or may not be compatible in a version lower than the version
  * that CodeAPI was designed to generate.
  */
@@ -68,7 +69,7 @@ val INNER_CLASSES = typedKeyOf<MutableList<TypeDeclaration>>("INNER_CLASSES")
  */
 val IN_EXPRESSION = typedKeyOf<Int>("IN_EXPRESSION")
 
-val SOURCE_FILE_FUNCTION = typedKeyOf<(TypeDeclaration) -> String>("SOURCE_FILE_FUNCTION")
+val SOURCE_FILE_FUNCTION = typedKeyOf<(Named) -> String>("SOURCE_FILE_FUNCTION")
 
 val LINE = typedKeyOf<Int>("LINE_POSITION")
 

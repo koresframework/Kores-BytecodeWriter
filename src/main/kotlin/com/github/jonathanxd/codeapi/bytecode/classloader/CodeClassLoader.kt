@@ -50,7 +50,10 @@ open class CodeClassLoader : ClassLoader() {
      * @return Defined Class.
      */
     open fun define(bytecodeClass: BytecodeClass): Class<*> {
-        return this.define(bytecodeClass.type, bytecodeClass.bytecode)
+        val type = (bytecodeClass.declaration as? TypeDeclaration)
+                ?: throw IllegalArgumentException("Non-TypeDeclaration loading is not supported yet. BytecodeClass: $bytecodeClass")
+
+        return this.define(type, bytecodeClass.bytecode)
     }
 
     /**
@@ -92,7 +95,10 @@ open class CodeClassLoader : ClassLoader() {
 
         val bytecodeClass = bytecodeClasses.next()
 
-        val define = this.define(bytecodeClass.type, bytecodeClass.bytecode)
+        val type = (bytecodeClass.declaration as? TypeDeclaration)
+                ?: throw IllegalArgumentException("Non-TypeDeclaration loading is not supported yet. BytecodeClass: $bytecodeClass")
+
+        val define = this.define(type, bytecodeClass.bytecode)
 
         bytecodeClasses.forEach {
             this.define(it)

@@ -101,7 +101,7 @@ public class CommonBytecodeTest {
         Class<?> first = null;
 
         for (BytecodeClass bytecodeClass : bytecodeClasses) {
-            TypeDeclaration type = bytecodeClass.getType();
+            TypeDeclaration type = (TypeDeclaration) bytecodeClass.getDeclaration();// TODO: Support modules
             byte[] bytecode = bytecodeClass.getBytecode();
 
             ResultSaver.save(testClass, type.getSimpleName(), bytecodeClass);

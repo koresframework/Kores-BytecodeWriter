@@ -49,7 +49,13 @@ import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.util.CheckClassAdapter
 
-class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclaration) -> String = { "${it.simpleName}.cai" }) //CodeAPI Instructions
+class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> String = {
+    when (it) {
+        is TypeDeclaration -> "${Util.getOwner(it).simpleName}.cai"
+        is ModuleDeclaration -> "module-info.cai" // Maybe module-info_${it.name}.cai ?
+        else -> it.name
+    }
+}) //CodeAPI Instructions
     : AbstractProcessorManager<List<BytecodeClass>>() {
 
     override val options: Options = Options()
@@ -115,6 +121,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
         registerProcessor(LocalCodeProcessor, LocalCode::class.java)
         registerProcessor(MethodDeclarationProcessor, ConstructorDeclaration::class.java)
         registerProcessor(MethodInvocationProcessor, MethodInvocation::class.java)
+        registerProcessor(ModuleDeclarationProcessor, ModuleDeclaration::class.java)
         registerProcessor(NewProcessor, New::class.java)
         registerProcessor(OperateProcessor, Operate::class.java)
         registerProcessor(ReturnProcessor, Return::class.java)
@@ -228,7 +235,7 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (TypeDeclarati
                         try {
                             ClassReader(bytecode).accept(CheckClassAdapter(ClassNode(), true), 0)
                         } catch (t: Throwable) {
-                            throw ClassCheckException("Failed to check bytecode of class ${it.type.qualifiedName}", t, classes, it)
+                            throw ClassCheckException("Failed to check bytecode of declaration ${it.declaration.name}", t, classes, it)
                         }
                     }
                 }

@@ -319,3 +319,5 @@ fun getConstructors(part: TypeDeclaration): List<ConstructorDeclaration> {
 
     return (part as? ConstructorsHolder)?.constructors.orEmpty()
 }
+
+val String.internal get() = this.replace('.', '/')

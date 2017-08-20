@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.classloader
 
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 
 /**
@@ -44,7 +45,10 @@ object ClassInject {
      * @throws IllegalStateException if the injection fails.
      */
     fun ClassLoader.inject(bytecodeClass: BytecodeClass): Class<*> {
-        return this.inject(bytecodeClass.type.type, bytecodeClass.bytecode)
+        val type = (bytecodeClass.declaration as? TypeDeclaration)?.type
+                ?: throw IllegalArgumentException("Non-TypeDeclaration loading is not supported yet. BytecodeClass: $bytecodeClass")
+
+        return this.inject(type, bytecodeClass.bytecode)
     }
 
     /**

@@ -28,9 +28,14 @@
 package com.github.jonathanxd.codeapi.bytecode
 
 import com.github.jonathanxd.bytecodedisassembler.Disassembler
+import com.github.jonathanxd.codeapi.base.Named
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.base.ModuleDeclaration
 
-class BytecodeClass constructor(val type: TypeDeclaration, private val bytecode_: ByteArray) {
+/**
+ * @property declaration Declaration that produced [bytecode]. Common types are [TypeDeclaration] and [ModuleDeclaration].
+ */
+class BytecodeClass constructor(val declaration: Named, private val bytecode_: ByteArray) {
 
     val disassembledCode: String by lazy {
         Disassembler.disassemble(bytes = this.bytecode, appendHash = true)
