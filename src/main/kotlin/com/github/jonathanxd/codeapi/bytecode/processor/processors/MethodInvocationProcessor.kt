@@ -28,10 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
-import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.TYPES
-import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
+import com.github.jonathanxd.codeapi.bytecode.processor.*
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.codeapi.bytecode.util.allInnerTypes
 import com.github.jonathanxd.codeapi.factory.invokeConstructor
@@ -117,7 +114,9 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         }
 
         if (safeTarget !is CodeType && !syntheticPart.isSuperConstructorInvocation) {
-            processorManager.process(target::class.java, target, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(target::class.java, target, data)
+            }
 
             if (safeTarget is New)
                 mv.visitInsn(Opcodes.DUP) // New does not dup, it is intended
@@ -135,6 +134,10 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
                     /*Method name*/newSpecification.methodName,
                     /*(ARGUMENT)RETURN*/newSpecification.typeSpec.typeDesc,
                     invokeType.isInterface())
+
+            if (!syntheticPart.spec.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
+                mv.visitInsn(Opcodes.POP)
+            }
         }
     }
 

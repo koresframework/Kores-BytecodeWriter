@@ -29,7 +29,9 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.Operate
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.ReflectType
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.helper.OperateHelper
@@ -38,10 +40,7 @@ import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.javaSpecName
-import com.github.jonathanxd.codeapi.util.require
-import com.github.jonathanxd.codeapi.util.safeForComparison
-import com.github.jonathanxd.codeapi.util.type
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -75,10 +74,14 @@ object OperateProcessor : Processor<Operate> {
             return
         }
 
-        processorManager.process(target::class.java, target, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(target::class.java, target, data)
+        }
 
         if (safeValue != CodeNothing) {
-            processorManager.process(value::class.java, value, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(value::class.java, value, data)
+            }
         }
 
         when (operation) {

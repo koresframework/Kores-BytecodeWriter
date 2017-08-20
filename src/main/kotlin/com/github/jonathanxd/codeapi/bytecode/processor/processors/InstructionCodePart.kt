@@ -32,7 +32,7 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
 
-internal interface InstructionCodePart : CodeInstruction {
+interface InstructionCodePart : CodeInstruction {
 
     fun apply(value: Any, data: TypedData, processorManager: ProcessorManager<*>)
 

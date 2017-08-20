@@ -34,10 +34,7 @@ import com.github.jonathanxd.codeapi.bytecode.VALIDATE_SUPER
 import com.github.jonathanxd.codeapi.bytecode.VALIDATE_THIS
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.common.Variable
-import com.github.jonathanxd.codeapi.bytecode.processor.ANNOTATION_VISITOR_CAPABLE
-import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
+import com.github.jonathanxd.codeapi.bytecode.processor.*
 import com.github.jonathanxd.codeapi.bytecode.util.*
 import com.github.jonathanxd.codeapi.bytecode.util.asm.ParameterVisitor
 import com.github.jonathanxd.codeapi.processor.Processor
@@ -50,6 +47,7 @@ import org.objectweb.asm.Opcodes
 object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
     override fun process(part: MethodDeclarationBase, data: TypedData, processorManager: ProcessorManager<*>) {
+        IN_EXPRESSION.set(data, 0)
         val validateSuper = processorManager.options.getOrElse(VALIDATE_SUPER, true)
         val validateThis = processorManager.options.getOrElse(VALIDATE_THIS, true)
         val genBridge = processorManager.options.getOrElse(GENERATE_BRIDGE_METHODS, false)
@@ -192,7 +190,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 }
             }
         }
-
+        IN_EXPRESSION.remove(data)
         mvHelper.methodVisitor.visitEnd()
 
     }

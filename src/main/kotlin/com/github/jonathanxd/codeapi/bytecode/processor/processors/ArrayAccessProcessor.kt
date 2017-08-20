@@ -28,16 +28,27 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.ArrayAccess
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
+import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
+import org.objectweb.asm.Opcodes
 
 object ArrayAccessProcessor : Processor<ArrayAccess> {
 
     override fun process(part: ArrayAccess, data: TypedData, processorManager: ProcessorManager<*>) {
         val target = part.target
 
-        processorManager.process(target::class.java, target, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(target::class.java, target, data)
+        }
+
+        if (IN_EXPRESSION.require(data) == 0) {
+            METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.POP)
+        }
     }
 
 }

@@ -28,9 +28,12 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.ThrowException
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.inContext
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
@@ -42,7 +45,9 @@ object ThrowExceptionProcessor : Processor<ThrowException> {
 
         val value = part.value
 
-        processorManager.process(value::class.java, value, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(value::class.java, value, data)
+        }
 
         mv.visitInsn(Opcodes.ATHROW)
 

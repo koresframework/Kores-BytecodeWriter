@@ -32,7 +32,9 @@ import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.Cast
 import com.github.jonathanxd.codeapi.base.TypeSpec
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.factory.cast
 import com.github.jonathanxd.codeapi.factory.constructorTypeSpec
@@ -58,7 +60,9 @@ object CastProcessor : Processor<Cast> {
 
         // No cast of void types.
         if (from != null && !from.`is`(to) && from.`is`(Types.VOID) || to.`is`(Types.VOID)) {
-            processorManager.process(castedPart::class.java, castedPart, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(castedPart::class.java, castedPart, data)
+            }
             return
         }
 
@@ -72,7 +76,9 @@ object CastProcessor : Processor<Cast> {
             }
 
         } else {
-            processorManager.process(castedPart::class.java, castedPart, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(castedPart::class.java, castedPart, data)
+            }
 
             if (from != null && !from.`is`(to)) {
                 if (to.isPrimitive) {

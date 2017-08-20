@@ -37,11 +37,20 @@ import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.common.FieldRef
 import com.github.jonathanxd.codeapi.factory.invoke
 import com.github.jonathanxd.codeapi.util.typedKeyOf
+import com.github.jonathanxd.iutils.`object`.TypedKey
+import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.ClassVisitor
 
-/** Version of Java class to generate
- *  CodeAPI always generates latest version
- * This can be changed via [version][CLASS_VERSION] key
+/**
+ * Version of Java class to generate
+ *
+ * CodeAPI always generates latest version
+ *
+ * This can be changed via [version][CLASS_VERSION] key.
+ *
+ * Note that no compatibility is guarantee. Depending on features that you use,
+ * the generated class may or may not be compatible in a version lower than the version
+ * that CodeAPI was designed to generate.
  */
 const val VERSION = 52
 
@@ -49,6 +58,14 @@ const val VERSION = 52
  * Indexes known inner classes to avoid name conflicts.
  */
 val INNER_CLASSES = typedKeyOf<MutableList<TypeDeclaration>>("INNER_CLASSES")
+
+/**
+ * Stores whether this is an expression or not. Used to generate `pop` instructions after unused values.
+ *
+ * This is set to true when the instruction is used as argument or receiver of a method, defined as values of a variable, used as
+ * operand of operator, used as return value, and so on.
+ */
+val IN_EXPRESSION = typedKeyOf<Int>("IN_EXPRESSION")
 
 val SOURCE_FILE_FUNCTION = typedKeyOf<(TypeDeclaration) -> String>("SOURCE_FILE_FUNCTION")
 
@@ -102,4 +119,22 @@ data class MemberAccess(val from: TypeDeclaration,
             args
     )
 
+}
+
+fun TypedKey<Int>.get(data: TypedData): Int {
+    return data.getOrSet(this.key, 0, this.type)
+}
+
+fun TypedKey<Int>.increment(data: TypedData) {
+    data.set(this.key, data.getOrSet(this.key, 0, this.type) + 1, this.type)
+}
+
+fun TypedKey<Int>.decrement(data: TypedData) {
+    data.set(this.key, data.getOrSet(this.key, 0, this.type) - 1, this.type)
+}
+
+inline fun TypedKey<Int>.incrementInContext(data: TypedData, context: () -> Unit) {
+    this.increment(data)
+    context()
+    this.decrement(data)
 }

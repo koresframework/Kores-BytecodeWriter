@@ -29,7 +29,9 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.ArrayAccess
 import com.github.jonathanxd.codeapi.base.ArrayLength
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
@@ -39,9 +41,15 @@ import org.objectweb.asm.Opcodes
 object ArrayLengthProcessor : Processor<ArrayLength> {
 
     override fun process(part: ArrayLength, data: TypedData, processorManager: ProcessorManager<*>) {
-        processorManager.process(ArrayAccess::class.java, part, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(ArrayAccess::class.java, part, data)
+        }
 
         METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.ARRAYLENGTH)
+
+        if (IN_EXPRESSION.require(data) == 0) {
+            METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.POP)
+        }
     }
 
 }

@@ -28,7 +28,9 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.bytecode.extra.Dup
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
@@ -39,7 +41,9 @@ object DupProcessor : Processor<Dup> {
 
     override fun process(part: Dup, data: TypedData, processorManager: ProcessorManager<*>) {
         val dupPart = part.part
-        processorManager.process(dupPart::class.java, dupPart, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(dupPart::class.java, dupPart, data)
+        }
         METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.DUP)
     }
 

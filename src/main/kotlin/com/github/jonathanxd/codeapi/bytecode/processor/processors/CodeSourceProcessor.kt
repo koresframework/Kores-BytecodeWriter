@@ -30,9 +30,12 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
+import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typedKeyOf
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -53,6 +56,12 @@ object CodeSourceProcessor : Processor<CodeSource> {
 
         for (i in 0..max) {
 
+            val inExpr = IN_EXPRESSION.require(data)
+
+            if (inExpr > 0 && i != max) {
+                IN_EXPRESSION.set(data, 0)
+            }
+
             METHOD_VISITOR.getOrNull(data)?.let {
                 if (visit == VisitLineType.FOLLOW_CODE_SOURCE) {
                     val line = i + 1 + offset
@@ -64,6 +73,10 @@ object CodeSourceProcessor : Processor<CodeSource> {
             }
 
             val codePart = part[i]
+
+            if (inExpr > 0 && i == max && IN_EXPRESSION.require(data) == 0) {
+                IN_EXPRESSION.set(data, inExpr)
+            }
 
             processorManager.process(codePart::class.java, codePart, data)
 

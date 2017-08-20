@@ -30,13 +30,16 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.InvokeDynamicBase
 import com.github.jonathanxd.codeapi.base.LocalCode
 import com.github.jonathanxd.codeapi.base.MethodInvocation
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.MethodInvocationUtil
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
+import org.objectweb.asm.Opcodes
 import java.lang.reflect.Type
 
 object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
@@ -74,6 +77,9 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
             MethodInvocationUtil.visitBootstrapInvocation(part, specification, data, mvHelper.methodVisitor)
         }
 
+        if (!part.invocation.spec.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
+            mvHelper.methodVisitor.visitInsn(Opcodes.POP)
+        }
     }
 
 

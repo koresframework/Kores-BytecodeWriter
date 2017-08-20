@@ -30,7 +30,9 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.Concat
 import com.github.jonathanxd.codeapi.base.MethodInvocation
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.factory.constructorTypeSpec
 import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.factory.invokeVirtual
@@ -57,8 +59,9 @@ object ConcatProcessor : Processor<Concat> {
         if (first != null && !allIsEmpty) {
 
             if (concatenations.size == 1) {
-
-                processorManager.process(first::class.java, first, data)
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(first::class.java, first, data)
+                }
 
             } else if (concatenations.size == 2) {
 

@@ -29,7 +29,9 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.Access
 import com.github.jonathanxd.codeapi.base.FieldAccess
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
@@ -57,7 +59,9 @@ object FieldAccessProcessor : Processor<FieldAccess> {
         } else {
 
             if (safeAt !is Access || safeAt != Access.STATIC) {
-                processorManager.process(at::class.java, at, data)
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(at::class.java, at, data)
+                }
             }
 
             if (safeAt is Access && safeAt == Access.STATIC) {

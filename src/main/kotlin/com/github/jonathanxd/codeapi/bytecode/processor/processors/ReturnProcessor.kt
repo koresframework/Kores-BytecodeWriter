@@ -29,15 +29,14 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.Return
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.common.Void
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.`is`
-import com.github.jonathanxd.codeapi.util.javaSpecName
-import com.github.jonathanxd.codeapi.util.require
-import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -51,7 +50,9 @@ object ReturnProcessor : Processor<Return> {
         val safeValue = value.safeForComparison
 
         if (safeValue != Void && safeValue != CodeNothing) {
-            processorManager.process(value::class.java, value, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(value::class.java, value, data)
+            }
         }
 
         val toRet = part.type

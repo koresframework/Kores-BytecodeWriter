@@ -29,7 +29,9 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.Access
 import com.github.jonathanxd.codeapi.base.FieldDefinition
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
@@ -49,9 +51,13 @@ object FieldDefinitionProcessor : Processor<FieldDefinition> {
         val variableType = part.type
         val opcode = if (safeTarget is Access && safeTarget == Access.STATIC) Opcodes.PUTSTATIC else Opcodes.PUTFIELD
 
-        processorManager.process(target::class.java, target, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(target::class.java, target, data)
+        }
 
-        processorManager.process(part.value::class.java, part.value, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(part.value::class.java, part.value, data)
+        }
 
         METHOD_VISITOR.require(data).methodVisitor.visitFieldInsn(opcode, localization.internalName, variableName, variableType.typeDesc)
     }

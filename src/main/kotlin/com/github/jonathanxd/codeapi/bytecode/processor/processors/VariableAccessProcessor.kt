@@ -28,9 +28,11 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.VariableAccess
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
@@ -63,6 +65,10 @@ object VariableAccessProcessor : Processor<VariableAccess> {
         val opcode = type.getOpcode(Opcodes.ILOAD) // ALOAD
 
         mv.visitVarInsn(opcode, i)
+
+        if (IN_EXPRESSION.require(data) == 0) {
+            mv.visitInsn(Opcodes.POP)
+        }
     }
 
 

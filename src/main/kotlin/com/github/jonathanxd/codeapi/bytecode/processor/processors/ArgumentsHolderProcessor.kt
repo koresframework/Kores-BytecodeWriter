@@ -28,8 +28,10 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.ArgumentsHolder
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.InsnUtil
 import com.github.jonathanxd.codeapi.factory.cast
 import com.github.jonathanxd.codeapi.processor.Processor
@@ -75,8 +77,9 @@ object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
         if (!part.array) {
 
             for (argument in arguments) {
-
-                processorManager.process(argument::class.java, argument, data)
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(argument::class.java, argument, data)
+                }
             }
         } else {
             for (i in arguments.indices) {
@@ -85,7 +88,9 @@ object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
 
                 val argument = arguments[i]
 
-                processorManager.process(argument::class.java, argument, data)
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(argument::class.java, argument, data)
+                }
 
             }
         }

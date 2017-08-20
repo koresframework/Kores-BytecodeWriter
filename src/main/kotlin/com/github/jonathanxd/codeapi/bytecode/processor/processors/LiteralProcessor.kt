@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.LiteralUtil
 import com.github.jonathanxd.codeapi.literal.Literal
@@ -34,11 +35,16 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
+import org.objectweb.asm.Opcodes
 
 object LiteralProcessor : Processor<Literal> {
 
     override fun process(part: Literal, data: TypedData, processorManager: ProcessorManager<*>) {
         LiteralUtil.visitLiteral(part, METHOD_VISITOR.require(data).methodVisitor)
+
+        if (IN_EXPRESSION.require(data) == 0) {
+            METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.POP)
+        }
     }
 
 }

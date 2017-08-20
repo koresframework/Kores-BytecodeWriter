@@ -29,7 +29,9 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.ArrayConstructor
 import com.github.jonathanxd.codeapi.base.ArrayStore
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.ArrayUtil
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.Processor
@@ -57,7 +59,9 @@ object ArrayConstructProcessor : Processor<ArrayConstructor> {
 
         if (multi && !initialize) {
             dimensions.forEach {
-                processorManager.process(it::class.java, it, data)
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(it::class.java, it, data)
+                }
             }
 
             mv.visitMultiANewArrayInsn(component.typeDesc, dimensions.size)
@@ -76,6 +80,10 @@ object ArrayConstructProcessor : Processor<ArrayConstructor> {
                 mv.visitInsn(Opcodes.DUP)
                 processorManager.process(ArrayStore::class.java, arrayStore, data)
             }
+        }
+
+        if (IN_EXPRESSION.require(data) == 0) {
+            METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.POP)
         }
     }
 

@@ -28,10 +28,13 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.VariableDeclaration
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.inContext
 import com.github.jonathanxd.codeapi.util.javaSpecName
 import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.safeForComparison
@@ -50,7 +53,9 @@ object VariableDeclarationProcessor : Processor<VariableDeclaration> {
         val safeValue = value.safeForComparison
 
         if (safeValue != CodeNothing) {
-            processorManager.process(value::class.java, value, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(value::class.java, value, data)
+            }
         }
 
         val `var` = mvHelper.getVar(part.name, part.variableType)

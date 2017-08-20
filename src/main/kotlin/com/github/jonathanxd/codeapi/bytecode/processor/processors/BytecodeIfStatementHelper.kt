@@ -35,6 +35,8 @@ import com.github.jonathanxd.codeapi.base.IfGroup
 import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.base.Line
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.IfUtil
 import com.github.jonathanxd.codeapi.bytecode.util.OperatorUtil
 import com.github.jonathanxd.codeapi.bytecode.util.booleanValue
@@ -46,10 +48,7 @@ import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.processor.processAs
-import com.github.jonathanxd.codeapi.util.`is`
-import com.github.jonathanxd.codeapi.util.isPrimitive
-import com.github.jonathanxd.codeapi.util.safeForComparison
-import com.github.jonathanxd.codeapi.util.type
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
@@ -201,10 +200,14 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
             opcode = IfUtil.invertIfNeEqOpcode(opcode)
 
         if (isBoolean(safeExpr1)) {
-            processorManager.process(expr2::class.java, expr2, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(expr2::class.java, expr2, data)
+            }
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(opcode, target)
         } else {
-            processorManager.process(expr1::class.java, expr1, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(expr1::class.java, expr1, data)
+            }
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(opcode, target)
         }
 
@@ -220,12 +223,16 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
             }
         }
 
-        processorManager.process(expr1::class.java, expr1, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(expr1::class.java, expr1, data)
+        }
 
         if (safeExpr2 === Literals.NULL) {
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.nullCheckToAsm(operation, inverse), target)
         } else if (safeExpr1.isPrimitive && safeExpr2.isPrimitive) {
-            processorManager.process(expr2::class.java, expr2, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(expr2::class.java, expr2, data)
+            }
 
             val firstType = safeExpr1.type
             val secondType = safeExpr2.type
@@ -254,7 +261,9 @@ fun genBranch(expr1_: CodeInstruction, expr2_: CodeInstruction, operation: Opera
 
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(check, target)
         } else {
-            processorManager.process(expr2::class.java, expr2, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(expr2::class.java, expr2, data)
+            }
 
             if (shouldJump) mvHelper.methodVisitor.visitJumpInsn(OperatorUtil.referenceToAsm(operation, inverse), target)
         }

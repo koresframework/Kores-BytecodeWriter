@@ -33,7 +33,9 @@ import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.ReflectType
 import com.github.jonathanxd.codeapi.bytecode.util.SwitchOnEnum
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
@@ -77,7 +79,9 @@ object SwitchProcessor : Processor<SwitchStatement> {
             val mv = mvHelper.methodVisitor
             val value = aSwitch.value
 
-            processorManager.process(value::class.java, value, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(value::class.java, value, data)
+            }
 
             val originCaseList = aSwitch.cases
             var filteredCaseList = originCaseList

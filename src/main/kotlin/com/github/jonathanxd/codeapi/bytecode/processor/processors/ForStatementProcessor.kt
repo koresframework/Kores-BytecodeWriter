@@ -33,7 +33,9 @@ import com.github.jonathanxd.codeapi.base.ForStatement
 import com.github.jonathanxd.codeapi.base.IfStatement
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
@@ -59,7 +61,9 @@ object ForStatementProcessor : Processor<ForStatement> {
         val init = part.forInit
 
         if (init.safeForComparison != CodeNothing) {
-            processorManager.process(init::class.java, init, data)
+            IN_EXPRESSION.incrementInContext(data) {
+                processorManager.process(init::class.java, init, data)
+            }
         }
 
 
@@ -84,7 +88,9 @@ object ForStatementProcessor : Processor<ForStatement> {
             val update = part.forUpdate
 
             if (update.safeForComparison != CodeNothing) {
-                iCodeProcessor.process(update::class.java, update, instructionData)
+                IN_EXPRESSION.incrementInContext(data) {
+                    iCodeProcessor.process(update::class.java, update, instructionData)
+                }
             }
 
             mv.visitJumpInsn(Opcodes.GOTO, whileStart)

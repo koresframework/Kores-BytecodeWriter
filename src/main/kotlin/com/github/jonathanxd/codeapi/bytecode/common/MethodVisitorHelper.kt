@@ -51,6 +51,8 @@ class MethodVisitorHelper constructor(
         val methodVisitor: MethodVisitor,
         variables: MutableList<Variable>) {
 
+    // Tracks amount of values put to stack that is missing to be popped.
+    private var stackValues = 0
     private var variableHistory = ListHashMap<Int, Variable>()
 
     private var frame_: Frame? = Frame(null, variables)

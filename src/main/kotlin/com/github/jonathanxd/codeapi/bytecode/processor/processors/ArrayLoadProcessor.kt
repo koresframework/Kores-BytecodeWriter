@@ -29,7 +29,9 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.ArrayAccess
 import com.github.jonathanxd.codeapi.base.ArrayLoad
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.CodeTypeUtil
 import com.github.jonathanxd.codeapi.common.Stack
 import com.github.jonathanxd.codeapi.factory.cast
@@ -44,11 +46,15 @@ import org.objectweb.asm.Opcodes
 object ArrayLoadProcessor : Processor<ArrayLoad> {
 
     override fun process(part: ArrayLoad, data: TypedData, processorManager: ProcessorManager<*>) {
-        processorManager.process(ArrayAccess::class.java, part, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(ArrayAccess::class.java, part, data)
+        }
 
         val index = part.index
 
-        processorManager.process(index::class.java, index, data)
+        IN_EXPRESSION.incrementInContext(data) {
+            processorManager.process(index::class.java, index, data)
+        }
 
         val valueType = part.valueType
 
@@ -63,6 +69,9 @@ object ArrayLoadProcessor : Processor<ArrayLoad> {
             processorManager.process(cast::class.java, cast, data)
         }
 
+        if (IN_EXPRESSION.require(data) == 0) {
+            METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.POP)
+        }
     }
 
 }
