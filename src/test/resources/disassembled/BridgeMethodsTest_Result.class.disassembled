@@ -1,4 +1,4 @@
-md5: 930d7cf81aed5bbfd9707aea3ff5b3ca
+md5: ebd4111df03e70b0004387697db8ff06
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -30,16 +30,17 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
     !parameter[name: iter, access:  (0)]
     public void iterate(java.util.List) {
       desc: (Ljava/util/List;)V 
-      maxStack: 3, maxLocals: 4 
+      maxStack: 2, maxLocals: 4 
       Label_0:
         aload 1
         iconst_0
         invokeinterface java.util.List.get(int)java.lang.Object (ownerIsInterface: true)
+        pop
         aload 1
         invokeinterface java.lang.Iterable.iterator()java.util.Iterator (ownerIsInterface: true)
         astore 2
       Label_1:
-       FRAME[type: F_FULL, locals: 3, local: {Reference[com.bridgeTest], Reference[java.util.List], Reference[java.util.Iterator]}, stacks: 1, stack: {Reference[java.lang.Object]}]
+       FRAME[type: F_APPEND, locals: 1, local: {Reference[java.util.Iterator]}, stacks: 0, stack: {}]
         aload 2
         invokeinterface java.util.Iterator.hasNext()boolean (ownerIsInterface: true)
         ifeq Label_3
@@ -53,7 +54,7 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         goto Label_1
       Label_3:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Object]}]
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
       Label_4:
       LocalVariables {

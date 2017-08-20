@@ -1,4 +1,4 @@
-md5: 266f8789a4e00f825e1f4c1cb8412b03
+md5: 4b1e8f86a8e572e074f05035c2f12ddf
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -79,6 +79,7 @@ public class test.InnerClass$Inner extends java.lang.Object {
         invokespecial test.InnerClass$Inner$Inner2$$.<init>()void (ownerIsInterface: false)
         invokespecial test.InnerClass$Inner$Inner2.<init>(test.InnerClass$Inner, test.InnerClass$Inner$Inner2$$)void (ownerIsInterface: false)
         invokestatic test.InnerClass$Inner$Inner2.accessor$(test.InnerClass$Inner$Inner2)java.lang.String (ownerIsInterface: false)
+        pop
       Label_3:
        LINE 4 -> Label_3
         ldc "A"              // type: java.lang.String

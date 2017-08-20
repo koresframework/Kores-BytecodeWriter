@@ -32,6 +32,8 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.MutableCodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.setFieldValue
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
@@ -175,7 +177,9 @@ object ConstructorUtil {
                 // No processor overhead.
                 mv.methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
 
-                processorManager.process(value::class.java, value, data)
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(value::class.java, value, data)
+                }
 
                 // No processor overhead.
                 mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD,

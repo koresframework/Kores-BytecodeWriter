@@ -158,6 +158,7 @@ public class Transformer {
                 TypedData data = new TypedData();
 
                 KeysKt.getMETHOD_VISITOR().set(data, methodVisitorHelper);
+                KeysKt.getIN_EXPRESSION().set(data, 0);
 
                 super.visitInsn(Opcodes.POP);
 
@@ -193,6 +194,7 @@ public class Transformer {
                 TypedData data = new TypedData();
 
                 KeysKt.getMETHOD_VISITOR().set(data, methodVisitorHelper);
+                KeysKt.getIN_EXPRESSION().set(data, 0);
 
                 bytecodeGenerator.process(
                         CodeSource.fromPart(Predefined.invokePrintln(Literals.STRING("Inicializado!"))),

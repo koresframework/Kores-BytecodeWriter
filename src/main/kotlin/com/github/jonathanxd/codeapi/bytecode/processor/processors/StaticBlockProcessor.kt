@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.base.StaticBlock
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.common.CodeNothing
@@ -48,7 +49,7 @@ import org.objectweb.asm.Opcodes
 object StaticBlockProcessor : Processor<StaticBlock> {
 
     override fun process(part: StaticBlock, data: TypedData, processorManager: ProcessorManager<*>) {
-
+        IN_EXPRESSION.set(data, 0)
         val cw = CLASS_VISITOR.require(data)
 
         val mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null)
@@ -96,6 +97,7 @@ object StaticBlockProcessor : Processor<StaticBlock> {
             e.printStackTrace()
         }
 
+        IN_EXPRESSION.remove(data)
         mv.visitEnd()
 
     }

@@ -1,4 +1,4 @@
-md5: 7b0e0f7f8269ae918892127eaaebe55d
+md5: 50f9e880116c039c5ee387965894ec64
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -29,6 +29,7 @@ public class test.InnerClass extends java.lang.Object {
         dup
         invokespecial test.InnerClass$Inner.<init>()void (ownerIsInterface: false)
         invokevirtual test.InnerClass$Inner.call()java.lang.String (ownerIsInterface: false)
+        pop
         return
       Label_2:
       LocalVariables {

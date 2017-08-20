@@ -1,4 +1,4 @@
-md5: 36c8d51f3220b97b76ed9c0de7aea88e
+md5: 80482d55a2c7a8367e6ec388689c53c1
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -28,16 +28,14 @@ public class test.SynchronizedTest extends java.lang.Object {
       Label_3:
        LINE 3 -> Label_3
         aload 1
-      Label_4:
-       LINE 4 -> Label_4
         monitorexit
-        goto Label_5
-      Label_5:
+        goto Label_4
+      Label_4:
        FRAME[type: F_FULL, locals: 2, local: {Reference[test.SynchronizedTest], Reference[test.SynchronizedTest]}, stacks: 0, stack: {}]
         return
-      Label_6:
+      Label_5:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_6, type: test.SynchronizedTest, signature: null
+        index: 0, name: this, start: Label_0, end: Label_5, type: test.SynchronizedTest, signature: null
       }
     }
     

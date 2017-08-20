@@ -59,7 +59,8 @@ object FieldDefinitionProcessor : Processor<FieldDefinition> {
             processorManager.process(part.value::class.java, part.value, data)
         }
 
-        METHOD_VISITOR.require(data).methodVisitor.visitFieldInsn(opcode, localization.internalName, variableName, variableType.typeDesc)
+        METHOD_VISITOR.require(data)
+                .methodVisitor.visitFieldInsn(opcode, localization.internalName, variableName, variableType.typeDesc)
     }
 
 

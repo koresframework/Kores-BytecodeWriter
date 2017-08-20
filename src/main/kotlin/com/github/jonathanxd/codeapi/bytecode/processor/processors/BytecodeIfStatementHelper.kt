@@ -146,8 +146,9 @@ fun visit(expressions: List<CodeInstruction>,
                 val stm = IfStatement(listOf(IfExpr(expr1, operation, expr2)),
                         CodeSource.fromVarArgs(Literals.INT(1)),
                         CodeSource.fromVarArgs(Literals.INT(0)))
-
-                processorManager.process(stm, data)
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(stm, data)
+                }
             } else {
                 genBranch(expr1, expr2, operation, jumpLabel, inverse, data, processorManager, mvHelper,
                         lastBitwiseVar == null && nextBitwise() == null)

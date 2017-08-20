@@ -41,9 +41,11 @@ object DupProcessor : Processor<Dup> {
 
     override fun process(part: Dup, data: TypedData, processorManager: ProcessorManager<*>) {
         val dupPart = part.part
+
         IN_EXPRESSION.incrementInContext(data) {
             processorManager.process(dupPart::class.java, dupPart, data)
         }
+
         METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.DUP)
     }
 

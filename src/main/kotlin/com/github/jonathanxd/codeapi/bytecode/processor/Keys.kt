@@ -36,6 +36,7 @@ import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.common.FieldRef
 import com.github.jonathanxd.codeapi.factory.invoke
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typedKeyOf
 import com.github.jonathanxd.iutils.`object`.TypedKey
 import com.github.jonathanxd.iutils.data.TypedData
@@ -126,11 +127,11 @@ fun TypedKey<Int>.get(data: TypedData): Int {
 }
 
 fun TypedKey<Int>.increment(data: TypedData) {
-    data.set(this.key, data.getOrSet(this.key, 0, this.type) + 1, this.type)
+    data.set(this.key, this.require(data) + 1, this.type)
 }
 
 fun TypedKey<Int>.decrement(data: TypedData) {
-    data.set(this.key, data.getOrSet(this.key, 0, this.type) - 1, this.type)
+    data.set(this.key, this.require(data) - 1, this.type)
 }
 
 inline fun TypedKey<Int>.incrementInContext(data: TypedData, context: () -> Unit) {

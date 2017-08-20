@@ -47,6 +47,10 @@ import org.objectweb.asm.Opcodes
 object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
     override fun process(part: MethodDeclarationBase, data: TypedData, processorManager: ProcessorManager<*>) {
+        val old =
+                if (IN_EXPRESSION.contains(data)) IN_EXPRESSION.require(data)
+                else null
+
         IN_EXPRESSION.set(data, 0)
         val validateSuper = processorManager.options.getOrElse(VALIDATE_SUPER, true)
         val validateThis = processorManager.options.getOrElse(VALIDATE_THIS, true)
@@ -190,7 +194,11 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 }
             }
         }
+
         IN_EXPRESSION.remove(data)
+
+        if (old != null) IN_EXPRESSION.set(data, old)
+
         mvHelper.methodVisitor.visitEnd()
 
     }

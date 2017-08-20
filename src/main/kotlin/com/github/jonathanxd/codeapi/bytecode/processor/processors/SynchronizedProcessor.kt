@@ -31,9 +31,12 @@ import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.base.Synchronized
 import com.github.jonathanxd.codeapi.base.TryStatement
+import com.github.jonathanxd.codeapi.base.VariableAccess
 import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.bytecode.extra.Dup
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.factory.accessVariable
 import com.github.jonathanxd.codeapi.factory.variable
 import com.github.jonathanxd.codeapi.processor.Processor
@@ -61,9 +64,11 @@ object SynchronizedProcessor : Processor<Synchronized> {
 
         TryStatement.Builder.builder()
                 .body(part.body)
-                .finallyStatement(CodeSource.fromVarArgs(
-                        accessVariable(variable),
-                        InstructionCodePart.create { _, _, _ ->
+                .finallyStatement(CodeSource.fromPart(
+                        InstructionCodePart.create { _, fdata, fprocessorManager ->
+                            IN_EXPRESSION.incrementInContext(fdata) {
+                                fprocessorManager.process(VariableAccess::class.java, accessVariable(variable), fdata)
+                            }
                             visitor.visitInsn(Opcodes.MONITOREXIT)
                         }
                 ))

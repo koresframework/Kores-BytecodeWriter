@@ -54,13 +54,15 @@ object CodeSourceProcessor : Processor<CodeSource> {
         if (visit == VisitLineType.FOLLOW_CODE_SOURCE)
             OFFSET.set(data, offset + max + 1)
 
+        var changed = false
+        val inExpr = IN_EXPRESSION.require(data)
+
+        if (inExpr > 0 && max > 0) {
+            IN_EXPRESSION.set(data, 0)
+            changed = true
+        }
+
         for (i in 0..max) {
-
-            val inExpr = IN_EXPRESSION.require(data)
-
-            if (inExpr > 0 && i != max) {
-                IN_EXPRESSION.set(data, 0)
-            }
 
             METHOD_VISITOR.getOrNull(data)?.let {
                 if (visit == VisitLineType.FOLLOW_CODE_SOURCE) {
@@ -74,14 +76,18 @@ object CodeSourceProcessor : Processor<CodeSource> {
 
             val codePart = part[i]
 
-            if (inExpr > 0 && i == max && IN_EXPRESSION.require(data) == 0) {
+            if (inExpr > 0 && i == max && changed) {
                 IN_EXPRESSION.set(data, inExpr)
+                changed = false
             }
 
             processorManager.process(codePart::class.java, codePart, data)
 
         }
 
+        if (changed) {
+            IN_EXPRESSION.set(data, inExpr)
+        }
     }
 
 

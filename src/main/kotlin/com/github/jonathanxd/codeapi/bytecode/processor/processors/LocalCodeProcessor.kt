@@ -29,9 +29,11 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.LocalCode
 import com.github.jonathanxd.codeapi.base.MethodDeclaration
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 
 object LocalCodeProcessor : Processor<LocalCode> {
@@ -45,7 +47,13 @@ object LocalCodeProcessor : Processor<LocalCode> {
             METHOD_VISITOR.remove(data)
         }
 
+        val inExpr = IN_EXPRESSION.require(data)
+
+        IN_EXPRESSION.remove(data)
+
         processorManager.process(MethodDeclaration::class.java, part.declaration, data)
+
+        IN_EXPRESSION.set(data, inExpr)
 
         mvHelper?.let {
             METHOD_VISITOR.set(data, mvHelper)
