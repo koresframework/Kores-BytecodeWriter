@@ -36,10 +36,10 @@ import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.inContext
-import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.inContext
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Opcodes
 
 object AnnotationPropertyProcessor : Processor<AnnotationProperty> {

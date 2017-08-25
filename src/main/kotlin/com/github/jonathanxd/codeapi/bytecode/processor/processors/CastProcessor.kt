@@ -45,6 +45,7 @@ import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Type
 

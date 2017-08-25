@@ -73,7 +73,7 @@ object VariableOperateProcessor {
         val isIncrementOne = constant == 1
 
         fun visitLine() {
-            if(part is Line) {
+            if (part is Line) {
                 Label().let {
                     mv.visitLabel(it)
                     mv.visitLineNumber(part.line, it)

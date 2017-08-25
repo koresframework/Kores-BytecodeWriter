@@ -48,7 +48,10 @@ import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.processor.processAs
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.codeapi.util.isPrimitive
+import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes

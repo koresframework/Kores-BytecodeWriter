@@ -37,10 +37,10 @@ import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.common.FieldRef
 import com.github.jonathanxd.codeapi.factory.invoke
-import com.github.jonathanxd.codeapi.util.require
-import com.github.jonathanxd.codeapi.util.typedKeyOf
 import com.github.jonathanxd.iutils.`object`.TypedKey
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.jwiutils.kt.typedKeyOf
 import org.objectweb.asm.ClassVisitor
 
 /**

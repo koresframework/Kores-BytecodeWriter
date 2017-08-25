@@ -42,6 +42,8 @@ import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.codeapi.util.conversion.access
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.add
+import com.github.jonathanxd.jwiutils.kt.require
 import java.lang.reflect.Type
 
 object Util {

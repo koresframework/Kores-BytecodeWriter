@@ -28,11 +28,14 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.Annotable
+import com.github.jonathanxd.codeapi.base.CodeModifier
 import com.github.jonathanxd.codeapi.base.FieldDeclaration
 import com.github.jonathanxd.codeapi.bytecode.processor.ANNOTATION_VISITOR_CAPABLE
 import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
+import com.github.jonathanxd.codeapi.bytecode.util.asmConstValue
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.GenericType
@@ -45,10 +48,19 @@ object FieldDeclarationProcessor : Processor<FieldDeclaration> {
     override fun process(part: FieldDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
         val visitor = CLASS_VISITOR.getOrNull(data)!!
 
-        val access = ModifierUtil.modifiersToAsm(part.modifiers)
-        val signature = (part.type as? GenericType)?.descriptor
+        val modifiers =
+                if (!part.modifiers.contains(CodeModifier.STATIC)
+                        && TYPE_DECLARATION.getOrNull(data)?.isInterface == true)
+                    part.modifiers + CodeModifier.STATIC
+                else part.modifiers
 
-        visitor.visitField(access, part.name, part.type.typeDesc, signature, null).let {
+        val access = ModifierUtil.modifiersToAsm(modifiers)
+        val signature = (part.type as? GenericType)?.descriptor
+        val constValue =
+                if (modifiers.contains(CodeModifier.STATIC)) part.value.asmConstValue
+                else null
+
+        visitor.visitField(access, part.name, part.type.typeDesc, signature, constValue).let {
             ANNOTATION_VISITOR_CAPABLE.set(data, AnnotationVisitorCapable.FieldVisitorCapable(it))
             processorManager.process(Annotable::class.java, part, data)
             ANNOTATION_VISITOR_CAPABLE.remove(data)

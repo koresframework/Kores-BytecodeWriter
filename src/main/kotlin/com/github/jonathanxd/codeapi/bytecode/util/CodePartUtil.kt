@@ -29,5 +29,16 @@ package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.literal.Literal
+import com.github.jonathanxd.codeapi.literal.Literals
 
 val CodePart.booleanValue: Boolean get() = (this as Literal).name.toBoolean()
+
+val CodePart.asmConstValue: Any?
+    get() = when (this) {
+        is Literals.IntLiteral -> this.name.toInt()
+        is Literals.FloatLiteral -> this.name.toFloat()
+        is Literals.LongLiteral -> this.name.toLong()
+        is Literals.DoubleLiteral -> this.name.toDouble()
+        is Literals.StringLiteral -> this.original
+        else -> null
+    }

@@ -41,6 +41,8 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.inContext
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
@@ -57,6 +59,9 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
         val genBridge = processorManager.options.getOrElse(GENERATE_BRIDGE_METHODS, false)
 
         val isConstructor = part is ConstructorDeclaration
+
+        if (isConstructor && TYPE_DECLARATION.getOrNull(data)?.isInterface == true)
+            throw IllegalArgumentException("Cannot declare a constructor in an interface.")
 
         val typeDeclaration: Lazy<TypeDeclaration> = lazy {
             TYPE_DECLARATION.require(data)

@@ -35,8 +35,12 @@ import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.factory.*
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.util.codeType
+import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.util.type
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.add
+import com.github.jonathanxd.jwiutils.kt.typedKeyOf
 
 /**
  * Switch on enum helper.
@@ -121,7 +125,7 @@ object SwitchOnEnum {
 
         fun buildClass(): TypeDeclaration {
 
-            if(evaluated)
+            if (evaluated)
                 throw IllegalStateException("SwitchOnEnum mapping already builded")
 
             evaluated = true
@@ -151,8 +155,7 @@ object SwitchOnEnum {
                     body = CodeSource.empty() // Ignore
             )
 
-            val staticBlock = StaticBlock(Comments.Absent, emptyList(), CodeSource.fromIterable(mappings.mapIndexed {
-                i, enumName ->
+            val staticBlock = StaticBlock(Comments.Absent, emptyList(), CodeSource.fromIterable(mappings.mapIndexed { i, enumName ->
 
                 tryStatement(
                         CodeSource.fromPart(

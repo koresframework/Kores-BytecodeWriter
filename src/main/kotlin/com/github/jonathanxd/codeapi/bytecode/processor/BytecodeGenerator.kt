@@ -42,9 +42,9 @@ import com.github.jonathanxd.codeapi.common.Stack
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.*
-import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.option.Options
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.util.CheckClassAdapter

@@ -38,9 +38,9 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.codeType
 import com.github.jonathanxd.codeapi.util.isPrimitive
-import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.codeapi.util.typeOrNull
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.require
 
 object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
 

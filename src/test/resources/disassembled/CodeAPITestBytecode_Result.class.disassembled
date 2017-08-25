@@ -1,4 +1,4 @@
-md5: 65451fd44260c514e63f1877886d6d30
+md5: 50352a2e69d68ff23b5204ca91e493fe
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -61,10 +61,10 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         nop
         athrow
       Label_7:
-       FRAME[type: F_FULL, locals: 2, local: {Reference[java.lang.Object], Reference[com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode]}, stacks: 1, stack: {Reference[java.lang.RuntimeException]}]
+       FRAME[type: F_FULL, locals: 2, local: {Reference[java.lang.Object], Reference[com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode]}, stacks: 1, stack: {Reference[java.lang.Exception]}]
         astore 2
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Rethrow from var 'thr'!"              // type: java.lang.String
+        ldc "Rethrow from var 'tlr'!"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         aload 2
         invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
@@ -74,10 +74,10 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
       Label_8:
         goto Label_11
       Label_9:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Exception]}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.RuntimeException]}]
         astore 2
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        ldc "Rethrow from var 'tlr'!"              // type: java.lang.String
+        ldc "Rethrow from var 'thr'!"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         aload 2
         invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
@@ -91,15 +91,15 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         return
       Label_12:
       TryCatchBlocks {
-        start: Label_2, end: Label_5, handler: Label_7, exception: java.lang.IllegalArgumentException
-        start: Label_2, end: Label_5, handler: Label_7, exception: java.lang.IllegalStateException
-        start: Label_2, end: Label_5, handler: Label_9, exception: java.io.IOException
-        start: Label_2, end: Label_5, handler: Label_9, exception: java.lang.ClassNotFoundException
+        start: Label_2, end: Label_5, handler: Label_9, exception: java.lang.IllegalArgumentException
+        start: Label_2, end: Label_5, handler: Label_9, exception: java.lang.IllegalStateException
+        start: Label_2, end: Label_5, handler: Label_7, exception: java.io.IOException
+        start: Label_2, end: Label_5, handler: Label_7, exception: java.lang.ClassNotFoundException
       }
       LocalVariables {
         index: 2, name: ref, start: Label_4, end: Label_6, type: java.lang.Object, signature: null
-        index: 2, name: thr, start: Label_7, end: Label_8, type: java.lang.Throwable, signature: null
-        index: 2, name: tlr, start: Label_7, end: Label_10, type: java.lang.Throwable, signature: null
+        index: 2, name: tlr, start: Label_7, end: Label_8, type: java.lang.Throwable, signature: null
+        index: 2, name: thr, start: Label_7, end: Label_10, type: java.lang.Throwable, signature: null
         index: 1, name: test, start: Label_1, end: Label_12, type: com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, signature: null
         index: 0, name: msg, start: Label_0, end: Label_12, type: java.lang.Object, signature: null
       }

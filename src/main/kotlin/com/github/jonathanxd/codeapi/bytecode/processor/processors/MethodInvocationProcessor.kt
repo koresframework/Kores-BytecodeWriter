@@ -28,15 +28,21 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.bytecode.processor.*
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
+import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
+import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
-import com.github.jonathanxd.codeapi.bytecode.util.allInnerTypes
 import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.codeapi.util.internalName
+import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Type
 

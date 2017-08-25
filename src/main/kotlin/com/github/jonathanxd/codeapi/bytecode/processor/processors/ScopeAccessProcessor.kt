@@ -36,8 +36,8 @@ import com.github.jonathanxd.codeapi.factory.accessField
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.`is`
-import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.require
 
 object ScopeAccessProcessor : Processor<ScopeAccess> {
 
@@ -60,11 +60,11 @@ object ScopeAccessProcessor : Processor<ScopeAccess> {
                                     part: ScopeAccess,
                                     old: CodeInstruction = Access.THIS,
                                     data: TypedData): FieldAccess =
-        if (outer.field.type.`is`(part.type)) {
-            accessField(type, old, outer.field.type, outer.field.name)
-        } else {
-            accessField(TYPE_DECLARATION.require(data.parent!!), OUTER_TYPE_FIELD.require(data.parent!!), part,
-                    accessField(type, old, outer.field.type, outer.field.name),
-                    data.parent!!)
-        }
+            if (outer.field.type.`is`(part.type)) {
+                accessField(type, old, outer.field.type, outer.field.name)
+            } else {
+                accessField(TYPE_DECLARATION.require(data.parent!!), OUTER_TYPE_FIELD.require(data.parent!!), part,
+                        accessField(type, old, outer.field.type, outer.field.name),
+                        data.parent!!)
+            }
 }

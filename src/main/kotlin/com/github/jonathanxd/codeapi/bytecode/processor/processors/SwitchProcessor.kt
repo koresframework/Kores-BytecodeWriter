@@ -48,6 +48,8 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.add
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Label
 
 object SwitchProcessor : Processor<SwitchStatement> {

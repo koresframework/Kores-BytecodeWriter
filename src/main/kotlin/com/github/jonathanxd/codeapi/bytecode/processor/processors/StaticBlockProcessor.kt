@@ -37,13 +37,14 @@ import com.github.jonathanxd.codeapi.bytecode.processor.CLASS_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
+import com.github.jonathanxd.codeapi.bytecode.util.asmConstValue
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.setFieldValue
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.inContext
-import com.github.jonathanxd.codeapi.util.require
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.inContext
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Opcodes
 
 object StaticBlockProcessor : Processor<StaticBlock> {
@@ -64,8 +65,9 @@ object StaticBlockProcessor : Processor<StaticBlock> {
             val typeDeclaration = TYPE_DECLARATION.require(data)
 
             val all = typeDeclaration.fields.filter {
-                it.modifiers.contains(CodeModifier.STATIC)
+                (it.modifiers.contains(CodeModifier.STATIC) || TYPE_DECLARATION.getOrNull(data)?.isInterface == true)
                         && it.value != CodeNothing
+                        && it.value.asmConstValue == null
             }
 
 
@@ -77,7 +79,8 @@ object StaticBlockProcessor : Processor<StaticBlock> {
 
                 if (value != CodeNothing) {
 
-                    val def = setFieldValue(typeDeclaration, Access.STATIC, fieldDeclaration.type, fieldDeclaration.name, value)
+                    val def =
+                            setFieldValue(typeDeclaration, Access.STATIC, fieldDeclaration.type, fieldDeclaration.name, value)
 
                     body.add(def)
                 }
@@ -91,6 +94,7 @@ object StaticBlockProcessor : Processor<StaticBlock> {
         }
 
         mv.visitInsn(Opcodes.RETURN)
+
         try {
             mv.visitMaxs(0, 0)
         } catch (e: Exception) {
