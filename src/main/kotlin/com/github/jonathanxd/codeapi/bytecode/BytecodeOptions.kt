@@ -117,7 +117,7 @@ val GENERATE_BRIDGE_METHODS = Option(false)
  * An anonymous synthetic class may be generated for private constructors.
  */
 @JvmField
-val GENERATE_SYNTHETIC_ACCESS = Option(true) // TODO: Fix: does not have effect
+val GENERATE_SYNTHETIC_ACCESS = Option(true)
 
 enum class VisitLineType {
     /**

@@ -28,6 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.bytecode.GENERATE_SYNTHETIC_ACCESS
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
@@ -79,21 +80,22 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         // Synthetic accessor redirection
         var syntheticPart = part
 
-        val access = accessMemberOfType(localization, newPart, data)
+        if (processorManager.options[GENERATE_SYNTHETIC_ACCESS]) {
+            val access = accessMemberOfType(localization, newPart, data)
 
-        // RETURN AT END OF IF
-        if (access != null) {
-            val args = if (access.newElementToAccess is ConstructorDeclaration) {
-                newPart.arguments + access.newElementToAccess.parameters.last().type.invokeConstructor()
-            } else newPart.arguments
+            // RETURN AT END OF IF
+            if (access != null) {
+                val args = if (access.newElementToAccess is ConstructorDeclaration) {
+                    newPart.arguments + access.newElementToAccess.parameters.last().type.invokeConstructor()
+                } else newPart.arguments
 
-            val invk = access.createInvokeToNewElement(newPart.target, args)
+                val invk = access.createInvokeToNewElement(newPart.target, args)
 
-            syntheticPart = invk
-            newPart = syntheticPart
-            newSpecification = syntheticPart.spec
+                syntheticPart = invk
+                newPart = syntheticPart
+                newSpecification = syntheticPart.spec
+            }
         }
-
         // /Synthetic accessor redirection
 
         val invokeType: InvokeType = syntheticPart.invokeType

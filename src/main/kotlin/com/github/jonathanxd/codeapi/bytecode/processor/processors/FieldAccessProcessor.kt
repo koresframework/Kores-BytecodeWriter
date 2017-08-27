@@ -29,6 +29,7 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.Access
 import com.github.jonathanxd.codeapi.base.FieldAccess
+import com.github.jonathanxd.codeapi.bytecode.GENERATE_SYNTHETIC_ACCESS
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
@@ -51,7 +52,9 @@ object FieldAccessProcessor : Processor<FieldAccess> {
         val at = part.target
         val safeAt = at.safeForComparison
 
-        val access = accessMemberOfType(localization, part, data)
+        val access =
+                if (processorManager.options[GENERATE_SYNTHETIC_ACCESS]) accessMemberOfType(localization, part, data)
+                else null
 
         if (access != null) {
             val invk = access.createInvokeToNewElement(at, emptyList())
