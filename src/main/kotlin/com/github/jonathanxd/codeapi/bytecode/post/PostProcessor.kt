@@ -25,41 +25,15 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.common
-
-import org.objectweb.asm.Label
-import java.time.Instant
-import com.github.jonathanxd.codeapi.base.Label as CodeLabel
+package com.github.jonathanxd.codeapi.bytecode.post
 
 /**
- * A class that hold information about the flow of the code.
- *
- * Example:
- *
- * <pre>{@code
- *     //@outsideStart
- *     for(int x = 0; x < 10: ++x) {
- *         //@insideStart
- *         body
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- * }</pre>
- *
- * <pre>{@code
- *     //@outsideStart
- *     switch(a) {
- *         //@insideStart
- *         case A: ...
- *         case B: ...
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- *
- * }</pre>
+ * Processor run after bytecode generation.
  */
-data class Flow(val label: CodeLabel?, val outsideStart: Label, val insideStart: Label, val insideEnd: Label, val outsideEnd: Label): Timed {
-    override val creationInstant: Instant = Instant.now()
+interface PostProcessor {
+
+    /**
+     * Process class bytecode
+     */
+    fun process(classBytes: ByteArray): ByteArray
 }

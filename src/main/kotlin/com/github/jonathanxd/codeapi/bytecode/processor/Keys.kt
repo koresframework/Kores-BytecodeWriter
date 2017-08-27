@@ -29,19 +29,24 @@ package com.github.jonathanxd.codeapi.bytecode.processor
 
 import com.github.jonathanxd.codeapi.CodeElement
 import com.github.jonathanxd.codeapi.CodeInstruction
+import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.bytecode.BytecodeModule
+import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
+import com.github.jonathanxd.codeapi.bytecode.common.Timed
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.codeapi.common.FieldRef
 import com.github.jonathanxd.codeapi.factory.invoke
+import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.`object`.TypedKey
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.jwiutils.kt.require
 import com.github.jonathanxd.jwiutils.kt.typedKeyOf
 import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.Label
+import java.time.Instant
 
 /**
  * Version of Java class to generate
@@ -84,6 +89,10 @@ val FLOWS = typedKeyOf<MutableList<Flow>>("CODE_FLOWS")
 // MVData
 val METHOD_VISITOR = typedKeyOf<MethodVisitorHelper>("METHOD_VISITOR_DATA")
 
+val C_LINE = typedKeyOf<MutableList<CLine>>("CURRENT_LINE")
+
+data class CLine(val line: Int, val label: Label)
+
 // List<BytecodeClass>
 val BYTECODE_CLASS_LIST = typedKeyOf<MutableList<BytecodeClass>>("BYTECODE_CLASS_LIST")
 
@@ -101,6 +110,38 @@ val TYPES = typedKeyOf<MutableList<TypeDeclaration>>("TYPES_VISIT")
  * Keep track of outer fields added to inner class.
  */
 val OUTER_TYPE_FIELD = typedKeyOf<OuterClassField>("OUTER_TYPE_FIELD")
+
+data class LineBuf(val visited: Boolean, val line: Int)
+
+val TRY_BLOCK_DATA = typedKeyOf<MutableList<TryBlockData>>("TRY_BLOCK_DATAS")
+
+class TryBlockData(val startLabel: Label, val stm: TryStatementBase): Timed {
+    override val creationInstant: Instant = Instant.now()
+    // List of labels of where finally was generated
+    val labels: MutableList<FLabel> = mutableListOf()
+
+    fun canGen(): Boolean = this.stm.finallyStatement.isNotEmpty
+
+    fun visit(manager: ProcessorManager<*>, data: TypedData) {
+
+        if (this.stm.finallyStatement.isNotEmpty) {
+
+            val start = Label()
+            val end = Label()
+
+            METHOD_VISITOR.require(data).methodVisitor.visitLabel(start)
+
+            manager.process(CodeSource::class.java, this.stm.finallyStatement, data)
+
+            METHOD_VISITOR.require(data).methodVisitor.visitLabel(end)
+
+            this.labels.add(FLabel(start, end))
+        }
+    }
+
+}
+
+data class FLabel(val start: Label, val end: Label)
 
 data class OuterClassField(val typeDeclaration: TypeDeclaration, val field: FieldRef)
 

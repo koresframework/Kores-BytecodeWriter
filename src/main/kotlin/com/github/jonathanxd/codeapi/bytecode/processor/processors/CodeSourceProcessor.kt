@@ -28,12 +28,18 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodeSource
+import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.base.VariableDeclaration
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.TRY_BLOCK_DATA
+import com.github.jonathanxd.codeapi.factory.accessVariable
+import com.github.jonathanxd.codeapi.factory.variable
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.jwiutils.kt.require
 import com.github.jonathanxd.jwiutils.kt.typedKeyOf
@@ -41,17 +47,11 @@ import org.objectweb.asm.Label
 
 object CodeSourceProcessor : Processor<CodeSource> {
 
-    val OFFSET = typedKeyOf<Int>("LINE_OFFSET")
 
     override fun process(part: CodeSource, data: TypedData, processorManager: ProcessorManager<*>) {
         val max = part.size - 1
 
-        val visit = processorManager.options.get(VISIT_LINES)
-
-        val offset = OFFSET.getOrSet(data, 0)
-
-        if (visit == VisitLineType.FOLLOW_CODE_SOURCE)
-            OFFSET.set(data, offset + max + 1)
+        val visitLine = LineProcessor.visitLineOF(processorManager, data, max)
 
         var changed = false
         val inExpr = IN_EXPRESSION.require(data)
@@ -62,16 +62,7 @@ object CodeSourceProcessor : Processor<CodeSource> {
         }
 
         for (i in 0..max) {
-
-            METHOD_VISITOR.getOrNull(data)?.let {
-                if (visit == VisitLineType.FOLLOW_CODE_SOURCE) {
-                    val line = i + 1 + offset
-                    val label = Label()
-
-                    it.methodVisitor.visitLabel(label)
-                    it.methodVisitor.visitLineNumber(line, label)
-                }
-            }
+            visitLine(i)
 
             val codePart = part[i]
 

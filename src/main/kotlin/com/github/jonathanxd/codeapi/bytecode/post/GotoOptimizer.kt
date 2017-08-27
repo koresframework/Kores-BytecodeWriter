@@ -25,41 +25,49 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.common
+package com.github.jonathanxd.codeapi.bytecode.post
 
-import org.objectweb.asm.Label
-import java.time.Instant
-import com.github.jonathanxd.codeapi.base.Label as CodeLabel
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.tree.AbstractInsnNode
+import org.objectweb.asm.tree.JumpInsnNode
+import org.objectweb.asm.tree.MethodNode
 
-/**
- * A class that hold information about the flow of the code.
- *
- * Example:
- *
- * <pre>{@code
- *     //@outsideStart
- *     for(int x = 0; x < 10: ++x) {
- *         //@insideStart
- *         body
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- * }</pre>
- *
- * <pre>{@code
- *     //@outsideStart
- *     switch(a) {
- *         //@insideStart
- *         case A: ...
- *         case B: ...
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- *
- * }</pre>
- */
-data class Flow(val label: CodeLabel?, val outsideStart: Label, val insideStart: Label, val insideEnd: Label, val outsideEnd: Label): Timed {
-    override val creationInstant: Instant = Instant.now()
+object GotoOptimizer : MethodProcessor {
+
+    override fun process(owner: String, methodNode: MethodNode): MethodNode {
+        val insns = methodNode.instructions
+
+        for (insn in insns) {
+            if (insn is JumpInsnNode) {
+                var label = insn.label
+                var target: AbstractInsnNode?
+                while (true) {
+                    target = label
+
+                    while (target != null && target.opcode < 0) {
+                        target = target.next
+                    }
+
+                    if (target != null && target.opcode == Opcodes.GOTO && target is JumpInsnNode) {
+                        label = target.label
+                    } else {
+                        break
+                    }
+                }
+
+                insn.label = label
+
+                if (insn.opcode == Opcodes.GOTO && target != null) {
+                    when(target.opcode) {
+                        in Opcodes.IRETURN..Opcodes.RETURN, Opcodes.ATHROW -> {
+                            insns.set(insn, target.clone(null))
+                        }
+                    }
+                }
+            }
+        }
+
+        return methodNode
+    }
+
 }

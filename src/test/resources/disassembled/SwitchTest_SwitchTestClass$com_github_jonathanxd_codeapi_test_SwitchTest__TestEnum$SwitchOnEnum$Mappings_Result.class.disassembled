@@ -1,4 +1,4 @@
-md5: 406275285826c3e798983bac3258bc41
+md5: 7044360dd81b295d57ead954e1252dfb
 
 version: Java 8 (52)
 access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
@@ -68,14 +68,14 @@ source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$
         iconst_2
         iastore
       Label_5:
-        goto Label_7
+        return
       Label_6:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.NoSuchFieldError]}]
         astore 0
-        goto Label_7
-      Label_7:
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
+      Label_7:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+        athrow
       TryCatchBlocks {
         start: Label_1, end: Label_2, handler: Label_3, exception: java.lang.NoSuchFieldError
         start: Label_4, end: Label_5, handler: Label_6, exception: java.lang.NoSuchFieldError

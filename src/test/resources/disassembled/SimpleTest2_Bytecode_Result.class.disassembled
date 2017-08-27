@@ -1,4 +1,4 @@
-md5: 08f81a8baf1d465f2ad21050bbfa96f1
+md5: f5742f1f56f583cabee4fb51ea933dd3
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -41,19 +41,17 @@ public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "First < Second"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-        goto Label_4
+        return
       Label_3:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "First >= Second"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_4:
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
-      Label_5:
+      Label_4:
       LocalVariables {
-        index: 1, name: myField, start: Label_0, end: Label_5, type: java.lang.String, signature: null
-        index: 0, name: this, start: Label_0, end: Label_5, type: me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, signature: null
+        index: 1, name: myField, start: Label_0, end: Label_4, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_4, type: me.jonathanscripter.codeapi.test.SimpleTest2_bytecode, signature: null
       }
     }
     

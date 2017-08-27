@@ -30,7 +30,11 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.TRY_BLOCK_DATA
+import com.github.jonathanxd.codeapi.bytecode.processor.TryBlockData
 import com.github.jonathanxd.codeapi.common.CodeNothing
+import com.github.jonathanxd.codeapi.factory.accessVariable
+import com.github.jonathanxd.codeapi.factory.variable
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.codeType
@@ -38,6 +42,8 @@ import com.github.jonathanxd.codeapi.util.insertAfterOrEnd
 import com.github.jonathanxd.codeapi.util.insertBeforeOrEnd
 import com.github.jonathanxd.codeapi.util.internalName
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.iutils.function.stream.BiStreams
+import com.github.jonathanxd.jwiutils.kt.add
 import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
@@ -50,10 +56,13 @@ object TryStatementProcessor : Processor<TryStatement> {
 
         val l0 = Label() // Code to surround
         val l1 = Label() // if no exceptions.
+        val endTc = Label() // End of try catch
+        val lCatchAll = Label()
 
         val finallySource = part.finallyStatement
+        val genFinally = finallySource.isNotEmpty
 
-        val catches = java.util.HashMap<CatchStatement, Label>()
+        val catches = mutableMapOf<CatchStatement, TryBlockData>()
 
         val outOfIf = Label() // Out of if
 
@@ -67,26 +76,62 @@ object TryStatementProcessor : Processor<TryStatement> {
                 mv.visitTryCatchBlock(l0, l1, lCatch, exceptionType.internalName)
             }
 
-            catches.put(catchBlock, lCatch)
+            catches.put(catchBlock, TryBlockData(lCatch, part))
+        }
+
+        fun TryBlockData.visitBlocks(start: Label, end: Label) {
+            if (!genFinally) return
+
+            if (this.labels.isEmpty()) {
+                mv.visitTryCatchBlock(start, start, lCatchAll, null)
+            } else {
+                var last = start
+
+                this.labels.forEach {
+                    if (last.offset != it.start.offset) {
+                        mv.visitTryCatchBlock(last, it.start, lCatchAll, null)
+                    }
+                    last = it.end
+                }
+
+                if (last.offset != end.offset)
+                    mv.visitTryCatchBlock(last, end, lCatchAll, null)
+            }
+
+        }
+
+        fun genFinally() {
+            if (!genFinally) return
+            TRY_BLOCK_DATA.getOrNull(data)?.let { blocks ->
+                if (blocks.isNotEmpty()) {
+                    TRY_BLOCK_DATA.remove(data)
+
+                    blocks.forEach { it.visit(processorManager, data) }
+
+                    TRY_BLOCK_DATA.set(data, blocks)
+                }
+            }
         }
 
         mv.visitLabel(l0)
 
-        var body = part.body
+        val tryBlockData = TryBlockData(l0, part)
+        TRY_BLOCK_DATA.add(data, tryBlockData)
+
+        val body = part.body
 
         mvHelper.enterNewFrame()
 
-        if (finallySource.isNotEmpty) {
-            body = insertAfterOrEnd({
-                it is ThrowException || it is Return || it is ControlFlow
-            }, finallySource, body)
-        }
-
         processorManager.process(CodeSource::class.java, body, data)
+        genFinally()
 
         mvHelper.exitFrame()
 
+        TRY_BLOCK_DATA.require(data).remove(tryBlockData)
+
         mv.visitLabel(l1)
+
+        tryBlockData.visitBlocks(l0, l1)
 
         mv.visitJumpInsn(Opcodes.GOTO, outOfIf)
 
@@ -98,16 +143,21 @@ object TryStatementProcessor : Processor<TryStatement> {
 
         val endLabel = Label()
 
+        catches.forEach { (_, field, codeSource), tdata ->
 
-        catches.forEach { (_, field, codeSource), label ->
+            TRY_BLOCK_DATA.add(data, tdata)
+            val label = tdata.startLabel
+            val end = Label()
 
             mv.visitLabel(label)
             mvHelper.enterNewFrame()
 
             val fieldValue = field.value
 
-            val stackPos = mvHelper.storeVar(field.name, field.type.codeType, i_label, null)
+            val stackPos = mvHelper.storeVar(field.name, field.type.codeType, i_label, end)
                     .orElseThrow({ mvHelper.failStore(field.name) })
+
+            mv.visitLabel(Label())
 
             mv.visitVarInsn(Opcodes.ASTORE, stackPos)
 
@@ -117,26 +167,58 @@ object TryStatementProcessor : Processor<TryStatement> {
                 mv.visitVarInsn(Opcodes.ASTORE, stackPos)
             }
 
-            var codeSource1 = CodeSource.fromIterable(codeSource)
+            processorManager.process(CodeSource::class.java, codeSource, data)
 
-            codeSource1 = insertBeforeOrEnd({
-                it is ThrowException || it is Return || it is ControlFlow
-            }, finallySource, codeSource1)
-
-            processorManager.process(CodeSource::class.java, codeSource1, data)
+            genFinally()
 
             mvHelper.exitFrame()
 
-            mv.visitJumpInsn(Opcodes.GOTO, outOfIf)
+            mv.visitLabel(end)
 
+            TRY_BLOCK_DATA.require(data).remove(tdata)
+
+            tdata.visitBlocks(label, end)
+
+            mv.visitJumpInsn(Opcodes.GOTO, outOfIf)
+        }
+
+        mv.visitLabel(endTc)
+
+        if (genFinally) {
+            mv.visitLabel(lCatchAll)
+            val end = Label()
+
+            val dummyName = mvHelper.getUniqueVariableName("dummy\$#")
+            val name = mvHelper.getUniqueVariableName("finallyException\$#")
+
+            mvHelper.enterNewFrame()
+
+            val variable = variable(Throwable::class.java, name, CodeNothing)
+
+            mvHelper.storeVar(dummyName, Exception::class.java.codeType, lCatchAll, end)
+                    .orElseThrow({ mvHelper.failStore(variable.name) }) // dummy
+
+            val stackPos = mvHelper.storeVar(variable.name, variable.type.codeType, lCatchAll, end)
+                    .orElseThrow({ mvHelper.failStore(variable.name) })
+
+            mv.visitLabel(Label())
+
+            mv.visitVarInsn(Opcodes.ASTORE, stackPos)
+
+            processorManager.process(CodeSource::class.java, finallySource, data)
+
+            processorManager.process(ThrowException::class.java, ThrowException(accessVariable(variable)), data)
+
+            mv.visitLabel(end)
+
+            mvHelper.exitFrame()
         }
 
         mv.visitLabel(endLabel)
 
         mv.visitLabel(outOfIf)
 
-
+        TRY_BLOCK_DATA.require(data).remove(tryBlockData)
     }
-
 
 }

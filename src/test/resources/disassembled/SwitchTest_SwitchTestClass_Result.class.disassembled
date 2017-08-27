@@ -1,4 +1,4 @@
-md5: eb22561d5823f0c3080a7f926b565add
+md5: 18f578cc4263a17384764caedbfb1d95
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -164,7 +164,7 @@ public class com.SwitchTestClass extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_24:
        LINE 24 -> Label_24
-        goto Label_32
+        return
       Label_25:
        LINE 25 -> Label_25
        LINE 26 -> Label_25
@@ -180,7 +180,7 @@ public class com.SwitchTestClass extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_27:
        LINE 28 -> Label_27
-        goto Label_32
+        return
       Label_28:
        LINE 29 -> Label_28
        LINE 30 -> Label_28
@@ -196,7 +196,7 @@ public class com.SwitchTestClass extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_30:
        LINE 32 -> Label_30
-        goto Label_32
+        return
       Label_31:
        LINE 33 -> Label_31
        LINE 34 -> Label_31
@@ -204,17 +204,15 @@ public class com.SwitchTestClass extends java.lang.Object {
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "default"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_32:
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
-      Label_33:
+      Label_32:
       LocalVariables {
-        index: 5, name: o, start: Label_0, end: Label_33, type: java.lang.Object, signature: null
-        index: 4, name: str, start: Label_0, end: Label_33, type: java.lang.String, signature: null
-        index: 3, name: testEnum, start: Label_0, end: Label_33, type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, signature: null
-        index: 2, name: number2, start: Label_0, end: Label_33, type: int, signature: null
-        index: 1, name: number, start: Label_0, end: Label_33, type: int, signature: null
-        index: 0, name: this, start: Label_0, end: Label_33, type: com.SwitchTestClass, signature: null
+        index: 5, name: o, start: Label_0, end: Label_32, type: java.lang.Object, signature: null
+        index: 4, name: str, start: Label_0, end: Label_32, type: java.lang.String, signature: null
+        index: 3, name: testEnum, start: Label_0, end: Label_32, type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum, signature: null
+        index: 2, name: number2, start: Label_0, end: Label_32, type: int, signature: null
+        index: 1, name: number, start: Label_0, end: Label_32, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_32, type: com.SwitchTestClass, signature: null
       }
     }
     

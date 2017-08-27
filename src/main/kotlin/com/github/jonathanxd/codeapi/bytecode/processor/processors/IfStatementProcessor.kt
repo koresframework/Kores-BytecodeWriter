@@ -51,7 +51,12 @@ object IfStatementProcessor : Processor<IfStatement> {
 
         val elseStatement = part.elseStatement
 
-        val jumpLabel = if (part.body.contains(SwitchProcessor.SwitchMarker)) FLOWS.require(data).last().insideEnd else if (elseStatement.isNotEmpty) elseLabel else endIfLabel
+        val jumpLabel =
+                when {
+                    part.body.contains(SwitchProcessor.SwitchMarker) -> FLOWS.require(data).last().insideEnd
+                    elseStatement.isNotEmpty -> elseLabel
+                    else -> endIfLabel
+                }
 
         val methodVisitor = mvHelper.methodVisitor
 
@@ -72,7 +77,6 @@ object IfStatementProcessor : Processor<IfStatement> {
         if (elseStatement.isNotEmpty) {
             methodVisitor.visitJumpInsn(Opcodes.GOTO, endIfLabel)
         }
-
 
         if (elseStatement.isNotEmpty) {
             methodVisitor.visitLabel(elseLabel)

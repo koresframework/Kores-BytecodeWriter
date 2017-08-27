@@ -27,28 +27,109 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
+import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.base.Line
+import com.github.jonathanxd.codeapi.base.Return
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
-import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.pre.GenLineVisitor
+import com.github.jonathanxd.codeapi.bytecode.processor.*
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.add
 import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.jwiutils.kt.typedKeyOf
 import org.objectweb.asm.Label
 
 object LineProcessor : Processor<Line> {
 
+    private val OFFSET = typedKeyOf<Int>("LINE_OFFSET")
+
     override fun process(part: Line, data: TypedData, processorManager: ProcessorManager<*>) {
 
-        if (processorManager.options[VISIT_LINES] == VisitLineType.LINE_INSTRUCTION) {
+        if (processorManager.options[VISIT_LINES] == VisitLineType.LINE_INSTRUCTION
+                || processorManager.options[VISIT_LINES] == VisitLineType.GEN_LINE_INSTRUCTION) {
             val mvHelper = METHOD_VISITOR.require(data)
 
             val label = Label()
             mvHelper.methodVisitor.visitLabel(label)
             mvHelper.methodVisitor.visitLineNumber(part.line, label)
-        }
 
-        processorManager.process(part.value, data)
+            val cline = CLine(part.line, label)
+
+            C_LINE.add(data, cline)
+
+            processorManager.process(part.value, data)
+
+            C_LINE.require(data).remove(cline)
+        } else {
+            processorManager.process(part.value, data)
+        }
+    }
+
+    /**
+     * Creates a offset-ed line visit function when [VISIT_LINES] is set to [VisitLineType.FOLLOW_CODE_SOURCE].
+     */
+    fun visitLineOF(manager: ProcessorManager<*>, data: TypedData, max: Int): (Int) -> Unit {
+
+        val visit = manager.options.get(VISIT_LINES)
+
+        if (visit != VisitLineType.FOLLOW_CODE_SOURCE)
+            return {}
+
+        val offset = OFFSET.getOrSet(data, 0)
+
+        if (visit == VisitLineType.FOLLOW_CODE_SOURCE)
+            OFFSET.set(data, offset + max + 1)
+
+        return { i ->
+            METHOD_VISITOR.getOrNull(data)?.let {
+                if (visit == VisitLineType.FOLLOW_CODE_SOURCE) {
+                    val line = i + 1 + offset
+                    val label = Label()
+
+                    it.methodVisitor.visitLabel(label)
+                    it.methodVisitor.visitLineNumber(line, label)
+                }
+            }
+        }
+    }
+
+    /**
+     * Do incremental line visit transform
+     */
+    fun visitLineICT(part: Any, manager: ProcessorManager<*>): Any =
+        if (part is CodePart && manager.options.get(VISIT_LINES) == VisitLineType.GEN_LINE_INSTRUCTION) {
+            GenLineVisitor.visit(part)
+        } else part
+
+
+    /**
+     * Do incremental line visit when [VISIT_LINES] is set to [VisitLineType.INCREMENTAL].
+     */
+    fun visitLineIC(manager: ProcessorManager<*>, data: TypedData) {
+        val mvData = METHOD_VISITOR.getOrNull(data)
+
+        if (manager.options.get(VISIT_LINES) == VisitLineType.INCREMENTAL
+                && mvData != null) {
+
+            val line = LINE.let {
+                if (!it.contains(data)) {
+                    it.set(data, 1)
+                    0
+                } else {
+                    val get = it.require(data)
+                    it.set(data, get + 1)
+                    get
+                }
+            }
+
+            val label = org.objectweb.asm.Label()
+
+            mvData.methodVisitor.visitLabel(label)
+
+            mvData.methodVisitor.visitLineNumber(line, label)
+        }
     }
 }

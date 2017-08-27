@@ -34,6 +34,7 @@ import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.bytecode.processor.KeysKt;
+import com.github.jonathanxd.codeapi.bytecode.util.ConstsKt;
 import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -87,7 +88,7 @@ public class Transformer {
         ClassReader cr = new ClassReader(bytes);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
 
-        cr.accept(new MyClassVisitor(Opcodes.ASM5, cw), 0);
+        cr.accept(new MyClassVisitor(ConstsKt.ASM_API, cw), 0);
 
         byte[] bytes1 = cw.toByteArray();
 
@@ -129,12 +130,12 @@ public class Transformer {
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             if (name.equals("<init>")) {
-                return new MyVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions));
+                return new MyVisitor(ConstsKt.ASM_API, super.visitMethod(access, name, desc, signature, exceptions));
             }
 
             if (name.contains("lambda$")) {
                 if (desc.endsWith("Ljava/lang/String;")) {
-                    return new FragmentTransformer(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions));
+                    return new FragmentTransformer(ConstsKt.ASM_API, super.visitMethod(access, name, desc, signature, exceptions));
                 }
             }
 

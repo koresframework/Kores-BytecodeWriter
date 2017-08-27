@@ -1,4 +1,4 @@
-md5: 8c8ffcf85f35b4ba9897e6906c837670
+md5: 0d61a5827c2a712c132a83240d0c7466
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -19,7 +19,7 @@ public class test.TryCatchFinally extends java.lang.Object {
        LINE 2 -> Label_1
         invokestatic com.github.jonathanxd.codeapi.test.TryTest_.boom()void (ownerIsInterface: false)
       Label_2:
-        goto Label_7
+        return
       Label_3:
        FRAME[type: F_FULL, locals: 1, local: {Reference[test.TryCatchFinally]}, stacks: 1, stack: {Reference[java.lang.Exception]}]
         astore 1
@@ -32,10 +32,10 @@ public class test.TryCatchFinally extends java.lang.Object {
         invokestatic com.github.jonathanxd.codeapi.test.asm.TryTest.x()java.lang.String (ownerIsInterface: false)
         pop
       Label_6:
-        goto Label_7
-      Label_7:
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
+      Label_7:
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+        athrow
       Label_8:
       TryCatchBlocks {
         start: Label_1, end: Label_2, handler: Label_3, exception: java.lang.Exception

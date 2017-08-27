@@ -25,41 +25,28 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.common
+package com.github.jonathanxd.codeapi.bytecode.post
 
-import org.objectweb.asm.Label
-import java.time.Instant
-import com.github.jonathanxd.codeapi.base.Label as CodeLabel
+import org.objectweb.asm.tree.LabelNode
+import org.objectweb.asm.tree.MethodNode
+import org.objectweb.asm.tree.analysis.Analyzer
+import org.objectweb.asm.tree.analysis.BasicInterpreter
 
-/**
- * A class that hold information about the flow of the code.
- *
- * Example:
- *
- * <pre>{@code
- *     //@outsideStart
- *     for(int x = 0; x < 10: ++x) {
- *         //@insideStart
- *         body
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- * }</pre>
- *
- * <pre>{@code
- *     //@outsideStart
- *     switch(a) {
- *         //@insideStart
- *         case A: ...
- *         case B: ...
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- *
- * }</pre>
- */
-data class Flow(val label: CodeLabel?, val outsideStart: Label, val insideStart: Label, val insideEnd: Label, val outsideEnd: Label): Timed {
-    override val creationInstant: Instant = Instant.now()
+object DeadCodeRemover : MethodProcessor {
+
+    override fun process(owner: String, methodNode: MethodNode): MethodNode {
+        val analyzer = Analyzer(BasicInterpreter())
+        val insns = methodNode.instructions.toArray()
+
+        analyzer.analyze(owner, methodNode)
+
+        analyzer.frames.forEachIndexed { index, frame ->
+            if (frame == null && insns[index] !is LabelNode) {
+                methodNode.instructions.remove(insns[index])
+            }
+        }
+
+        return methodNode
+    }
+
 }

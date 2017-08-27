@@ -25,41 +25,11 @@
  *      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *      THE SOFTWARE.
  */
-package com.github.jonathanxd.codeapi.bytecode.common
+package com.github.jonathanxd.codeapi.bytecode.util
 
-import org.objectweb.asm.Label
-import java.time.Instant
-import com.github.jonathanxd.codeapi.base.Label as CodeLabel
+import org.objectweb.asm.Opcodes
 
 /**
- * A class that hold information about the flow of the code.
- *
- * Example:
- *
- * <pre>{@code
- *     //@outsideStart
- *     for(int x = 0; x < 10: ++x) {
- *         //@insideStart
- *         body
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- * }</pre>
- *
- * <pre>{@code
- *     //@outsideStart
- *     switch(a) {
- *         //@insideStart
- *         case A: ...
- *         case B: ...
- *         //@insideEnd
- *     }
- *     //@outsideEnd
- *
- *
- * }</pre>
+ * Current ASM API used by CodeAPI
  */
-data class Flow(val label: CodeLabel?, val outsideStart: Label, val insideStart: Label, val insideEnd: Label, val outsideEnd: Label): Timed {
-    override val creationInstant: Instant = Instant.now()
-}
+const val ASM_API = Opcodes.ASM6

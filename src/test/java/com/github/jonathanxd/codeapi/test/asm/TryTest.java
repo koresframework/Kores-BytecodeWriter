@@ -34,7 +34,9 @@ import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.base.TryStatement;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeSpec;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.extra.Pop;
+import com.github.jonathanxd.codeapi.bytecode.post.DeadCodeRemover;
 import com.github.jonathanxd.codeapi.bytecode.processor.KeysKt;
 import com.github.jonathanxd.codeapi.bytecode.processor.processors.InstructionCodePart;
 import com.github.jonathanxd.codeapi.factory.Factories;
@@ -119,6 +121,7 @@ public class TryTest {
                         ))
                         .build())
                 .build();
+
         @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity());
     }
 

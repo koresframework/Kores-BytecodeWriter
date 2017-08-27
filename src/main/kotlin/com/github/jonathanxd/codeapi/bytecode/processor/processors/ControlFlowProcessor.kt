@@ -30,6 +30,7 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.ControlFlow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
+import com.github.jonathanxd.codeapi.bytecode.processor.TRY_BLOCK_DATA
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
@@ -44,6 +45,31 @@ object ControlFlowProcessor : Processor<ControlFlow> {
         val flow = if (part.at == null) flows.last() else flows.findLast { it.label != null && part.at!!.name == it.label.name }!!
 
         val visitor = METHOD_VISITOR.require(data).methodVisitor
+
+        TRY_BLOCK_DATA.getOrNull(data)?.let { blocks ->
+
+            if (blocks.isNotEmpty()) {
+                val anyGen = blocks.any { it.canGen() }
+
+                if (anyGen) {
+                    TRY_BLOCK_DATA.remove(data)
+
+                    blocks.forEach {
+                        val time =
+                                if (part.at != null) FLOWS.require(data).first { it.label == part.at }.creationInstant
+                                else flow.creationInstant
+
+                        // Hacky check to determine whether block is inside of the try-catch or not
+                        if (time.isBefore(it.creationInstant)) {
+                            // If flow is created before the statement
+                            it.visit(processorManager, data)
+                        }
+                    }
+
+                    TRY_BLOCK_DATA.set(data, blocks)
+                }
+            }
+        }
 
         if (part.type == ControlFlow.Type.BREAK) {
             visitor.visitJumpInsn(Opcodes.GOTO, flow.outsideEnd)

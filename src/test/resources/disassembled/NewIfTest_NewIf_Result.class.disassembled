@@ -1,4 +1,4 @@
-md5: 4b825ebae1c6856afaa2dd0ac3955334
+md5: 3dd56a49fae27cb9301f282ef43a8e80
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -19,26 +19,21 @@ public class com.NewIf extends java.lang.Object {
         if_icmpeq Label_1
         iload 1
         bipush 9
-        if_icmpne Label_3
+        if_icmpne Label_2
       Label_1:
        LINE 2 -> Label_1
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_0
         ireturn
       Label_2:
-       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
-        nop
-        nop
-        athrow
-      Label_3:
-       LINE 3 -> Label_3
-       FRAME[type: F_APPEND, locals: 2, local: {Reference[com.NewIf], Primitive[integer]}, stacks: 0, stack: {}]
+       LINE 3 -> Label_2
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_1
         ireturn
-      Label_4:
+      Label_3:
       LocalVariables {
-        index: 1, name: x, start: Label_0, end: Label_4, type: int, signature: null
-        index: 0, name: this, start: Label_0, end: Label_4, type: com.NewIf, signature: null
+        index: 1, name: x, start: Label_0, end: Label_3, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: com.NewIf, signature: null
       }
     }
     

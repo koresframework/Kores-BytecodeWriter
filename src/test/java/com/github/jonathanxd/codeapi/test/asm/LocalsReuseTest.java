@@ -36,6 +36,7 @@ import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.bytecode.util.ConstsKt;
 import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.literal.Literals;
@@ -89,7 +90,7 @@ public class LocalsReuseTest {
 
         ClassReader cr = new ClassReader(gen.get(0).getBytecode());
 
-        ClassNode cn = new ClassNode(Opcodes.ASM5);
+        ClassNode cn = new ClassNode(ConstsKt.ASM_API);
         cr.accept(cn, 0);
 
         MethodNode node = ((List<MethodNode>) cn.methods).stream().filter(methodNode -> methodNode.name.equals("test")).findFirst().orElseThrow(NullPointerException::new);

@@ -29,7 +29,13 @@
 
 package com.github.jonathanxd.codeapi.bytecode
 
+import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.Line
+import com.github.jonathanxd.codeapi.bytecode.post.DeadCodeRemover
+import com.github.jonathanxd.codeapi.bytecode.post.GotoOptimizer
+import com.github.jonathanxd.codeapi.bytecode.post.MethodProcessor
+import com.github.jonathanxd.codeapi.bytecode.post.PostProcessor
+import com.github.jonathanxd.codeapi.bytecode.pre.GenLineVisitor
 import com.github.jonathanxd.iutils.option.Option
 
 /**
@@ -40,6 +46,27 @@ import com.github.jonathanxd.iutils.option.Option
  */
 @JvmField
 val CHECK = Option(true)
+
+/**
+ * Enables post-processing tasks:
+ *
+ * - Dead Code removal
+ * - Goto to goto removal.
+ */
+@JvmField
+val POST_PROCESSING = Option(true)
+
+/**
+ * How many times post-processors should run.
+ */
+@JvmField
+val POST_PROCESSING_LOOPS = Option(1)
+
+/**
+ * List of method post-processors
+ */
+@JvmField
+val POST_PROCESSORS = Option<List<MethodProcessor>>(listOf(DeadCodeRemover, GotoOptimizer))
 
 /**
  * Calls MethodVisitor.visitLine for each expression
@@ -90,7 +117,7 @@ val GENERATE_BRIDGE_METHODS = Option(false)
  * An anonymous synthetic class may be generated for private constructors.
  */
 @JvmField
-val GENERATE_SYNTHETIC_ACCESS = Option(true)
+val GENERATE_SYNTHETIC_ACCESS = Option(true) // TODO: Fix: does not have effect
 
 enum class VisitLineType {
     /**
@@ -104,9 +131,17 @@ enum class VisitLineType {
     INCREMENTAL,
 
     /**
-     * Follow Code Source indexes
+     * Follow Code Source indexes.
      */
+    @Deprecated(message = "Imprecise approach, finally blocks receive buggy lines because of the way that inlining works.")
     FOLLOW_CODE_SOURCE,
+
+    /**
+     * Generates line instruction for each instruction *before* processing it. This introduces a little overhead.
+     *
+     * This uses a incremental line visiting (see [GenLineVisitor]).
+     */
+    GEN_LINE_INSTRUCTION,
 
     /**
      * Uses [Line] instructions. If this option is not set, [Line] instructions will be ignored.

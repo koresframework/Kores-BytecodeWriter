@@ -30,21 +30,22 @@ package com.github.jonathanxd.codeapi.bytecode.processor
 import com.github.jonathanxd.codeapi.*
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.base.Annotation
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.bytecode.CHECK
-import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
-import com.github.jonathanxd.codeapi.bytecode.VisitLineType
+import com.github.jonathanxd.codeapi.bytecode.*
 import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException
 import com.github.jonathanxd.codeapi.bytecode.extra.Dup
 import com.github.jonathanxd.codeapi.bytecode.extra.Pop
 import com.github.jonathanxd.codeapi.bytecode.processor.processors.*
+import com.github.jonathanxd.codeapi.bytecode.util.ASM_API
+import com.github.jonathanxd.codeapi.bytecode.post.DeadCodeRemover
+import com.github.jonathanxd.codeapi.bytecode.post.Processor
 import com.github.jonathanxd.codeapi.common.Stack
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
-import com.github.jonathanxd.codeapi.processor.*
+import com.github.jonathanxd.codeapi.processor.AbstractProcessorManager
+import com.github.jonathanxd.codeapi.processor.ValidatorManager
+import com.github.jonathanxd.codeapi.processor.VoidValidatorManager
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.option.Options
-import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.util.CheckClassAdapter
@@ -179,51 +180,43 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
         return data
     }
 
+    override fun process(part: Any): List<BytecodeClass> {
+        return super.process(LineProcessor.visitLineICT(part, this))
+    }
+
     override fun <T> process(type: Class<out T>, part: T, data: TypedData): List<BytecodeClass> {
-        val mvDataOpt = METHOD_VISITOR.getOrNull(data)
-
-        if (this.options.get(VISIT_LINES) == VisitLineType.INCREMENTAL
-                && mvDataOpt != null) {
-
-            val line = LINE.let {
-                if (!it.contains(data)) {
-                    it.set(data, 1)
-                    0
-                } else {
-                    val get = it.require(data)
-                    it.set(data, get + 1)
-                    get
-                }
-            }
-
-            val label = org.objectweb.asm.Label()
-
-            mvDataOpt.methodVisitor.visitLabel(label)
-
-            mvDataOpt.methodVisitor.visitLineNumber(line, label)
-        }
+        LineProcessor.visitLineIC(this, data)
 
         val processor = getProcessorOf(type, part, data)
 
         processor.process(part, data, this)
         processor.endProcess(part, data, this)
 
-        val classes = BYTECODE_CLASS_LIST.getOrNull(data) ?: mutableListOf()
-
-        if (classes.isNotEmpty() && this.options.get(CHECK))
-            check(classes)
-
-        return classes
+        return getFinalValue(data)
     }
 
-    // Will not be called because of overriden version above
+    // Called by version above.
     override fun getFinalValue(data: TypedData): List<BytecodeClass> {
         val classes = BYTECODE_CLASS_LIST.getOrNull(data) ?: mutableListOf()
 
-        if (classes.isNotEmpty() && this.options.get(CHECK))
-            check(classes)
+        val checkClasses = if (this.options[POST_PROCESSING]) {
+            classes.map {
+                BytecodeClass(it.declaration,
+                        try {
+                            Processor(ASM_API, this.options[POST_PROCESSORS], this.options[POST_PROCESSING_LOOPS])
+                                    .process(it.bytecode)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            it.bytecode
+                        }
+                )
+            }
+        } else classes
 
-        return classes
+        if (checkClasses.isNotEmpty() && this.options.get(CHECK))
+            check(checkClasses)
+
+        return checkClasses
     }
 
     private fun check(classes: List<BytecodeClass>) {
