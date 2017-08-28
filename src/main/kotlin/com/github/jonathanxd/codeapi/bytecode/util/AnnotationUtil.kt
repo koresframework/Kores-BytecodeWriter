@@ -96,9 +96,11 @@ object AnnotationUtil {
             }
 
             visitor2.visitEnd()
+
+            return
         }
 
-        if (value is CodeType) {
+        if (value is java.lang.reflect.Type) {
             value = Type.getType(value.typeDesc)
         }
 
