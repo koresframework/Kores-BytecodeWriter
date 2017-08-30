@@ -28,6 +28,10 @@
 package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
+import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
+import com.github.jonathanxd.codeapi.test.ComplexIfTest2_;
+import com.github.jonathanxd.codeapi.test.ComplexIfTest3_;
+import com.github.jonathanxd.codeapi.test.ComplexIfTest4_;
 import com.github.jonathanxd.codeapi.test.ComplexIfTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
 
@@ -49,6 +53,55 @@ public class ComplexIfTest {
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
+        });
+
+    }
+
+    @Test
+    public void testComplexIf2() throws Exception {
+        TypeDeclaration $ = ComplexIfTest2_.$();
+
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
+            try {
+                return aClass.getConstructor(Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE)
+                        .newInstance(true, true, false, true, true, false);
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+    }
+
+    @Test
+    public void testComplexIf3() throws Exception {
+        TypeDeclaration $ = ComplexIfTest3_.$();
+
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
+            try {
+                return aClass.getConstructor(Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE)
+                        .newInstance(true, true, false, true, true, false);
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }, bytecodeGenerator -> {
+            bytecodeGenerator.getOptions().set(BytecodeOptions.POST_PROCESSING, Boolean.FALSE);
+        });
+
+    }
+
+    @Test
+    public void testComplexIf4() throws Exception {
+        TypeDeclaration $ = ComplexIfTest4_.$();
+
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> {
+            try {
+                return aClass.getConstructor(Boolean.TYPE, Boolean.TYPE, Boolean.TYPE)
+                        .newInstance(true, true, false);
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }, bytecodeGenerator -> {
+            bytecodeGenerator.getOptions().set(BytecodeOptions.POST_PROCESSING, Boolean.FALSE);
         });
 
     }

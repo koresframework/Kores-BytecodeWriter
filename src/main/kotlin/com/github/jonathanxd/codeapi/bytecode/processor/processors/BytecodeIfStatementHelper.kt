@@ -75,13 +75,20 @@ fun visit(expressions: List<CodeInstruction>,
     fun hasOr() =
             index + 1 < expressions.size
                     && expressions.slice((index + 1)..(expressions.size - 1))
-                    .takeWhile { it.safeForComparison !is IfGroup }
                     .any { val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name }
 
     fun nextIsOr() =
             if (index + 1 < expressions.size)
                 (expressions[index + 1]).let { val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name }
             else nextIsOr // fix for ifGroup
+
+    fun nextIsAnd() =
+            if (index + 1 < expressions.size)
+                (expressions[index + 1]).let { val safe = it.safeForComparison; safe is Operator && safe.name == Operators.AND.name }
+            else false
+
+    fun hasNext() =
+            index + 1 < expressions.size
 
     fun nextBitwise() =
             if (index + 1 < expressions.size)
@@ -133,7 +140,7 @@ fun visit(expressions: List<CodeInstruction>,
         if (safeExpr is IfExpr) {
             if (index - 1 > 0 && expressions[index - 1].let {
                 val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name
-            }) orLabel?.let { visitor.visitLabel(it) }
+            }) orLabel?.let { visitor.visitLabel(it) } // orLabel visit
 
             val expr1 = safeExpr.expr1
             val operation = safeExpr.operation
@@ -169,10 +176,21 @@ fun visit(expressions: List<CodeInstruction>,
         }
 
         if (safeExpr is IfGroup) {
-            visit(safeExpr.expressions, ifStart, ifBody, outOfIf, isWhile, data, processorManager, mvHelper,
+            if (index - 1 > 0 && expressions[index - 1].let {
+                val safe = it.safeForComparison; safe is Operator && safe.name == Operators.OR.name
+            }) orLabel?.let { visitor.visitLabel(it) } // orLabel visit
+
+            val hasNext = hasNext()
+            val nextIsAnd = nextIsAnd()
+            val target = if (hasNext && nextIsAnd()) Label() else ifBody
+
+            visit(safeExpr.expressions, ifStart, target, outOfIf, isWhile, data, processorManager, mvHelper,
                     nextIsOr(),
                     nextBitwise(),
                     lastBitwise())
+
+            if (hasNext && nextIsAnd)
+                mvHelper.methodVisitor.visitLabel(target)
         }
 
         ++index
