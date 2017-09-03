@@ -90,7 +90,7 @@ object ModifierUtil {
      */
     fun toAsmAccess(codeModifier: CodeModifier): Int {
         return when (codeModifier) {
-            CodeModifier.DEFAULT -> Opcodes.ACC_ABSTRACT
+            CodeModifier.DEFAULT -> 0
             CodeModifier.ABSTRACT -> Opcodes.ACC_ABSTRACT
             CodeModifier.FINAL -> Opcodes.ACC_FINAL
             CodeModifier.NATIVE -> Opcodes.ACC_NATIVE
