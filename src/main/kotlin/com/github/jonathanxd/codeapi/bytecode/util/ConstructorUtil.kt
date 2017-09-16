@@ -173,7 +173,7 @@ object ConstructorUtil {
 
             val value = fieldDeclaration.value
 
-            if (value != CodeNothing) {
+            if (value.safeForComparison != CodeNothing) {
                 // No processor overhead.
                 mv.methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
 
