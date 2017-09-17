@@ -70,9 +70,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
         if (!part.modifiers.contains(CodeModifier.BRIDGE) && genBridge) {
             val bridgeOpt = BridgeUtil.genBridgeMethod(typeDeclaration.value, part)
 
-            if (bridgeOpt.isPresent) {
-                val bridgeMethod = bridgeOpt.get()
-
+            bridgeOpt.forEach { bridgeMethod ->
                 val methodSpec = bridgeMethod.getMethodSpec(typeDeclaration.value)
 
                 val any = typeDeclaration.value.methods.any {
