@@ -38,17 +38,27 @@ import com.github.jonathanxd.codeapi.util.findType
 import com.github.jonathanxd.codeapi.util.inferType
 import com.github.jonathanxd.codeapi.util.toTypeVars
 import java.lang.reflect.TypeVariable
-import java.util.ArrayList
-import java.util.Objects
-import java.util.Optional
+import java.util.*
 
 
 object BridgeUtil {
 
+    fun genBridgeMethods(typeDeclaration: TypeDeclaration): List<MethodDeclaration> =
+            typeDeclaration.methods.filterNot { it.modifiers.contains(CodeModifier.BRIDGE) }
+                    .map { BridgeUtil.genBridgeMethod(typeDeclaration, it) }
+                    .filter { it.isPresent }
+                    .map { it.get() }
+                    .filter { bridge ->
+                        typeDeclaration.methods.none {
+                            it.getMethodSpec(typeDeclaration).compareTo(bridge.getMethodSpec(typeDeclaration)) == 0
+                        }
+                    }
+
     fun genBridgeMethod(typeDeclaration: TypeDeclaration, methodDeclaration: MethodDeclarationBase): Optional<MethodDeclaration> {
         val bridgeMethod = BridgeUtil.findMethodToBridge(typeDeclaration, methodDeclaration)
 
-        return if (bridgeMethod == null) Optional.empty() else Optional.of(com.github.jonathanxd.codeapi.factory.bridgeMethod(typeDeclaration, methodDeclaration, bridgeMethod))
+        return if (bridgeMethod == null) Optional.empty()
+        else Optional.of(com.github.jonathanxd.codeapi.factory.bridgeMethod(typeDeclaration, methodDeclaration, bridgeMethod))
     }
 
     fun findMethodToBridge(typeDeclaration: TypeDeclaration, methodDeclaration: MethodDeclarationBase): MethodTypeSpec? {
