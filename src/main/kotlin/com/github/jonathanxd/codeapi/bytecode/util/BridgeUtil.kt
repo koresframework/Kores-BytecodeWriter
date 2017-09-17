@@ -30,11 +30,8 @@ package com.github.jonathanxd.codeapi.bytecode.util
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
 import com.github.jonathanxd.codeapi.generic.GenericSignature
-import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.type.Generic
-import com.github.jonathanxd.codeapi.type.LoadedCodeType
 import com.github.jonathanxd.codeapi.util.*
-import com.github.jonathanxd.codeapi.util.conversion.methodTypeSpec
 import com.github.jonathanxd.jwiutils.kt.rightOrFail
 import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
@@ -51,6 +48,7 @@ object BridgeUtil {
                             it.getMethodSpec(typeDeclaration).compareTo(bridge.getMethodSpec(typeDeclaration)) == 0
                         }
                     }
+                    .distinctBy { it.getMethodSpec(typeDeclaration) }
                     .toSet()
 
     fun genBridgeMethod(typeDeclaration: TypeDeclaration, methodDeclaration: MethodDeclarationBase): Set<MethodDeclaration> {
@@ -122,76 +120,28 @@ object BridgeUtil {
         val codeType = type.concreteType
         val bridges = mutableSetOf<MethodTypeSpec>()
 
-        BridgeUtil.findInOverride(codeType, generic, methodSpec)?.let {
+        BridgeUtil.findInOverride(codeType, generic, methodSpec).let {
             bridges += it
         }
 
-        if (codeType is LoadedCodeType<*>) {
-            val loadedType = codeType.loadedType
-
-            BridgeUtil.findIn(loadedType, generic, methodSpec)?.let {
-                bridges += it
-            }
+        BridgeUtil.findIn(codeType, generic, methodSpec)?.let {
+            bridges += it
         }
-
-        if (codeType is TypeDeclaration) {
-            BridgeUtil.findIn(codeType, generic, methodSpec)?.let {
-                bridges += it
-            }
-        }
-
         return bridges
     }
 
     private fun findInOverride(theType: Type, generic: Generic, methodSpec: MethodTypeSpec): List<MethodTypeSpec> =
-        theType.defaultResolver.resolveMethods(theType).mapRight {
-            it.map { it.getMethodSpec(theType) }.filter {
-                it.methodName == methodSpec.methodName
-                        && it.typeSpec.parameterTypes.map { it.concreteType }
-                        .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
-                        && !it.typeSpec.returnType.concreteType
-                        .`is`(methodSpec.typeSpec.returnType.concreteType)
-            }
-        }.rightOrFail
-
-    // Generic cases only
-    private fun findIn(theClass: Class<*>, generic: Generic, methodSpec: MethodTypeSpec): MethodTypeSpec? {
-        val typeParameters = theClass.typeParameters
-
-        for (method in theClass.declaredMethods) {
-
-            if (methodSpec.methodName != method.name)
-                continue
-
-            val spec = MethodTypeSpec(
-                    method.declaringClass,
-                    method.name,
-                    TypeSpec(method.returnType, method.parameterTypes.toList()))
-
-            if (methodSpec.compareTo(spec) == 0) {
-                return spec // No problem here, CodeAPI will not duplicate methods, it will only avoid the type inference (slow part of the bridge method inference)
-            }
-
-            val methodParameters = method.typeParameters
-            val inferredReturnType = method.genericReturnType.inferType(typeParameters, methodParameters, generic)
-
-
-            val genericParameterTypes = method.genericParameterTypes
-
-            val inferredParametersTypes = genericParameterTypes.map { it.inferType(methodParameters, typeParameters, generic) }
-
-            val methodTypeSpec = MethodTypeSpec(
-                    method.declaringClass,
-                    method.name,
-                    TypeSpec(inferredReturnType, inferredParametersTypes))
-
-            if (methodTypeSpec.compareTo(methodSpec) == 0) {
-                return fixGenerics(spec, null, typeParameters, null)
-            }
-        }
-
-        return null
-    }
+            theType.defaultResolver.resolveMethods(theType).mapRight {
+                it.map { it.getMethodSpec(theType) }.filter {
+                    it.methodName == methodSpec.methodName
+                            && it.typeSpec.parameterTypes.map { it.concreteType }
+                            .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
+                            && !it.typeSpec.returnType.concreteType
+                            .`is`(methodSpec.typeSpec.returnType.concreteType)
+                            && it.typeSpec.returnType.codeType.bindedDefaultResolver.isAssignableFrom(methodSpec.typeSpec.returnType)
+                            .rightOr(true)
+                }
+            }.rightOrFail
 
     private fun findIn(theClass: TypeDeclaration, generic: Generic, methodSpec: MethodTypeSpec): MethodTypeSpec? {
         val genericSignature = theClass.genericSignature
@@ -218,11 +168,7 @@ object BridgeUtil {
 
             val inferredReturnType = method.returnType.inferType(typeParameters, methodParameters, generic)
 
-            val inferredParametersTypes = ArrayList<CodeType>()
-
-            for (genericParameterType in parameterTypes) {
-                inferredParametersTypes.add(genericParameterType.inferType(methodParameters, typeParameters, generic))
-            }
+            val inferredParametersTypes = parameterTypes.map { it.inferType(methodParameters, typeParameters, generic) }
 
             val methodTypeSpec = MethodTypeSpec(theClass, method.name, TypeSpec(inferredReturnType, inferredParametersTypes))
 
@@ -234,18 +180,22 @@ object BridgeUtil {
         return null
     }
 
+    private fun findIn(theType: Type, generic: Generic, methodSpec: MethodTypeSpec): MethodTypeSpec? {
+        val type = theType.defaultResolver.resolveTypeDeclaration(theType).rightOrFail
+
+        return findIn(type, generic, methodSpec)
+    }
+
     private fun fixGenerics(spec: MethodTypeSpec, genericSignature: GenericSignature?, typeVariables: Array<out TypeVariable<*>>?, method: Any?): MethodTypeSpec {
         val returnType = spec.typeSpec.returnType
 
         var newReturnType = returnType
 
         if (returnType is Generic) {
-
-
-            if (returnType.isType)
-                newReturnType = returnType.resolvedType
+            newReturnType = if (returnType.isType)
+                returnType.resolvedType
             else
-                newReturnType = Objects.requireNonNull(
+                Objects.requireNonNull(
                         if (genericSignature != null)
                             findType(genericSignature, returnType.name)
                         else
@@ -274,23 +224,19 @@ object BridgeUtil {
         return MethodTypeSpec(spec.localization, spec.methodName, TypeSpec(newReturnType, newParameterTypes))
     }
 
-    private fun find(name: String, typeVariables: Array<TypeVariable<*>>): TypeVariable<*>? {
-        return typeVariables.firstOrNull { it.name == name }
-    }
+    private fun find(name: String, typeVariables: Array<TypeVariable<*>>): TypeVariable<*>? =
+            typeVariables.firstOrNull { it.name == name }
 }
 
-fun MethodDeclarationBase.getMethodSpec(typeDeclaration: TypeDeclaration): MethodTypeSpec {
-    return MethodTypeSpec(
-            typeDeclaration,
-            this.name,
-            TypeSpec(this.returnType, this.parameters.map { it.type })
-    )
-}
+fun MethodDeclarationBase.getMethodSpec(typeDeclaration: TypeDeclaration): MethodTypeSpec =
+        MethodTypeSpec(
+                typeDeclaration,
+                this.name,
+                TypeSpec(this.returnType, this.parameters.map { it.type })
+        )
 
-fun MethodDeclarationBase.getMethodSpec(type: Type): MethodTypeSpec {
-    return MethodTypeSpec(
-            type,
-            this.name,
-            TypeSpec(this.returnType, this.parameters.map { it.type })
-    )
-}
+fun MethodDeclarationBase.getMethodSpec(type: Type): MethodTypeSpec = MethodTypeSpec(
+        type,
+        this.name,
+        TypeSpec(this.returnType, this.parameters.map { it.type })
+)

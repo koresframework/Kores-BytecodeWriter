@@ -47,7 +47,9 @@ interface BaseGInteger : BaseGNumber {
     override val value: Int
 }
 
-interface BaseGNumberG<out T: Number> : BaseGGeneric<T>
+interface BaseGNumberG<out T: Number> : BaseGGeneric<T> {
+    override val value: T
+}
 
 interface BaseGIntegerG : BaseGNumberG<Int> {
     override val value: Int

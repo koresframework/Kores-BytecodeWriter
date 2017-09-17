@@ -66,7 +66,7 @@ public class CommonBytecodeTest {
             try {
                 return aClass.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new RethrowException(e, e.getCause());
+                throw RethrowException.rethrow(e);
             }
         });
     }

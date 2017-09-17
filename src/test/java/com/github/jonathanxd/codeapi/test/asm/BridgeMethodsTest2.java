@@ -94,9 +94,7 @@ public class BridgeMethodsTest2 {
     }
 
     @Test
-    public void bridgeMethodTest3() throws Throwable {
-
-        BCLoader bcLoader = new BCLoader();
+    public void bridgeMethodTest3() {
 
         TypeDeclaration typeDeclaration = ClassDeclaration.Builder.builder()
                 .modifiers(CodeModifier.PUBLIC)
@@ -128,5 +126,41 @@ public class BridgeMethodsTest2 {
         Assert.assertEquals(14, baseg.getValue());
         Assert.assertEquals(14, basen.getValue());
         Assert.assertEquals((Object) 14, basegInteger.getValue());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void bridgeMethodTest4() {
+
+        TypeDeclaration typeDeclaration = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("com.BridgeMethodTest4")
+                .implementations(BaseGIntegerG.class)
+                .methods(MethodDeclaration.Builder.builder()
+                        .modifiers(CodeModifier.PUBLIC)
+                        .returnType(Integer.class)
+                        .name("getValue")
+                        .body(CodeSource.fromPart(
+                                Factories.returnValue(Integer.class,
+                                        Factories.cast(Integer.TYPE, Integer.class, Literals.INT(14)))
+                        ))
+                        .build()
+                )
+                .build();
+
+        Object o = CommonBytecodeTest.test(this.getClass(), typeDeclaration, UnaryOperator.identity(), Class::newInstance,
+                bytecodeGenerator -> {
+                    bytecodeGenerator.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
+                });
+
+        BaseGNumberG<Number> base = (BaseGNumberG<Number>) o;
+        BaseGNumberG<Integer> basegn = (BaseGNumberG<Integer>) o;
+        BaseGGeneric baseg = (BaseGGeneric) o;
+        BaseGIntegerG basen = (BaseGIntegerG) o;
+
+        Assert.assertEquals(14, base.getValue());
+        Assert.assertEquals(14, baseg.getValue());
+        Assert.assertEquals((Object) 14, basegn.getValue());
+        Assert.assertEquals((Object) 14, basen.getValue());
     }
 }
