@@ -45,11 +45,16 @@ object BridgeUtil {
                     .flatMap { BridgeUtil.genBridgeMethod(typeDeclaration, it) }
                     .filter { bridge ->
                         typeDeclaration.methods.none {
-                            it.getMethodSpec(typeDeclaration).compareTo(bridge.getMethodSpec(typeDeclaration)) == 0
+                            val itSpec = it.getMethodSpec(typeDeclaration)
+                            val bridgeSpec = bridge.getMethodSpec(typeDeclaration)
+                            itSpec.methodName == bridgeSpec.methodName
+                                    && itSpec.typeSpec.isConreteEq(bridgeSpec.typeSpec)
                         }
                     }
-                    .distinctBy { it.getMethodSpec(typeDeclaration) }
+                    .distinctBy { Spec(it.name, it.returnType.concreteType, it.parameters.map { it.type.concreteType }) }
                     .toSet()
+
+    private data class Spec(val name: String, val rtype: Type, val ptypes: List<Type>)
 
     fun genBridgeMethod(typeDeclaration: TypeDeclaration, methodDeclaration: MethodDeclarationBase): Set<MethodDeclaration> {
         val bridgeMethod = BridgeUtil.findMethodToBridge(typeDeclaration, methodDeclaration)
