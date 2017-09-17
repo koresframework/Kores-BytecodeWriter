@@ -35,6 +35,7 @@ import com.github.jonathanxd.codeapi.type.Generic
 import com.github.jonathanxd.codeapi.type.LoadedCodeType
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.codeapi.util.conversion.methodTypeSpec
+import com.github.jonathanxd.jwiutils.kt.rightOrFail
 import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
 import java.util.*
@@ -121,12 +122,12 @@ object BridgeUtil {
         val codeType = type.concreteType
         val bridges = mutableSetOf<MethodTypeSpec>()
 
+        BridgeUtil.findInOverride(codeType, generic, methodSpec)?.let {
+            bridges += it
+        }
+
         if (codeType is LoadedCodeType<*>) {
             val loadedType = codeType.loadedType
-
-            BridgeUtil.findInOverride(loadedType, generic, methodSpec)?.let {
-                bridges += it
-            }
 
             BridgeUtil.findIn(loadedType, generic, methodSpec)?.let {
                 bridges += it
@@ -134,41 +135,24 @@ object BridgeUtil {
         }
 
         if (codeType is TypeDeclaration) {
-
-            BridgeUtil.findInOverride(codeType, generic, methodSpec)?.let {
-                bridges += it
-            }
-
             BridgeUtil.findIn(codeType, generic, methodSpec)?.let {
                 bridges += it
             }
-
         }
 
         return bridges
     }
 
-    private fun findInOverride(theClass: Class<*>, generic: Generic, methodSpec: MethodTypeSpec): List<MethodTypeSpec> =
-        theClass.declaredMethods.filter { it.name == methodSpec.methodName }
-                .map { it.methodTypeSpec }
-                .filter {
-                    it.methodName == methodSpec.methodName
-                            && it.typeSpec.parameterTypes.map { it.concreteType }
-                            .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
-                    && !it.typeSpec.returnType.concreteType
-                            .`is`(methodSpec.typeSpec.returnType.concreteType)
-                }
-
-    private fun findInOverride(declaration: TypeDeclaration, generic: Generic, methodSpec: MethodTypeSpec): List<MethodTypeSpec> =
-            declaration.methods.filter { it.name == methodSpec.methodName }
-                    .map { it.getMethodSpec(declaration) }
-                    .filter {
-                        it.methodName == methodSpec.methodName
-                                && it.typeSpec.parameterTypes.map { it.concreteType }
-                                .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
-                                && !it.typeSpec.returnType.concreteType
-                                .`is`(methodSpec.typeSpec.returnType.concreteType)
-                    }
+    private fun findInOverride(theType: Type, generic: Generic, methodSpec: MethodTypeSpec): List<MethodTypeSpec> =
+        theType.defaultResolver.resolveMethods(theType).mapRight {
+            it.map { it.getMethodSpec(theType) }.filter {
+                it.methodName == methodSpec.methodName
+                        && it.typeSpec.parameterTypes.map { it.concreteType }
+                        .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
+                        && !it.typeSpec.returnType.concreteType
+                        .`is`(methodSpec.typeSpec.returnType.concreteType)
+            }
+        }.rightOrFail
 
     // Generic cases only
     private fun findIn(theClass: Class<*>, generic: Generic, methodSpec: MethodTypeSpec): MethodTypeSpec? {
@@ -298,6 +282,14 @@ object BridgeUtil {
 fun MethodDeclarationBase.getMethodSpec(typeDeclaration: TypeDeclaration): MethodTypeSpec {
     return MethodTypeSpec(
             typeDeclaration,
+            this.name,
+            TypeSpec(this.returnType, this.parameters.map { it.type })
+    )
+}
+
+fun MethodDeclarationBase.getMethodSpec(type: Type): MethodTypeSpec {
+    return MethodTypeSpec(
+            type,
             this.name,
             TypeSpec(this.returnType, this.parameters.map { it.type })
     )

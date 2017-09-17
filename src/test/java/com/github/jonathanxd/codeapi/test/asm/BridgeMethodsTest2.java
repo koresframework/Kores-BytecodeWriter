@@ -51,6 +51,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import kotlin.collections.CollectionsKt;
 
@@ -81,21 +82,51 @@ public class BridgeMethodsTest2 {
                 )
                 .build();
 
-        BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
-
-        bytecodeGenerator.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
-
-        byte[] gen = bytecodeGenerator.process(typeDeclaration).get(0).getBytecode();
-
-        ResultSaver.save(this.getClass(), gen);
-
-        Class<?> define = bcLoader.define(typeDeclaration, gen);
-
-        Object o = define.newInstance();
+        Object o = CommonBytecodeTest.test(this.getClass(), typeDeclaration, UnaryOperator.identity(), Class::newInstance,
+                bytecodeGenerator -> {
+                    bytecodeGenerator.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
+                });
 
         Base base = (Base) o;
 
         Assert.assertEquals("works", base.getValue());
 
+    }
+
+    @Test
+    public void bridgeMethodTest3() throws Throwable {
+
+        BCLoader bcLoader = new BCLoader();
+
+        TypeDeclaration typeDeclaration = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .qualifiedName("com.BridgeMethodTest3")
+                .implementations(BaseGInteger.class)
+                .methods(MethodDeclaration.Builder.builder()
+                        .modifiers(CodeModifier.PUBLIC)
+                        .returnType(Integer.class)
+                        .name("getValue")
+                        .body(CodeSource.fromPart(
+                                Factories.returnValue(Integer.class,
+                                        Factories.cast(Integer.TYPE, Integer.class, Literals.INT(14)))
+                        ))
+                        .build()
+                )
+                .build();
+
+        Object o = CommonBytecodeTest.test(this.getClass(), typeDeclaration, UnaryOperator.identity(), Class::newInstance,
+                bytecodeGenerator -> {
+                    bytecodeGenerator.getOptions().set(BytecodeOptions.GENERATE_BRIDGE_METHODS, true);
+                });
+
+        BaseGNumber base = (BaseGNumber) o;
+        BaseGGeneric baseg = (BaseGGeneric) o;
+        BaseGNumber basen = (BaseGNumber) o;
+        BaseGInteger basegInteger = (BaseGInteger) o;
+
+        Assert.assertEquals(14, base.getValue());
+        Assert.assertEquals(14, baseg.getValue());
+        Assert.assertEquals(14, basen.getValue());
+        Assert.assertEquals((Object) 14, basegInteger.getValue());
     }
 }

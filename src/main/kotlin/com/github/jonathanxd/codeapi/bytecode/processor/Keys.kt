@@ -80,6 +80,8 @@ val LINE = typedKeyOf<Int>("LINE_POSITION")
 
 val TYPE_DECLARATION = typedKeyOf<TypeDeclaration>("TYPE_DECLARATION")
 
+val METHOD_DECLARATIONS = typedKeyOf<MutableList<MethodDeclarationBase>>("METHOD_DECLARATIONS")
+
 val LOCATION = typedKeyOf<InnerTypesHolder>("INNER_LOCATION")
 
 val CLASS_VISITOR = typedKeyOf<ClassVisitor>("CLASS_VISITOR")

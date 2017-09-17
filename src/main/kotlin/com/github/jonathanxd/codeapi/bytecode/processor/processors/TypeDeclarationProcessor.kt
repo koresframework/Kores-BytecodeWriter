@@ -47,6 +47,7 @@ import com.github.jonathanxd.codeapi.util.genericTypesToDescriptor
 import com.github.jonathanxd.codeapi.util.parametersAndReturnToInferredDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.jwiutils.kt.add
+import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
@@ -64,6 +65,7 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         val outerVisitor: ClassVisitor? = CLASS_VISITOR.getOrNull(data)
         val at = BYTECODE_CLASS_LIST.getOrSet(data, mutableListOf()).size
         var tmpPart = part
+        METHOD_DECLARATIONS.set(data, mutableListOf())
 
         if (TYPES.getOrNull(data).orEmpty().contains(part))
             throw IllegalStateException("Revisiting type '$part'. Accidental recursive type visiting")
@@ -227,6 +229,7 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
 
         cw.visitEnd()
 
+        METHOD_DECLARATIONS.remove(data)
         TYPE_DECLARATION.remove(data)
         CLASS_VISITOR.remove(data)
         SwitchOnEnum.MAPPINGS.remove(data)

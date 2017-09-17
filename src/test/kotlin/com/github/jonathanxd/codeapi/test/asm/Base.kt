@@ -34,3 +34,21 @@ interface Base {
 interface BaseString : Base {
     override val value: String
 }
+
+interface BaseGGeneric<out T> {
+    val value: T
+}
+
+interface BaseGNumber : BaseGGeneric<Number> {
+    override val value: Number
+}
+
+interface BaseGInteger : BaseGNumber {
+    override val value: Int
+}
+
+interface BaseGNumberG<out T: Number> : BaseGGeneric<T>
+
+interface BaseGIntegerG : BaseGNumberG<Int> {
+    override val value: Int
+}

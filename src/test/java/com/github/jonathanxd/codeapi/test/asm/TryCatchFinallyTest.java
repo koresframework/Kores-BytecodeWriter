@@ -90,7 +90,7 @@ public class TryCatchFinallyTest {
                 .build();
 
         @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), decl, typeDeclaration -> typeDeclaration,
-                (EFunction<Class<?>, Object>) aClass -> aClass.getConstructor().newInstance(),
+                aClass -> aClass.getConstructor().newInstance(),
                 bytecodeGenerator -> {
                     bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.GEN_LINE_INSTRUCTION);
                 });

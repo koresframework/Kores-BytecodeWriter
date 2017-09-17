@@ -41,6 +41,7 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.jwiutils.kt.add
 import com.github.jonathanxd.jwiutils.kt.inContext
 import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Label
@@ -53,6 +54,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 if (IN_EXPRESSION.contains(data)) IN_EXPRESSION.require(data)
                 else null
 
+        METHOD_DECLARATIONS.add(data, part)
         IN_EXPRESSION.set(data, 0)
         val validateSuper = processorManager.options.getOrElse(VALIDATE_SUPER, true)
         val validateThis = processorManager.options.getOrElse(VALIDATE_THIS, true)
@@ -73,11 +75,11 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
             bridgeOpt.forEach { bridgeMethod ->
                 val methodSpec = bridgeMethod.getMethodSpec(typeDeclaration.value)
 
-                val any = typeDeclaration.value.methods.any {
+                val none = (typeDeclaration.value.methods + METHOD_DECLARATIONS.require(data)).none {
                     it.getMethodSpec(typeDeclaration.value).compareTo(methodSpec) == 0
                 }
 
-                if (!any) {
+                if (none) {
                     processorManager.process(bridgeMethod::class.java, bridgeMethod, data)
                 }
             }

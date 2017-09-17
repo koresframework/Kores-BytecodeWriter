@@ -36,6 +36,7 @@ import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.exception.RethrowException;
+import com.github.jonathanxd.iutils.function.checked.function.CFunction;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -56,7 +57,7 @@ public class CommonBytecodeTest {
         return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, modifier);
     }
 
-    public static @Named("Instance") <R> R test(Class<?> testClass, ClassDeclaration mainClass, UnaryOperator<TypeDeclaration> modifier, Function<Class<?>, R> function) {
+    public static @Named("Instance") <R> R test(Class<?> testClass, ClassDeclaration mainClass, UnaryOperator<TypeDeclaration> modifier, CFunction<Class<?>, R> function) {
         return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, modifier, function);
     }
 
@@ -73,14 +74,14 @@ public class CommonBytecodeTest {
     public static @Named("Instance") <R> R test(Class<?> testClass,
                                                 TypeDeclaration mainClass,
                                                 UnaryOperator<TypeDeclaration> modifier,
-                                                Function<Class<?>, R> function) {
+                                                CFunction<Class<?>, R> function) {
         return test(testClass, mainClass, modifier, function, bytecodeProcessor -> {});
     }
 
     public static @Named("Instance") <R> R test(Class<?> testClass,
                                                 TypeDeclaration mainClass,
                                                 UnaryOperator<TypeDeclaration> modifier,
-                                                Function<Class<?>, R> function,
+                                                CFunction<Class<?>, R> function,
                                                 Consumer<BytecodeGenerator> bytecodeProcessorConsumer) {
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
