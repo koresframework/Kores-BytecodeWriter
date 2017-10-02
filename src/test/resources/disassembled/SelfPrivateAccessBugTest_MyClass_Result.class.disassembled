@@ -1,4 +1,4 @@
-md5: a3e441b8405b80e699b52dafa20f24ac
+md5: 21599971563e390623cdcd391ed8e0aa
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -18,7 +18,7 @@ public class com.MyClass extends java.lang.Object {
       maxStack: 1, maxLocals: 0 
       Label_0:
        LINE 1 -> Label_0
-        invokestatic com.MyClass.accessor$()java.lang.String (ownerIsInterface: false)
+        getstatic com.MyClass.f1 (type: java.lang.String)
         areturn
     }
     
@@ -29,7 +29,7 @@ public class com.MyClass extends java.lang.Object {
       Label_0:
        LINE 2 -> Label_0
         aload 0
-        invokestatic com.MyClass.accessor$0(com.MyClass)int (ownerIsInterface: false)
+        getfield com.MyClass.f2 (type: int)
         ireturn
       Label_1:
       LocalVariables {
@@ -59,32 +59,6 @@ public class com.MyClass extends java.lang.Object {
       desc: ()V 
       maxStack: 0, maxLocals: 0 
         return
-    }
-    
-    !access: PACKAGE_PRIVATE, ACC_STATIC, ACC_SYNTHETIC (4104)
-    static java.lang.String accessor$() {
-      desc: ()Ljava/lang/String; 
-      maxStack: 1, maxLocals: 0 
-      Label_0:
-       LINE 3 -> Label_0
-        getstatic com.MyClass.f1 (type: java.lang.String)
-        areturn
-    }
-    
-    !access: PACKAGE_PRIVATE, ACC_STATIC, ACC_SYNTHETIC (4104)
-    !parameter[name: this, access:  (0)]
-    static int accessor$0(com.MyClass) {
-      desc: (Lcom/MyClass;)I 
-      maxStack: 1, maxLocals: 1 
-      Label_0:
-       LINE 4 -> Label_0
-        aload 0
-        getfield com.MyClass.f2 (type: int)
-        ireturn
-      Label_1:
-      LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: com.MyClass, signature: null
-      }
     }
     
 }

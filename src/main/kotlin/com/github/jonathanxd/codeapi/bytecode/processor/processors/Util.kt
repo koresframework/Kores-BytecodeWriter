@@ -152,7 +152,7 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
     val targetData = data.mainData
 
     if (target != null) {
-        if (accessor.localization.`is`(target)) {
+        if (!accessor.localization.`is`(type) && accessor.localization.`is`(target)) {
             val member: CodeElement? =
                     if (accessor is FieldAccess) {
                         val field = target.fields.firstOrNull {
