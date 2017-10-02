@@ -198,14 +198,25 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
                         target.methods.map { it.name } + existingNames
                 )
 
+                val isStatic = it is ModifiersHolder && it.modifiers.contains(CodeModifier.STATIC)
+
+                val baseParameters =
+                        if (isStatic)
+                            listOf()
+                        else
+                            listOf(parameter(type = target, name = "this"))
+
+                val acc = if (isStatic) Access.STATIC else Access.THIS
+
                 val newMember: MethodDeclarationBase = when (it) {
                     is FieldDeclaration -> MethodDeclaration.Builder.builder()
                             .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC, CodeModifier.STATIC)
                             .returnType(it.type)
                             .name(name)
-                            .parameters(parameter(type = target, name = "this"))
+                            .parameters(baseParameters)
                             .body(CodeSource.fromPart(
-                                    returnValue(it.type, accessField(Alias.THIS, Access.THIS, it.type, it.name))
+                                    returnValue(it.type,
+                                            accessField(Alias.THIS, acc, it.type, it.name))
                             ))
                             .build()
                     is MethodDeclaration -> {
@@ -215,12 +226,12 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
                                 .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC, CodeModifier.STATIC)
                                 .returnType(it.returnType)
                                 .name(name)
-                                .parameters(listOf(parameter(type = target, name = "this")) + it.parameters)
+                                .parameters(baseParameters + it.parameters)
                                 .body(CodeSource.fromPart(
                                         returnValue(it.type,
                                                 invoke(accessor.invokeType,
                                                         Alias.THIS,
-                                                        Access.THIS,
+                                                        acc,
                                                         it.name,
                                                         it.typeSpec,
                                                         it.parameters.access
