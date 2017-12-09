@@ -1,4 +1,4 @@
-md5: 96fb33b7a2711a744b0bb9f7d69a66cd
+md5: c7f5317bbadface428a8d4ba90f05b39
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -24,7 +24,6 @@ public class test.AnnotatedTestClass extends java.lang.Object {
       desc: (Ljava/lang/Object;)Ljava/lang/Object; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
         aconst_null
         areturn
       Label_1:
@@ -52,7 +51,7 @@ public class test.AnnotatedTestClass extends java.lang.Object {
       desc: ()V 
       maxStack: 1, maxLocals: 0 
       Label_0:
-       LINE 2 -> Label_0
+       LINE 1 -> Label_0
         aconst_null
         putstatic test.AnnotatedTestClass.field (type: java.lang.String)
         return

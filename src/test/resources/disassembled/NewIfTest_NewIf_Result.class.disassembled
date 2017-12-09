@@ -1,4 +1,4 @@
-md5: 3dd56a49fae27cb9301f282ef43a8e80
+md5: c241360385b1776661f86cfdae0698b4
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,7 +13,6 @@ public class com.NewIf extends java.lang.Object {
       desc: (I)I 
       maxStack: 2, maxLocals: 2 
       Label_0:
-       LINE 1 -> Label_0
         iload 1
         bipush 7
         if_icmpeq Label_1
@@ -21,12 +20,12 @@ public class com.NewIf extends java.lang.Object {
         bipush 9
         if_icmpne Label_2
       Label_1:
-       LINE 2 -> Label_1
+       LINE 1 -> Label_1
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_0
         ireturn
       Label_2:
-       LINE 3 -> Label_2
+       LINE 2 -> Label_2
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_1
         ireturn

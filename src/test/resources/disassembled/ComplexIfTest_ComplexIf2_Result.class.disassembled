@@ -1,4 +1,4 @@
-md5: caa344cb8d6c09cbdc236eb68b4d1487
+md5: e3de0eff0bd85692d86fe0ad2a052cea
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -20,45 +20,43 @@ public class test.ComplexIf2 extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         iload 1
-        ifeq Label_4
+        ifeq Label_3
         iload 2
-        ifeq Label_4
+        ifeq Label_3
         iload 3
-        ifne Label_2
+        ifne Label_1
         iload 4
-        ifeq Label_4
-      Label_2:
+        ifeq Label_3
+      Label_1:
        FRAME[type: F_FULL, locals: 7, local: {Reference[test.ComplexIf2], Primitive[integer], Primitive[integer], Primitive[integer], Primitive[integer], Primitive[integer], Primitive[integer]}, stacks: 0, stack: {}]
         iload 5
-        ifne Label_3
+        ifne Label_2
         iload 6
-        ifeq Label_4
-      Label_3:
-       LINE 2 -> Label_3
+        ifeq Label_3
+      Label_2:
+       LINE 1 -> Label_2
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_4:
-       LINE 3 -> Label_4
+      Label_3:
+       LINE 2 -> Label_3
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_5:
+      Label_4:
       LocalVariables {
-        index: 6, name: v, start: Label_0, end: Label_5, type: boolean, signature: null
-        index: 5, name: p, start: Label_0, end: Label_5, type: boolean, signature: null
-        index: 4, name: z, start: Label_0, end: Label_5, type: boolean, signature: null
-        index: 3, name: y, start: Label_0, end: Label_5, type: boolean, signature: null
-        index: 2, name: x, start: Label_0, end: Label_5, type: boolean, signature: null
-        index: 1, name: h, start: Label_0, end: Label_5, type: boolean, signature: null
-        index: 0, name: this, start: Label_0, end: Label_5, type: test.ComplexIf2, signature: null
+        index: 6, name: v, start: Label_0, end: Label_4, type: boolean, signature: null
+        index: 5, name: p, start: Label_0, end: Label_4, type: boolean, signature: null
+        index: 4, name: z, start: Label_0, end: Label_4, type: boolean, signature: null
+        index: 3, name: y, start: Label_0, end: Label_4, type: boolean, signature: null
+        index: 2, name: x, start: Label_0, end: Label_4, type: boolean, signature: null
+        index: 1, name: h, start: Label_0, end: Label_4, type: boolean, signature: null
+        index: 0, name: this, start: Label_0, end: Label_4, type: test.ComplexIf2, signature: null
       }
     }
     

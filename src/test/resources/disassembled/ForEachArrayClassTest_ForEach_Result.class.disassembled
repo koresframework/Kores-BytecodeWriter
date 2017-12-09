@@ -1,4 +1,4 @@
-md5: 3df8c05a5b148d064d4737c7d23ac02c
+md5: dad240b402c1d302dda63c8e1bd1c26f
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -18,48 +18,42 @@ public class com.ForEach extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         getstatic com.ForEach.stra (type: java.lang.String)
-      Label_2:
+      Label_1:
         astore 2
-      Label_3:
-       LINE 2 -> Label_3
+      Label_2:
+       LINE 1 -> Label_2
         aload 1
         astore 3
         iconst_0
         istore 4
-      Label_4:
+      Label_3:
        FRAME[type: F_FULL, locals: 5, local: {Reference[com.ForEach], Reference[java.lang.String[]], Reference[java.lang.String], Reference[java.lang.String[]], Primitive[integer]}, stacks: 0, stack: {}]
         iload 4
         aload 3
         arraylength
-        if_icmpge Label_9
-      Label_5:
-       LINE 3 -> Label_5
+        if_icmpge Label_6
         aload 3
         iload 4
         aaload
-      Label_6:
+      Label_4:
         astore 5
-      Label_7:
-       LINE 4 -> Label_7
+      Label_5:
+       LINE 2 -> Label_5
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 5
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_8:
-       LINE 5 -> Label_8
         iinc 4 1
-        goto Label_4
-      Label_9:
+        goto Label_3
+      Label_6:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
-      Label_10:
+      Label_7:
       LocalVariables {
-        index: 5, name: str, start: Label_6, end: Label_9, type: java.lang.String, signature: null
-        index: 2, name: v, start: Label_2, end: Label_10, type: java.lang.String, signature: null
-        index: 1, name: strArray, start: Label_0, end: Label_10, type: java.lang.String[], signature: null
-        index: 0, name: this, start: Label_0, end: Label_10, type: com.ForEach, signature: null
+        index: 5, name: str, start: Label_4, end: Label_6, type: java.lang.String, signature: null
+        index: 2, name: v, start: Label_1, end: Label_7, type: java.lang.String, signature: null
+        index: 1, name: strArray, start: Label_0, end: Label_7, type: java.lang.String[], signature: null
+        index: 0, name: this, start: Label_0, end: Label_7, type: com.ForEach, signature: null
       }
     }
     

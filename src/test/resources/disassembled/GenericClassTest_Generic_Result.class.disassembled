@@ -1,4 +1,4 @@
-md5: 98e49ee93f7d4e60091c0adc50fcfaf5
+md5: 55d630636351c26edbc27286c4a4fe61
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -18,17 +18,16 @@ public class com.Generic extends java.lang.Object implements java.util.List {
       desc: (Ljava/util/List;)V 
       maxStack: 1, maxLocals: 4 
       Label_0:
-       LINE 1 -> Label_0
         aconst_null
       Label_1:
         astore 1
       Label_2:
-       LINE 2 -> Label_2
+       LINE 1 -> Label_2
         aconst_null
       Label_3:
         astore 2
       Label_4:
-       LINE 3 -> Label_4
+       LINE 2 -> Label_4
         aconst_null
       Label_5:
         astore 3

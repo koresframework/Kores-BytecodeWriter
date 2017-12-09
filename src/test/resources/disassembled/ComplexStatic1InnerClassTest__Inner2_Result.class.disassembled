@@ -1,4 +1,4 @@
-md5: 09887d2f11be96baed24d06ea691b77a
+md5: cabeaeb4215746d5bc3a615f6d70b2f9
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -37,14 +37,14 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
       desc: ()Ljava/lang/String; 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
+       LINE 2 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
         getfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
         invokevirtual test.InnerClass$Inner.call()java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
-       LINE 2 -> Label_1
+       LINE 3 -> Label_1
         ldc "A"              // type: java.lang.String
         areturn
       Label_2:

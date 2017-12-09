@@ -1,4 +1,4 @@
-md5: 65d0c3492707de7a6adad16af7619aa3
+md5: d394d857d731182364ed72aa464fee58
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -14,40 +14,35 @@ public class test.SynchronizedTest extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         aload 0
         dup
         astore 1
         monitorenter
-      Label_2:
-       LINE 2 -> Label_2
+      Label_1:
+       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Synchronized"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_3:
-       LINE 3 -> Label_3
+      Label_2:
         aload 1
         monitorexit
         return
-      Label_4:
+      Label_3:
        FRAME[type: F_FULL, locals: 2, local: {Reference[test.SynchronizedTest], Reference[test.SynchronizedTest]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         astore 3
-      Label_5:
-       LINE 4 -> Label_5
         aload 1
         monitorexit
         aload 3
         athrow
-      Label_6:
+      Label_4:
        FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         athrow
-      Label_7:
+      Label_5:
       TryCatchBlocks {
-        start: Label_2, end: Label_3, handler: Label_4, exception: null
+        start: Label_1, end: Label_2, handler: Label_3, exception: null
       }
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_7, type: test.SynchronizedTest, signature: null
+        index: 0, name: this, start: Label_0, end: Label_5, type: test.SynchronizedTest, signature: null
       }
     }
     

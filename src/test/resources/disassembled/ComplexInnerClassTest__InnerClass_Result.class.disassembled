@@ -1,4 +1,4 @@
-md5: e52bc4fc4ba6a093f094ac7575d9c166
+md5: 79fe94f709b7ecb662bfafaf76e54446
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -24,7 +24,7 @@ public class test.InnerClass extends java.lang.Object {
         ldc "XSD"              // type: java.lang.String
         putfield test.InnerClass.field (type: java.lang.String)
       Label_1:
-       LINE 1 -> Label_1
+       LINE 10 -> Label_1
         new test.InnerClass$Inner
         dup
         aload 0
@@ -50,7 +50,7 @@ public class test.InnerClass extends java.lang.Object {
         ldc "XSD"              // type: java.lang.String
         putfield test.InnerClass.field (type: java.lang.String)
       Label_1:
-       LINE 2 -> Label_1
+       LINE 11 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 1
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
@@ -67,7 +67,6 @@ public class test.InnerClass extends java.lang.Object {
       desc: ()V 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 3 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
@@ -91,7 +90,6 @@ public class test.InnerClass extends java.lang.Object {
       desc: (Ltest/InnerClass;)Ljava/lang/String; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 4 -> Label_0
         aload 0
         getfield test.InnerClass.field (type: java.lang.String)
         areturn

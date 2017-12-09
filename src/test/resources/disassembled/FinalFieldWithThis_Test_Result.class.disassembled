@@ -1,4 +1,4 @@
-md5: a0d496537fcc7a0fa10281e764676868
+md5: 11940caf6f4576c91454964c7ef6d85b
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -19,8 +19,6 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.
         aload 0
         aconst_null
         invokespecial com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
-      Label_1:
-       LINE 2 -> Label_1
         aload 0
         new com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox
         dup
@@ -28,9 +26,9 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.
         invokespecial com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
         putfield finalfieldwiththis.Test.testField (type: com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox)
         return
-      Label_2:
+      Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_2, type: finalfieldwiththis.Test, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: finalfieldwiththis.Test, signature: null
       }
     }
     

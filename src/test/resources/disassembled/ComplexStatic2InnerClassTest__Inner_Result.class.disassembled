@@ -1,4 +1,4 @@
-md5: 1653081970952019cc0689fd2d895294
+md5: bf8378426ef1f3d114454218ab9cd8b8
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -29,16 +29,18 @@ public class test.InnerClass$Inner extends java.lang.Object {
         aload 1
         putfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         aload 0
+      Label_1:
+       LINE 5 -> Label_1
         new test.InnerClass
         dup
         ldc "Hello"              // type: java.lang.String
         invokespecial test.InnerClass.<init>(java.lang.String)void (ownerIsInterface: false)
         putfield test.InnerClass$Inner.a (type: test.InnerClass)
         return
-      Label_1:
+      Label_2:
       LocalVariables {
-        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+        index: 1, name: outer$, start: Label_0, end: Label_2, type: test.InnerClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: test.InnerClass$Inner, signature: null
       }
     }
     

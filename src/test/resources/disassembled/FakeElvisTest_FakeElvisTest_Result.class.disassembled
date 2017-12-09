@@ -1,4 +1,4 @@
-md5: 4d4f10551f6b76a3e89ed1c151fce604
+md5: fb975fd5a324cda174c9ad206505d52d
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,33 +13,25 @@ public class com.FakeElvisTest extends java.lang.Object {
       desc: (Ljava/lang/String;)Lcom/github/jonathanxd/codeapi/test/FakeElvisTest_$TestClass; 
       maxStack: 3, maxLocals: 2 
       Label_0:
-       LINE 1 -> Label_0
         new com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass
         dup
         aload 1
-        ifnonnull Label_3
-      Label_1:
-       LINE 2 -> Label_1
+        ifnonnull Label_1
         invokestatic com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.noti()void (ownerIsInterface: false)
-      Label_2:
-       LINE 3 -> Label_2
         ldc ""              // type: java.lang.String
-        goto Label_5
-      Label_3:
-       LINE 4 -> Label_3
+        goto Label_2
+      Label_1:
        FRAME[type: F_FULL, locals: 2, local: {Reference[com.FakeElvisTest], Reference[java.lang.String]}, stacks: 2, stack: {Label[Label_0], Label[Label_0]}]
         invokestatic com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.noti2()void (ownerIsInterface: false)
-      Label_4:
-       LINE 5 -> Label_4
         aload 1
-      Label_5:
+      Label_2:
        FRAME[type: F_FULL, locals: 2, local: {Reference[com.FakeElvisTest], Reference[java.lang.String]}, stacks: 3, stack: {Label[Label_0], Label[Label_0], Reference[java.lang.String]}]
         invokespecial com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.<init>(java.lang.String)void (ownerIsInterface: false)
         areturn
-      Label_6:
+      Label_3:
       LocalVariables {
-        index: 1, name: a, start: Label_0, end: Label_6, type: java.lang.String, signature: null
-        index: 0, name: this, start: Label_0, end: Label_6, type: com.FakeElvisTest, signature: null
+        index: 1, name: a, start: Label_0, end: Label_3, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: com.FakeElvisTest, signature: null
       }
     }
     

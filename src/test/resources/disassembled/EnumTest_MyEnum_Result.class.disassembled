@@ -1,4 +1,4 @@
-md5: 2979ba26ff9fefff9a2932c50747bff0
+md5: 0e49bfa0ff8095ec6bd51fb643a18a5c
 
 version: Java 8 (52)
 access: ACC_PUBLIC, ACC_ABSTRACT (17441)
@@ -26,7 +26,6 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
       desc: (Ljava/lang/String;I)V 
       maxStack: 3, maxLocals: 3 
       Label_0:
-       LINE 1 -> Label_0
         aload 0
         aload 1
         iload 2
@@ -44,8 +43,6 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     public static com.MyEnum[] values() {
       desc: ()[Lcom/MyEnum; 
       maxStack: 1, maxLocals: 0 
-      Label_0:
-       LINE 2 -> Label_0
         getstatic com.MyEnum.$VALUES (type: com.MyEnum[])
         invokevirtual com.MyEnum[].clone()java.lang.Object (ownerIsInterface: false)
         checkcast com.MyEnum[]
@@ -58,7 +55,6 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
       desc: (Ljava/lang/String;)Lcom/MyEnum; 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 3 -> Label_0
         ldc Lcom/MyEnum;              // type: java.lang.Class
         aload 0
         invokestatic java.lang.Enum.valueOf(java.lang.Class, java.lang.String)java.lang.Enum (ownerIsInterface: false)
@@ -74,24 +70,18 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     static void <clinit>() {
       desc: ()V 
       maxStack: 4, maxLocals: 0 
-      Label_0:
-       LINE 4 -> Label_0
         new com.MyEnum$A$Inner
         dup
         ldc "A"              // type: java.lang.String
         iconst_0
         invokespecial com.MyEnum$A$Inner.<init>(java.lang.String, int)void (ownerIsInterface: false)
         putstatic com.MyEnum.A (type: com.MyEnum)
-      Label_1:
-       LINE 5 -> Label_1
         new com.MyEnum$B$Inner
         dup
         ldc "B"              // type: java.lang.String
         iconst_1
         invokespecial com.MyEnum$B$Inner.<init>(java.lang.String, int)void (ownerIsInterface: false)
         putstatic com.MyEnum.B (type: com.MyEnum)
-      Label_2:
-       LINE 6 -> Label_2
         iconst_2
         anewarray com.MyEnum
         dup

@@ -1,4 +1,4 @@
-md5: bb695122512cc60372f930716a293c40
+md5: 14f1c58eb9b307204c47cea1f743f361
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -18,7 +18,6 @@ public class test.ComplexIf4 extends java.lang.Object {
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
-       LINE 1 -> Label_1
         iload 2
         ifeq Label_2
         iload 3
@@ -28,14 +27,14 @@ public class test.ComplexIf4 extends java.lang.Object {
         iload 1
         ifeq Label_4
       Label_3:
-       LINE 2 -> Label_3
+       LINE 1 -> Label_3
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         goto Label_5
       Label_4:
-       LINE 3 -> Label_4
+       LINE 2 -> Label_4
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "false"              // type: java.lang.String

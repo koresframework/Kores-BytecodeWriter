@@ -1,4 +1,4 @@
-md5: 6ba989cd414aaa53233aa5311d76b4cf
+md5: 4a9ff3b348611292a9393856e8aa393a
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -15,8 +15,6 @@ public class com.OperateTest extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         iload 1
@@ -27,15 +25,15 @@ public class com.OperateTest extends java.lang.Object {
         iadd
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_2:
-       LINE 2 -> Label_2
+      Label_1:
+       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         ineg
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_3:
-       LINE 3 -> Label_3
+      Label_2:
+       LINE 2 -> Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         bipush 10
@@ -45,10 +43,10 @@ public class com.OperateTest extends java.lang.Object {
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_4:
+      Label_3:
       LocalVariables {
-        index: 1, name: num, start: Label_0, end: Label_4, type: int, signature: null
-        index: 0, name: this, start: Label_0, end: Label_4, type: com.OperateTest, signature: null
+        index: 1, name: num, start: Label_0, end: Label_3, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: com.OperateTest, signature: null
       }
     }
     

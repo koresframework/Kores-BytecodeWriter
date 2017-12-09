@@ -1,4 +1,4 @@
-md5: f266bfe1b3dcd279219e7c9c839e1519
+md5: 9772c9ab46f874605037d92adfc2bca8
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -17,17 +17,15 @@ public class test.LocalClass extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         new test.LocalClass$Greeter
         dup
         aload 0
         invokespecial test.LocalClass$Greeter.<init>(test.LocalClass)void (ownerIsInterface: false)
         invokevirtual test.LocalClass$Greeter.greet()void (ownerIsInterface: false)
         return
-      Label_2:
+      Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_2, type: test.LocalClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.LocalClass, signature: null
       }
     }
     

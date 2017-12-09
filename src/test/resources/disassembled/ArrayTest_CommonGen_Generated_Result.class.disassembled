@@ -1,4 +1,4 @@
-md5: de668b897ace752fa189398e1381c31a
+md5: 3e1b2ecee18303f9e90e8b739c29bd31
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -14,8 +14,6 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         iconst_2
         anewarray java.lang.String[]
         dup
@@ -68,16 +66,16 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         ldc "J"              // type: java.lang.String
         aastore
         aastore
-      Label_2:
+      Label_1:
         astore 1
-      Label_3:
-       LINE 2 -> Label_3
+      Label_2:
+       LINE 1 -> Label_2
         iconst_0
         anewarray java.lang.String
-      Label_4:
+      Label_3:
         astore 2
-      Label_5:
-       LINE 3 -> Label_5
+      Label_4:
+       LINE 2 -> Label_4
         iconst_1
         anewarray java.lang.Object
         dup
@@ -88,10 +86,10 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
         checkcast java.lang.Object
         aastore
-      Label_6:
+      Label_5:
         astore 3
-      Label_7:
-       LINE 4 -> Label_7
+      Label_6:
+       LINE 3 -> Label_6
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 1
         iconst_0
@@ -100,12 +98,12 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         aaload
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         return
-      Label_8:
+      Label_7:
       LocalVariables {
-        index: 3, name: array3, start: Label_6, end: Label_8, type: java.lang.Object[], signature: null
-        index: 2, name: array2, start: Label_4, end: Label_8, type: java.lang.String[], signature: null
-        index: 1, name: array, start: Label_2, end: Label_8, type: java.lang.String[][], signature: null
-        index: 0, name: this, start: Label_0, end: Label_8, type: com.github.jonathanxd.codeapi.test.CommonGen_Generated, signature: null
+        index: 3, name: array3, start: Label_5, end: Label_7, type: java.lang.Object[], signature: null
+        index: 2, name: array2, start: Label_3, end: Label_7, type: java.lang.String[], signature: null
+        index: 1, name: array, start: Label_1, end: Label_7, type: java.lang.String[][], signature: null
+        index: 0, name: this, start: Label_0, end: Label_7, type: com.github.jonathanxd.codeapi.test.CommonGen_Generated, signature: null
       }
     }
     

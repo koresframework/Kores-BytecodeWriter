@@ -1,4 +1,4 @@
-md5: 61e4c1e04fd248309fcbf03608eed36b
+md5: 4ccd1517b71c5a23240d123faec9423d
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -18,71 +18,63 @@ public class test.ComplexIf extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         bipush 9
         iconst_5
-        if_icmpge Label_3
-      Label_2:
-       LINE 4 -> Label_2
+        if_icmpge Label_1
         iconst_1
-        goto Label_4
-      Label_3:
-       LINE 5 -> Label_3
+        goto Label_2
+      Label_1:
        FRAME[type: F_FULL, locals: 5, local: {Reference[test.ComplexIf], Primitive[integer], Primitive[integer], Primitive[integer], Primitive[integer]}, stacks: 0, stack: {}]
         iconst_0
-      Label_4:
+      Label_2:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         istore 5
-      Label_5:
-       LINE 2 -> Label_5
+      Label_3:
+       LINE 1 -> Label_3
         bipush 9
         iconst_5
-        if_icmpge Label_7
-      Label_6:
-       LINE 6 -> Label_6
+        if_icmpge Label_4
         ldc "9 < 5"              // type: java.lang.String
-        goto Label_8
-      Label_7:
-       LINE 7 -> Label_7
+        goto Label_5
+      Label_4:
        FRAME[type: F_APPEND, locals: 1, local: {Primitive[integer]}, stacks: 0, stack: {}]
         ldc "9 >= 5"              // type: java.lang.String
-      Label_8:
+      Label_5:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.String]}]
         astore 6
-      Label_9:
-       LINE 3 -> Label_9
+      Label_6:
+       LINE 2 -> Label_6
         iload 1
-        ifeq Label_11
+        ifeq Label_8
         iload 2
-        ifeq Label_11
+        ifeq Label_8
         iload 3
-        ifne Label_10
+        ifne Label_7
         iload 4
-        ifeq Label_11
-      Label_10:
-       LINE 8 -> Label_10
+        ifeq Label_8
+      Label_7:
+       LINE 3 -> Label_7
        FRAME[type: F_APPEND, locals: 1, local: {Reference[java.lang.String]}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_11:
-       LINE 9 -> Label_11
+      Label_8:
+       LINE 4 -> Label_8
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_12:
+      Label_9:
       LocalVariables {
-        index: 6, name: b, start: Label_8, end: Label_12, type: java.lang.String, signature: null
-        index: 5, name: a, start: Label_4, end: Label_12, type: boolean, signature: null
-        index: 4, name: z, start: Label_0, end: Label_12, type: boolean, signature: null
-        index: 3, name: y, start: Label_0, end: Label_12, type: boolean, signature: null
-        index: 2, name: x, start: Label_0, end: Label_12, type: boolean, signature: null
-        index: 1, name: h, start: Label_0, end: Label_12, type: boolean, signature: null
-        index: 0, name: this, start: Label_0, end: Label_12, type: test.ComplexIf, signature: null
+        index: 6, name: b, start: Label_5, end: Label_9, type: java.lang.String, signature: null
+        index: 5, name: a, start: Label_2, end: Label_9, type: boolean, signature: null
+        index: 4, name: z, start: Label_0, end: Label_9, type: boolean, signature: null
+        index: 3, name: y, start: Label_0, end: Label_9, type: boolean, signature: null
+        index: 2, name: x, start: Label_0, end: Label_9, type: boolean, signature: null
+        index: 1, name: h, start: Label_0, end: Label_9, type: boolean, signature: null
+        index: 0, name: this, start: Label_0, end: Label_9, type: test.ComplexIf, signature: null
       }
     }
     

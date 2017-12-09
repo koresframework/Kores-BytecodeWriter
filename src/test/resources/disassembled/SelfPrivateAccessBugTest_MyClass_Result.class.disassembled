@@ -1,4 +1,4 @@
-md5: 21599971563e390623cdcd391ed8e0aa
+md5: a77f81c6daf9cb27036e0ba1e21a3449
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -16,8 +16,6 @@ public class com.MyClass extends java.lang.Object {
     public static java.lang.String getStaticF1() {
       desc: ()Ljava/lang/String; 
       maxStack: 1, maxLocals: 0 
-      Label_0:
-       LINE 1 -> Label_0
         getstatic com.MyClass.f1 (type: java.lang.String)
         areturn
     }
@@ -27,7 +25,7 @@ public class com.MyClass extends java.lang.Object {
       desc: ()I 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 2 -> Label_0
+       LINE 1 -> Label_0
         aload 0
         getfield com.MyClass.f2 (type: int)
         ireturn

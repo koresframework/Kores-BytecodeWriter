@@ -1,4 +1,4 @@
-md5: 90e7a5733e653d728d00ab7bbffc3913
+md5: b1bbb65ca8fa0178748a406ea4c4d1a8
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -14,29 +14,22 @@ public class test.DupTest_getNotNull extends java.lang.Object {
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         invokestatic com.github.jonathanxd.codeapi.test.asm.DupTest.getNotNull()java.lang.String (ownerIsInterface: false)
         dup
-        ifnull Label_3
-      Label_2:
-       LINE 2 -> Label_2
-        goto Label_5
-      Label_3:
-       LINE 3 -> Label_3
+        ifnull Label_1
+        goto Label_2
+      Label_1:
        FRAME[type: F_FULL, locals: 1, local: {Reference[test.DupTest_getNotNull]}, stacks: 2, stack: {Reference[java.io.PrintStream], Reference[java.lang.String]}]
         pop
-      Label_4:
-       LINE 4 -> Label_4
         ldc "NULL"              // type: java.lang.String
-      Label_5:
+      Label_2:
        FRAME[type: F_FULL, locals: 1, local: {Reference[test.DupTest_getNotNull]}, stacks: 2, stack: {Reference[java.io.PrintStream], Reference[java.lang.String]}]
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_6:
+      Label_3:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_6, type: test.DupTest_getNotNull, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: test.DupTest_getNotNull, signature: null
       }
     }
     

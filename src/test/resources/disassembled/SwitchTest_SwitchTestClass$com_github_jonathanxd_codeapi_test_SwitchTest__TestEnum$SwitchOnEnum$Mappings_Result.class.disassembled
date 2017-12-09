@@ -1,4 +1,4 @@
-md5: 7044360dd81b295d57ead954e1252dfb
+md5: f8a22346624625cd2ab3f711cce80a4e
 
 version: Java 8 (52)
 access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
@@ -38,47 +38,41 @@ source: SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$
     static void <clinit>() {
       desc: ()V 
       maxStack: 3, maxLocals: 1 
-      Label_0:
-       LINE 1 -> Label_0
         invokestatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.values()com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum[] (ownerIsInterface: false)
         arraylength
         newarray 10
         putstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
-      Label_1:
-       LINE 2 -> Label_1
-       LINE 4 -> Label_1
+      Label_0:
         getstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
         getstatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.A (type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum)
         invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
         iconst_1
         iastore
+      Label_1:
+        goto Label_3
       Label_2:
-        goto Label_4
-      Label_3:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.NoSuchFieldError]}]
         astore 0
-        goto Label_4
-      Label_4:
-       LINE 3 -> Label_4
-       LINE 5 -> Label_4
+        goto Label_3
+      Label_3:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic com.SwitchTestClass$com_github_jonathanxd_codeapi_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
         getstatic com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum.B (type: com.github.jonathanxd.codeapi.test.SwitchTest_$TestEnum)
         invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
         iconst_2
         iastore
-      Label_5:
+      Label_4:
         return
-      Label_6:
+      Label_5:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.NoSuchFieldError]}]
         astore 0
         return
-      Label_7:
+      Label_6:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         athrow
       TryCatchBlocks {
-        start: Label_1, end: Label_2, handler: Label_3, exception: java.lang.NoSuchFieldError
-        start: Label_4, end: Label_5, handler: Label_6, exception: java.lang.NoSuchFieldError
+        start: Label_0, end: Label_1, handler: Label_2, exception: java.lang.NoSuchFieldError
+        start: Label_3, end: Label_4, handler: Label_5, exception: java.lang.NoSuchFieldError
       }
     }
     

@@ -101,13 +101,13 @@ object ConstructorUtil {
                     return searchResult
             }
 
-            if (codePart is MethodInvocation) {
+            if (safe is MethodInvocation) {
 
                 // Constructors requires a [New] target, super invocations does not have this target
-                if (codePart.target.safeForComparison !is New
-                        && targetAccessPredicate(codePart.target.safeForComparison)
-                        && codePart.invokeType == InvokeType.INVOKE_SPECIAL
-                        && codePart.spec.methodName == "<init>") {
+                if (safe.target.safeForComparison !is New
+                        && targetAccessPredicate(safe.target.safeForComparison)
+                        && safe.invokeType == InvokeType.INVOKE_SPECIAL
+                        && safe.spec.methodName == "<init>") {
                     return SearchResult(true, isSub)
                 }
             }
