@@ -38,10 +38,7 @@ import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.`is`
-import com.github.jonathanxd.codeapi.util.internalName
-import com.github.jonathanxd.codeapi.util.safeForComparison
-import com.github.jonathanxd.codeapi.util.typeDesc
+import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.jwiutils.kt.require
 import org.objectweb.asm.Opcodes
@@ -141,7 +138,7 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
                     /*Localization*/localization.internalName,
                     /*Method name*/newSpecification.methodName,
                     /*(ARGUMENT)RETURN*/newSpecification.typeSpec.typeDesc,
-                    invokeType.isInterface())
+                    localization.isInterface)
 
             if (!syntheticPart.spec.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
                 mv.visitInsn(Opcodes.POP)
