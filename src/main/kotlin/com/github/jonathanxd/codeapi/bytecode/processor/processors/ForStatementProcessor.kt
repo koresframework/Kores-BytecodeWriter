@@ -60,12 +60,13 @@ object ForStatementProcessor : Processor<ForStatement> {
 
         val init = part.forInit
 
-        if (init.safeForComparison != CodeNothing) {
-            IN_EXPRESSION.incrementInContext(data) {
-                processorManager.process(init::class.java, init, data)
+        init.forEach {
+            if (it.safeForComparison != CodeNothing) {
+                IN_EXPRESSION.incrementInContext(data) {
+                    processorManager.process(it::class.java, it, data)
+                }
             }
         }
-
 
         val source = MutableCodeSource.create()
 
@@ -87,9 +88,11 @@ object ForStatementProcessor : Processor<ForStatement> {
 
             val update = part.forUpdate
 
-            if (update.safeForComparison != CodeNothing) {
-                IN_EXPRESSION.incrementInContext(data) {
-                    iCodeProcessor.process(update::class.java, update, instructionData)
+            update.forEach {
+                if (it.safeForComparison != CodeNothing) {
+                    IN_EXPRESSION.incrementInContext(data) {
+                        iCodeProcessor.process(it::class.java, it, instructionData)
+                    }
                 }
             }
 

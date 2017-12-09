@@ -51,27 +51,31 @@ object ForEachProcessor : Processor<ForEachStatement> {
 
         val stm = when (iterationType) {
             IterationType.ARRAY -> {
+                val arrayName = mvHelper.getUniqueVariableName("\$array#")
                 val name = mvHelper.getUniqueVariableName("\$arrayIndex#")
 
+                val arrayVariable = variable(modifiers = setOf(CodeModifier.FINAL),
+                        type = part.iterableElement.type, name = arrayName, value = part.iterableElement)
                 val indexVariable = variable(type = Types.INT, name = name, value = Literals.INT(0))
 
-                val arrayType = part.iterableElement.type
+                val accessArray = accessVariable(arrayVariable)
+                val arrayType = arrayVariable.type
 
                 ForStatement.Builder.builder()
-                        .forInit(indexVariable)
+                        .forInit(listOf(arrayVariable, indexVariable))
                         .forExpression(check(
                                 accessVariable(indexVariable),
                                 Operators.LESS_THAN,
-                                arrayLength(arrayType, part.iterableElement)
+                                arrayLength(arrayType, accessArray)
                         ))
-                        .forUpdate(operateAndAssign(indexVariable, Operators.ADD, Literals.INT(1)))
+                        .forUpdate(listOf(operateAndAssign(indexVariable, Operators.ADD, Literals.INT(1))))
                         .body(
                                 CodeSource.fromPart(variable(
                                         name = part.variable.name,
                                         type = part.variable.type,
                                         value = accessArrayValue(
                                                 arrayType = arrayType,
-                                                target = part.iterableElement,
+                                                target = accessArray,
                                                 index = accessVariable(indexVariable),
                                                 valueType = part.variable.type
 
