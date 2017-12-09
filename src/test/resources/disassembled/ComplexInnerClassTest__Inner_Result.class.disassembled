@@ -1,4 +1,4 @@
-md5: 2b5604fcb864044d3543720dcc6427c0
+md5: af5844e08009b2a48594fc325639c032
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -31,12 +31,16 @@ public class test.InnerClass$Inner extends java.lang.Object {
         aload 1
         putfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         aload 0
+      Label_1:
+       LINE 9 -> Label_1
         new test.InnerClass
         dup
         ldc "Hello"              // type: java.lang.String
         invokespecial test.InnerClass.<init>(java.lang.String)void (ownerIsInterface: false)
         putfield test.InnerClass$Inner.a (type: test.InnerClass)
         aload 0
+      Label_2:
+       LINE 10 -> Label_2
         new test.InnerClass$Inner$Inner2
         dup
         aload 0
@@ -46,10 +50,10 @@ public class test.InnerClass$Inner extends java.lang.Object {
         invokespecial test.InnerClass$Inner$Inner2.<init>(test.InnerClass$Inner, test.InnerClass$Inner$Inner2$$)void (ownerIsInterface: false)
         putfield test.InnerClass$Inner.b (type: test.InnerClass$Inner$Inner2)
         return
-      Label_1:
+      Label_3:
       LocalVariables {
-        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+        index: 1, name: outer$, start: Label_0, end: Label_3, type: test.InnerClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: test.InnerClass$Inner, signature: null
       }
     }
     
@@ -58,19 +62,19 @@ public class test.InnerClass$Inner extends java.lang.Object {
       desc: ()Ljava/lang/String; 
       maxStack: 5, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
+       LINE 2 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
         getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         invokestatic test.InnerClass.accessor$(test.InnerClass)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
-       LINE 2 -> Label_1
+       LINE 3 -> Label_1
         aload 0
         getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         invokevirtual test.InnerClass.mm()void (ownerIsInterface: false)
       Label_2:
-       LINE 3 -> Label_2
+       LINE 4 -> Label_2
         new test.InnerClass$Inner$Inner2
         dup
         aload 0
@@ -81,7 +85,7 @@ public class test.InnerClass$Inner extends java.lang.Object {
         invokestatic test.InnerClass$Inner$Inner2.accessor$(test.InnerClass$Inner$Inner2)java.lang.String (ownerIsInterface: false)
         pop
       Label_3:
-       LINE 4 -> Label_3
+       LINE 5 -> Label_3
         ldc "A"              // type: java.lang.String
         areturn
       Label_4:

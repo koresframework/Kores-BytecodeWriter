@@ -1,4 +1,4 @@
-md5: f7bd3626360b1af9c387ecf1f54836ae
+md5: 8437a952966ab090f684f25c78a940f6
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -17,7 +17,7 @@ public class com.MethodFragment extends java.lang.Object {
       maxStack: 2, maxLocals: 0 
       Label_0:
        LINE 1 -> Label_0
-       LINE 2 -> Label_0
+       LINE 3 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello"              // type: java.lang.String
         invokestatic com.MethodFragment.sameMod(java.lang.String)java.lang.String (ownerIsInterface: false)
@@ -31,7 +31,7 @@ public class com.MethodFragment extends java.lang.Object {
       desc: (Ljava/lang/String;)Ljava/lang/String; 
       maxStack: 3, maxLocals: 1 
       Label_0:
-       LINE 3 -> Label_0
+       LINE 2 -> Label_0
         new java.lang.StringBuilder
         dup
         ldc "["              // type: java.lang.String

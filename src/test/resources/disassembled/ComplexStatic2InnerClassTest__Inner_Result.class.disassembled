@@ -1,4 +1,4 @@
-md5: 1653081970952019cc0689fd2d895294
+md5: 052608d334cef077d1092994c66b6aba
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -29,16 +29,18 @@ public class test.InnerClass$Inner extends java.lang.Object {
         aload 1
         putfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         aload 0
+      Label_1:
+       LINE 6 -> Label_1
         new test.InnerClass
         dup
         ldc "Hello"              // type: java.lang.String
         invokespecial test.InnerClass.<init>(java.lang.String)void (ownerIsInterface: false)
         putfield test.InnerClass$Inner.a (type: test.InnerClass)
         return
-      Label_1:
+      Label_2:
       LocalVariables {
-        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+        index: 1, name: outer$, start: Label_0, end: Label_2, type: test.InnerClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: test.InnerClass$Inner, signature: null
       }
     }
     
@@ -47,19 +49,19 @@ public class test.InnerClass$Inner extends java.lang.Object {
       desc: ()Ljava/lang/String; 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
+       LINE 2 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
         getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         getfield test.InnerClass.field (type: java.lang.String)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
-       LINE 2 -> Label_1
+       LINE 3 -> Label_1
         aload 0
         getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         invokevirtual test.InnerClass.mm()void (ownerIsInterface: false)
       Label_2:
-       LINE 3 -> Label_2
+       LINE 4 -> Label_2
         ldc "A"              // type: java.lang.String
         areturn
       Label_3:

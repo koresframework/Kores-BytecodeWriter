@@ -85,7 +85,7 @@ public class CommonBytecodeTest {
                                                 Consumer<BytecodeGenerator> bytecodeProcessorConsumer) {
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.FOLLOW_CODE_SOURCE);
+        bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.GEN_LINE_INSTRUCTION);
         bytecodeProcessorConsumer.accept(bytecodeGenerator);
         BCLoader bcLoader = new BCLoader();
 

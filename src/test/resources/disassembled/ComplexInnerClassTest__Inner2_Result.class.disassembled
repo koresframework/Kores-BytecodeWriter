@@ -1,4 +1,4 @@
-md5: dd9e4930b38eac8c17f7f62255cd52b9
+md5: 93eae1f245fd0c4cf5d236345278abe5
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -39,7 +39,7 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
       desc: ()Ljava/lang/String; 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
+       LINE 6 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 0
         getfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
@@ -47,13 +47,13 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
         invokestatic test.InnerClass.accessor$(test.InnerClass)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
-       LINE 2 -> Label_1
+       LINE 7 -> Label_1
         aload 0
         getfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
         getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
         invokevirtual test.InnerClass.mm()void (ownerIsInterface: false)
       Label_2:
-       LINE 3 -> Label_2
+       LINE 8 -> Label_2
         ldc "A"              // type: java.lang.String
         areturn
       Label_3:
@@ -76,7 +76,6 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
       desc: (Ltest/InnerClass$Inner;Ltest/InnerClass$Inner$Inner2$$;)V 
       maxStack: 2, maxLocals: 3 
       Label_0:
-       LINE 4 -> Label_0
         aload 0
         aload 1
         invokespecial test.InnerClass$Inner$Inner2.<init>(test.InnerClass$Inner)void (ownerIsInterface: false)
@@ -95,7 +94,6 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
       desc: (Ltest/InnerClass$Inner$Inner2;)Ljava/lang/String; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 5 -> Label_0
         aload 0
         invokevirtual test.InnerClass$Inner$Inner2.call2()java.lang.String (ownerIsInterface: false)
         areturn

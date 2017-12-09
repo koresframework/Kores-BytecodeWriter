@@ -1,4 +1,4 @@
-md5: 99eb050e48d4d4158f843cf5e870a9c9
+md5: b10a5bf041522c289e138487de6bc1c0
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -12,7 +12,6 @@ public class com.BridgeMethodTest2 extends java.lang.Object implements com.githu
       desc: ()Ljava/lang/Object; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
         aload 0
         invokevirtual com.BridgeMethodTest2.getValue()java.lang.String (ownerIsInterface: false)
         checkcast java.lang.Object
@@ -28,7 +27,7 @@ public class com.BridgeMethodTest2 extends java.lang.Object implements com.githu
       desc: ()Ljava/lang/String; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 2 -> Label_0
+       LINE 1 -> Label_0
         ldc "works"              // type: java.lang.String
         areturn
       Label_1:

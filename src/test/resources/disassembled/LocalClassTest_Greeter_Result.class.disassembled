@@ -1,4 +1,4 @@
-md5: 7212b0c8e4f7b7a35e7f9714e6781430
+md5: 7c73c64ab0e880932accbe08fab02473
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -41,7 +41,7 @@ public class test.LocalClass$Greeter extends java.lang.Object {
       desc: ()V 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
+       LINE 2 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)

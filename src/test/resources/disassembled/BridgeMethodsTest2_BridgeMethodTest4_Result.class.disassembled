@@ -1,4 +1,4 @@
-md5: 9979200b5ada747601adab68fa1ae144
+md5: 8af6885e1d16931a6ebb6dacb7e37ac7
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,7 +13,6 @@ public class com.BridgeMethodTest4 extends java.lang.Object implements com.githu
       desc: ()Ljava/lang/Number; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
         aload 0
         invokevirtual com.BridgeMethodTest4.getValue()java.lang.Integer (ownerIsInterface: false)
         checkcast java.lang.Number
@@ -30,7 +29,6 @@ public class com.BridgeMethodTest4 extends java.lang.Object implements com.githu
       desc: ()Ljava/lang/Object; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 2 -> Label_0
         aload 0
         invokevirtual com.BridgeMethodTest4.getValue()java.lang.Integer (ownerIsInterface: false)
         checkcast java.lang.Object
@@ -46,7 +44,7 @@ public class com.BridgeMethodTest4 extends java.lang.Object implements com.githu
       desc: ()Ljava/lang/Integer; 
       maxStack: 3, maxLocals: 1 
       Label_0:
-       LINE 3 -> Label_0
+       LINE 1 -> Label_0
         new java.lang.Integer
         dup
         bipush 14

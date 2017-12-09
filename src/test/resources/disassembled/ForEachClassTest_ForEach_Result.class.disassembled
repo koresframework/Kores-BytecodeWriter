@@ -1,4 +1,4 @@
-md5: 0a00077ebd9abe736652ba4c417be2db
+md5: 6e5f005dd742a7fde0361c58e9c06da1
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -25,30 +25,26 @@ public class com.ForEach extends java.lang.Object {
        FRAME[type: F_FULL, locals: 3, local: {Reference[com.ForEach], Reference[java.util.List], Reference[java.util.Iterator]}, stacks: 0, stack: {}]
         aload 2
         invokeinterface java.util.Iterator.hasNext()boolean (ownerIsInterface: true)
-        ifeq Label_7
-      Label_3:
-       LINE 2 -> Label_3
+        ifeq Label_5
         aload 2
         invokeinterface java.util.Iterator.next()java.lang.Object (ownerIsInterface: true)
         checkcast java.lang.String
-      Label_4:
+      Label_3:
         astore 3
-      Label_5:
-       LINE 3 -> Label_5
+      Label_4:
+       LINE 2 -> Label_4
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 3
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_6:
-       LINE 4 -> Label_6
         goto Label_2
-      Label_7:
+      Label_5:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
-      Label_8:
+      Label_6:
       LocalVariables {
-        index: 3, name: str, start: Label_4, end: Label_7, type: java.lang.String, signature: null
-        index: 1, name: strList, start: Label_0, end: Label_8, type: java.util.List, signature: Ljava/util/List<Ljava/lang/String;>;
-        index: 0, name: this, start: Label_0, end: Label_8, type: com.ForEach, signature: null
+        index: 3, name: str, start: Label_3, end: Label_5, type: java.lang.String, signature: null
+        index: 1, name: strList, start: Label_0, end: Label_6, type: java.util.List, signature: Ljava/util/List<Ljava/lang/String;>;
+        index: 0, name: this, start: Label_0, end: Label_6, type: com.ForEach, signature: null
       }
     }
     

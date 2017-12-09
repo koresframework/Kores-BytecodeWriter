@@ -1,4 +1,4 @@
-md5: ed45e10b112e899c7e19a58a221d3f0a
+md5: f36eeaef18d91efda3fb306bd421a937
 
 version: Java 8 (52)
 access: PACKAGE_PRIVATE (16416)
@@ -17,7 +17,6 @@ source: MyEnum.cai
       desc: (Ljava/lang/String;I)V 
       maxStack: 3, maxLocals: 3 
       Label_0:
-       LINE 1 -> Label_0
         aload 0
         aload 1
         iload 2
@@ -37,7 +36,6 @@ source: MyEnum.cai
       desc: ()V 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 2 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)

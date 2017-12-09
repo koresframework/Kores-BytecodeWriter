@@ -84,6 +84,11 @@ object GenLineVisitor {
                     .innerTypes(methodDeclarationBase.innerTypes.map { visit(it, data) })
                     .build() as T
 
+    fun visit(variableDeclaration: VariableDeclaration, data: TypedData): VariableDeclaration {
+        return variableDeclaration.builder()
+                .value(createLine(variableDeclaration.value, data))
+                .build()
+    }
 
     fun visit(codeSource: CodeSource, data: TypedData): CodeSource {
         return codeSource.map { createLine(it, data) }.let {
@@ -135,7 +140,7 @@ object GenLineVisitor {
     }
 
     private fun getLine(data: TypedData): Int {
-        return (CURRENT.getOrSet(data, -1) + 1).also { CURRENT.set(data, it) }
+        return (CURRENT.getOrSet(data, 0) + 1).also { CURRENT.set(data, it) }
     }
 
 }

@@ -1,4 +1,4 @@
-md5: 9d577af7596d875f87228021c2131a06
+md5: 1b2efb9da827e1d5fba561b8bdb74c43
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -15,7 +15,7 @@ public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
       desc: ()Ljava/lang/String; 
       maxStack: 1, maxLocals: 1 
       Label_0:
-       LINE 1 -> Label_0
+       LINE 5 -> Label_0
         ldc "A"              // type: java.lang.String
         areturn
       Label_1:

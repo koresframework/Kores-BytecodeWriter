@@ -1,4 +1,4 @@
-md5: c4c4d9e4e4006508c7407ae457bb9437
+md5: f56ce0086db2aaec76c8dc776f8f25a3
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -17,25 +17,25 @@ public class test.BitwiseIf extends java.lang.Object {
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
-       LINE 1 -> Label_1
+       LINE 4 -> Label_1
         iload 1
         iload 2
         iand
         ifeq Label_3
       Label_2:
-       LINE 6 -> Label_2
+       LINE 5 -> Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "BITWISE_AND: true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         goto Label_4
       Label_3:
-       LINE 7 -> Label_3
+       LINE 6 -> Label_3
        FRAME[type: F_FULL, locals: 3, local: {Reference[test.BitwiseIf], Primitive[integer], Primitive[integer]}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "BITWISE_AND: false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_4:
-       LINE 2 -> Label_4
+       LINE 7 -> Label_4
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iload 1
         iload 2
@@ -54,101 +54,92 @@ public class test.BitwiseIf extends java.lang.Object {
         ldc "BITWISE_INCLUSIVE_OR: false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_7:
-       LINE 3 -> Label_7
+       LINE 10 -> Label_7
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iload 1
         iload 2
         ixor
         ifeq Label_9
       Label_8:
-       LINE 10 -> Label_8
+       LINE 11 -> Label_8
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "BITWISE_EXCLUSIVE_OR: true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         goto Label_10
       Label_9:
-       LINE 11 -> Label_9
+       LINE 12 -> Label_9
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "BITWISE_EXCLUSIVE_OR: false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_10:
-       LINE 4 -> Label_10
+       LINE 13 -> Label_10
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iload 1
-        ifne Label_12
-      Label_11:
-       LINE 12 -> Label_11
+        ifne Label_11
         iconst_1
-        goto Label_13
-      Label_12:
-       LINE 13 -> Label_12
+        goto Label_12
+      Label_11:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_0
-      Label_13:
+      Label_12:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         iload 2
         ixor
-        ifeq Label_15
-      Label_14:
-       LINE 14 -> Label_14
+        ifeq Label_14
+      Label_13:
+       LINE 14 -> Label_13
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "NEGATE_FIRST BITWISE_EXCLUSIVE_OR: true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-        goto Label_16
-      Label_15:
-       LINE 15 -> Label_15
+        goto Label_15
+      Label_14:
+       LINE 15 -> Label_14
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "NEGATE_FIRST BITWISE_EXCLUSIVE_OR: false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
-      Label_16:
-       LINE 5 -> Label_16
+      Label_15:
+       LINE 16 -> Label_15
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iload 1
-        ifne Label_18
+        ifne Label_16
+        iconst_1
+        goto Label_17
+      Label_16:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        iconst_0
       Label_17:
-       LINE 16 -> Label_17
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
+        iload 2
+        ifne Label_18
         iconst_1
         goto Label_19
       Label_18:
-       LINE 17 -> Label_18
-       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         iconst_0
       Label_19:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
-        iload 2
-        ifne Label_21
-      Label_20:
-       LINE 18 -> Label_20
-        iconst_1
-        goto Label_22
-      Label_21:
-       LINE 19 -> Label_21
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
-        iconst_0
-      Label_22:
        FRAME[type: F_FULL, locals: 3, local: {Reference[test.BitwiseIf], Primitive[integer], Primitive[integer]}, stacks: 2, stack: {Primitive[integer], Primitive[integer]}]
         ixor
-        ifeq Label_24
-      Label_23:
-       LINE 20 -> Label_23
+        ifeq Label_21
+      Label_20:
+       LINE 17 -> Label_20
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "NEGATE_ALL BITWISE_EXCLUSIVE_OR: true"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_24:
-       LINE 21 -> Label_24
+      Label_21:
+       LINE 18 -> Label_21
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "NEGATE_ALL BITWISE_EXCLUSIVE_OR: false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_25:
+      Label_22:
       LocalVariables {
-        index: 2, name: x, start: Label_0, end: Label_25, type: boolean, signature: null
-        index: 1, name: h, start: Label_0, end: Label_25, type: boolean, signature: null
-        index: 0, name: this, start: Label_0, end: Label_25, type: test.BitwiseIf, signature: null
+        index: 2, name: x, start: Label_0, end: Label_22, type: boolean, signature: null
+        index: 1, name: h, start: Label_0, end: Label_22, type: boolean, signature: null
+        index: 0, name: this, start: Label_0, end: Label_22, type: test.BitwiseIf, signature: null
       }
     }
     
@@ -159,53 +150,47 @@ public class test.BitwiseIf extends java.lang.Object {
       desc: (II)V 
       maxStack: 3, maxLocals: 3 
       Label_0:
-       LINE 22 -> Label_0
+       LINE 1 -> Label_0
         iload 1
         bipush 100
-        if_icmpge Label_2
-      Label_1:
-       LINE 23 -> Label_1
+        if_icmpge Label_1
         iconst_1
-        goto Label_3
-      Label_2:
-       LINE 24 -> Label_2
+        goto Label_2
+      Label_1:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         iconst_0
-      Label_3:
+      Label_2:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         iload 2
         bipush 100
-        if_icmple Label_5
-      Label_4:
-       LINE 25 -> Label_4
+        if_icmple Label_3
         iconst_1
-        goto Label_6
-      Label_5:
-       LINE 26 -> Label_5
+        goto Label_4
+      Label_3:
        FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         iconst_0
-      Label_6:
+      Label_4:
        FRAME[type: F_FULL, locals: 3, local: {Reference[test.BitwiseIf], Primitive[integer], Primitive[integer]}, stacks: 2, stack: {Primitive[integer], Primitive[integer]}]
         iand
-        ifeq Label_8
-      Label_7:
-       LINE 27 -> Label_7
+        ifeq Label_6
+      Label_5:
+       LINE 2 -> Label_5
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "a < 100 & b > 100"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_8:
-       LINE 28 -> Label_8
+      Label_6:
+       LINE 3 -> Label_6
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "false"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
         return
-      Label_9:
+      Label_7:
       LocalVariables {
-        index: 2, name: b, start: Label_0, end: Label_9, type: int, signature: null
-        index: 1, name: a, start: Label_0, end: Label_9, type: int, signature: null
-        index: 0, name: this, start: Label_0, end: Label_9, type: test.BitwiseIf, signature: null
+        index: 2, name: b, start: Label_0, end: Label_7, type: int, signature: null
+        index: 1, name: a, start: Label_0, end: Label_7, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_7, type: test.BitwiseIf, signature: null
       }
     }
     
