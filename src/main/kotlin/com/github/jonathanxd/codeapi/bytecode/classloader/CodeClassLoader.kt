@@ -30,7 +30,10 @@ package com.github.jonathanxd.codeapi.bytecode.classloader
 import com.github.jonathanxd.codeapi.base.TypeDeclaration
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
 
-open class CodeClassLoader : ClassLoader() {
+open class CodeClassLoader : ClassLoader {
+
+    constructor() : super()
+    constructor(parent: ClassLoader): super(parent)
 
     /**
      * Define type declaration class.

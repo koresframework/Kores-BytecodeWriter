@@ -33,7 +33,10 @@ import java.util.*
 /**
  * Cache all defined classes.
  */
-class CachedCodeClassLoader : CodeClassLoader() {
+class CachedCodeClassLoader : CodeClassLoader {
+
+    constructor() : super()
+    constructor(parent: ClassLoader): super(parent)
 
     private val cache = mutableMapOf<TypeDeclaration, Class<*>>()
     private val immutableCache = Collections.unmodifiableMap(cache)
