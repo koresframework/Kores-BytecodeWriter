@@ -29,12 +29,10 @@
 
 package com.github.jonathanxd.codeapi.bytecode
 
-import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.Line
 import com.github.jonathanxd.codeapi.bytecode.post.DeadCodeRemover
 import com.github.jonathanxd.codeapi.bytecode.post.GotoOptimizer
 import com.github.jonathanxd.codeapi.bytecode.post.MethodProcessor
-import com.github.jonathanxd.codeapi.bytecode.post.PostProcessor
 import com.github.jonathanxd.codeapi.bytecode.pre.GenLineVisitor
 import com.github.jonathanxd.iutils.option.Option
 
@@ -74,7 +72,6 @@ val POST_PROCESSORS = Option<List<MethodProcessor>>(listOf(DeadCodeRemover, Goto
 @JvmField
 val VISIT_LINES = Option(VisitLineType.DISABLED)
 
-
 /**
  * Validate constructor this() invocation.
  *
@@ -84,9 +81,9 @@ val VISIT_LINES = Option(VisitLineType.DISABLED)
 val VALIDATE_THIS = Option(true)
 
 /**
- * Validate constructor this() invocation.
+ * Validate constructor super() invocation.
  *
- * Known supported generators: `BytecodeGenerator`.
+ * Default: true
  */
 @JvmField
 val VALIDATE_SUPER = Option(true)
@@ -100,12 +97,11 @@ val VALIDATE_SUPER = Option(true)
  * The generation of bridge methods is very limited, the [Bridge Generator][com.github.jonathanxd.codeapi.bytecode.util.BridgeUtil]
  * will inspect super-classes (and super-interfaces) and find the overridden method.
  * The [Bridge Generator][com.github.jonathanxd.codeapi.bytecode.util.BridgeUtil] will only inspect
- * [Java type][Class] and [CodeAPI Type][com.github.jonathanxd.codeapi.base.TypeDeclaration],
- * if the super-class and/or super-interfaces is of another type, [Bridge Generator][com.github.jonathanxd.codeapi.bytecode.util.BridgeUtil]
+ * [Java type][Class] and [CodeAPI Type][com.github.jonathanxd.codeapi.base.TypeDeclaration].
+ * If the super-class and/or super-interfaces is of another type, [Bridge Generator][com.github.jonathanxd.codeapi.bytecode.util.BridgeUtil]
  * will ignore and the bridge method will not be generated.
  *
  * You could also bridge methods manually with [com.github.jonathanxd.codeapi.CodeAPI.bridgeMethod].
- *
  */
 @JvmField
 val GENERATE_BRIDGE_METHODS = Option(false)
@@ -133,7 +129,7 @@ enum class VisitLineType {
     /**
      * Follow Code Source indexes.
      */
-    @Deprecated(message = "Imprecise approach, finally blocks receive buggy lines because of the way that inlining works.")
+    @Deprecated(message = "Imprecise approach, finally blocks receive buggy lines because of the way inlining code works.")
     FOLLOW_CODE_SOURCE,
 
     /**

@@ -44,7 +44,7 @@ object ModuleDeclarationProcessor : Processor<ModuleDeclaration> {
     override fun process(part: ModuleDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
         val cw = ClassWriter(0)
 
-        cw.visit(Opcodes.V1_9, Opcodes.ACC_MODULE, "module-info", null, null, null)
+        cw.visit(Opcodes.V9, Opcodes.ACC_MODULE, "module-info", null, null, null)
 
         SOURCE_FILE_FUNCTION.getOrNull(data)?.invoke(part)?.let {
             cw.visitSource(it, null)
