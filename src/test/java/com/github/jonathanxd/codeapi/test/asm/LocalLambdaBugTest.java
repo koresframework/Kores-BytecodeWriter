@@ -31,13 +31,17 @@ import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.Access;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.InvokeType;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.MethodInvocation;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeSpec;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
+import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
+import com.github.jonathanxd.codeapi.common.DynamicMethodSpec;
+import com.github.jonathanxd.codeapi.common.MethodInvokeSpec;
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec;
 import com.github.jonathanxd.codeapi.factory.DynamicInvocationFactory;
 import com.github.jonathanxd.codeapi.factory.Factories;
@@ -47,6 +51,7 @@ import com.github.jonathanxd.codeapi.helper.ConcatHelper;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.type.Generic;
 import com.github.jonathanxd.codeapi.util.Alias;
+import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.collection.Collections3;
 
 import org.junit.Assert;
@@ -62,12 +67,13 @@ public class LocalLambdaBugTest {
     @SuppressWarnings("unchecked")
     @Test
     public void localLambdaBugTest() throws Throwable {
-        MethodInvocation mi = InvocationFactory.invokeVirtual(
-                Alias.THIS.INSTANCE,
-                Access.THIS,
-                "lambda",
-                new TypeSpec(String.class, Collections3.listOf(Short.TYPE, String.class)),
-                Collections3.listOf(Factories.accessVariable(Short.TYPE, "s"))
+        MethodInvokeSpec ref = new MethodInvokeSpec(
+                InvokeType.INVOKE_VIRTUAL,
+                new MethodTypeSpec(
+                        Alias.THIS.INSTANCE,
+                        "lambda",
+                        new TypeSpec(String.class, Collections3.listOf(Short.TYPE, String.class))
+                )
         );
 
         TypeDeclaration decl = ClassDeclaration.Builder.builder()
@@ -82,7 +88,9 @@ public class LocalLambdaBugTest {
                                 .body(CodeSource.fromVarArgs(
                                         VariableFactory.variable(Function.class, "func",
                                                 DynamicInvocationFactory.invokeDynamicLambda(
-                                                        mi,
+                                                        ref,
+                                                        Collections3.listOf(Access.THIS,
+                                                                Factories.accessVariable(Short.TYPE, "s")),
                                                         new MethodTypeSpec(Generic.type(Function.class).of(String.class),
                                                                 "apply",
                                                                 Factories.typeSpec(Object.class, Object.class)),
@@ -124,10 +132,15 @@ public class LocalLambdaBugTest {
                                 .build()
                 )
                 .build();
-
+        //@Named("Instance") Class<?> define = CommonBytecodeTest.test(this.getClass(), decl, t -> t, v -> v, g -> {});
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
-        List<? extends BytecodeClass> gen = bytecodeGenerator.process(decl);
+        List<? extends BytecodeClass> gen;
+        try {
+            gen = bytecodeGenerator.process(decl);
+        } catch (ClassCheckException e) {
+            gen = e.getBytecodeClasses();
+        }
 
         ResultSaver.save(this.getClass(), gen);
 

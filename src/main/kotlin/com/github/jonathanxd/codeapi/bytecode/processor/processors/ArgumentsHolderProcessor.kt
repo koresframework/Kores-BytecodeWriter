@@ -52,7 +52,7 @@ object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
 
         val mv = visitor.methodVisitor
 
-        val types = part.types
+        val types = part.types.map { Util.resolveType(it, data) }
         // Try to auto box and unbox
         val arguments = part.arguments.mapIndexed { i, it ->
 

@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
+import com.github.jonathanxd.codeapi.base.ArgumentsHolder
 import com.github.jonathanxd.codeapi.base.InvokeDynamicBase
 import com.github.jonathanxd.codeapi.base.LocalCode
 import com.github.jonathanxd.codeapi.base.MethodInvocation
@@ -48,36 +49,22 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
 
         val mvHelper = METHOD_VISITOR.require(data)
 
-        val invocation = part.invocation
+        val dynamicMethod = part.dynamicMethod
 
-        val localization: Type = Util.resolveType(invocation.localization, data)
+        processorManager.process(ArgumentsHolder::class.java, part.dynamicMethod, data)
 
-        IN_INVOKE_DYNAMIC.set(data, Unit, true)
+        val specification = dynamicMethod
 
-        processorManager.process(MethodInvocation::class.java, invocation, data)
-
-        val specification = invocation.spec
-
-        // Generate lambda 'invokeDynamic'
         if (part is InvokeDynamicBase.LambdaMethodRefBase) {
-
-            val spec = if (part is InvokeDynamicBase.LambdaLocalCodeBase) {
-                // Register fragment to gen
+            if (part is InvokeDynamicBase.LambdaLocalCodeBase) {
+                // Registers the local code
                 processorManager.process(LocalCode::class.java, part.localCode, data)
-
-                specification.builder().withMethodName(part.localCode.declaration.name).build()
-            } else specification
-
-
-            MethodInvocationUtil.visitLambdaInvocation(part, part.invocation.invokeType, localization, spec, mvHelper.methodVisitor)
-
-        } else {
-            // Generate bootstrap 'invokeDynamic'
-            // Visit bootstrap invoke dynamic
-            MethodInvocationUtil.visitBootstrapInvocation(part, specification, data, mvHelper.methodVisitor)
+            }
         }
 
-        if (!part.invocation.spec.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
+        MethodInvocationUtil.visitBootstrapInvocation(part, specification, data, mvHelper.methodVisitor)
+
+        if (!part.dynamicMethod.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
             mvHelper.methodVisitor.visitInsn(Opcodes.POP)
         }
     }

@@ -17,13 +17,17 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '4.0.0.11-beta-bytecode'
+version '4.0.0.12-beta-bytecode'
 
 apply from: project(":CodeAPI").file("gradle/common.gradle")
 
 dependencies {
+    // Developer note: Indev, we use this statement to compile and test BytecodeWriter.
+    // When releasing a version of project, with git tag, we comment this statement and use compileOnly
+    // with runtime dependency pointing to CodeAPI published version
+    //compile project(":CodeAPI")
     compileOnly project(":CodeAPI")
-    runtime "com.github.JonathanxD:CodeAPI:4.0.0.9-beta"
+    runtime "com.github.JonathanxD:CodeAPI:4.0.0.11-beta"
     compile 'com.github.JonathanxD:BytecodeDisassembler:2.0.5'
     compile "org.ow2.asm:asm:6.0"
     compile "org.ow2.asm:asm-tree:6.0"

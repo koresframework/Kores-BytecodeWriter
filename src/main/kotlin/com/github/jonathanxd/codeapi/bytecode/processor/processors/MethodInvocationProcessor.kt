@@ -47,9 +47,6 @@ import java.lang.reflect.Type
 object MethodInvocationProcessor : Processor<MethodInvocation> {
 
     override fun process(part: MethodInvocation, data: TypedData, processorManager: ProcessorManager<*>) {
-        // MUST be retrieved here to avoid the data to be removed too late
-        val isInInvokeDynamic = IN_INVOKE_DYNAMIC.getOrNull(data) != null
-
         val mv = METHOD_VISITOR.require(data).methodVisitor
 
         val localization: Type = Util.resolveType(part.localization, data)
@@ -127,22 +124,17 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
                 mv.visitInsn(Opcodes.DUP) // New does not dup, it is intended
         }
 
-        if (isInInvokeDynamic)
-            IN_INVOKE_DYNAMIC.set(data, Unit, true)
-
         processorManager.process(ArgumentsHolder::class.java, newPart, data)
 
-        if (!isInInvokeDynamic) {
-            mv.visitMethodInsn(
-                    /*Type like invokestatic*/InvokeTypeUtil.toAsm(invokeType),
-                    /*Localization*/localization.internalName,
-                    /*Method name*/newSpecification.methodName,
-                    /*(ARGUMENT)RETURN*/newSpecification.typeSpec.typeDesc,
-                    localization.isInterface)
+        mv.visitMethodInsn(
+                /*Type like invokestatic*/InvokeTypeUtil.toAsm(invokeType),
+                /*Localization*/localization.internalName,
+                /*Method name*/newSpecification.methodName,
+                /*(ARGUMENT)RETURN*/newSpecification.typeSpec.typeDesc,
+                localization.isInterface)
 
-            if (!syntheticPart.spec.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
-                mv.visitInsn(Opcodes.POP)
-            }
+        if (!syntheticPart.spec.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
+            mv.visitInsn(Opcodes.POP)
         }
     }
 

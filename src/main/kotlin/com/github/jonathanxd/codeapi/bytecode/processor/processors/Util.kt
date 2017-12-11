@@ -48,6 +48,10 @@ import java.lang.reflect.Type
 
 object Util {
 
+    fun resolveType(spec: TypeSpec, data: TypedData): TypeSpec =
+            spec.copy(returnType = resolveType(spec.returnType, data),
+                    parameterTypes = spec.parameterTypes.map { resolveType(it, data) })
+
     fun resolveType(codeType: ReflectType, data: TypedData): CodeType {
 
         val type by lazy {
