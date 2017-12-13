@@ -121,7 +121,14 @@ object BridgeUtil {
 
     private fun findIn(type: Type, methodSpec: MethodTypeSpec): Set<MethodTypeSpec> {
 
-        val generic = type.codeType as? Generic ?: Generic.type(type)
+        val toGeneric = type.toGeneric
+        val generic =
+                (when {
+                    toGeneric.isWildcard -> Generic.wildcard()
+                    toGeneric.isType -> Generic.type(toGeneric.type)
+                    else -> Generic.type(toGeneric.name)
+                }).of(*toGeneric.bounds)
+
         val codeType = type.concreteType
         val bridges = mutableSetOf<MethodTypeSpec>()
 
