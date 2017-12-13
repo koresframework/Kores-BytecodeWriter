@@ -17,7 +17,7 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '4.0.0.12-beta-bytecode'
+version '4.0.0.13-beta-bytecode'
 
 apply from: project(":CodeAPI").file("gradle/common.gradle")
 
@@ -27,8 +27,8 @@ dependencies {
     // with runtime dependency pointing to CodeAPI published version
     //compile project(":CodeAPI")
     compileOnly project(":CodeAPI")
-    runtime "com.github.JonathanxD:CodeAPI:4.0.0.11-beta"
-    compile 'com.github.JonathanxD:BytecodeDisassembler:2.0.5'
+    runtime "com.github.JonathanxD:CodeAPI:4.0.0.12-beta"
+    compile 'com.github.JonathanxD:BytecodeDisassembler:2.1.0'
     compile "org.ow2.asm:asm:6.0"
     compile "org.ow2.asm:asm-tree:6.0"
     compile "org.ow2.asm:asm-util:6.0"

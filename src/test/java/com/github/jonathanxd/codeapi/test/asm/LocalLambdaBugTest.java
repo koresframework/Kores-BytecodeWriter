@@ -89,8 +89,8 @@ public class LocalLambdaBugTest {
                                         VariableFactory.variable(Function.class, "func",
                                                 DynamicInvocationFactory.invokeDynamicLambda(
                                                         ref,
-                                                        Collections3.listOf(Access.THIS,
-                                                                Factories.accessVariable(Short.TYPE, "s")),
+                                                        Access.THIS,
+                                                        Collections3.listOf(Factories.accessVariable(Short.TYPE, "s")),
                                                         new MethodTypeSpec(Generic.type(Function.class).of(String.class),
                                                                 "apply",
                                                                 Factories.typeSpec(Object.class, Object.class)),
