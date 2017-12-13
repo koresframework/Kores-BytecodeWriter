@@ -31,6 +31,7 @@ import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
 import com.github.jonathanxd.codeapi.generic.GenericSignature
 import com.github.jonathanxd.codeapi.type.Generic
+import com.github.jonathanxd.codeapi.type.GenericType
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.jwiutils.kt.rightOrFail
 import java.lang.reflect.Type
@@ -121,13 +122,12 @@ object BridgeUtil {
 
     private fun findIn(type: Type, methodSpec: MethodTypeSpec): Set<MethodTypeSpec> {
 
-        val toGeneric = type.toGeneric
-        val generic =
-                (when {
-                    toGeneric.isWildcard -> Generic.wildcard()
-                    toGeneric.isType -> Generic.type(toGeneric.type)
-                    else -> Generic.type(toGeneric.name)
-                }).of(*toGeneric.bounds)
+        val toGeneric = type as? GenericType ?: type.toGeneric
+        val generic = (when {
+            toGeneric.isWildcard -> Generic.wildcard()
+            toGeneric.isType -> Generic.type(toGeneric.type)
+            else -> Generic.type(toGeneric.name)
+        }).of(*toGeneric.bounds)
 
         val codeType = type.concreteType
         val bridges = mutableSetOf<MethodTypeSpec>()
