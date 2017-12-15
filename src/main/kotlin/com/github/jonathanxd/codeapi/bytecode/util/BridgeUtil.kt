@@ -171,8 +171,6 @@ object BridgeUtil {
                 it.map { it.getMethodSpec(theType) }.filter(filter)
             }.rightOrFail
         }
-
-
     }
 
     private fun findIn(theClass: TypeDeclaration, generic: GenericType, methodSpec: MethodTypeSpec): MethodTypeSpec? {
@@ -212,10 +210,54 @@ object BridgeUtil {
         return null
     }
 
-    private fun findIn(theType: Type, generic: GenericType, methodSpec: MethodTypeSpec): MethodTypeSpec? {
-        val type = theType.defaultResolver.resolveTypeDeclaration(theType).rightOrFail
+    private fun findIn(theClass: Class<*>, generic: GenericType, methodSpec: MethodTypeSpec): MethodTypeSpec? {
+        val genericSignature = theClass.genericSignature
 
-        return findIn(type, generic, methodSpec)
+        val typeParameters = toTypeVars(genericSignature)
+
+        for (method in theClass.methods) {
+
+            if (methodSpec.methodName != method.name)
+                continue
+
+            val parameterTypes = method.parameters.map { it.type }
+
+            val spec = MethodTypeSpec(theClass, method.name,
+                    TypeSpec(method.returnType, parameterTypes))
+
+            if (methodSpec.compareTo(spec) == 0) {
+                return spec // No problem here, CodeAPI will not duplicate methods, it will only avoid the type inference (slow part of the bridge method inference)
+            }
+
+            val methodSignature = method.genericSignature
+
+            val methodParameters = toTypeVars(methodSignature)
+
+            val inferredReturnType = method.returnType.inferType(typeParameters, methodParameters, generic)
+
+            val inferredParametersTypes = parameterTypes.map { it.inferType(methodParameters, typeParameters, generic) }
+
+            val methodTypeSpec = MethodTypeSpec(theClass, method.name, TypeSpec(inferredReturnType, inferredParametersTypes))
+
+            if (methodTypeSpec.compareTo(methodSpec) == 0) {
+                return fixGenerics(spec, genericSignature, null, method)
+            }
+        }
+
+        return null
+    }
+
+    private fun findIn(theType: Type, generic: GenericType, methodSpec: MethodTypeSpec): MethodTypeSpec? {
+
+        val type = theType.concreteType
+
+        val resolved = type.defaultResolver.resolve(type).rightOr(null)
+
+        return when (resolved) {
+            is Class<*> -> findIn(resolved, generic, methodSpec)
+            is TypeDeclaration -> findIn(resolved, generic, methodSpec)
+            else -> findIn(theType.defaultResolver.resolveTypeDeclaration(theType).rightOrFail, generic, methodSpec)
+        }
     }
 
     private fun fixGenerics(spec: MethodTypeSpec, genericSignature: GenericSignature?, typeVariables: Array<out TypeVariable<*>>?, method: Any?): MethodTypeSpec {
