@@ -30,15 +30,27 @@ package com.github.jonathanxd.codeapi.bytecode.util
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
 import com.github.jonathanxd.codeapi.generic.GenericSignature
-import com.github.jonathanxd.codeapi.type.Generic
 import com.github.jonathanxd.codeapi.type.GenericType
+import com.github.jonathanxd.codeapi.type.CodeTypeResolver
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.jwiutils.kt.rightOrFail
+import java.lang.reflect.Method
 import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
 import java.util.*
 
-
+/**
+ * Bridge method generation utility. This class provides functions to generate bridge methods,
+ * bridge methods are required for some generic methods to ensure that invocations will not end up with
+ * an [AbstractMethodError], this is also the class used by BytecodeGenerator to generate bridges.
+ *
+ * The bridge method resolution is a expensive task,
+ * in some cases, optimized codes will be used, but in others, methods of a type is resolved with
+ * [CodeTypeResolver.resolveMethods], and the performance depends on how it is implemented,
+ * for CodeAPI types, a whole copy of original [TypeDeclaration] is returned, and this is very expensive from
+ * performance perspective, the same applies for Java [classes][Class], but for both, a specialized
+ * code is used to get methods, which is not expensive as much as the resolution.
+ */
 object BridgeUtil {
 
     fun genBridgeMethods(typeDeclaration: TypeDeclaration): Set<MethodDeclaration> =
@@ -122,12 +134,7 @@ object BridgeUtil {
 
     private fun findIn(type: Type, methodSpec: MethodTypeSpec): Set<MethodTypeSpec> {
 
-        val toGeneric = type as? GenericType ?: type.toGeneric
-        val generic = (when {
-            toGeneric.isWildcard -> Generic.wildcard()
-            toGeneric.isType -> Generic.type(toGeneric.type)
-            else -> Generic.type(toGeneric.name)
-        }).of(*toGeneric.bounds)
+        val generic = type as? GenericType ?: type.toGeneric
 
         val codeType = type.concreteType
         val bridges = mutableSetOf<MethodTypeSpec>()
@@ -142,20 +149,29 @@ object BridgeUtil {
         return bridges
     }
 
-    private fun findInOverride(theType: Type, generic: Generic, methodSpec: MethodTypeSpec): List<MethodTypeSpec> =
-            theType.defaultResolver.resolveMethods(theType).mapRight {
-                it.map { it.getMethodSpec(theType) }.filter {
-                    it.methodName == methodSpec.methodName
-                            && it.typeSpec.parameterTypes.map { it.concreteType }
-                            .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
-                            && !it.typeSpec.returnType.concreteType
-                            .`is`(methodSpec.typeSpec.returnType.concreteType)
-                            && it.typeSpec.returnType.codeType.bindedDefaultResolver.isAssignableFrom(methodSpec.typeSpec.returnType)
-                            .rightOr(true)
-                }
-            }.rightOrFail
+    private fun findInOverride(theType: Type, generic: GenericType, methodSpec: MethodTypeSpec): List<MethodTypeSpec> {
+        val filter: (MethodTypeSpec) -> Boolean = {
+            it.methodName == methodSpec.methodName
+                    && it.typeSpec.parameterTypes.map { it.concreteType }
+                    .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
+                    && !it.typeSpec.returnType.concreteType
+                    .`is`(methodSpec.typeSpec.returnType.concreteType)
+                    && it.typeSpec.returnType.codeType.bindedDefaultResolver.isAssignableFrom(methodSpec.typeSpec.returnType)
+                    .rightOr(true)
+        }
 
-    private fun findIn(theClass: TypeDeclaration, generic: Generic, methodSpec: MethodTypeSpec): MethodTypeSpec? {
+        return when (theType) {
+            is Class<*> -> theType.methods.map { it.getMethodSpec(theType) }.filter(filter)
+            is TypeDeclaration -> theType.methods.map { it.getMethodSpec(theType) }.filter(filter)
+            else -> theType.defaultResolver.resolveMethods(theType).mapRight {
+                it.map { it.getMethodSpec(theType) }.filter(filter)
+            }.rightOrFail
+        }
+
+
+    }
+
+    private fun findIn(theClass: TypeDeclaration, generic: GenericType, methodSpec: MethodTypeSpec): MethodTypeSpec? {
         val genericSignature = theClass.genericSignature
 
         val typeParameters = toTypeVars(genericSignature)
@@ -192,7 +208,7 @@ object BridgeUtil {
         return null
     }
 
-    private fun findIn(theType: Type, generic: Generic, methodSpec: MethodTypeSpec): MethodTypeSpec? {
+    private fun findIn(theType: Type, generic: GenericType, methodSpec: MethodTypeSpec): MethodTypeSpec? {
         val type = theType.defaultResolver.resolveTypeDeclaration(theType).rightOrFail
 
         return findIn(type, generic, methodSpec)
@@ -203,7 +219,7 @@ object BridgeUtil {
 
         var newReturnType = returnType
 
-        if (returnType is Generic) {
+        if (returnType is GenericType) {
             newReturnType = if (returnType.isType)
                 returnType.resolvedType
             else
@@ -220,7 +236,7 @@ object BridgeUtil {
         var newParameterTypes = spec.typeSpec.parameterTypes
 
         newParameterTypes = newParameterTypes.map { codeType ->
-            if (codeType is Generic) {
+            if (codeType is GenericType) {
                 if (codeType.isType)
                     return@map codeType
                 else
@@ -248,6 +264,12 @@ fun MethodDeclarationBase.getMethodSpec(typeDeclaration: TypeDeclaration): Metho
         )
 
 fun MethodDeclarationBase.getMethodSpec(type: Type): MethodTypeSpec = MethodTypeSpec(
+        type,
+        this.name,
+        TypeSpec(this.returnType, this.parameters.map { it.type })
+)
+
+fun Method.getMethodSpec(type: Type): MethodTypeSpec = MethodTypeSpec(
         type,
         this.name,
         TypeSpec(this.returnType, this.parameters.map { it.type })
