@@ -162,9 +162,11 @@ object BridgeUtil {
 
         val type = theType.concreteType
 
-        return when (type) {
-            is Class<*> -> type.methods.map { it.getMethodSpec(theType) }.filter(filter)
-            is TypeDeclaration -> type.methods.map { it.getMethodSpec(theType) }.filter(filter)
+        val resolved = type.defaultResolver.resolve(type).rightOr(null)
+
+        return when (resolved) {
+            is Class<*> -> resolved.methods.map { it.getMethodSpec(theType) }.filter(filter)
+            is TypeDeclaration -> resolved.methods.map { it.getMethodSpec(theType) }.filter(filter)
             else -> theType.defaultResolver.resolveMethods(theType).mapRight {
                 it.map { it.getMethodSpec(theType) }.filter(filter)
             }.rightOrFail
