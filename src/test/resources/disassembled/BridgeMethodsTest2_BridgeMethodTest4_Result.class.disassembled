@@ -1,4 +1,4 @@
-md5: 8af6885e1d16931a6ebb6dacb7e37ac7
+md5: f4140f2cce6fbfdcc1736e4731afaaac
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,7 +8,6 @@ source: BridgeMethodTest4.cai
 public class com.BridgeMethodTest4 extends java.lang.Object implements com.github.jonathanxd.codeapi.test.asm.BaseGIntegerG {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
-    !signature: ()T<Ljava/lang/Number;>;
     public java.lang.Number getValue() {
       desc: ()Ljava/lang/Number; 
       maxStack: 1, maxLocals: 1 
@@ -24,7 +23,6 @@ public class com.BridgeMethodTest4 extends java.lang.Object implements com.githu
     }
     
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
-    !signature: ()TT;
     public java.lang.Object getValue() {
       desc: ()Ljava/lang/Object; 
       maxStack: 1, maxLocals: 1 

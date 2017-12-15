@@ -1,4 +1,4 @@
-md5: ebd4111df03e70b0004387697db8ff06
+md5: fb84d869d35669927269bd0e35d077e1
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -7,6 +7,25 @@ source: bridgeTest.cai
 
 public class com.bridgeTest extends java.lang.Object implements com.AB {
 
+    !access: ACC_PUBLIC, ACC_BRIDGE (65)
+    !signature: (TT;)V
+    !parameter[name: iter, access:  (0)]
+    public void iterate(java.lang.Object) {
+      desc: (Ljava/lang/Object;)V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        aload 1
+        checkcast java.util.List
+        invokevirtual com.bridgeTest.iterate(java.util.List)void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 1, name: iter, start: Label_0, end: Label_1, type: java.lang.Object, signature: TT;
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.bridgeTest, signature: null
+      }
+    }
+    
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
     !signature: (Ljava/lang/Iterable<*>;)V
     !parameter[name: iter, access:  (0)]

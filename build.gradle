@@ -17,7 +17,7 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '4.0.0.21-beta-bytecode'
+version '4.0.0.22-beta-bytecode'
 
 apply from: project(":CodeAPI").file("gradle/common.gradle")
 

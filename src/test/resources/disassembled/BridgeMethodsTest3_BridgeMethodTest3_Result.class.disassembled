@@ -1,55 +1,44 @@
-md5: 7998251d79f7355e344106402c491eba
+md5: 13b514a7c7700aa0000ec60005b3ae02
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: BridgeMethodTest3.cai
 
-public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.codeapi.test.asm.BaseGInteger {
+public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.codeapi.test.asm.BridgeMethodsTest3$StringTransform {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
-    public java.lang.Number getValue() {
-      desc: ()Ljava/lang/Number; 
-      maxStack: 1, maxLocals: 1 
+    !parameter[name: i, access:  (0)]
+    public java.lang.Object transform(java.lang.Object) {
+      desc: (Ljava/lang/Object;)Ljava/lang/Object; 
+      maxStack: 2, maxLocals: 2 
       Label_0:
         aload 0
-        invokevirtual com.BridgeMethodTest3.getValue()java.lang.Integer (ownerIsInterface: false)
-        checkcast java.lang.Number
-        areturn
-      Label_1:
-      LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: com.BridgeMethodTest3, signature: null
-      }
-    }
-    
-    !access: ACC_PUBLIC, ACC_BRIDGE (65)
-    public java.lang.Object getValue() {
-      desc: ()Ljava/lang/Object; 
-      maxStack: 1, maxLocals: 1 
-      Label_0:
-        aload 0
-        invokevirtual com.BridgeMethodTest3.getValue()java.lang.Integer (ownerIsInterface: false)
+        aload 1
+        checkcast java.lang.Integer
+        invokevirtual com.BridgeMethodTest3.transform(java.lang.Integer)java.lang.String (ownerIsInterface: false)
         checkcast java.lang.Object
         areturn
       Label_1:
       LocalVariables {
+        index: 1, name: i, start: Label_0, end: Label_1, type: java.lang.Object, signature: null
         index: 0, name: this, start: Label_0, end: Label_1, type: com.BridgeMethodTest3, signature: null
       }
     }
     
     !access: ACC_PUBLIC (1)
-    public java.lang.Integer getValue() {
-      desc: ()Ljava/lang/Integer; 
-      maxStack: 3, maxLocals: 1 
+    !parameter[name: i, access:  (0)]
+    public java.lang.String transform(java.lang.Integer) {
+      desc: (Ljava/lang/Integer;)Ljava/lang/String; 
+      maxStack: 1, maxLocals: 2 
       Label_0:
        LINE 1 -> Label_0
-        new java.lang.Integer
-        dup
-        bipush 14
-        invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
+        aload 1
+        invokevirtual java.lang.Object.toString()java.lang.String (ownerIsInterface: false)
         areturn
       Label_1:
       LocalVariables {
+        index: 1, name: i, start: Label_0, end: Label_1, type: java.lang.Integer, signature: null
         index: 0, name: this, start: Label_0, end: Label_1, type: com.BridgeMethodTest3, signature: null
       }
     }

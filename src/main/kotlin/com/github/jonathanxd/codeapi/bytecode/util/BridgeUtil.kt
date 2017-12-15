@@ -30,8 +30,8 @@ package com.github.jonathanxd.codeapi.bytecode.util
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
 import com.github.jonathanxd.codeapi.generic.GenericSignature
-import com.github.jonathanxd.codeapi.type.GenericType
 import com.github.jonathanxd.codeapi.type.CodeTypeResolver
+import com.github.jonathanxd.codeapi.type.GenericType
 import com.github.jonathanxd.codeapi.util.*
 import com.github.jonathanxd.jwiutils.kt.rightOrFail
 import java.lang.reflect.Method
@@ -150,14 +150,34 @@ object BridgeUtil {
     }
 
     private fun findInOverride(theType: Type, generic: GenericType, methodSpec: MethodTypeSpec): List<MethodTypeSpec> {
-        val filter: (MethodTypeSpec) -> Boolean = {
-            it.methodName == methodSpec.methodName
-                    && it.typeSpec.parameterTypes.map { it.concreteType }
-                    .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
-                    && !it.typeSpec.returnType.concreteType
-                    .`is`(methodSpec.typeSpec.returnType.concreteType)
-                    && it.typeSpec.returnType.codeType.bindedDefaultResolver.isAssignableFrom(methodSpec.typeSpec.returnType)
+        val otherRType = methodSpec.typeSpec.returnType
+        val otherParams = methodSpec.typeSpec.parameterTypes.map { it.concreteType }
+
+        val filter: (MethodTypeSpec) -> Boolean = f@ {
+
+            val itRType = it.typeSpec.returnType.concreteType
+            val itParams = it.typeSpec.parameterTypes.map { it.concreteType }
+
+            if (it.methodName != methodSpec.methodName
+                    || itParams.size != otherParams.size
+                    || (otherRType.`is`(itRType) && otherParams.`is`(itParams)))
+                return@f false
+
+            val rTypeEq = itRType.`is`(otherRType)
+                    || itRType.bindedDefaultResolver.isAssignableFrom(otherRType)
                     .rightOr(true)
+
+            val paramAssign = itParams.mapIndexed { index, codeType ->
+                codeType.bindedDefaultResolver.isAssignableFrom(otherParams[index])
+            }.all {
+                it.rightOr(true)
+            }
+
+            val isParamEq = otherParams.size == itParams.size
+                    && (otherParams.`is`(itParams)
+                    || paramAssign)
+
+            rTypeEq && isParamEq
         }
 
         val type = theType.concreteType
