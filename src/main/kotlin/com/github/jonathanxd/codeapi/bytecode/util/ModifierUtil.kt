@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -45,7 +45,10 @@ object ModifierUtil {
         if (modifiers.contains(CodeModifier.STATIC))
             modifiers.remove(CodeModifier.STATIC)
 
-        return (if (!typeDeclaration.isInterface) Opcodes.ACC_SUPER else 0) + ModifierUtil.modifiersToAsm(modifiers, typeDeclaration.isInterface)
+        return (if (!typeDeclaration.isInterface) Opcodes.ACC_SUPER else 0) + ModifierUtil.modifiersToAsm(
+            modifiers,
+            typeDeclaration.isInterface
+        )
     }
 
     fun modifiersToAsm(codeModifiers: Collection<CodeModifier>): Int {
@@ -53,7 +56,9 @@ object ModifierUtil {
     }
 
     fun modifiersToAsm(codeModifiers: Collection<CodeModifier>, isInterface: Boolean): Int {
-        return (if (isInterface) Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE else 0) + ModifierUtil.toAsmAccess(codeModifiers)
+        return (if (isInterface) Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE else 0) + ModifierUtil.toAsmAccess(
+            codeModifiers
+        )
     }
 
     fun innerModifiersToAsm(typeDeclaration: TypeDeclaration): Int {
@@ -128,13 +133,13 @@ object ModifierUtil {
         if (mods.isEmpty())
             return Opcodes.ACC_PUBLIC
 
-        if(mods.none { it.modifierType == ModifierType.VISIBILITY })
+        if (mods.none { it.modifierType == ModifierType.VISIBILITY })
             mods.add(CodeModifier.PUBLIC)
 
         return modifiers
-                .map { toAsmAccess(it) }
-                .filter { it != 0 }
-                .sum()
+            .map { toAsmAccess(it) }
+            .filter { it != 0 }
+            .sum()
     }
 
 }

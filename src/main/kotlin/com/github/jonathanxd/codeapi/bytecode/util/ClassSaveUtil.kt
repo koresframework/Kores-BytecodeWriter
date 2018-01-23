@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -33,7 +33,11 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
-fun BytecodeClass.save(directory: Path, disassemble: Boolean = false, alternativeDir: Boolean = false) {
+fun BytecodeClass.save(
+    directory: Path,
+    disassemble: Boolean = false,
+    alternativeDir: Boolean = false
+) {
 
     val targetPath = this.toPath(directory)
 
@@ -43,33 +47,41 @@ fun BytecodeClass.save(directory: Path, disassemble: Boolean = false, alternativ
 
     val classPath = targetPath.resolve("$name.class")
 
-    if(Files.exists(classPath))
+    if (Files.exists(classPath))
         Files.deleteIfExists(classPath)
 
     Files.write(classPath, this.bytecode, StandardOpenOption.CREATE)
 
     if (disassemble) {
-        val base = if (alternativeDir) this.toPath(directory.resolve("disassembled")) else targetPath
+        val base =
+            if (alternativeDir) this.toPath(directory.resolve("disassembled")) else targetPath
 
         Files.createDirectories(base)
         val disassembledPath = base.resolve("$name.class.dissassembled")
 
-        if(Files.exists(disassembledPath))
+        if (Files.exists(disassembledPath))
             Files.deleteIfExists(disassembledPath)
 
-        Files.write(disassembledPath, this.disassembledCode.toByteArray(), StandardOpenOption.CREATE)
+        Files.write(
+            disassembledPath,
+            this.disassembledCode.toByteArray(),
+            StandardOpenOption.CREATE
+        )
     }
 }
 
 fun BytecodeClass.toPath(base: Path): Path =
-        ((this.declaration as? TypeDeclaration)?.packageName ?: this.declaration.name)
-                .split('.')
-                .fold(base) { acc, s -> acc.resolve(s) }
-
+    ((this.declaration as? TypeDeclaration)?.packageName ?: this.declaration.name)
+        .split('.')
+        .fold(base) { acc, s -> acc.resolve(s) }
 
 
 fun BytecodeClass.toPathWithName(base: Path): Path =
-        this.toPath(base).resolve((this.declaration as? TypeDeclaration)?.simpleName ?: this.declaration.name)
+    this.toPath(base).resolve(
+        (this.declaration as? TypeDeclaration)?.simpleName ?: this.declaration.name
+    )
 
 fun BytecodeClass.toPathWithNameAnd(base: Path, str: String): Path =
-        this.toPath(base).resolve("${(this.declaration as? TypeDeclaration)?.simpleName ?: this.declaration.name}$str")
+    this.toPath(base).resolve(
+        "${(this.declaration as? TypeDeclaration)?.simpleName ?: this.declaration.name}$str"
+    )

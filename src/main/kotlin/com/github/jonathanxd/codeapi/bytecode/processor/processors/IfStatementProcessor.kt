@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,13 +34,17 @@ import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
 object IfStatementProcessor : Processor<IfStatement> {
 
-    override fun process(part: IfStatement, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: IfStatement,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val mvHelper = METHOD_VISITOR.require(data)
 
         val startIfLabel = Label()
@@ -52,17 +56,26 @@ object IfStatementProcessor : Processor<IfStatement> {
         val elseStatement = part.elseStatement
 
         val jumpLabel =
-                when {
-                    part.body.contains(SwitchProcessor.SwitchMarker) -> FLOWS.require(data).last().insideEnd
-                    elseStatement.isNotEmpty -> elseLabel
-                    else -> endIfLabel
-                }
+            when {
+                part.body.contains(SwitchProcessor.SwitchMarker) -> FLOWS.require(data).last().insideEnd
+                elseStatement.isNotEmpty -> elseLabel
+                else -> endIfLabel
+            }
 
         val methodVisitor = mvHelper.methodVisitor
 
         methodVisitor.visitLabel(startIfLabel)
 
-        visit(part.expressions, startIfLabel, ifBody, jumpLabel, false, data, processorManager, mvHelper)
+        visit(
+            part.expressions,
+            startIfLabel,
+            ifBody,
+            jumpLabel,
+            false,
+            data,
+            processorManager,
+            mvHelper
+        )
 
         val body = part.body
 

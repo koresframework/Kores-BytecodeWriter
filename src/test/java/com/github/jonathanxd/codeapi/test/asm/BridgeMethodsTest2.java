@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -30,35 +30,16 @@ package com.github.jonathanxd.codeapi.test.asm;
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.CodeModifier;
-import com.github.jonathanxd.codeapi.base.ForEachStatement;
-import com.github.jonathanxd.codeapi.base.InterfaceDeclaration;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
-import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.factory.Factories;
-import com.github.jonathanxd.codeapi.factory.InvocationFactory;
-import com.github.jonathanxd.codeapi.factory.VariableFactory;
-import com.github.jonathanxd.codeapi.generic.GenericSignature;
-import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
-import com.github.jonathanxd.codeapi.type.Generic;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.function.UnaryOperator;
-
-import kotlin.collections.CollectionsKt;
-
-import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
-import static com.github.jonathanxd.codeapi.factory.Factories.forEachIterable;
-import static com.github.jonathanxd.codeapi.factory.Factories.parameter;
-import static com.github.jonathanxd.codeapi.factory.Factories.typeSpec;
 
 public class BridgeMethodsTest2 {
 
@@ -72,13 +53,13 @@ public class BridgeMethodsTest2 {
                 .qualifiedName("com.BridgeMethodTest2")
                 .implementations(BaseString.class)
                 .methods(MethodDeclaration.Builder.builder()
-                                .modifiers(CodeModifier.PUBLIC)
-                                .returnType(String.class)
-                                .name("getValue")
-                                .body(CodeSource.fromPart(
-                                        Factories.returnValue(String.class, Literals.STRING("works"))
-                                ))
-                                .build()
+                        .modifiers(CodeModifier.PUBLIC)
+                        .returnType(String.class)
+                        .name("getValue")
+                        .body(CodeSource.fromPart(
+                                Factories.returnValue(String.class, Literals.STRING("works"))
+                        ))
+                        .build()
                 )
                 .build();
 

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -92,11 +92,11 @@ public final class ResultSaver {
 
             Files.write(file.toPath(), result, StandardOpenOption.CREATE);
 
-            String savedPath = path+"/disassembled/" + simpleName + ".disassembled";
+            String savedPath = path + "/disassembled/" + simpleName + ".disassembled";
 
             File pathDisassembled = new File(savedPath);
 
-            if(pathDisassembled.getParentFile() != null && !pathDisassembled.getParentFile().exists())
+            if (pathDisassembled.getParentFile() != null && !pathDisassembled.getParentFile().exists())
                 pathDisassembled.getParentFile().mkdirs();
 
             Files.deleteIfExists(pathDisassembled.toPath());
@@ -114,7 +114,7 @@ public final class ResultSaver {
 
                 start.waitFor();
 
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

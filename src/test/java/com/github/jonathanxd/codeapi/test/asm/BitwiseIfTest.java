@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,7 +29,6 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.test.BitwiseIfTest_;
-import com.github.jonathanxd.codeapi.test.ComplexIfTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.reflection.Invokables;
 import com.github.jonathanxd.iutils.reflection.Link;
@@ -37,8 +36,6 @@ import com.github.jonathanxd.iutils.reflection.Links;
 
 import org.junit.Test;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.UnaryOperator;
 
 public class BitwiseIfTest {

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -36,7 +36,7 @@ import java.util.*
 class CachedCodeClassLoader : CodeClassLoader {
 
     constructor() : super()
-    constructor(parent: ClassLoader): super(parent)
+    constructor(parent: ClassLoader) : super(parent)
 
     private val cache = mutableMapOf<TypeDeclaration, Class<*>>()
     private val immutableCache = Collections.unmodifiableMap(cache)

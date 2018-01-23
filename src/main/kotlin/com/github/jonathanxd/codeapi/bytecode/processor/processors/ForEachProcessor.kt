@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -37,13 +37,17 @@ import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.type
+import com.github.jonathanxd.codeapi.type
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 
 object ForEachProcessor : Processor<ForEachStatement> {
 
-    override fun process(part: ForEachStatement, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ForEachStatement,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
 
         val mvHelper = METHOD_VISITOR.require(data)
 
@@ -54,36 +58,50 @@ object ForEachProcessor : Processor<ForEachStatement> {
                 val arrayName = mvHelper.getUniqueVariableName("\$array#")
                 val name = mvHelper.getUniqueVariableName("\$arrayIndex#")
 
-                val arrayVariable = variable(modifiers = setOf(CodeModifier.FINAL),
-                        type = part.iterableElement.type, name = arrayName, value = part.iterableElement)
+                val arrayVariable = variable(
+                    modifiers = setOf(CodeModifier.FINAL),
+                    type = part.iterableElement.type, name = arrayName, value = part.iterableElement
+                )
                 val indexVariable = variable(type = Types.INT, name = name, value = Literals.INT(0))
 
                 val accessArray = accessVariable(arrayVariable)
                 val arrayType = arrayVariable.type
 
                 ForStatement.Builder.builder()
-                        .forInit(listOf(arrayVariable, indexVariable))
-                        .forExpression(check(
-                                accessVariable(indexVariable),
-                                Operators.LESS_THAN,
-                                arrayLength(arrayType, accessArray)
-                        ))
-                        .forUpdate(listOf(operateAndAssign(indexVariable, Operators.ADD, Literals.INT(1))))
-                        .body(
-                                CodeSource.fromPart(variable(
-                                        name = part.variable.name,
-                                        type = part.variable.type,
-                                        value = accessArrayValue(
-                                                arrayType = arrayType,
-                                                target = accessArray,
-                                                index = accessVariable(indexVariable),
-                                                valueType = part.variable.type
-
-                                        )
-                                )) + part.body
-
+                    .forInit(listOf(arrayVariable, indexVariable))
+                    .forExpression(
+                        check(
+                            accessVariable(indexVariable),
+                            Operators.LESS_THAN,
+                            arrayLength(arrayType, accessArray)
                         )
-                        .build()
+                    )
+                    .forUpdate(
+                        listOf(
+                            operateAndAssign(
+                                indexVariable,
+                                Operators.ADD,
+                                Literals.INT(1)
+                            )
+                        )
+                    )
+                    .body(
+                        CodeSource.fromPart(
+                            variable(
+                                name = part.variable.name,
+                                type = part.variable.type,
+                                value = accessArrayValue(
+                                    arrayType = arrayType,
+                                    target = accessArray,
+                                    index = accessVariable(indexVariable),
+                                    valueType = part.variable.type
+
+                                )
+                            )
+                        ) + part.body
+
+                    )
+                    .build()
 
             }
             else -> {
@@ -94,50 +112,56 @@ object ForEachProcessor : Processor<ForEachStatement> {
                 val name = mvHelper.getUniqueVariableName("\$iteratorInstance#")
 
                 val iteratorVariable = variable(
-                        type = iteratorType,
-                        name = name,
-                        value = invoke(
-                                invokeType = InvokeType.get(iterableType),
-                                localization = iterableType,
-                                name = iteratorGetterName,
-                                target = part.iterableElement,
-                                spec = iterationType.iteratorMethodSpec.typeSpec,
-                                arguments = emptyList()
-                        ))
+                    type = iteratorType,
+                    name = name,
+                    value = invoke(
+                        invokeType = InvokeType.get(iterableType),
+                        localization = iterableType,
+                        name = iteratorGetterName,
+                        target = part.iterableElement,
+                        spec = iterationType.iteratorMethodSpec.typeSpec,
+                        arguments = emptyList()
+                    )
+                )
 
                 ForStatement.Builder.builder()
-                        .forInit(iteratorVariable)
-                        .forExpression(check(
-                                invoke(
+                    .forInit(iteratorVariable)
+                    .forExpression(
+                        check(
+                            invoke(
+                                invokeType = InvokeType.get(iteratorType),
+                                localization = iteratorType,
+                                name = iterationType.hasNextName,
+                                target = accessVariable(iteratorVariable),
+                                spec = TypeSpec(Types.BOOLEAN),
+                                arguments = emptyList()
+                            ),
+                            Operators.EQUAL_TO,
+                            Literals.TRUE
+                        )
+                    )
+                    .forUpdate(CodeNothing)
+                    .body(
+                        CodeSource.fromPart(
+                            variable(
+                                name = part.variable.name,
+                                type = part.variable.type,
+                                value = cast(
+                                    from = iterationType.nextMethodSpec.typeSpec.returnType,
+                                    to = part.variable.type,
+                                    part = invoke(
                                         invokeType = InvokeType.get(iteratorType),
                                         localization = iteratorType,
-                                        name = iterationType.hasNextName,
+                                        name = iterationType.nextMethodSpec.methodName,
                                         target = accessVariable(iteratorVariable),
-                                        spec = TypeSpec(Types.BOOLEAN),
+                                        spec = iterationType.nextMethodSpec.typeSpec,
                                         arguments = emptyList()
-                                ),
-                                Operators.EQUAL_TO,
-                                Literals.TRUE
-                        ))
-                        .forUpdate(CodeNothing)
-                        .body(
-                                CodeSource.fromPart(variable(
-                                        name = part.variable.name,
-                                        type = part.variable.type,
-                                        value = cast(from = iterationType.nextMethodSpec.typeSpec.returnType,
-                                                to = part.variable.type,
-                                                part = invoke(
-                                                        invokeType = InvokeType.get(iteratorType),
-                                                        localization = iteratorType,
-                                                        name = iterationType.nextMethodSpec.methodName,
-                                                        target = accessVariable(iteratorVariable),
-                                                        spec = iterationType.nextMethodSpec.typeSpec,
-                                                        arguments = emptyList()
-                                                )
-                                        )
-                                )) + part.body
-                        )
-                        .build()
+                                    )
+                                )
+                            )
+                        ) + part.body
+                    )
+                    .build()
 
             }
         }

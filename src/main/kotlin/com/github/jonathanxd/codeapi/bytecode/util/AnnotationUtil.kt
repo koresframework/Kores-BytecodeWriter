@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,16 +28,20 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.base.Annotation
+import com.github.jonathanxd.codeapi.base.CodeRetention
 import com.github.jonathanxd.codeapi.base.EnumValue
-import com.github.jonathanxd.codeapi.type.CodeType
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.array.ArrayUtils
 import org.objectweb.asm.Type
 
 object AnnotationUtil {
-    fun visitAnnotation(annotation: Annotation, annotationVisitorCapable: AnnotationVisitorCapable) {
+    fun visitAnnotation(
+        annotation: Annotation,
+        annotationVisitorCapable: AnnotationVisitorCapable
+    ) {
+        val visible = annotation.retention == CodeRetention.RUNTIME
         val annotationTypeAsm = annotation.type.typeDesc
-        val annotationVisitor = annotationVisitorCapable.visitAnnotation(annotationTypeAsm, annotation.visible)
+        val annotationVisitor = annotationVisitorCapable.visitAnnotation(annotationTypeAsm, visible)
 
         val values = annotation.values
 
@@ -48,7 +52,11 @@ object AnnotationUtil {
         annotationVisitor.visitEnd()
     }
 
-    fun visitAnnotationValue(annotationVisitor: org.objectweb.asm.AnnotationVisitor, key: String?, value: Any) {
+    fun visitAnnotationValue(
+        annotationVisitor: org.objectweb.asm.AnnotationVisitor,
+        key: String?,
+        value: Any
+    ) {
         @Suppress("NAME_SHADOWING")
         var value = value
 

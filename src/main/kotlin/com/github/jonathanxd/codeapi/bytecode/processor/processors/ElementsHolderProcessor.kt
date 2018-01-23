@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -35,11 +35,15 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.processor.processAs
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.inContext
+import com.github.jonathanxd.iutils.kt.inContext
 
 object ElementsHolderProcessor : Processor<ElementsHolder> {
 
-    override fun process(part: ElementsHolder, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ElementsHolder,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
 
         part.fields.forEach {
             it.visitHolder(data, processorManager)
@@ -54,9 +58,11 @@ object ElementsHolderProcessor : Processor<ElementsHolder> {
         }
 
         if (part is TypeDeclaration && part is ConstructorsHolder
-                && !part.isInterface && part.constructors.isEmpty()) {
+                && !part.isInterface && part.constructors.isEmpty()
+        ) {
             val defaultConstructor = constructorDec().build {
-                this.modifiers = part.modifiers.filter { it.modifierType == ModifierType.VISIBILITY }.toSet()
+                this.modifiers =
+                        part.modifiers.filter { it.modifierType == ModifierType.VISIBILITY }.toSet()
             }
 
             processorManager.process(ConstructorDeclaration::class.java, defaultConstructor, data)
@@ -69,13 +75,20 @@ object ElementsHolderProcessor : Processor<ElementsHolder> {
 
 }
 
-inline fun <reified T : InnerTypesHolder> T.visitHolder(data: TypedData, processorManager: ProcessorManager<*>) {
+inline fun <reified T : InnerTypesHolder> T.visitHolder(
+    data: TypedData,
+    processorManager: ProcessorManager<*>
+) {
     processorManager.process(InnerTypesHolder::class.java, this, data)
     processorManager.process(T::class.java, this, data)
 }
 
 object ConstructorsHolderProcessor : Processor<ConstructorsHolder> {
-    override fun process(part: ConstructorsHolder, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ConstructorsHolder,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         part.constructors.forEach {
             it.visitHolder(data, processorManager)
         }
@@ -84,7 +97,11 @@ object ConstructorsHolderProcessor : Processor<ConstructorsHolder> {
 }
 
 object InnerTypesHolderProcessor : Processor<InnerTypesHolder> {
-    override fun process(part: InnerTypesHolder, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: InnerTypesHolder,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         LOCATION.inContext(data, part) {
             part.innerTypes.forEach {
                 processorManager.process(it::class.java, it, data)

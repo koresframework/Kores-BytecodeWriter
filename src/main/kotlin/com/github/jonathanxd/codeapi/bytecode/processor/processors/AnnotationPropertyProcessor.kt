@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -38,13 +38,17 @@ import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.inContext
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.inContext
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
 
 object AnnotationPropertyProcessor : Processor<AnnotationProperty> {
 
-    override fun process(part: AnnotationProperty, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: AnnotationProperty,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val cw = CLASS_VISITOR.require(data)
 
         val asmModifiers = Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT
@@ -66,7 +70,10 @@ object AnnotationPropertyProcessor : Processor<AnnotationProperty> {
 
         val helper = MethodVisitorHelper(mv, mutableListOf())
 
-        ANNOTATION_VISITOR_CAPABLE.inContext(data, AnnotationVisitorCapable.MethodVisitorCapable(helper.methodVisitor)) {
+        ANNOTATION_VISITOR_CAPABLE.inContext(
+            data,
+            AnnotationVisitorCapable.MethodVisitorCapable(helper.methodVisitor)
+        ) {
             processorManager.process(Annotable::class.java, part, data)
         }
 

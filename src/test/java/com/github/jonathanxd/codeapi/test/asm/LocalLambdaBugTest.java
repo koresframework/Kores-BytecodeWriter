@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,18 +29,17 @@ package com.github.jonathanxd.codeapi.test.asm;
 
 import com.github.jonathanxd.codeapi.CodeSource;
 import com.github.jonathanxd.codeapi.base.Access;
+import com.github.jonathanxd.codeapi.base.Alias;
 import com.github.jonathanxd.codeapi.base.ClassDeclaration;
 import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.InvokeType;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
-import com.github.jonathanxd.codeapi.base.MethodInvocation;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeSpec;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
 import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
 import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
-import com.github.jonathanxd.codeapi.common.DynamicMethodSpec;
 import com.github.jonathanxd.codeapi.common.MethodInvokeSpec;
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec;
 import com.github.jonathanxd.codeapi.factory.DynamicInvocationFactory;
@@ -50,8 +49,6 @@ import com.github.jonathanxd.codeapi.factory.VariableFactory;
 import com.github.jonathanxd.codeapi.helper.ConcatHelper;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.type.Generic;
-import com.github.jonathanxd.codeapi.util.Alias;
-import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.collection.Collections3;
 
 import org.junit.Assert;
@@ -98,12 +95,12 @@ public class LocalLambdaBugTest {
                                                 )),
                                         Factories.returnValue(String.class,
                                                 Factories.cast(Object.class, String.class,
-                                                InvocationFactory.invokeInterface(Function.class,
-                                                Factories.accessVariable(Function.class, "func"),
-                                                "apply",
-                                                Factories.typeSpec(Object.class, Object.class),
-                                                Collections3.listOf(Literals.STRING("A")))
-                                        ))
+                                                        InvocationFactory.invokeInterface(Function.class,
+                                                                Factories.accessVariable(Function.class, "func"),
+                                                                "apply",
+                                                                Factories.typeSpec(Object.class, Object.class),
+                                                                Collections3.listOf(Literals.STRING("A")))
+                                                ))
                                 ))
                                 .build(),
 
@@ -123,7 +120,7 @@ public class LocalLambdaBugTest {
                                                         Factories.typeSpec(String.class, Integer.TYPE),
                                                         Collections3.listOf(
                                                                 Factories.cast(Short.TYPE, Integer.TYPE,
-                                                                Factories.accessVariable(Short.TYPE, "s"))))
+                                                                        Factories.accessVariable(Short.TYPE, "s"))))
 
                                                 ).concat(". S: ").concat(
                                                         Factories.accessVariable(String.class, "value")).build()

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -30,23 +30,29 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.GENERATE_SYNTHETIC_ACCESS
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
-import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
+import com.github.jonathanxd.codeapi.safeForComparison
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.type.`is`
+import com.github.jonathanxd.codeapi.type.internalName
+import com.github.jonathanxd.codeapi.type.isInterface
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Type
 
 object MethodInvocationProcessor : Processor<MethodInvocation> {
 
-    override fun process(part: MethodInvocation, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: MethodInvocation,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
 
         val localization: Type = Util.resolveType(part.localization, data)
@@ -60,12 +66,14 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
             val innerSpec = getInnerSpec(localization, data)
 
             if (innerSpec != null) {
-                newSpecification = newSpecification.copy(typeSpec = newSpecification.typeSpec.copy(
+                newSpecification = newSpecification.copy(
+                    typeSpec = newSpecification.typeSpec.copy(
                         parameterTypes = innerSpec.argTypes + newSpecification.typeSpec.parameterTypes
-                ))
+                    )
+                )
                 newPart = newPart.builder()
-                        .spec(newSpecification)
-                        .arguments(innerSpec.args + newPart.arguments).build()
+                    .spec(newSpecification)
+                    .arguments(innerSpec.args + newPart.arguments).build()
             }
         }
 
@@ -127,11 +135,12 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         processorManager.process(ArgumentsHolder::class.java, newPart, data)
 
         mv.visitMethodInsn(
-                /*Type like invokestatic*/InvokeTypeUtil.toAsm(invokeType),
-                /*Localization*/localization.internalName,
-                /*Method name*/newSpecification.methodName,
-                /*(ARGUMENT)RETURN*/newSpecification.typeSpec.typeDesc,
-                localization.isInterface)
+            /*Type like invokestatic*/InvokeTypeUtil.toAsm(invokeType),
+            /*Localization*/localization.internalName,
+            /*Method name*/newSpecification.methodName,
+            /*(ARGUMENT)RETURN*/newSpecification.typeSpec.typeDesc,
+            localization.isInterface
+        )
 
         if (!syntheticPart.spec.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
             mv.visitInsn(Opcodes.POP)

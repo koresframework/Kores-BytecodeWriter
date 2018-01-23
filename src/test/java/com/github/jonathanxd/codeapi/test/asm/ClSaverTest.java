@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -33,7 +33,6 @@ import com.github.jonathanxd.codeapi.base.CodeModifier;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass;
-import com.github.jonathanxd.codeapi.bytecode.classloader.CodeClassLoader;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.bytecode.util.ClassSaveUtilKt;
 import com.github.jonathanxd.codeapi.helper.Predefined;
@@ -42,7 +41,6 @@ import com.github.jonathanxd.codeapi.literal.Literals;
 import org.junit.Test;
 
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.List;
 
 public class ClSaverTest {

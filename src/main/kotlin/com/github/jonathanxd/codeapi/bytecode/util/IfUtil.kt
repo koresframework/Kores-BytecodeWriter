@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -32,9 +32,9 @@ import org.objectweb.asm.Opcodes
 object IfUtil {
 
     fun getIfNeEqOpcode(value: Boolean): Int =
-            if (value) Opcodes.IFNE else Opcodes.IFEQ
+        if (value) Opcodes.IFNE else Opcodes.IFEQ
 
     fun invertIfNeEqOpcode(opcode: Int): Int =
-            if (opcode == Opcodes.IFNE) Opcodes.IFEQ else Opcodes.IFNE
+        if (opcode == Opcodes.IFNE) Opcodes.IFEQ else Opcodes.IFNE
 
 }

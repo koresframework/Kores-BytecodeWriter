@@ -27,37 +27,54 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
-import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.test.EnumTest_;
+import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.Alias;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
+import com.github.jonathanxd.codeapi.factory.Factories;
+import com.github.jonathanxd.codeapi.factory.InvocationFactory;
+import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.iutils.annotation.Named;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.function.UnaryOperator;
+import java.util.ArrayList;
+import java.util.Collections;
 
-public class EnumTest {
+public class InvokeSuperConstructorBugTest {
 
-    public static void main(String[] args) {
-        new EnumTest().test();
-    }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test() {
-        TypeDeclaration $ = EnumTest_.$();
+    public void invokeSuperConstructorBugTest() {
+        ClassDeclaration decl = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .specifiedName("com.InvokeSuperConstructor")
+                .superClass(ClassWithConstructor.class)
+                .fields(new ArrayList<>())
+                .constructors(new ArrayList<>())
+                .methods(new ArrayList<>())
+                .build();
 
-        @Named("Instance") Class<Enum> test = (Class<Enum>) CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> aClass);
+        decl.getConstructors().add(ConstructorDeclaration.Builder.builder()
+                .body(CodeSource.fromPart(InvocationFactory.invokeSuperConstructor(
+                        Alias.SUPER.INSTANCE,
+                        Factories.constructorTypeSpec(String.class),
+                        Collections.singletonList(Literals.STRING("Hello"))
+                )))
+                .build()
+        );
 
-        Enum a = Enum.valueOf(test, "A");
+        @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), decl);
+    }
 
-        Assert.assertEquals(0, a.ordinal());
-        Assert.assertEquals("A", a.name());
+    public static class ClassWithConstructor {
+        private final String s;
 
-        EnumTest_.MyItf myItf = (EnumTest_.MyItf) a;
-
-        myItf.v();
+        public ClassWithConstructor(String s) {
+            this.s = s;
+        }
     }
 
 }
-

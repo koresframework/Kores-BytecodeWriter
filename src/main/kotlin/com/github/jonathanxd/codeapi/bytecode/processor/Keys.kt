@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -32,7 +32,6 @@ import com.github.jonathanxd.codeapi.CodeInstruction
 import com.github.jonathanxd.codeapi.CodeSource
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.BytecodeClass
-import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.bytecode.common.Timed
@@ -42,8 +41,8 @@ import com.github.jonathanxd.codeapi.factory.invoke
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.`object`.TypedKey
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
-import com.github.jonathanxd.jwiutils.kt.typedKeyOf
+import com.github.jonathanxd.iutils.kt.require
+import com.github.jonathanxd.iutils.kt.typedKeyOf
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.Label
 import java.time.Instant
@@ -117,7 +116,7 @@ data class LineBuf(val visited: Boolean, val line: Int)
 
 val TRY_BLOCK_DATA = typedKeyOf<MutableList<TryBlockData>>("TRY_BLOCK_DATAS")
 
-class TryBlockData(val startLabel: Label, val stm: TryStatementBase): Timed {
+class TryBlockData(val startLabel: Label, val stm: TryStatementBase) : Timed {
     override val creationInstant: Instant = Instant.now()
     // List of labels of where finally was generated
     val labels: MutableList<FLabel> = mutableListOf()
@@ -149,19 +148,21 @@ data class OuterClassField(val typeDeclaration: TypeDeclaration, val field: Fiel
 
 val MEMBER_ACCESSES = typedKeyOf<MutableList<MemberAccess>>("MEMBER_ACCESSES")
 
-data class MemberAccess(val from: TypeDeclaration,
-                        val member: CodeElement,
-                        val owner: TypeDeclaration,
-                        val newElementToAccess: MethodDeclarationBase) {
+data class MemberAccess(
+    val from: TypeDeclaration,
+    val member: CodeElement,
+    val owner: TypeDeclaration,
+    val newElementToAccess: MethodDeclarationBase
+) {
 
     fun createInvokeToNewElement(target: CodeInstruction, args: List<CodeInstruction>) = invoke(
-            if (newElementToAccess is ConstructorDeclaration) InvokeType.INVOKE_SPECIAL
-            else InvokeType.INVOKE_STATIC,
-            owner,
-            target,
-            newElementToAccess.name,
-            newElementToAccess.typeSpec,
-            args
+        if (newElementToAccess is ConstructorDeclaration) InvokeType.INVOKE_SPECIAL
+        else InvokeType.INVOKE_STATIC,
+        owner,
+        target,
+        newElementToAccess.name,
+        newElementToAccess.typeSpec,
+        args
     )
 
 }

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,7 +28,9 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.base.*
+import com.github.jonathanxd.codeapi.base.CatchStatement
+import com.github.jonathanxd.codeapi.base.ThrowException
+import com.github.jonathanxd.codeapi.base.TryStatement
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.TRY_BLOCK_DATA
 import com.github.jonathanxd.codeapi.bytecode.processor.TryBlockData
@@ -37,20 +39,21 @@ import com.github.jonathanxd.codeapi.factory.accessVariable
 import com.github.jonathanxd.codeapi.factory.variable
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.codeType
-import com.github.jonathanxd.codeapi.util.insertAfterOrEnd
-import com.github.jonathanxd.codeapi.util.insertBeforeOrEnd
-import com.github.jonathanxd.codeapi.util.internalName
+import com.github.jonathanxd.codeapi.type.codeType
+import com.github.jonathanxd.codeapi.type.internalName
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.iutils.function.stream.BiStreams
-import com.github.jonathanxd.jwiutils.kt.add
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.add
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
 object TryStatementProcessor : Processor<TryStatement> {
 
-    override fun process(part: TryStatement, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: TryStatement,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val mvHelper = METHOD_VISITOR.require(data)
         val mv = mvHelper.methodVisitor
 
@@ -155,7 +158,7 @@ object TryStatementProcessor : Processor<TryStatement> {
             val fieldValue = field.value
 
             val stackPos = mvHelper.storeVar(field.name, field.type.codeType, i_label, end)
-                    .orElseThrow({ mvHelper.failStore(field.name) })
+                .orElseThrow({ mvHelper.failStore(field.name) })
 
             mv.visitLabel(Label())
 
@@ -196,10 +199,10 @@ object TryStatementProcessor : Processor<TryStatement> {
             val variable = variable(Throwable::class.java, name, CodeNothing)
 
             mvHelper.storeVar(dummyName, Exception::class.java.codeType, lCatchAll, end)
-                    .orElseThrow({ mvHelper.failStore(variable.name) }) // dummy
+                .orElseThrow({ mvHelper.failStore(variable.name) }) // dummy
 
             val stackPos = mvHelper.storeVar(variable.name, variable.type.codeType, lCatchAll, end)
-                    .orElseThrow({ mvHelper.failStore(variable.name) })
+                .orElseThrow({ mvHelper.failStore(variable.name) })
 
             mv.visitLabel(Label())
 
@@ -207,7 +210,11 @@ object TryStatementProcessor : Processor<TryStatement> {
 
             processorManager.process(CodeSource::class.java, finallySource, data)
 
-            processorManager.process(ThrowException::class.java, ThrowException(accessVariable(variable)), data)
+            processorManager.process(
+                ThrowException::class.java,
+                ThrowException(accessVariable(variable)),
+                data
+            )
 
             mv.visitLabel(end)
 

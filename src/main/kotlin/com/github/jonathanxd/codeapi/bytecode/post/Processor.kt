@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -32,7 +32,8 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodNode
 
-class Processor(val api: Int, val processors: List<MethodProcessor>, val addTimes: Int) : PostProcessor {
+class Processor(val api: Int, val processors: List<MethodProcessor>, val addTimes: Int) :
+    PostProcessor {
 
     override fun process(classBytes: ByteArray): ByteArray {
         val cr = ClassReader(classBytes)
@@ -43,7 +44,14 @@ class Processor(val api: Int, val processors: List<MethodProcessor>, val addTime
             m as MethodNode
 
             if (addTimes > 0) {
-                (1..addTimes).fold(m) { _, _ -> processors.fold(m) { lm, p -> p.process(cn.name, lm) } }
+                (1..addTimes).fold(m) { _, _ ->
+                    processors.fold(m) { lm, p ->
+                        p.process(
+                            cn.name,
+                            lm
+                        )
+                    }
+                }
             } else {
                 processors.fold(m) { lm, p -> p.process(cn.name, lm) }
             }

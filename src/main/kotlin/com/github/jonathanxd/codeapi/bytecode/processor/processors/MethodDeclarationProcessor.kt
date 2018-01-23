@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -37,22 +37,31 @@ import com.github.jonathanxd.codeapi.bytecode.common.Variable
 import com.github.jonathanxd.codeapi.bytecode.processor.*
 import com.github.jonathanxd.codeapi.bytecode.util.*
 import com.github.jonathanxd.codeapi.bytecode.util.asm.ParameterVisitor
+import com.github.jonathanxd.codeapi.insertAfter
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.safeForComparison
+import com.github.jonathanxd.codeapi.type.internalName
+import com.github.jonathanxd.codeapi.util.methodGenericSignature
+import com.github.jonathanxd.codeapi.util.parametersAndReturnToInferredDesc
+import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.add
-import com.github.jonathanxd.jwiutils.kt.inContext
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.add
+import com.github.jonathanxd.iutils.kt.inContext
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
 object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
-    override fun process(part: MethodDeclarationBase, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: MethodDeclarationBase,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val old =
-                if (IN_EXPRESSION.contains(data)) IN_EXPRESSION.require(data)
-                else null
+            if (IN_EXPRESSION.contains(data)) IN_EXPRESSION.require(data)
+            else null
 
         METHOD_DECLARATIONS.add(data, part)
         IN_EXPRESSION.set(data, 0)
@@ -75,9 +84,10 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
             bridgeOpt.forEach { bridgeMethod ->
                 val methodSpec = bridgeMethod.getMethodSpec(typeDeclaration.value)
 
-                val none = (typeDeclaration.value.methods + METHOD_DECLARATIONS.require(data)).none {
-                    it.getMethodSpec(typeDeclaration.value).compareTo(methodSpec) == 0
-                }
+                val none =
+                    (typeDeclaration.value.methods + METHOD_DECLARATIONS.require(data)).none {
+                        it.getMethodSpec(typeDeclaration.value).compareTo(methodSpec) == 0
+                    }
 
                 if (none) {
                     processorManager.process(bridgeMethod::class.java, bridgeMethod, data)
@@ -95,7 +105,8 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 && !modifiers.contains(CodeModifier.FINAL)
                 && !modifiers.contains(CodeModifier.DEFAULT)
                 && part.body.isEmpty
-                && typeDeclaration.value.isInterface) {
+                && typeDeclaration.value.isInterface
+        ) {
             modifiers.add(CodeModifier.ABSTRACT)
         }
 
@@ -107,13 +118,26 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
         val signature = part.methodGenericSignature()
 
-        val desc = parametersAndReturnToInferredDesc(typeDeclaration, part, parameters, part.returnType)
+        val desc =
+            parametersAndReturnToInferredDesc(typeDeclaration, part, parameters, part.returnType)
 
-        val throws = if (part.throwsClause.isEmpty()) null else part.throwsClause.map { it.internalName }.toTypedArray()
+        val throws =
+            if (part.throwsClause.isEmpty()) null else part.throwsClause.map { it.internalName }.toTypedArray()
 
-        val mvHelper = MethodVisitorHelper(visitor.visitMethod(asmModifiers, part.name, desc, signature, throws), mutableListOf())
+        val mvHelper = MethodVisitorHelper(
+            visitor.visitMethod(
+                asmModifiers,
+                part.name,
+                desc,
+                signature,
+                throws
+            ), mutableListOf()
+        )
 
-        ANNOTATION_VISITOR_CAPABLE.inContext(data, AnnotationVisitorCapable.MethodVisitorCapable(mvHelper.methodVisitor)) {
+        ANNOTATION_VISITOR_CAPABLE.inContext(
+            data,
+            AnnotationVisitorCapable.MethodVisitorCapable(mvHelper.methodVisitor)
+        ) {
             processorManager.process(Annotable::class.java, part, data)
         }
 
@@ -122,7 +146,10 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
             mvHelper.methodVisitor.visitParameter(codeParameter.name, 0)
 
-            ANNOTATION_VISITOR_CAPABLE.inContext(data, AnnotationVisitorCapable.ParameterVisitorCapable(ParameterVisitor(mvHelper, i))) {
+            ANNOTATION_VISITOR_CAPABLE.inContext(
+                data,
+                AnnotationVisitorCapable.ParameterVisitorCapable(ParameterVisitor(mvHelper, i))
+            ) {
                 processorManager.process(Annotable::class.java, codeParameter, data)
             }
         }
@@ -151,29 +178,47 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 var isGenerated = false
 
                 if (isConstructor) {
-                    val initSuper = ConstructorUtil.searchForSuper(typeDeclaration.value, methodSource, validateSuper)
-                    val initThis = ConstructorUtil.searchInitThis(typeDeclaration.value, methodSource, validateThis)
+                    val initSuper = ConstructorUtil.searchForSuper(
+                        typeDeclaration.value,
+                        methodSource,
+                        validateSuper
+                    )
+                    val initThis = ConstructorUtil.searchInitThis(
+                        typeDeclaration.value,
+                        methodSource,
+                        validateThis
+                    )
 
                     if (typeDeclaration.value is ClassDeclaration) {
                         if (!initSuper && !initThis) {
-                            ConstructorUtil.generateSuperInvoke(typeDeclaration.value, mvHelper.methodVisitor)
+                            ConstructorUtil.generateSuperInvoke(
+                                typeDeclaration.value,
+                                mvHelper.methodVisitor
+                            )
                             isGenerated = true
                         }
                     }
 
                     if (isGenerated) {
-                        ConstructorUtil.declareFinalFields(processorManager, methodSource, typeDeclaration.value, mvHelper, data, validateThis)
+                        ConstructorUtil.declareFinalFields(
+                            processorManager,
+                            methodSource,
+                            typeDeclaration.value,
+                            mvHelper,
+                            data,
+                            validateThis
+                        )
                     } else {
                         if (!initThis) {
                             val elementsHolder = typeDeclaration.value
 
-                            methodSource = insertAfter(
-                                    { testPart ->
-                                        val safe = testPart.safeForComparison
-                                        safe is MethodInvocation && ConstructorUtil.isInitForThat(safe)
-                                    },
-                                    ConstructorUtil.generateFinalFields(elementsHolder),
-                                    methodSource)
+                            methodSource = methodSource.insertAfter(
+                                { testPart ->
+                                    val safe = testPart.safeForComparison
+                                    safe is MethodInvocation && ConstructorUtil.isInitForThat(safe)
+                                },
+                                ConstructorUtil.generateFinalFields(elementsHolder)
+                            )
                         }
                     }
                 }
@@ -195,7 +240,10 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
                 try {
                     mvHelper.methodVisitor.visitMaxs(0, 0)
                 } catch (e: Exception) {
-                    RuntimeException("An exception occurred during the call of 'MethodVisitor.visitMaxs(0, 0)' (stack count and frame generation) of method '$part'!", e).printStackTrace()
+                    RuntimeException(
+                        "An exception occurred during the call of 'MethodVisitor.visitMaxs(0, 0)' (stack count and frame generation) of method '$part'!",
+                        e
+                    ).printStackTrace()
                 }
             }
         }

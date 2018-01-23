@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,10 +28,14 @@
 package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.Types
-import com.github.jonathanxd.codeapi.base.*
-import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.type.GenericType
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.base.ConstructorsHolder
+import com.github.jonathanxd.codeapi.base.EnumDeclaration
+import com.github.jonathanxd.codeapi.base.InnerTypesHolder
+import com.github.jonathanxd.codeapi.base.TypeDeclaration
+import com.github.jonathanxd.codeapi.type.canonicalName
+import com.github.jonathanxd.codeapi.type.isArray
+import com.github.jonathanxd.codeapi.type.isPrimitive
+import com.github.jonathanxd.codeapi.type.javaSpecName
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -115,7 +119,11 @@ object CodeTypeUtil {
             opcode = this.getOpcode(fromTypeChar, toTypeChar)
 
             if (opcode == -1) {
-                if (this.getOpcode(fromTypeChar, 'I') == -1 || this.getOpcode('I', toTypeChar) == -1) {
+                if (this.getOpcode(fromTypeChar, 'I') == -1 || this.getOpcode(
+                            'I',
+                            toTypeChar
+                        ) == -1
+                ) {
                     throw IllegalArgumentException("Can't cast from '$from' to '$to'.")
                 }
                 CodeTypeUtil.convertToPrimitive(from, Types.INT, mv)

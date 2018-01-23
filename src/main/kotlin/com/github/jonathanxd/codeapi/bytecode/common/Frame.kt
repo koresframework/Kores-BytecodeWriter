@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,8 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.common
 
 import com.github.jonathanxd.codeapi.Types
-import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.codeapi.type.`is`
 import org.objectweb.asm.Label
 import java.lang.reflect.Type
 import java.util.*
@@ -37,9 +36,14 @@ import java.util.*
 /**
  * Jvm Frame, this frame contains all variables of parent frame and store variables of current frame.
  */
-internal class Frame(val parent: Frame? = null, variables: List<Variable> = emptyList(), val endLabel: Label? = null) {
+internal class Frame(
+    val parent: Frame? = null,
+    variables: List<Variable> = emptyList(),
+    val endLabel: Label? = null
+) {
 
-    private val variables: MutableList<Variable> = (parent?.immutableVariableList.orEmpty() + variables).toMutableList()
+    private val variables: MutableList<Variable> =
+        (parent?.immutableVariableList.orEmpty() + variables).toMutableList()
     val immutableVariableList: List<Variable> = Collections.unmodifiableList(this.variables)
 
     /**
@@ -52,7 +56,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
         if (i !in this.variables.indices)
             return null
 
-        if(!this.variables[i].isVisible)
+        if (!this.variables[i].isVisible)
             throw IllegalArgumentException("Cannot access a invisible variable!!!")
 
         return this.variables[i]
@@ -80,7 +84,11 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
             return this.getVarByName(name)
         }
 
-        return this.variables.find { `var` -> `var`.isVisible && `var`.name == name && `var`.type.`is`(type) }
+        return this.variables.find { `var` ->
+            `var`.isVisible && `var`.name == name && `var`.type.`is`(
+                type
+            )
+        }
     }
 
     /**
@@ -119,7 +127,7 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      */
     fun set(pos: Int, variable: Variable) {
 
-        if(variable.type.`is`(Types.DOUBLE) || variable.type.`is`(Types.LONG))
+        if (variable.type.`is`(Types.DOUBLE) || variable.type.`is`(Types.LONG))
             throw IllegalArgumentException("Cannot set variable at pos '$pos' because it is of type Double or Long and it requires a right-move of all other variables.")
 
         this.variables[pos] = variable
@@ -131,8 +139,14 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      * Workaround to properly store double and longs in the Local Variable Table.
      */
     private fun handle(variable: Variable) {
-        if(variable.type.`is`(Types.DOUBLE) || variable.type.`is`(Types.LONG))
-            this.variables.add(variable.copy(name = "#${variable.name}ext_", isTemp = true, isVisible = false))
+        if (variable.type.`is`(Types.DOUBLE) || variable.type.`is`(Types.LONG))
+            this.variables.add(
+                variable.copy(
+                    name = "#${variable.name}ext_",
+                    isTemp = true,
+                    isVisible = false
+                )
+            )
     }
 
     /**
@@ -183,7 +197,12 @@ internal class Frame(val parent: Frame? = null, variables: List<Variable> = empt
      * @param endLabel   End label (last usage of variable).
      * @return [OptionalInt] holding the position, or empty if failed to store.
      */
-    fun storeInternalVar(name: String, type: Type, startLabel: Label, endLabel: Label?): OptionalInt {
+    fun storeInternalVar(
+        name: String,
+        type: Type,
+        startLabel: Label,
+        endLabel: Label?
+    ): OptionalInt {
         val variable = Variable(name, type, startLabel, endLabel ?: this.endLabel, true)
 
         for (i in variables.indices.reversed()) {

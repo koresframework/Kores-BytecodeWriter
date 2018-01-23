@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -37,38 +37,60 @@ interface AnnotationVisitorCapable {
 
     fun visitAnnotation(desc: String, visible: Boolean): AnnotationVisitor
 
-    fun visitTypeAnnotation(typeRef: Int,
-                            typePath: TypePath, desc: String, visible: Boolean): AnnotationVisitor
+    fun visitTypeAnnotation(
+        typeRef: Int,
+        typePath: TypePath, desc: String, visible: Boolean
+    ): AnnotationVisitor
 
     fun visitParameterAnnotation(parameter: Int, desc: String, visible: Boolean): AnnotationVisitor
 
-    class ClassVisitorVisitorCapable(private val classVisitor: ClassVisitor) : AnnotationVisitorCapable {
+    class ClassVisitorVisitorCapable(private val classVisitor: ClassVisitor) :
+        AnnotationVisitorCapable {
 
         override fun visitAnnotation(desc: String, visible: Boolean): AnnotationVisitor {
             return this.classVisitor.visitAnnotation(desc, visible)
         }
 
-        override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitTypeAnnotation(
+            typeRef: Int,
+            typePath: TypePath,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             return this.classVisitor.visitTypeAnnotation(typeRef, typePath, desc, visible)
         }
 
-        override fun visitParameterAnnotation(parameter: Int, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitParameterAnnotation(
+            parameter: Int,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             throw UnsupportedOperationException("Classes doesn't have parameter annotations!")
         }
     }
 
-    class MethodVisitorCapable(private val methodVisitor: MethodVisitor) : AnnotationVisitorCapable {
+    class MethodVisitorCapable(private val methodVisitor: MethodVisitor) :
+        AnnotationVisitorCapable {
 
         override fun visitAnnotation(desc: String, visible: Boolean): AnnotationVisitor {
             return this.methodVisitor.visitAnnotation(desc, visible)
 
         }
 
-        override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitTypeAnnotation(
+            typeRef: Int,
+            typePath: TypePath,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             return this.methodVisitor.visitTypeAnnotation(typeRef, typePath, desc, visible)
         }
 
-        override fun visitParameterAnnotation(parameter: Int, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitParameterAnnotation(
+            parameter: Int,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             return this.methodVisitor.visitParameterAnnotation(parameter, desc, visible)
         }
     }
@@ -80,27 +102,46 @@ interface AnnotationVisitorCapable {
 
         }
 
-        override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitTypeAnnotation(
+            typeRef: Int,
+            typePath: TypePath,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             return this.fieldVisitor.visitTypeAnnotation(typeRef, typePath, desc, visible)
         }
 
-        override fun visitParameterAnnotation(parameter: Int, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitParameterAnnotation(
+            parameter: Int,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             throw UnsupportedOperationException("Fields doesn't have parameter annotations!")
         }
     }
 
-    class ParameterVisitorCapable(private val parameterVisitor: ParameterVisitor) : AnnotationVisitorCapable {
+    class ParameterVisitorCapable(private val parameterVisitor: ParameterVisitor) :
+        AnnotationVisitorCapable {
 
         override fun visitAnnotation(desc: String, visible: Boolean): AnnotationVisitor {
             return this.parameterVisitor.visitAnnotation(desc, visible)
 
         }
 
-        override fun visitTypeAnnotation(typeRef: Int, typePath: TypePath, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitTypeAnnotation(
+            typeRef: Int,
+            typePath: TypePath,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             throw UnsupportedOperationException("Parameters doesn't have type annotations!")
         }
 
-        override fun visitParameterAnnotation(parameter: Int, desc: String, visible: Boolean): AnnotationVisitor {
+        override fun visitParameterAnnotation(
+            parameter: Int,
+            desc: String,
+            visible: Boolean
+        ): AnnotationVisitor {
             throw UnsupportedOperationException("Parameters doesn't have parameter annotations!")
         }
     }

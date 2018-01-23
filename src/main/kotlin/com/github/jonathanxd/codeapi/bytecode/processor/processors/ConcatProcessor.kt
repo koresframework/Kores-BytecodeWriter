@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -40,9 +40,9 @@ import com.github.jonathanxd.codeapi.factory.typeSpec
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 
 
 object ConcatProcessor : Processor<Concat> {
@@ -53,7 +53,8 @@ object ConcatProcessor : Processor<Concat> {
         val first = if (concatenations.isEmpty()) null else concatenations[0]
 
         val allIsEmpty = concatenations.isNotEmpty() && concatenations.all {
-            val safe = it.safeForComparison; safe is Literals.StringLiteral && safe.original.isEmpty()
+            val safe =
+                it.safeForComparison; safe is Literals.StringLiteral && safe.original.isEmpty()
         }
 
         if (first != null && !allIsEmpty) {
@@ -65,25 +66,39 @@ object ConcatProcessor : Processor<Concat> {
 
             } else if (concatenations.size == 2) {
 
-                val stringConcat = invokeVirtual(String::class.java, first, "concat",
-                        typeSpec(String::class.java, String::class.java),
-                        listOf(concatenations[1]))
+                val stringConcat = invokeVirtual(
+                    String::class.java, first, "concat",
+                    typeSpec(String::class.java, String::class.java),
+                    listOf(concatenations[1])
+                )
 
                 processorManager.process(MethodInvocation::class.java, stringConcat, data)
             } else {
 
                 var strBuilder = Types.STRING_BUILDER.invokeConstructor(
-                        constructorTypeSpec(String::class.java),
-                        listOf(first)
+                    constructorTypeSpec(String::class.java),
+                    listOf(first)
                 )
 
                 (1..concatenations.size - 1)
-                        .map { concatenations[it] }
-                        .forEach {
-                            strBuilder = invokeVirtual(Types.STRING_BUILDER, strBuilder, "append", typeSpec(Types.STRING_BUILDER, Types.STRING), listOf(it))
-                        }
+                    .map { concatenations[it] }
+                    .forEach {
+                        strBuilder = invokeVirtual(
+                            Types.STRING_BUILDER,
+                            strBuilder,
+                            "append",
+                            typeSpec(Types.STRING_BUILDER, Types.STRING),
+                            listOf(it)
+                        )
+                    }
 
-                strBuilder = invokeVirtual(Types.OBJECT, strBuilder, "toString", typeSpec(Types.STRING), emptyList())
+                strBuilder = invokeVirtual(
+                    Types.OBJECT,
+                    strBuilder,
+                    "toString",
+                    typeSpec(Types.STRING),
+                    emptyList()
+                )
 
                 processorManager.process(MethodInvocation::class.java, strBuilder, data)
             }

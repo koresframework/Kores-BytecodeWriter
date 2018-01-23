@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,32 +27,39 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.common
 
-import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.codeapi.type.`is`
 import com.github.jonathanxd.iutils.string.ToStringHelper
 import org.objectweb.asm.Label
 import java.lang.reflect.Type
-import java.util.Objects
+import java.util.*
 
 /**
  * Internal class undocumented.
  *
  * isVisible -> If false, this variable will be ignored by get operations.
  */
-data class Variable @JvmOverloads constructor(val name: String, val type: Type, val startLabel: Label, val endLabel: Label?, val isTemp: Boolean = false, val isVisible: Boolean = true) {
+data class Variable @JvmOverloads constructor(
+    val name: String,
+    val type: Type,
+    val startLabel: Label,
+    val endLabel: Label?,
+    val isTemp: Boolean = false,
+    val isVisible: Boolean = true
+) {
 
     override fun hashCode(): Int =
-            Objects.hash(this.name, this.type)
+        Objects.hash(this.name, this.type)
 
     override fun equals(other: Any?): Boolean =
-            other is Variable && other.name == this.name && other.type.`is`(this.type)
+        other is Variable && other.name == this.name && other.type.`is`(this.type)
 
     override fun toString(): String {
         return ToStringHelper.defaultHelper(this::class.java.simpleName)
-                .add("name", this.name)
-                .add("type", this.type)
-                .add("isTemp", this.isTemp)
-                .add("startLabel", this.startLabel)
-                .add("endLabel", this.endLabel)
-                .toString()
+            .add("name", this.name)
+            .add("type", this.type)
+            .add("isTemp", this.isTemp)
+            .add("startLabel", this.startLabel)
+            .add("endLabel", this.endLabel)
+            .toString()
     }
 }

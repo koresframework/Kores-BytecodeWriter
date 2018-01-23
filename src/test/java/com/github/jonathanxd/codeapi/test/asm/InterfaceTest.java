@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -42,7 +42,6 @@ import static com.github.jonathanxd.codeapi.Types.INT;
 import static com.github.jonathanxd.codeapi.Types.STRING;
 import static com.github.jonathanxd.codeapi.factory.Factories.accessVariable;
 import static com.github.jonathanxd.codeapi.factory.Factories.operate;
-import static com.github.jonathanxd.codeapi.factory.Factories.operateAndAssign;
 import static com.github.jonathanxd.codeapi.factory.Factories.parameter;
 import static com.github.jonathanxd.codeapi.factory.Factories.returnValue;
 

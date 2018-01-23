@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -30,22 +30,23 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 import com.github.jonathanxd.codeapi.base.ArgumentsHolder
 import com.github.jonathanxd.codeapi.base.InvokeDynamicBase
 import com.github.jonathanxd.codeapi.base.LocalCode
-import com.github.jonathanxd.codeapi.base.MethodInvocation
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
-import com.github.jonathanxd.codeapi.bytecode.processor.IN_INVOKE_DYNAMIC
 import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.util.MethodInvocationUtil
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.codeapi.type.`is`
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
-import java.lang.reflect.Type
 
 object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
 
-    override fun process(part: InvokeDynamicBase, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: InvokeDynamicBase,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
 
         val mvHelper = METHOD_VISITOR.require(data)
 
@@ -62,7 +63,12 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
             }
         }
 
-        MethodInvocationUtil.visitBootstrapInvocation(part, specification, data, mvHelper.methodVisitor)
+        MethodInvocationUtil.visitBootstrapInvocation(
+            part,
+            specification,
+            data,
+            mvHelper.methodVisitor
+        )
 
         if (!part.dynamicMethod.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
             mvHelper.methodVisitor.visitInsn(Opcodes.POP)

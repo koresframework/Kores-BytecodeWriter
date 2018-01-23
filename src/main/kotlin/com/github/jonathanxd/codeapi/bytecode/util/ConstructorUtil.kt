@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -37,9 +37,8 @@ import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.factory.setFieldValue
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.Alias
-import com.github.jonathanxd.codeapi.util.internalName
-import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.safeForComparison
+import com.github.jonathanxd.codeapi.type.internalName
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import org.objectweb.asm.Label
@@ -78,16 +77,26 @@ object ConstructorUtil {
 
     }
 
-    fun searchForInitTo(typeDeclaration: TypeDeclaration,
-                        source: CodeSource,
-                        targetAccessPredicate: (CodeInstruction) -> Boolean): SearchResult {
-        return ConstructorUtil.searchForInitTo(typeDeclaration, source, true, targetAccessPredicate, false)
+    fun searchForInitTo(
+        typeDeclaration: TypeDeclaration,
+        source: CodeSource,
+        targetAccessPredicate: (CodeInstruction) -> Boolean
+    ): SearchResult {
+        return ConstructorUtil.searchForInitTo(
+            typeDeclaration,
+            source,
+            true,
+            targetAccessPredicate,
+            false
+        )
     }
 
-    fun searchForInitTo(typeDeclaration: TypeDeclaration,
-                        codeParts: CodeSource?,
-                        includeChild: Boolean,
-                        targetAccessPredicate: (CodeInstruction) -> Boolean, isSub: Boolean): SearchResult {
+    fun searchForInitTo(
+        typeDeclaration: TypeDeclaration,
+        codeParts: CodeSource?,
+        includeChild: Boolean,
+        targetAccessPredicate: (CodeInstruction) -> Boolean, isSub: Boolean
+    ): SearchResult {
         if (codeParts == null)
             return SearchResult.FALSE
 
@@ -95,7 +104,13 @@ object ConstructorUtil {
             val safe = codePart.safeForComparison
 
             if (safe is BodyHolder && includeChild) {
-                val searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, safe.body, includeChild, targetAccessPredicate, true)
+                val searchResult = ConstructorUtil.searchForInitTo(
+                    typeDeclaration,
+                    safe.body,
+                    includeChild,
+                    targetAccessPredicate,
+                    true
+                )
 
                 if (searchResult.found)
                     return searchResult
@@ -107,7 +122,8 @@ object ConstructorUtil {
                 if (safe.target.safeForComparison !is New
                         && targetAccessPredicate(safe.target.safeForComparison)
                         && safe.invokeType == InvokeType.INVOKE_SPECIAL
-                        && safe.spec.methodName == "<init>") {
+                        && safe.spec.methodName == "<init>"
+                ) {
                     return SearchResult(true, isSub)
                 }
             }
@@ -117,10 +133,15 @@ object ConstructorUtil {
         return SearchResult.FALSE
     }
 
-    fun searchInitThis(typeDeclaration: TypeDeclaration, codeParts: CodeSource, validate: Boolean): Boolean {
-        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { instruction ->
-            instruction == Access.THIS || instruction == Alias.THIS
-        }, false)
+    fun searchInitThis(
+        typeDeclaration: TypeDeclaration,
+        codeParts: CodeSource,
+        validate: Boolean
+    ): Boolean {
+        var searchResult =
+            ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { instruction ->
+                instruction == Access.THIS || instruction == Alias.THIS
+            }, false)
 
         if (validate)
             searchResult = ConstructorUtil.validateConstructor(searchResult)
@@ -128,10 +149,15 @@ object ConstructorUtil {
         return searchResult.found
     }
 
-    fun searchForSuper(typeDeclaration: TypeDeclaration, codeParts: CodeSource?, validate: Boolean): Boolean {
-        var searchResult = ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { instruction ->
-            instruction == Access.SUPER || instruction == Alias.SUPER
-        }, false)
+    fun searchForSuper(
+        typeDeclaration: TypeDeclaration,
+        codeParts: CodeSource?,
+        validate: Boolean
+    ): Boolean {
+        var searchResult =
+            ConstructorUtil.searchForInitTo(typeDeclaration, codeParts, !validate, { instruction ->
+                instruction == Access.SUPER || instruction == Alias.SUPER
+            }, false)
 
         if (validate)
             searchResult = ConstructorUtil.validateConstructor(searchResult)
@@ -146,12 +172,14 @@ object ConstructorUtil {
         return searchResult
     }
 
-    fun declareFinalFields(processorManager: ProcessorManager<*>,
-                           methodBody: CodeSource,
-                           typeDeclaration: TypeDeclaration,
-                           mv: MethodVisitorHelper,
-                           data: TypedData,
-                           validate: Boolean) {
+    fun declareFinalFields(
+        processorManager: ProcessorManager<*>,
+        methodBody: CodeSource,
+        typeDeclaration: TypeDeclaration,
+        mv: MethodVisitorHelper,
+        data: TypedData,
+        validate: Boolean
+    ) {
 
         if (ConstructorUtil.searchInitThis(typeDeclaration, methodBody, validate)) {
             return
@@ -182,10 +210,12 @@ object ConstructorUtil {
                 }
 
                 // No processor overhead.
-                mv.methodVisitor.visitFieldInsn(Opcodes.PUTFIELD,
-                        typeDeclaration.internalName,
-                        fieldDeclaration.name,
-                        fieldDeclaration.type.typeDesc)
+                mv.methodVisitor.visitFieldInsn(
+                    Opcodes.PUTFIELD,
+                    typeDeclaration.internalName,
+                    fieldDeclaration.name,
+                    fieldDeclaration.type.typeDesc
+                )
             }
 
         }

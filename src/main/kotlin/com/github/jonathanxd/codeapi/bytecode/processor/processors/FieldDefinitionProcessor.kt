@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,22 +34,27 @@ import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.safeForComparison
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
 
 object FieldDefinitionProcessor : Processor<FieldDefinition> {
 
-    override fun process(part: FieldDefinition, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: FieldDefinition,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val localization = Util.resolveType(part.localization, data)
         val target = part.target
         val safeTarget = target.safeForComparison
 
         val variableName = part.name
         val variableType = part.type
-        val opcode = if (safeTarget is Access && safeTarget == Access.STATIC) Opcodes.PUTSTATIC else Opcodes.PUTFIELD
+        val opcode =
+            if (safeTarget is Access && safeTarget == Access.STATIC) Opcodes.PUTSTATIC else Opcodes.PUTFIELD
 
         IN_EXPRESSION.incrementInContext(data) {
             processorManager.process(target::class.java, target, data)
@@ -60,7 +65,12 @@ object FieldDefinitionProcessor : Processor<FieldDefinition> {
         }
 
         METHOD_VISITOR.require(data)
-                .methodVisitor.visitFieldInsn(opcode, localization.internalName, variableName, variableType.typeDesc)
+            .methodVisitor.visitFieldInsn(
+            opcode,
+            localization.internalName,
+            variableName,
+            variableType.typeDesc
+        )
     }
 
 

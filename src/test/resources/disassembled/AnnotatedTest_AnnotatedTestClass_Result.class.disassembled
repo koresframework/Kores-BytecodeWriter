@@ -1,4 +1,4 @@
-md5: 96fb33b7a2711a744b0bb9f7d69a66cd
+md5: 40a16df7c2abd13ef42d6931efb7b898
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -14,11 +14,6 @@ public class test.AnnotatedTestClass extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !parameter[name: first, access:  (0)]
-    !parametersAnnotations [
-      [0] {
-        @kotlin.Deprecated()
-      }
-    ]
     @java.lang.invoke.MethodHandle.PolymorphicSignature()
     public static java.lang.Object polymorphic(java.lang.Object) {
       desc: (Ljava/lang/Object;)Ljava/lang/Object; 

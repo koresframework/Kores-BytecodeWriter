@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,22 +28,11 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.Types
-import com.github.jonathanxd.codeapi.base.VariableDeclaration
-import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
-import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.processor.IN_EXPRESSION
-import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.codeapi.bytecode.processor.TRY_BLOCK_DATA
-import com.github.jonathanxd.codeapi.factory.accessVariable
-import com.github.jonathanxd.codeapi.factory.variable
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.`is`
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
-import com.github.jonathanxd.jwiutils.kt.typedKeyOf
-import org.objectweb.asm.Label
+import com.github.jonathanxd.iutils.kt.require
 
 object CodeSourceProcessor : Processor<CodeSource> {
 

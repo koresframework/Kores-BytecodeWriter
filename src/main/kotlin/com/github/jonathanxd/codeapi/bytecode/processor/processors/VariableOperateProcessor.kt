@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -35,7 +35,7 @@ import com.github.jonathanxd.codeapi.base.VariableDefinition
 import com.github.jonathanxd.codeapi.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.operator.Operators
-import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.codeapi.type.`is`
 import org.objectweb.asm.Label
 
 object VariableOperateProcessor {
@@ -44,16 +44,22 @@ object VariableOperateProcessor {
      * Improve the operation and assign of a variable, returns true if this class improved
      * the operation, false otherwise.
      */
-    fun visit(t: VariableDefinition, operate: Operate, part: CodeInstruction, varPos: Int, mvHelper: MethodVisitorHelper): Boolean {
+    fun visit(
+        t: VariableDefinition,
+        operate: Operate,
+        part: CodeInstruction,
+        varPos: Int,
+        mvHelper: MethodVisitorHelper
+    ): Boolean {
         val mv = mvHelper.methodVisitor
 
         val target = operate.target
 
         require(
-                target is VariableAccess
-                        && target.name == t.name
-                        && target.variableType.`is`(t.type),
-                { "The operate target must be variable access of variable definition '$t'!" }
+            target is VariableAccess
+                    && target.name == t.name
+                    && target.variableType.`is`(t.type),
+            { "The operate target must be variable access of variable definition '$t'!" }
         )
 
         val operation = operate.operation

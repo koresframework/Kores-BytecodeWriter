@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,17 +34,21 @@ import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.javaSpecName
-import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.safeForComparison
+import com.github.jonathanxd.codeapi.type.javaSpecName
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 
 object VariableDeclarationProcessor : Processor<VariableDeclaration> {
 
-    override fun process(part: VariableDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: VariableDeclaration,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val mvHelper = METHOD_VISITOR.require(data)
         val mv = mvHelper.methodVisitor
 
@@ -67,7 +71,7 @@ object VariableDeclarationProcessor : Processor<VariableDeclaration> {
         mv.visitLabel(i_label)
 
         val i: Int = mvHelper.storeVar(part.name, part.type, i_label, null)
-                .orElseThrow({ mvHelper.failStore(part) })
+            .orElseThrow({ mvHelper.failStore(part) })
 
         if (safeValue != CodeNothing) {
             val type = Type.getType(part.type.javaSpecName)

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,8 +34,7 @@ import com.github.jonathanxd.iutils.map.ListHashMap
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import java.lang.reflect.Type
-import java.util.Optional
-import java.util.OptionalInt
+import java.util.*
 
 /**
  * Internal class that holds a [MethodVisitor] and data about current stored variables (stack)
@@ -48,8 +47,9 @@ import java.util.OptionalInt
  * @param variables Variables in stack (including `this`).
  */
 class MethodVisitorHelper constructor(
-        val methodVisitor: MethodVisitor,
-        variables: MutableList<Variable>) {
+    val methodVisitor: MethodVisitor,
+    variables: MutableList<Variable>
+) {
 
     // Tracks amount of values put to stack that is missing to be popped.
     private var stackValues = 0
@@ -119,7 +119,8 @@ class MethodVisitorHelper constructor(
      * @param name Name of the variable.
      * @return Variable or [Optional.empty] if not present.
      */
-    fun getVarByName(name: String): Optional<Variable> = Optional.ofNullable(this.frame.getVarByName(name))
+    fun getVarByName(name: String): Optional<Variable> =
+        Optional.ofNullable(this.frame.getVarByName(name))
 
     /**
      * Get a variable by name and type.
@@ -128,7 +129,8 @@ class MethodVisitorHelper constructor(
      * @param type Type of the variable.
      * @return Variable or [Optional.empty] if not present.
      */
-    fun getVar(name: String, type: Type?): Optional<Variable> = Optional.ofNullable(this.frame.getVar(name, type))
+    fun getVar(name: String, type: Type?): Optional<Variable> =
+        Optional.ofNullable(this.frame.getVar(name, type))
 
     /**
      * Gets the position of a variable instance
@@ -154,7 +156,7 @@ class MethodVisitorHelper constructor(
      * @throws RuntimeException if variable is already defined.
      */
     fun storeVar(name: String, type: Type, startLabel: Label, endLabel: Label?): OptionalInt =
-            this.frame.storeVar(name, type, startLabel, endLabel)
+        this.frame.storeVar(name, type, startLabel, endLabel)
 
     /**
      * Store a internal variable. (internal variables doesn't have their names generated in
@@ -172,8 +174,13 @@ class MethodVisitorHelper constructor(
      * @param endLabel   End label (last usage of variable).
      * @return [OptionalInt] holding the position, or empty if failed to store.
      */
-    fun storeInternalVar(name: String, type: Type, startLabel: Label, endLabel: Label?): OptionalInt =
-            this.frame.storeInternalVar(name, type, startLabel, endLabel)
+    fun storeInternalVar(
+        name: String,
+        type: Type,
+        startLabel: Label,
+        endLabel: Label?
+    ): OptionalInt =
+        this.frame.storeInternalVar(name, type, startLabel, endLabel)
 
     /**
      * Return last position in stack map.
@@ -233,7 +240,14 @@ class MethodVisitorHelper constructor(
                     signature = variable.type.descriptor
                 }
 
-                methodVisitor.visitLocalVariable(variable.name, type, signature, varStart, varEnd, i)
+                methodVisitor.visitLocalVariable(
+                    variable.name,
+                    type,
+                    signature,
+                    varStart,
+                    varEnd,
+                    i
+                )
             }
         }
     }

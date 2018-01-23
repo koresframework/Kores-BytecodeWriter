@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -36,16 +36,20 @@ import com.github.jonathanxd.codeapi.bytecode.util.ArrayUtil
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.arrayComponent
-import com.github.jonathanxd.codeapi.util.arrayDimension
+import com.github.jonathanxd.codeapi.type.arrayComponent
+import com.github.jonathanxd.codeapi.type.arrayDimension
 import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
 
 object ArrayConstructProcessor : Processor<ArrayConstructor> {
 
-    override fun process(part: ArrayConstructor, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ArrayConstructor,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
         val arguments = part.arguments
 

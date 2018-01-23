@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,15 +34,20 @@ import com.github.jonathanxd.codeapi.bytecode.processor.TRY_BLOCK_DATA
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
 
 object ControlFlowProcessor : Processor<ControlFlow> {
 
-    override fun process(part: ControlFlow, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ControlFlow,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val flows = FLOWS.require(data)
 
-        val flow = if (part.at == null) flows.last() else flows.findLast { it.label != null && part.at!!.name == it.label.name }!!
+        val flow =
+            if (part.at == null) flows.last() else flows.findLast { it.label != null && part.at!!.name == it.label.name }!!
 
         val visitor = METHOD_VISITOR.require(data).methodVisitor
 
@@ -56,8 +61,8 @@ object ControlFlowProcessor : Processor<ControlFlow> {
 
                     blocks.forEach {
                         val time =
-                                if (part.at != null) FLOWS.require(data).first { it.label == part.at }.creationInstant
-                                else flow.creationInstant
+                            if (part.at != null) FLOWS.require(data).first { it.label == part.at }.creationInstant
+                            else flow.creationInstant
 
                         // Hacky check to determine whether block is inside of the try-catch or not
                         if (time.isBefore(it.creationInstant)) {

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,31 +34,23 @@ import com.github.jonathanxd.codeapi.base.ConstructorDeclaration;
 import com.github.jonathanxd.codeapi.base.TryStatement;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeSpec;
-import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
-import com.github.jonathanxd.codeapi.bytecode.extra.Pop;
-import com.github.jonathanxd.codeapi.bytecode.post.DeadCodeRemover;
-import com.github.jonathanxd.codeapi.bytecode.processor.KeysKt;
-import com.github.jonathanxd.codeapi.bytecode.processor.processors.InstructionCodePart;
 import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.factory.InvocationFactory;
 import com.github.jonathanxd.codeapi.factory.VariableFactory;
-import com.github.jonathanxd.codeapi.helper.Predefined;
-import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.test.TryTest_;
-import com.github.jonathanxd.codeapi.test.TryWithResourcesTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
 import com.github.jonathanxd.iutils.collection.Collections3;
 
 import org.junit.Test;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 import java.util.Collections;
 import java.util.function.UnaryOperator;
 
-import kotlin.Unit;
-
 public class TryTest {
+
+    public static String x() {
+        return null;
+    }
 
     @Test
     public void tryTest() {
@@ -123,9 +115,5 @@ public class TryTest {
                 .build();
 
         @Named("Instance") Object test = CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity());
-    }
-
-    public static String x() {
-        return null;
     }
 }

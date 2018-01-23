@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -42,10 +42,9 @@ import com.github.jonathanxd.codeapi.factory.invokeConstructor
 import com.github.jonathanxd.codeapi.factory.invokeVirtual
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.type.*
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Type
 
@@ -57,7 +56,7 @@ object CastProcessor : Processor<Cast> {
         val from = part.originalType
         val to = part.targetType
 
-        val castedPart = part.castedPart
+        val castedPart = part.instruction
 
         // No cast of void types.
         if (from != null && !from.`is`(to) && from.`is`(Types.VOID) || to.`is`(Types.VOID)) {
@@ -107,7 +106,8 @@ object CastProcessor : Processor<Cast> {
 
         if (from.isPrimitive && !to.isPrimitive) {
 
-            translate = from.wrapperType!!.invokeConstructor(constructorTypeSpec(from), listOf(casted))
+            translate =
+                    from.wrapperType!!.invokeConstructor(constructorTypeSpec(from), listOf(casted))
 
         } else if (!from.isPrimitive && to.isPrimitive) {
 
@@ -142,7 +142,13 @@ object CastProcessor : Processor<Cast> {
             if (castTo == null) {
                 translate = invokeVirtual(wrapper, casted, methodName, TypeSpec(to), emptyList())
             } else {
-                translate = invokeVirtual(wrapper, cast(from, castTo, casted), methodName, TypeSpec(to), emptyList())
+                translate = invokeVirtual(
+                    wrapper,
+                    cast(from, castTo, casted),
+                    methodName,
+                    TypeSpec(to),
+                    emptyList()
+                )
             }
         }
 

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,17 +29,19 @@ package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.CodePart
 import com.github.jonathanxd.codeapi.base.Line
-import com.github.jonathanxd.codeapi.base.Return
 import com.github.jonathanxd.codeapi.bytecode.VISIT_LINES
 import com.github.jonathanxd.codeapi.bytecode.VisitLineType
 import com.github.jonathanxd.codeapi.bytecode.pre.GenLineVisitor
-import com.github.jonathanxd.codeapi.bytecode.processor.*
+import com.github.jonathanxd.codeapi.bytecode.processor.CLine
+import com.github.jonathanxd.codeapi.bytecode.processor.C_LINE
+import com.github.jonathanxd.codeapi.bytecode.processor.LINE
+import com.github.jonathanxd.codeapi.bytecode.processor.METHOD_VISITOR
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.add
-import com.github.jonathanxd.jwiutils.kt.require
-import com.github.jonathanxd.jwiutils.kt.typedKeyOf
+import com.github.jonathanxd.iutils.kt.add
+import com.github.jonathanxd.iutils.kt.require
+import com.github.jonathanxd.iutils.kt.typedKeyOf
 import org.objectweb.asm.Label
 
 object LineProcessor : Processor<Line> {
@@ -49,7 +51,8 @@ object LineProcessor : Processor<Line> {
     override fun process(part: Line, data: TypedData, processorManager: ProcessorManager<*>) {
 
         if (processorManager.options[VISIT_LINES] == VisitLineType.LINE_INSTRUCTION
-                || processorManager.options[VISIT_LINES] == VisitLineType.GEN_LINE_INSTRUCTION) {
+                || processorManager.options[VISIT_LINES] == VisitLineType.GEN_LINE_INSTRUCTION
+        ) {
             val mvHelper = METHOD_VISITOR.require(data)
 
             val label = Label()
@@ -112,7 +115,8 @@ object LineProcessor : Processor<Line> {
         val mvData = METHOD_VISITOR.getOrNull(data)
 
         if (manager.options.get(VISIT_LINES) == VisitLineType.INCREMENTAL
-                && mvData != null) {
+                && mvData != null
+        ) {
 
             val line = LINE.let {
                 if (!it.contains(data)) {

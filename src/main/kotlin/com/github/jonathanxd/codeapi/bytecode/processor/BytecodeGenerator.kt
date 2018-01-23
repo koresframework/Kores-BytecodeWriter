@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,10 +34,9 @@ import com.github.jonathanxd.codeapi.bytecode.*
 import com.github.jonathanxd.codeapi.bytecode.exception.ClassCheckException
 import com.github.jonathanxd.codeapi.bytecode.extra.Dup
 import com.github.jonathanxd.codeapi.bytecode.extra.Pop
+import com.github.jonathanxd.codeapi.bytecode.post.Processor
 import com.github.jonathanxd.codeapi.bytecode.processor.processors.*
 import com.github.jonathanxd.codeapi.bytecode.util.ASM_API
-import com.github.jonathanxd.codeapi.bytecode.post.DeadCodeRemover
-import com.github.jonathanxd.codeapi.bytecode.post.Processor
 import com.github.jonathanxd.codeapi.common.Stack
 import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
@@ -50,13 +49,15 @@ import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.util.CheckClassAdapter
 
-class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> String = {
-    when (it) {
-        is TypeDeclaration -> "${Util.getOwner(it).simpleName}.cai"
-        is ModuleDeclaration -> "module-info.cai" // Maybe module-info_${it.name}.cai ?
-        else -> it.name
+class BytecodeGenerator @JvmOverloads constructor(
+    val sourceFile: (Named) -> String = {
+        when (it) {
+            is TypeDeclaration -> "${Util.getOwner(it).simpleName}.cai"
+            is ModuleDeclaration -> "module-info.cai" // Maybe module-info_${it.name}.cai ?
+            else -> it.name
+        }
     }
-}) //CodeAPI Instructions
+) //CodeAPI Instructions
     : AbstractProcessorManager<List<BytecodeClass>>() {
 
     override val options: Options = Options()
@@ -76,13 +77,15 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
         registerProcessor(ArrayStoreProcessor, ArrayStore::class.java)
         registerProcessor(CastProcessor, Cast::class.java)
 
-        registerProcessorOfTypes(CodeSourceProcessor, arrayOf(
+        registerProcessorOfTypes(
+            CodeSourceProcessor, arrayOf(
                 CodeSource::class.java,
                 ArrayCodeSource::class.java,
                 CodeSourceView::class.java,
                 ListCodeSource::class.java,
                 MutableCodeSource::class.java
-        ))
+            )
+        )
 
         registerProcessor(ConcatProcessor, Concat::class.java)
         registerProcessor(ControlFlowProcessor, ControlFlow::class.java)
@@ -98,24 +101,31 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
         registerProcessor(IfExprProcessor, IfExpr::class.java)
         registerProcessor(IfStatementProcessor, IfStatement::class.java)
         registerProcessor(InstanceOfProcessor, InstanceOfCheck::class.java)
-        registerProcessor(InstructionCodePart.InstructionCodePartVisitor, InstructionCodePart::class.java)
+        registerProcessor(
+            InstructionCodePart.InstructionCodePartVisitor,
+            InstructionCodePart::class.java
+        )
 
-        registerProcessorOfTypes(InvokeDynamicProcessor, arrayOf(
+        registerProcessorOfTypes(
+            InvokeDynamicProcessor, arrayOf(
                 InvokeDynamicBase::class.java,
                 InvokeDynamicBase.LambdaMethodRefBase::class.java,
                 InvokeDynamicBase.LambdaLocalCodeBase::class.java,
                 InvokeDynamic::class.java,
                 InvokeDynamic.LambdaMethodRef::class.java,
                 InvokeDynamic.LambdaLocalCode::class.java
-        ))
+            )
+        )
 
         registerProcessor(LabelProcessor, Label::class.java)
 
-        registerProcessorOfTypes(LineProcessor, arrayOf(
+        registerProcessorOfTypes(
+            LineProcessor, arrayOf(
                 Line::class.java,
                 Line.NormalLine::class.java,
                 Line.TypedLine::class.java
-        ))
+            )
+        )
 
         registerProcessor(LiteralProcessor, Literal::class.java)
         registerProcessor(MethodDeclarationProcessor, MethodDeclaration::class.java)
@@ -130,7 +140,10 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
         registerProcessor(StaticBlockProcessor, StaticBlock::class.java)
 
         registerProcessor(SwitchProcessor, SwitchStatement::class.java)
-        registerProcessor(SwitchProcessor.SwitchMarkerProcessor, SwitchProcessor.SwitchMarker::class.java)
+        registerProcessor(
+            SwitchProcessor.SwitchMarkerProcessor,
+            SwitchProcessor.SwitchMarker::class.java
+        )
 
         registerProcessor(SynchronizedProcessor, Synchronized::class.java)
 
@@ -154,7 +167,8 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
         registerProcessor(PopProcessor, Pop::class.java)
 
         // Literals
-        registerProcessorOfTypes(LiteralProcessor, arrayOf(
+        registerProcessorOfTypes(
+            LiteralProcessor, arrayOf(
                 Literals.ClassLiteral::class.java,
                 Literals.ByteLiteral::class.java,
                 Literals.ShortLiteral::class.java,
@@ -164,7 +178,8 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
                 Literals.DoubleLiteral::class.java,
                 Literals.CharLiteral::class.java,
                 Literals.StringLiteral::class.java
-        ))
+            )
+        )
     }
 
     // Will not be called because here we use void validator.
@@ -201,14 +216,19 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
 
         val checkClasses = if (this.options[POST_PROCESSING]) {
             classes.map {
-                BytecodeClass(it.declaration,
-                        try {
-                            Processor(ASM_API, this.options[POST_PROCESSORS], this.options[POST_PROCESSING_LOOPS])
-                                    .process(it.bytecode)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            it.bytecode
-                        }
+                BytecodeClass(
+                    it.declaration,
+                    try {
+                        Processor(
+                            ASM_API,
+                            this.options[POST_PROCESSORS],
+                            this.options[POST_PROCESSING_LOOPS]
+                        )
+                            .process(it.bytecode)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        it.bytecode
+                    }
                 )
             }
         } else classes
@@ -228,7 +248,12 @@ class BytecodeGenerator @JvmOverloads constructor(val sourceFile: (Named) -> Str
                         try {
                             ClassReader(bytecode).accept(CheckClassAdapter(ClassNode(), true), 0)
                         } catch (t: Throwable) {
-                            throw ClassCheckException("Failed to check bytecode of declaration ${it.declaration.name}", t, classes, it)
+                            throw ClassCheckException(
+                                "Failed to check bytecode of declaration ${it.declaration.name}",
+                                t,
+                                classes,
+                                it
+                            )
                         }
                     }
                 }

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -90,7 +90,8 @@ object LiteralUtil {
             val type = num.value as CodeType
 
             if (type.isPrimitive) {
-                val wrapperType = type.wrapperType ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version.")
+                val wrapperType = type.wrapperType
+                        ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version.")
 
                 val wrapperTypeSpec = wrapperType.internalName
                 val classType = Types.CLASS.typeDesc

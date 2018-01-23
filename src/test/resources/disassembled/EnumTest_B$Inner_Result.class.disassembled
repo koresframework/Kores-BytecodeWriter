@@ -1,4 +1,4 @@
-md5: 7ca1503abb6c03422bb5d6159e4920c8
+md5: 94efb94db44c199b28418e1cb3a6d9a8
 
 version: Java 8 (52)
 access: PACKAGE_PRIVATE (16416)
@@ -31,7 +31,6 @@ source: MyEnum.cai
     }
     
     !access: ACC_PUBLIC (1)
-    @java.lang.Override()
     public void v() {
       desc: ()V 
       maxStack: 2, maxLocals: 1 

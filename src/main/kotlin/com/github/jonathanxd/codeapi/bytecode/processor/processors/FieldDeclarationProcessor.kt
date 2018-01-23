@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -45,20 +45,25 @@ import com.github.jonathanxd.iutils.data.TypedData
 
 object FieldDeclarationProcessor : Processor<FieldDeclaration> {
 
-    override fun process(part: FieldDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: FieldDeclaration,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val visitor = CLASS_VISITOR.getOrNull(data)!!
 
         val modifiers =
-                if (!part.modifiers.contains(CodeModifier.STATIC)
-                        && TYPE_DECLARATION.getOrNull(data)?.isInterface == true)
-                    part.modifiers + CodeModifier.STATIC
-                else part.modifiers
+            if (!part.modifiers.contains(CodeModifier.STATIC)
+                    && TYPE_DECLARATION.getOrNull(data)?.isInterface == true
+            )
+                part.modifiers + CodeModifier.STATIC
+            else part.modifiers
 
         val access = ModifierUtil.modifiersToAsm(modifiers)
         val signature = (part.type as? GenericType)?.descriptor
         val constValue =
-                if (modifiers.contains(CodeModifier.STATIC)) part.value.asmConstValue
-                else null
+            if (modifiers.contains(CodeModifier.STATIC)) part.value.asmConstValue
+            else null
 
         visitor.visitField(access, part.name, part.type.typeDesc, signature, constValue).let {
             ANNOTATION_VISITOR_CAPABLE.set(data, AnnotationVisitorCapable.FieldVisitorCapable(it))

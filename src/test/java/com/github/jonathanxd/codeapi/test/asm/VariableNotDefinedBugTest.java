@@ -27,37 +27,38 @@
  */
 package com.github.jonathanxd.codeapi.test.asm;
 
+import com.github.jonathanxd.codeapi.CodeSource;
+import com.github.jonathanxd.codeapi.base.ClassDeclaration;
+import com.github.jonathanxd.codeapi.base.CodeModifier;
+import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeDeclaration;
-import com.github.jonathanxd.codeapi.test.EnumTest_;
-import com.github.jonathanxd.iutils.annotation.Named;
+import com.github.jonathanxd.codeapi.factory.Factories;
+import com.github.jonathanxd.codeapi.factory.VariableFactory;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.function.UnaryOperator;
+public class VariableNotDefinedBugTest {
 
-public class EnumTest {
-
-    public static void main(String[] args) {
-        new EnumTest().test();
-    }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void test() {
-        TypeDeclaration $ = EnumTest_.$();
+    public void variableNotDefinedBugTest() throws Throwable {
+        TypeDeclaration decl = ClassDeclaration.Builder.builder()
+                .modifiers(CodeModifier.PUBLIC)
+                .name("com.MyClass")
+                .methods(
+                        MethodDeclaration.Builder.builder()
+                                .modifiers(CodeModifier.PUBLIC)
+                                .name("test")
+                                .parameters(Factories.parameter(Short.TYPE, "s"))
+                                .body(CodeSource.fromPart(
+                                        VariableFactory.variable(Object.class, "a")
+                                ))
+                                .build()
+                )
+                .build();
 
-        @Named("Instance") Class<Enum> test = (Class<Enum>) CommonBytecodeTest.test(this.getClass(), $, UnaryOperator.identity(), aClass -> aClass);
+        CommonBytecodeTest.test(this.getClass(), decl);
 
-        Enum a = Enum.valueOf(test, "A");
-
-        Assert.assertEquals(0, a.ordinal());
-        Assert.assertEquals("A", a.name());
-
-        EnumTest_.MyItf myItf = (EnumTest_.MyItf) a;
-
-        myItf.v();
     }
-
 }
-

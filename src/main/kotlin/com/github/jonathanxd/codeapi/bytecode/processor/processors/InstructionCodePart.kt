@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -39,7 +39,11 @@ interface InstructionCodePart : CodeInstruction {
     companion object {
         inline fun create(crossinline func: (value: Any, data: TypedData, processorManager: ProcessorManager<*>) -> Unit): InstructionCodePart {
             return object : InstructionCodePart {
-                override fun apply(value: Any, data: TypedData, processorManager: ProcessorManager<*>) {
+                override fun apply(
+                    value: Any,
+                    data: TypedData,
+                    processorManager: ProcessorManager<*>
+                ) {
                     func(value, data, processorManager)
                 }
             }
@@ -48,7 +52,11 @@ interface InstructionCodePart : CodeInstruction {
 
     object InstructionCodePartVisitor : Processor<InstructionCodePart> {
 
-        override fun process(part: InstructionCodePart, data: TypedData, processorManager: ProcessorManager<*>) {
+        override fun process(
+            part: InstructionCodePart,
+            data: TypedData,
+            processorManager: ProcessorManager<*>
+        ) {
             part.apply(part, data, processorManager)
         }
 

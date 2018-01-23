@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -40,7 +40,11 @@ object ParameterUtil {
         return parameters.map { Variable(it.name, it.type, label, null) }
     }
 
-    fun parametersToVars(parameters: Collection<CodeParameter>, target: MutableCollection<Variable>, label: Label) {
+    fun parametersToVars(
+        parameters: Collection<CodeParameter>,
+        target: MutableCollection<Variable>,
+        label: Label
+    ) {
         if (parameters.isEmpty())
             return
 

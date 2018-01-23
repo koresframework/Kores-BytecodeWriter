@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -85,13 +85,22 @@ object ClassInject {
      */
     fun ClassLoader.inject(name: String, bytes: ByteArray): Class<*> {
         try {
-            val defineClass = ClassLoader::class.java.getDeclaredMethod("defineClass", String::class.java, ByteArray::class.java, Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+            val defineClass = ClassLoader::class.java.getDeclaredMethod(
+                "defineClass",
+                String::class.java,
+                ByteArray::class.java,
+                Int::class.javaPrimitiveType,
+                Int::class.javaPrimitiveType
+            )
 
             defineClass.isAccessible = true
 
             return defineClass.invoke(this, name, bytes, 0, bytes.size) as Class<*>
         } catch (e: Exception) {
-            throw IllegalStateException("Injection of class '$name' in class loader '$this' failed!", e)
+            throw IllegalStateException(
+                "Injection of class '$name' in class loader '$this' failed!",
+                e
+            )
         }
 
     }

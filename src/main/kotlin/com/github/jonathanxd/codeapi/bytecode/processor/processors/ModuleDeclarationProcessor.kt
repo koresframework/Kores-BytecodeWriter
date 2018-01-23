@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -34,14 +34,18 @@ import com.github.jonathanxd.codeapi.bytecode.processor.SOURCE_FILE_FUNCTION
 import com.github.jonathanxd.codeapi.bytecode.util.ModifierUtil
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.internalName
+import com.github.jonathanxd.codeapi.type.internalName
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.add
+import com.github.jonathanxd.iutils.kt.add
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
 
 object ModuleDeclarationProcessor : Processor<ModuleDeclaration> {
-    override fun process(part: ModuleDeclaration, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ModuleDeclaration,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val cw = ClassWriter(0)
 
         cw.visit(Opcodes.V9, Opcodes.ACC_MODULE, "module-info", null, null, null)
@@ -52,9 +56,9 @@ object ModuleDeclarationProcessor : Processor<ModuleDeclaration> {
 
 
         val moduleVisitor = cw.visitModule(
-                part.name,
-                ModifierUtil.toAsmAccess(part.modifiers),
-                part.version
+            part.name,
+            ModifierUtil.toAsmAccess(part.modifiers),
+            part.version
         )
 
         // TODO: Review version. Maybe 9-ea currently
@@ -62,31 +66,31 @@ object ModuleDeclarationProcessor : Processor<ModuleDeclaration> {
 
         part.requires.filterNot { it.module.name == "java.base" }.forEach {
             moduleVisitor.visitRequire(
-                    it.module.name,
-                    ModifierUtil.toAsmAccess(it.modifiers),
-                    it.version
+                it.module.name,
+                ModifierUtil.toAsmAccess(it.modifiers),
+                it.version
             )
         }
 
         part.exports.forEach {
             val modules =
-                    it.to.map { it.name.internal }.toTypedArray()
+                it.to.map { it.name.internal }.toTypedArray()
 
             moduleVisitor.visitExport(
-                    it.module.name.internal,
-                    ModifierUtil.toAsmAccess(it.modifiers),
-                    *modules
+                it.module.name.internal,
+                ModifierUtil.toAsmAccess(it.modifiers),
+                *modules
             )
         }
 
         part.opens.forEach {
             val modules =
-                    it.to.map { it.name.internal }.toTypedArray()
+                it.to.map { it.name.internal }.toTypedArray()
 
             moduleVisitor.visitOpen(
-                    it.module.name.internal,
-                    ModifierUtil.toAsmAccess(it.modifiers),
-                    *modules
+                it.module.name.internal,
+                ModifierUtil.toAsmAccess(it.modifiers),
+                *modules
             )
         }
 
@@ -95,7 +99,10 @@ object ModuleDeclarationProcessor : Processor<ModuleDeclaration> {
         }
 
         part.provides.forEach {
-            moduleVisitor.visitProvide(it.service.internalName, *it.with.map { it.internalName }.toTypedArray())
+            moduleVisitor.visitProvide(
+                it.service.internalName,
+                *it.with.map { it.internalName }.toTypedArray()
+            )
         }
 
         moduleVisitor.visitEnd()

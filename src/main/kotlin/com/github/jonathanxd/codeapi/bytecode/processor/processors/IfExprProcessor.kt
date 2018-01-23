@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -40,11 +40,13 @@ import com.github.jonathanxd.iutils.data.TypedData
 object IfExprProcessor : Processor<IfExpr> {
 
     override fun process(part: IfExpr, data: TypedData, processorManager: ProcessorManager<*>) {
-        ifStatement(ifExprs(part), CodeSource.fromPart(
+        ifStatement(
+            ifExprs(part), CodeSource.fromPart(
                 Literals.BOOLEAN(true)
-        ), CodeSource.fromPart(
+            ), CodeSource.fromPart(
                 Literals.BOOLEAN(false)
-        )).let {
+            )
+        ).let {
             processorManager.process(IfStatement::class.java, it, data)
         }
     }

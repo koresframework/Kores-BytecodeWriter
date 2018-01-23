@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,7 +29,6 @@ package com.github.jonathanxd.codeapi.bytecode.util
 
 import com.github.jonathanxd.codeapi.Types
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.typeDesc
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Array as ReflectArray

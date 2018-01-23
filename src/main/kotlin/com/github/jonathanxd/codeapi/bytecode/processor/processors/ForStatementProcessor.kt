@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -39,16 +39,20 @@ import com.github.jonathanxd.codeapi.bytecode.processor.incrementInContext
 import com.github.jonathanxd.codeapi.common.CodeNothing
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.safeForComparison
+import com.github.jonathanxd.codeapi.safeForComparison
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.add
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.add
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
 object ForStatementProcessor : Processor<ForStatement> {
 
-    override fun process(part: ForStatement, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ForStatement,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val mv = METHOD_VISITOR.require(data).methodVisitor
 
         val outsideStart = Label()
@@ -72,9 +76,11 @@ object ForStatementProcessor : Processor<ForStatement> {
 
         source.addAll(part.body)
 
-        val ifStatement = IfStatement(expressions = part.forExpression,
-                body = source,
-                elseStatement = CodeSource.empty())
+        val ifStatement = IfStatement(
+            expressions = part.forExpression,
+            body = source,
+            elseStatement = CodeSource.empty()
+        )
 
         mv.visitLabel(whileStart)
 

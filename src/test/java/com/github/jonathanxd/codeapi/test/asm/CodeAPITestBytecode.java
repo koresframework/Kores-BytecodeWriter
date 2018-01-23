@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -40,7 +40,6 @@ import com.github.jonathanxd.codeapi.base.InvokeType;
 import com.github.jonathanxd.codeapi.base.MethodDeclaration;
 import com.github.jonathanxd.codeapi.base.TypeSpec;
 import com.github.jonathanxd.codeapi.base.VariableDeclaration;
-import com.github.jonathanxd.codeapi.bytecode.BytecodeOptions;
 import com.github.jonathanxd.codeapi.bytecode.processor.BytecodeGenerator;
 import com.github.jonathanxd.codeapi.factory.Factories;
 import com.github.jonathanxd.codeapi.factory.InvocationFactory;
@@ -49,8 +48,8 @@ import com.github.jonathanxd.codeapi.helper.Predefined;
 import com.github.jonathanxd.codeapi.literal.Literals;
 import com.github.jonathanxd.codeapi.operator.Operators;
 import com.github.jonathanxd.codeapi.type.CodeType;
+import com.github.jonathanxd.codeapi.type.CodeTypes;
 import com.github.jonathanxd.codeapi.type.LoadedCodeType;
-import com.github.jonathanxd.codeapi.util.CodeTypes;
 
 import org.junit.Test;
 

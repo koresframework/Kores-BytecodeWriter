@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -33,62 +33,87 @@ import com.github.jonathanxd.codeapi.common.DynamicMethodSpec
 import com.github.jonathanxd.codeapi.common.MethodInvokeSpec
 import com.github.jonathanxd.codeapi.common.MethodTypeSpec
 import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.type.internalName
+import com.github.jonathanxd.codeapi.type.javaSpecName
+import com.github.jonathanxd.codeapi.util.TypeResolver
+import com.github.jonathanxd.codeapi.util.resolveUnknown
+import com.github.jonathanxd.codeapi.util.toTypeSpec
+import com.github.jonathanxd.codeapi.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.description.DescriptionUtil
 import org.objectweb.asm.Handle
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
-import java.util.ArrayList
+import java.util.*
 
 object MethodInvocationUtil {
 
     @Deprecated("Bootstrap visit can be used since 4.0.0")
-    fun visitLambdaInvocation(lambdaDynamic: InvokeDynamicBase.LambdaMethodRefBase,
-                              invokeType: InvokeType,
-                              localization: ReflectType,
-                              spec: DynamicMethodSpec,
-                              mv: MethodVisitor) {
+    fun visitLambdaInvocation(
+        lambdaDynamic: InvokeDynamicBase.LambdaMethodRefBase,
+        invokeType: InvokeType,
+        localization: ReflectType,
+        spec: DynamicMethodSpec,
+        mv: MethodVisitor
+    ) {
 
         val baseSam = lambdaDynamic.baseSam
         val expectedTypes = lambdaDynamic.expectedTypes
 
-        val metafactory = Handle(Opcodes.H_INVOKESTATIC,
-                "java/lang/invoke/LambdaMetafactory",
-                "metafactory",
-                "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
-                false)
+        val metafactory = Handle(
+            Opcodes.H_INVOKESTATIC,
+            "java/lang/invoke/LambdaMetafactory",
+            "metafactory",
+            "(Ljava/lang/invoke/MethodHandles\$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;",
+            false
+        )
 
         val objects = arrayOf(
-                Type.getType(baseSam.typeSpec.typeDesc),
-                Handle(/*Opcodes.H_INVOKEINTERFACE*/InvokeTypeUtil.toAsm_H(invokeType),
-                        localization.internalName,
-                        spec.name,
-                        spec.typeSpec.typeDesc,
-                        invokeType == InvokeType.INVOKE_INTERFACE),
+            Type.getType(baseSam.typeSpec.typeDesc),
+            Handle(/*Opcodes.H_INVOKEINTERFACE*/InvokeTypeUtil.toAsm_H(invokeType),
+                localization.internalName,
+                spec.name,
+                spec.typeSpec.typeDesc,
+                invokeType == InvokeType.INVOKE_INTERFACE
+            ),
 
-                Type.getType(expectedTypes.typeDesc))
+            Type.getType(expectedTypes.typeDesc)
+        )
 
         val additionalArguments = if (baseSam.typeSpec.parameterTypes.size !=
-                                          lambdaDynamic.methodRef.methodTypeSpec.typeSpec.parameterTypes.size) {
+                lambdaDynamic.methodRef.methodTypeSpec.typeSpec.parameterTypes.size
+        ) {
             val samSpec = baseSam.typeSpec
             val invkSpec = lambdaDynamic.methodRef.methodTypeSpec.typeSpec
 
-            invkSpec.parameterTypes.subList(0, (invkSpec.parameterTypes.size - samSpec.parameterTypes.size))
+            invkSpec.parameterTypes.subList(
+                0,
+                (invkSpec.parameterTypes.size - samSpec.parameterTypes.size)
+            )
         } else emptyList()
 
-        val local = "(${if (invokeType != InvokeType.INVOKE_STATIC) localization.typeDesc else ""}" +
-                "${additionalArguments.typeDesc})${baseSam.localization.typeDesc}"
+        val local =
+            "(${if (invokeType != InvokeType.INVOKE_STATIC) localization.typeDesc else ""}" +
+                    "${additionalArguments.typeDesc})${baseSam.localization.typeDesc}"
         mv.visitInvokeDynamicInsn(baseSam.methodName, local, metafactory, *objects)
 
     }
 
-    fun visitBootstrapInvocation(bootstrap: InvokeDynamicBase, spec: DynamicMethodSpec, data: TypedData, mv: MethodVisitor) {
+    fun visitBootstrapInvocation(
+        bootstrap: InvokeDynamicBase,
+        spec: DynamicMethodSpec,
+        data: TypedData,
+        mv: MethodVisitor
+    ) {
         val handle = MethodInvocationUtil.toHandle(bootstrap, data)
 
-        mv.visitInvokeDynamicInsn(spec.name,
-                Util.resolveType(spec.typeSpec, data).typeDesc, handle, *MethodInvocationUtil.toAsmArguments(bootstrap, data))
+        mv.visitInvokeDynamicInsn(
+            spec.name,
+            Util.resolveType(spec.typeSpec, data).typeDesc,
+            handle,
+            *MethodInvocationUtil.toAsmArguments(bootstrap, data)
+        )
     }
 
     fun toAsmArguments(bootstrap: InvokeDynamicBase, data: TypedData): Array<Any> {
@@ -105,19 +130,23 @@ object MethodInvocationUtil {
 
                 val typeSpec = arg.methodTypeSpec
 
-                converted = Handle(InvokeTypeUtil.toAsm_H(arg.invokeType),
-                        Util.resolveType(typeSpec.localization, data).internalName,
-                        typeSpec.methodName,
-                        Util.resolveType(typeSpec.typeSpec, data).typeDesc,
-                        arg.invokeType == InvokeType.INVOKE_INTERFACE)
+                converted = Handle(
+                    InvokeTypeUtil.toAsm_H(arg.invokeType),
+                    Util.resolveType(typeSpec.localization, data).internalName,
+                    typeSpec.methodName,
+                    Util.resolveType(typeSpec.typeSpec, data).typeDesc,
+                    arg.invokeType == InvokeType.INVOKE_INTERFACE
+                )
             } else if (arg is TypeSpec) {
 
                 val toAsm = Util.resolveType(arg, data).typeDesc
 
                 converted = Type.getMethodType(toAsm)
             } else {
-                throw IllegalArgumentException("Illegal argument at index '" + i + "' of arguments list [" +
-                        bootstrap.bootstrapArgs + "], element type unsupported! Read the documentation.")
+                throw IllegalArgumentException(
+                    "Illegal argument at index '" + i + "' of arguments list [" +
+                            bootstrap.bootstrapArgs + "], element type unsupported! Read the documentation."
+                )
             }
 
             converted
@@ -131,13 +160,16 @@ object MethodInvocationUtil {
         val btpInvokeType = bootstrap.bootstrap.invokeType
 
         val methodName = bootstrapMethodSpec.methodTypeSpec.methodName
-        val bsmLocalization = Util.resolveType(bootstrapMethodSpec.methodTypeSpec.localization, data)
+        val bsmLocalization =
+            Util.resolveType(bootstrapMethodSpec.methodTypeSpec.localization, data)
 
-        return Handle(InvokeTypeUtil.toAsm_H(btpInvokeType),
-                bsmLocalization.internalName,
-                methodName,
-                Util.resolveType(bootstrapMethodSpec.methodTypeSpec.typeSpec, data).typeDesc,
-                btpInvokeType.isInterface())
+        return Handle(
+            InvokeTypeUtil.toAsm_H(btpInvokeType),
+            bsmLocalization.internalName,
+            methodName,
+            Util.resolveType(bootstrapMethodSpec.methodTypeSpec.typeSpec, data).typeDesc,
+            btpInvokeType.isInterface()
+        )
     }
 
     fun specFromHandle(handle: Handle, typeResolver: TypeResolver): MethodInvokeSpec {
@@ -149,22 +181,30 @@ object MethodInvocationUtil {
         val description = DescriptionUtil.parseDescription(desc)
 
         return MethodInvokeSpec(
-                invokeType,
-                MethodTypeSpec(
-                        owner,
-                        handle.name,
-                        TypeSpec(typeResolver.resolveUnknown(description.type), description.parameterTypes.map { typeResolver.resolveUnknown(it) })
-                )
+            invokeType,
+            MethodTypeSpec(
+                owner,
+                handle.name,
+                TypeSpec(
+                    typeResolver.resolveUnknown(description.type),
+                    description.parameterTypes.map { typeResolver.resolveUnknown(it) })
+            )
         )
     }
 
-    fun fromHandle(handle: Handle, args: Array<Any>, typeResolver: TypeResolver, dynamicMethod: DynamicMethodSpec,
-                   type: ReflectType): InvokeDynamicBase {
+    fun fromHandle(
+        handle: Handle,
+        args: Array<Any>,
+        typeResolver: TypeResolver,
+        dynamicMethod: DynamicMethodSpec,
+        type: ReflectType
+    ): InvokeDynamicBase {
         val methodInvokeSpec = MethodInvocationUtil.specFromHandle(handle, typeResolver)
 
-        return InvokeDynamic(bootstrap = methodInvokeSpec,
-                dynamicMethod = dynamicMethod,
-                bootstrapArgs = MethodInvocationUtil.bsmArgsFromAsm(args, typeResolver)
+        return InvokeDynamic(
+            bootstrap = methodInvokeSpec,
+            dynamicMethod = dynamicMethod,
+            bootstrapArgs = MethodInvocationUtil.bsmArgsFromAsm(args, typeResolver)
         )
     }
 
@@ -179,7 +219,8 @@ object MethodInvocationUtil {
                     || asmArg is Float
                     || asmArg is Long
                     || asmArg is Double
-                    || asmArg is String) {
+                    || asmArg is String
+            ) {
                 codeAPIArgsList.add(asmArg)
             } else if (asmArg is Type) {
 
@@ -190,7 +231,7 @@ object MethodInvocationUtil {
                     codeAPIArgsList.add(typeResolver.resolveUnknown(className))
                 } else {
                     // Method
-                    codeAPIArgsList.add(DescriptionHelper.toTypeSpec(asmArg.descriptor, typeResolver))
+                    codeAPIArgsList.add(toTypeSpec(asmArg.descriptor, typeResolver))
                 }
 
 

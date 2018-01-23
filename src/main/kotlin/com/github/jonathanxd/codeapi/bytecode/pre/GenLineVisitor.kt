@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -35,7 +35,7 @@ import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.util.asmConstValue
 import com.github.jonathanxd.codeapi.factory.line
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.typedKeyOf
+import com.github.jonathanxd.iutils.kt.typedKeyOf
 
 /**
  * Visits lines incrementally.
@@ -56,38 +56,38 @@ object GenLineVisitor {
 
     fun visit(typeDeclaration: TypeDeclaration, data: TypedData): TypeDeclaration {
         return typeDeclaration.builder()
-                .methods(typeDeclaration.methods.map { visit(it, data) })
-                .innerTypes(typeDeclaration.innerTypes.map { visit(it, data) })
-                .fields(typeDeclaration.fields.map { visit(it, data) })
-                .let {
-                    if (it is ConstructorsHolder.Builder<*, *> && typeDeclaration is ConstructorsHolder) {
-                        it.constructors(typeDeclaration.constructors.map { visit(it, data) })
-                                as TypeDeclaration.Builder<TypeDeclaration, *>
-                    } else it
-                }
-                .build()
+            .methods(typeDeclaration.methods.map { visit(it, data) })
+            .innerTypes(typeDeclaration.innerTypes.map { visit(it, data) })
+            .fields(typeDeclaration.fields.map { visit(it, data) })
+            .let {
+                if (it is ConstructorsHolder.Builder<*, *> && typeDeclaration is ConstructorsHolder) {
+                    it.constructors(typeDeclaration.constructors.map { visit(it, data) })
+                            as TypeDeclaration.Builder<TypeDeclaration, *>
+                } else it
+            }
+            .build()
     }
 
     fun visit(fieldDeclaration: FieldDeclaration, data: TypedData): FieldDeclaration =
-            if (fieldDeclaration.value.asmConstValue == null)
-                fieldDeclaration.builder()
-                        .value(createLineInstance(fieldDeclaration.value, data))
-                        .innerTypes(fieldDeclaration.innerTypes.map { visit(it, data) })
-                        .build()
-            else
-                fieldDeclaration
+        if (fieldDeclaration.value.asmConstValue == null)
+            fieldDeclaration.builder()
+                .value(createLineInstance(fieldDeclaration.value, data))
+                .innerTypes(fieldDeclaration.innerTypes.map { visit(it, data) })
+                .build()
+        else
+            fieldDeclaration
 
     @Suppress("UNCHECKED_CAST")
     fun <T : MethodDeclarationBase> visit(methodDeclarationBase: T, data: TypedData): T =
-            methodDeclarationBase.builder()
-                    .body(visit(methodDeclarationBase.body, data))
-                    .innerTypes(methodDeclarationBase.innerTypes.map { visit(it, data) })
-                    .build() as T
+        methodDeclarationBase.builder()
+            .body(visit(methodDeclarationBase.body, data))
+            .innerTypes(methodDeclarationBase.innerTypes.map { visit(it, data) })
+            .build() as T
 
     fun visit(variableDeclaration: VariableDeclaration, data: TypedData): VariableDeclaration {
         return variableDeclaration.builder()
-                .value(createLine(variableDeclaration.value, data))
-                .build()
+            .value(createLine(variableDeclaration.value, data))
+            .build()
     }
 
     fun visit(codeSource: CodeSource, data: TypedData): CodeSource {
@@ -101,36 +101,42 @@ object GenLineVisitor {
     fun createLine(insn: CodeInstruction, data: TypedData): CodeInstruction = when (insn) {
         is IfStatement -> createLineAndTransform(insn, data) {
             it.builder()
-                    .body(visit(insn.body, data))
-                    .elseStatement(visit(insn.elseStatement, data))
-                    .build()
+                .body(visit(insn.body, data))
+                .elseStatement(visit(insn.elseStatement, data))
+                .build()
         }
         is TryStatementBase -> createLineAndTransform(insn, data) {
             it.builder()
-                    .body(visit(insn.body, data))
-                    .catchStatements(insn.catchStatements.map { it.builder().body(visit(it.body, data)).build() })
-                    .finallyStatement(visit(insn.finallyStatement, data))
-                    .build()
+                .body(visit(insn.body, data))
+                .catchStatements(insn.catchStatements.map {
+                    it.builder().body(visit(it.body, data)).build()
+                })
+                .finallyStatement(visit(insn.finallyStatement, data))
+                .build()
         }
         is SwitchStatement -> createLineAndTransform(insn, data) {
             it.builder()
-                    .cases(insn.cases.map { it.builder().body(visit(it.body, data)).build() })
-                    .build()
+                .cases(insn.cases.map { it.builder().body(visit(it.body, data)).build() })
+                .build()
         }
         is LocalCode -> createLineAndTransform(insn, data) {
             it.builder()
-                    .declaration(visit(insn.declaration, data))
-                    .build()
+                .declaration(visit(insn.declaration, data))
+                .build()
         }
         is BodyHolder -> createLineAndTransform(insn, data) {
             (it as BodyHolder).builder()
-                    .body(visit(insn.body, data))
-                    .build() as CodeInstruction
+                .body(visit(insn.body, data))
+                .build() as CodeInstruction
         }
         else -> createLineInstance(insn, data)
     }
 
-    private fun <T : CodeInstruction> createLineAndTransform(insn: T, data: TypedData, transformer: (T) -> T): Line {
+    private fun <T : CodeInstruction> createLineAndTransform(
+        insn: T,
+        data: TypedData,
+        transformer: (T) -> T
+    ): Line {
         val line = getLine(data)
         return line(line, transformer(insn))
     }

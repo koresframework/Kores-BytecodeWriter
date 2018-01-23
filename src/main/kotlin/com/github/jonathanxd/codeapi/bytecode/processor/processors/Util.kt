@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -38,19 +38,18 @@ import com.github.jonathanxd.codeapi.bytecode.util.allTypes
 import com.github.jonathanxd.codeapi.common.getNewName
 import com.github.jonathanxd.codeapi.common.getNewNameBasedOnNameList
 import com.github.jonathanxd.codeapi.factory.*
-import com.github.jonathanxd.codeapi.type.CodeType
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.type.*
 import com.github.jonathanxd.codeapi.util.conversion.access
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.add
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.add
+import com.github.jonathanxd.iutils.kt.require
 import java.lang.reflect.Type
 
 object Util {
 
     fun resolveType(spec: TypeSpec, data: TypedData): TypeSpec =
-            spec.copy(returnType = resolveType(spec.returnType, data),
-                    parameterTypes = spec.parameterTypes.map { resolveType(it, data) })
+        spec.copy(returnType = resolveType(spec.returnType, data),
+            parameterTypes = spec.parameterTypes.map { resolveType(it, data) })
 
     fun resolveType(codeType: ReflectType, data: TypedData): CodeType {
 
@@ -61,13 +60,13 @@ object Util {
         return if (codeType is Alias.THIS) {
             type
         } else if (codeType is Alias.SUPER) {
-            (type as? SuperClassHolder)?.superClass?.codeType ?:
-                    throw IllegalStateException("Type '$type' as no super types.")
+            (type as? SuperClassHolder)?.superClass?.codeType
+                    ?: throw IllegalStateException("Type '$type' as no super types.")
         } else if (codeType is Alias.INTERFACE) {
             val n = codeType.n
 
-            (type as? ImplementationHolder)?.implementations?.map { it.codeType }?.getOrNull(n) ?:
-                    throw IllegalStateException("Type '$type' as no implementation or the index '$n' exceed the amount of implementations in the type.")
+            (type as? ImplementationHolder)?.implementations?.map { it.codeType }?.getOrNull(n)
+                    ?: throw IllegalStateException("Type '$type' as no implementation or the index '$n' exceed the amount of implementations in the type.")
 
         } else {
             codeType.codeType
@@ -76,10 +75,10 @@ object Util {
     }
 
     tailrec fun getOwner(typeDeclaration: TypeDeclaration): TypeDeclaration =
-            if (typeDeclaration.outerClass == null || typeDeclaration.outerClass !is TypeDeclaration)
-                typeDeclaration
-            else
-                this.getOwner(typeDeclaration.outerClass as TypeDeclaration)
+        if (typeDeclaration.outerType == null || typeDeclaration.outerType !is TypeDeclaration)
+            typeDeclaration
+        else
+            this.getOwner(typeDeclaration.outerType as TypeDeclaration)
 
 
 }
@@ -158,35 +157,36 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
     if (target != null) {
         if (!accessor.localization.`is`(type) && accessor.localization.`is`(target)) {
             val member: CodeElement? =
-                    if (accessor is FieldAccess) {
-                        val field = target.fields.firstOrNull {
-                            it.name == accessor.name
-                                    && it.type.isConcreteIdEq(accessor.type)
-                        }
+                if (accessor is FieldAccess) {
+                    val field = target.fields.firstOrNull {
+                        it.name == accessor.name
+                                && it.type.isConcreteIdEq(accessor.type)
+                    }
 
-                        if (field != null && field.modifiers.contains(CodeModifier.PRIVATE))
-                            field
-                        else null
-                    } else if (accessor is MethodInvocation) {
-                        val method = target.methods.firstOrNull {
-                            it.name == accessor.spec.methodName
-                                    && it.typeSpec.isConreteEq(accessor.spec.typeSpec)
-                        }
+                    if (field != null && field.modifiers.contains(CodeModifier.PRIVATE))
+                        field
+                    else null
+                } else if (accessor is MethodInvocation) {
+                    val method = target.methods.firstOrNull {
+                        it.name == accessor.spec.methodName
+                                && it.typeSpec.isConreteEq(accessor.spec.typeSpec)
+                    }
 
-                        val ctr = getConstructors(target).firstOrNull {
-                            it.name == accessor.spec.methodName
-                                    && it.typeSpec.isConreteEq(accessor.spec.typeSpec)
-                        }
+                    val ctr = getConstructors(target).firstOrNull {
+                        it.name == accessor.spec.methodName
+                                && it.typeSpec.isConreteEq(accessor.spec.typeSpec)
+                    }
 
-                        if (method != null && method.modifiers.contains(CodeModifier.PRIVATE))
-                            method
-                        else if (accessor.invokeType == InvokeType.INVOKE_SPECIAL
-                                && (ctr != null && ctr.modifiers.contains(CodeModifier.PRIVATE))
-                                || ((target as? ConstructorsHolder)?.constructors.orEmpty().isEmpty()
-                                && target.modifiers.contains(CodeModifier.PRIVATE)))
-                            ctr
-                        else null
-                    } else null
+                    if (method != null && method.modifiers.contains(CodeModifier.PRIVATE))
+                        method
+                    else if (accessor.invokeType == InvokeType.INVOKE_SPECIAL
+                            && (ctr != null && ctr.modifiers.contains(CodeModifier.PRIVATE))
+                            || ((target as? ConstructorsHolder)?.constructors.orEmpty().isEmpty()
+                                    && target.modifiers.contains(CodeModifier.PRIVATE))
+                    )
+                        ctr
+                    else null
+                } else null
 
             member?.let {
                 MEMBER_ACCESSES.getOrNull(targetData)?.forEach { e ->
@@ -194,80 +194,110 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
                         return e
                 }
 
-                val existingNames = MEMBER_ACCESSES.getOrNull(targetData).orEmpty().filter { it.owner.`is`(target) }.map {
-                    (it.newElementToAccess as Named).name
-                }
+                val existingNames =
+                    MEMBER_ACCESSES.getOrNull(targetData).orEmpty().filter { it.owner.`is`(target) }
+                        .map {
+                            (it.newElementToAccess as Named).name
+                        }
 
                 val name = getNewNameBasedOnNameList("accessor\$",
-                        target.methods.map { it.name } + existingNames
+                    target.methods.map { it.name } + existingNames
                 )
 
                 val isStatic = it is ModifiersHolder && it.modifiers.contains(CodeModifier.STATIC)
 
                 val baseParameters =
-                        if (isStatic)
-                            listOf()
-                        else
-                            listOf(parameter(type = target, name = "this"))
+                    if (isStatic)
+                        listOf()
+                    else
+                        listOf(parameter(type = target, name = "this"))
 
                 val acc = if (isStatic) Access.STATIC else Access.THIS
 
                 val newMember: MethodDeclarationBase = when (it) {
                     is FieldDeclaration -> MethodDeclaration.Builder.builder()
-                            .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC, CodeModifier.STATIC)
-                            .returnType(it.type)
-                            .name(name)
-                            .parameters(baseParameters)
-                            .body(CodeSource.fromPart(
-                                    returnValue(it.type,
-                                            accessField(Alias.THIS, acc, it.type, it.name))
-                            ))
-                            .build()
+                        .modifiers(
+                            CodeModifier.PACKAGE_PRIVATE,
+                            CodeModifier.SYNTHETIC,
+                            CodeModifier.STATIC
+                        )
+                        .returnType(it.type)
+                        .name(name)
+                        .parameters(baseParameters)
+                        .body(
+                            CodeSource.fromPart(
+                                returnValue(
+                                    it.type,
+                                    accessField(Alias.THIS, acc, it.type, it.name)
+                                )
+                            )
+                        )
+                        .build()
                     is MethodDeclaration -> {
                         accessor as MethodInvocation
 
                         MethodDeclaration.Builder.builder()
-                                .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC, CodeModifier.STATIC)
-                                .returnType(it.returnType)
-                                .name(name)
-                                .parameters(baseParameters + it.parameters)
-                                .body(CodeSource.fromPart(
-                                        returnValue(it.type,
-                                                invoke(accessor.invokeType,
-                                                        Alias.THIS,
-                                                        acc,
-                                                        it.name,
-                                                        it.typeSpec,
-                                                        it.parameters.access
-                                                )
+                            .modifiers(
+                                CodeModifier.PACKAGE_PRIVATE,
+                                CodeModifier.SYNTHETIC,
+                                CodeModifier.STATIC
+                            )
+                            .returnType(it.returnType)
+                            .name(name)
+                            .parameters(baseParameters + it.parameters)
+                            .body(
+                                CodeSource.fromPart(
+                                    returnValue(
+                                        it.type,
+                                        invoke(
+                                            accessor.invokeType,
+                                            Alias.THIS,
+                                            acc,
+                                            it.name,
+                                            it.typeSpec,
+                                            it.parameters.access
                                         )
+                                    )
 
-                                ))
-                                .build()
+                                )
+                            )
+                            .build()
                     }
                     is ConstructorDeclaration -> {
-                        val newPname = getNewName("access\$",
-                                it.parameters
+                        val newPname = getNewName(
+                            "access\$",
+                            it.parameters
                         )
 
                         val newName = getNewName("\$", INNER_CLASSES.require(data))
 
                         val innerType = ClassDeclaration.Builder.builder()
-                                .outerClass(target)
-                                .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC, CodeModifier.STATIC)
-                                .name(newName)
-                                .build()
+                            .outerType(target)
+                            .modifiers(
+                                CodeModifier.PACKAGE_PRIVATE,
+                                CodeModifier.SYNTHETIC,
+                                CodeModifier.STATIC
+                            )
+                            .name(newName)
+                            .build()
 
                         INNER_CLASSES.add(data, innerType)
 
                         ConstructorDeclaration.Builder.builder()
-                                .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC)
-                                .innerTypes(innerType)
-                                .parameters(it.parameters + parameter(type = innerType, name = newPname))
-                                .body(CodeSource.fromPart(
-                                        invokeThisConstructor(it.typeSpec, it.parameters.access)
-                                ))
-                                .build()
+                            .modifiers(CodeModifier.PACKAGE_PRIVATE, CodeModifier.SYNTHETIC)
+                            .innerTypes(innerType)
+                            .parameters(
+                                it.parameters + parameter(
+                                    type = innerType,
+                                    name = newPname
+                                )
+                            )
+                            .body(
+                                CodeSource.fromPart(
+                                    invokeThisConstructor(it.typeSpec, it.parameters.access)
+                                )
+                            )
+                            .build()
 
                     }
                     else -> TODO()
@@ -301,34 +331,39 @@ fun getTopLevelOuter(data: TypedData): TypeDeclaration? {
 
 fun getConstructors(part: TypeDeclaration): List<ConstructorDeclaration> {
     val isStatic = part.modifiers.contains(CodeModifier.STATIC)
-    val outerType = part.outerClass
+    val outerType = part.outerType
 
     if (!isStatic && outerType != null) {
 
         val localLocalPart = part
         if (localLocalPart is ConstructorsHolder && !isStatic && !outerType.isInterface) {
 
-            val allNames = localLocalPart.fields.map { it.name } + localLocalPart.constructors.flatMap {
-                it.parameters.map { it.name }
-            }
+            val allNames =
+                localLocalPart.fields.map { it.name } + localLocalPart.constructors.flatMap {
+                    it.parameters.map { it.name }
+                }
 
-            val singleName = getNewNameBasedOnNameList(TypeDeclarationProcessor.baseOuterName, allNames)
+            val singleName =
+                getNewNameBasedOnNameList(TypeDeclarationProcessor.baseOuterName, allNames)
 
             val newCtrs =
-                    if (localLocalPart.constructors.isNotEmpty()) {
-                        localLocalPart.constructors.map {
-                            val newParams = listOf(parameter(type = outerType, name = singleName)) + it.parameters
+                if (localLocalPart.constructors.isNotEmpty()) {
+                    localLocalPart.constructors.map {
+                        val newParams =
+                            listOf(parameter(type = outerType, name = singleName)) + it.parameters
 
-                            it.builder()
-                                    .parameters(newParams)
-                                    .build()
-                        }
-                    } else {
-                        listOf(ConstructorDeclaration.Builder.builder()
-                                .modifiers(part.modifiers.filter { it.modifierType == ModifierType.VISIBILITY }.toSet())
-                                .parameters(parameter(type = outerType, name = singleName))
-                                .build())
+                        it.builder()
+                            .parameters(newParams)
+                            .build()
                     }
+                } else {
+                    listOf(
+                        ConstructorDeclaration.Builder.builder()
+                            .modifiers(part.modifiers.filter { it.modifierType == ModifierType.VISIBILITY }.toSet())
+                            .parameters(parameter(type = outerType, name = singleName))
+                            .build()
+                    )
+                }
 
             return newCtrs
         }

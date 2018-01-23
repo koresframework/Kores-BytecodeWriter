@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,6 +28,7 @@
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
 import com.github.jonathanxd.codeapi.base.Annotation
+import com.github.jonathanxd.codeapi.base.CodeRetention
 import com.github.jonathanxd.codeapi.bytecode.processor.ANNOTATION_VISITOR_CAPABLE
 import com.github.jonathanxd.codeapi.bytecode.util.AnnotationUtil
 import com.github.jonathanxd.codeapi.processor.Processor
@@ -37,9 +38,11 @@ import com.github.jonathanxd.iutils.data.TypedData
 object AnnotationProcessor : Processor<Annotation> {
 
     override fun process(part: Annotation, data: TypedData, processorManager: ProcessorManager<*>) {
-        val visitor = ANNOTATION_VISITOR_CAPABLE.getOrNull(data)!!
+        if (part.retention != CodeRetention.SOURCE) {
+            val visitor = ANNOTATION_VISITOR_CAPABLE.getOrNull(data)!!
 
-        AnnotationUtil.visitAnnotation(part, visitor)
+            AnnotationUtil.visitAnnotation(part, visitor)
+        }
 
     }
 

@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -40,7 +40,6 @@ import com.github.jonathanxd.iutils.function.checked.function.CFunction;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public class CommonBytecodeTest {
@@ -75,7 +74,8 @@ public class CommonBytecodeTest {
                                                 TypeDeclaration mainClass,
                                                 UnaryOperator<TypeDeclaration> modifier,
                                                 CFunction<Class<?>, R> function) {
-        return test(testClass, mainClass, modifier, function, bytecodeProcessor -> {});
+        return test(testClass, mainClass, modifier, function, bytecodeProcessor -> {
+        });
     }
 
     public static @Named("Instance") <R> R test(Class<?> testClass,

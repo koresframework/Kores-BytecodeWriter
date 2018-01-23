@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,9 +27,7 @@
  */
 package com.github.jonathanxd.codeapi.bytecode.processor.processors
 
-import com.github.jonathanxd.codeapi.CodeInstruction
-import com.github.jonathanxd.codeapi.CodeSource
-import com.github.jonathanxd.codeapi.Types
+import com.github.jonathanxd.codeapi.*
 import com.github.jonathanxd.codeapi.base.*
 import com.github.jonathanxd.codeapi.bytecode.common.Flow
 import com.github.jonathanxd.codeapi.bytecode.processor.FLOWS
@@ -43,18 +41,25 @@ import com.github.jonathanxd.codeapi.factory.checkTrue
 import com.github.jonathanxd.codeapi.factory.defaultCase
 import com.github.jonathanxd.codeapi.factory.invokeVirtual
 import com.github.jonathanxd.codeapi.factory.typeSpec
+import com.github.jonathanxd.codeapi.literal.Literal
 import com.github.jonathanxd.codeapi.literal.Literals
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.*
+import com.github.jonathanxd.codeapi.type.`is`
+import com.github.jonathanxd.codeapi.type.isPrimitive
+import com.github.jonathanxd.codeapi.type.primitiveType
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.add
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.add
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Label
 
 object SwitchProcessor : Processor<SwitchStatement> {
 
-    override fun process(part: SwitchStatement, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: SwitchStatement,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val switchType = part.switchType
         var aSwitch: SwitchStatement = part
         val mvHelper = METHOD_VISITOR.require(data)
@@ -87,8 +92,8 @@ object SwitchProcessor : Processor<SwitchStatement> {
 
             val originCaseList = aSwitch.cases
             var filteredCaseList = originCaseList
-                    .filter(Case::isNotDefault)
-                    .sortedBy(this::getInt)// or Integer.compare(this.getInt(o1), this.getInt(o2))
+                .filter(Case::isNotDefault)
+                .sortedBy(this::getInt) // or Integer.compare(this.getInt(o1), this.getInt(o2))
 
             val useLookupSwitch = this.useLookupSwitch(filteredCaseList)
 
@@ -112,7 +117,8 @@ object SwitchProcessor : Processor<SwitchStatement> {
                 var max = this.getMax(filteredCaseList)
 
                 if (min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
-                        || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE)
+                        || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE
+                )
                     throw IllegalStateException("Too much table entries to generate: ${min..max}")
 
                 filteredCaseList = this.fill(min.toInt(), max.toInt(), filteredCaseList)
@@ -123,7 +129,8 @@ object SwitchProcessor : Processor<SwitchStatement> {
                 max = this.getMax(filteredCaseList)
 
                 if (min < Integer.MIN_VALUE || min > Integer.MAX_VALUE
-                        || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE)
+                        || max < Integer.MIN_VALUE || max > Integer.MAX_VALUE
+                )
                     throw IllegalStateException("Too much table entries to generate: ${min..max}")
 
                 mv.visitTableSwitchInsn(min.toInt(), max.toInt(), defaultLabel, *labels)
@@ -170,7 +177,8 @@ object SwitchProcessor : Processor<SwitchStatement> {
 
 
     fun toLabel(caseList: List<Case>, defaultLabel: Label): Array<Label> {
-        return caseList.map { if (it.body.contains(SwitchMarker)) defaultLabel else Label() }.toTypedArray()
+        return caseList.map { if (it.body.contains(SwitchMarker)) defaultLabel else Label() }
+            .toTypedArray()
     }
 
     fun getDefault(caseList: List<Case>): Case {
@@ -198,23 +206,23 @@ object SwitchProcessor : Processor<SwitchStatement> {
     }
 
     private fun getCase(caseList: List<Case>, i: Int): Case? =
-            caseList.firstOrNull { this.getInt(it) == i }
+        caseList.firstOrNull { this.getInt(it) == i }
 
 
     private fun getMin(caseList: List<Case>): Long =
-            caseList
-                    .filterNot(Case::isDefault)
-                    .map { it.value.safeForComparison as Literals.IntLiteral }
-                    .map { it.name.toLong() }
-                    .min() ?: 0L
+        caseList
+            .filterNot(Case::isDefault)
+            .map { it.value.safeForComparison as Literals.IntLiteral }
+            .map { it.name.toLong() }
+            .min() ?: 0L
 
 
     private fun getMax(caseList: List<Case>): Long =
-            caseList
-                    .filterNot(Case::isDefault)
-                    .map { it.value.safeForComparison as Literals.IntLiteral }
-                    .map { it.name.toLong() }
-                    .max() ?: 0L
+        caseList
+            .filterNot(Case::isDefault)
+            .map { it.value.safeForComparison as Literals.IntLiteral }
+            .map { it.name.toLong() }
+            .max() ?: 0L
 
     private fun getCasesToFill(caseList: List<Case>): Long {
         val min = this.getMin(caseList)
@@ -262,16 +270,23 @@ object SwitchProcessor : Processor<SwitchStatement> {
                 if (type.`is`(Types.INT))
                     return@map aCase
 
-                return@map aCase.builder().body(CodeSource.fromPart(
-                        IfStatement(body = codeSource + SwitchMarker,
-                                elseStatement = CodeSource.empty(),
-                                expressions = listOf(checkTrue(
-                                        invokeVirtual(Any::class.java, switchValue, "equals",
-                                                typeSpec(Types.BOOLEAN, Types.OBJECT),
-                                                listOf(caseValue)
-                                        )
-                                )))
-                )).build()
+                return@map aCase.builder().body(
+                    CodeSource.fromPart(
+                        IfStatement(
+                            body = codeSource + SwitchMarker,
+                            elseStatement = CodeSource.empty(),
+                            expressions = listOf(
+                                checkTrue(
+                                    invokeVirtual(
+                                        Any::class.java, switchValue, "equals",
+                                        typeSpec(Types.BOOLEAN, Types.OBJECT),
+                                        listOf(caseValue)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ).build()
             }
 
             return@map aCase
@@ -289,7 +304,11 @@ object SwitchProcessor : Processor<SwitchStatement> {
     object SwitchMarker : CodeInstruction
 
     object SwitchMarkerProcessor : Processor<SwitchMarker> {
-        override fun process(part: SwitchMarker, data: TypedData, processorManager: ProcessorManager<*>) {
+        override fun process(
+            part: SwitchMarker,
+            data: TypedData,
+            processorManager: ProcessorManager<*>
+        ) {
         }
 
     }
@@ -340,23 +359,24 @@ object SwitchProcessor : Processor<SwitchStatement> {
             if (aCase.type.`is`(Types.INT))
                 return aCase
 
-            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison))).build()
+            return aCase.builder().value(Literals.INT(resolve(aCase.value.safeForComparison)))
+                .build()
         }
 
 
         private fun translate(aSwitch: SwitchStatement): SwitchStatement {
             return aSwitch.builder().value(
-                    MethodInvocation(
-                            invokeType = InvokeType.INVOKE_VIRTUAL,
-                            target = aSwitch.value,
-                            arguments = emptyList(),
-                            spec = MethodTypeSpec(
-                                    localization = Types.OBJECT,
-                                    methodName = "hashCode",
-                                    typeSpec = TypeSpec(Types.INT)
-                            )
-
+                MethodInvocation(
+                    invokeType = InvokeType.INVOKE_VIRTUAL,
+                    target = aSwitch.value,
+                    arguments = emptyList(),
+                    spec = MethodTypeSpec(
+                        localization = Types.OBJECT,
+                        methodName = "hashCode",
+                        typeSpec = TypeSpec(Types.INT)
                     )
+
+                )
             ).build()
         }
     }
@@ -371,26 +391,27 @@ object SwitchProcessor : Processor<SwitchStatement> {
             if (aCase.isDefault)
                 return aCase
 
-            return aCase.builder().value(Literals.INT(EnumTypeUtil.resolve(aCase.value.safeForComparison))).build()
+            return aCase.builder().value(Literals.INT(resolve(aCase.value.safeForComparison)))
+                .build()
         }
 
         private fun translate(aSwitch: SwitchStatement): SwitchStatement {
             return aSwitch.builder()
-                    .value(
-                            MethodInvocation(
-                                    invokeType = InvokeType.INVOKE_VIRTUAL,
-                                    target = aSwitch.value,
-                                    arguments = emptyList(),
-                                    spec = MethodTypeSpec(
-                                            localization = Types.ENUM,
-                                            methodName = "ordinal",
-                                            typeSpec = TypeSpec(Types.INT)
-                                    )
-
-                            )
+                .value(
+                    MethodInvocation(
+                        invokeType = InvokeType.INVOKE_VIRTUAL,
+                        target = aSwitch.value,
+                        arguments = emptyList(),
+                        spec = MethodTypeSpec(
+                            localization = Types.ENUM,
+                            methodName = "ordinal",
+                            typeSpec = TypeSpec(Types.INT)
+                        )
 
                     )
-                    .build()
+
+                )
+                .build()
         }
 
     }
@@ -406,14 +427,21 @@ object SwitchProcessor : Processor<SwitchStatement> {
         }
 
         open fun generate(t: SwitchStatement): SwitchStatement {
-            val caseList = t.cases.map { aCase -> if (aCase.isDefault) aCase else this.checkType(this.translateCase(aCase, t)) }
+            val caseList = t.cases.map { aCase ->
+                if (aCase.isDefault) aCase else this.checkType(
+                    this.translateCase(
+                        aCase,
+                        t
+                    )
+                )
+            }
 
             val translatedSwitch = this.checkType(this.translateSwitch(t))
 
             val switchStmt = SwitchStatement(
-                    value = translatedSwitch.value,
-                    cases = caseList,
-                    switchType = SwitchType.NUMERIC
+                value = translatedSwitch.value,
+                cases = caseList,
+                switchType = SwitchType.NUMERIC
             )
 
             return switchStmt
@@ -427,5 +455,31 @@ object SwitchProcessor : Processor<SwitchStatement> {
             return typed
         }
     }
+
+    /**
+     * Try to resolve int value of part [p]. If is a numeric literal, returns the numeric value of
+     * the literal, if is a string literal, returns the hashcode of the string.
+     */
+    internal fun resolve(p: CodePart): Int {
+
+
+        if (p is Literal) {
+            val l = p
+
+            if (p is Literals.CharLiteral)
+                return l.name[0].toInt()
+
+            if (p is Literals.ByteLiteral || p is Literals.ShortLiteral || p is Literals.IntLiteral)
+                return Integer.parseInt(l.name)
+
+        }
+
+        if (p is Literals.StringLiteral) {
+            return p.original.hashCode()
+        }
+
+        throw RuntimeException("Cannot resolve the numeric value of '$p', a new SwitchType must be implemented to resolve this!")
+    }
+
 }
 

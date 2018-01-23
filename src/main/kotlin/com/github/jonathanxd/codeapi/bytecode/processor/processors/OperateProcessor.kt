@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -40,11 +40,11 @@ import com.github.jonathanxd.codeapi.operator.Operator
 import com.github.jonathanxd.codeapi.operator.Operators
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.javaSpecName
-import com.github.jonathanxd.codeapi.util.safeForComparison
-import com.github.jonathanxd.codeapi.util.type
+import com.github.jonathanxd.codeapi.safeForComparison
+import com.github.jonathanxd.codeapi.type
+import com.github.jonathanxd.codeapi.type.javaSpecName
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 
@@ -65,12 +65,12 @@ object OperateProcessor : Processor<Operate> {
 
             // Desugar
             val desugar = OperateHelper.builder(target)
-                    .subtract(
-                            OperateHelper.builder(value)
-                                    .xor(Literals.INT(-1))
-                                    .build()
-                    )
-                    .build()
+                .subtract(
+                    OperateHelper.builder(value)
+                        .xor(Literals.INT(-1))
+                        .build()
+                )
+                .build()
 
             processorManager.process(desugar::class.java, desugar, data)
 
@@ -98,13 +98,23 @@ object OperateProcessor : Processor<Operate> {
             -> {
                 val type = target.type
 
-                operateVisit(type, operation, safeValue == CodeNothing, METHOD_VISITOR.require(data))
+                operateVisit(
+                    type,
+                    operation,
+                    safeValue == CodeNothing,
+                    METHOD_VISITOR.require(data)
+                )
             }
             else -> throw RuntimeException("Cannot handle operation: '$operation'!")
         }
     }
 
-    internal fun operateVisit(codeType: ReflectType, operation: Operator, valueIsNull: Boolean, mvData: MethodVisitorHelper) {
+    internal fun operateVisit(
+        codeType: ReflectType,
+        operation: Operator,
+        valueIsNull: Boolean,
+        mvData: MethodVisitorHelper
+    ) {
         val type = Type.getType(codeType.javaSpecName)
 
         val opcode = if (operation === Operators.ADD) {

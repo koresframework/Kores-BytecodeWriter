@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -35,13 +35,17 @@ import com.github.jonathanxd.codeapi.bytecode.processor.TYPE_DECLARATION
 import com.github.jonathanxd.codeapi.factory.accessField
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.`is`
+import com.github.jonathanxd.codeapi.type.`is`
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 
 object ScopeAccessProcessor : Processor<ScopeAccess> {
 
-    override fun process(part: ScopeAccess, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ScopeAccess,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         val type = TYPE_DECLARATION.require(data)
         val outer = OUTER_TYPE_FIELD.require(data)
 
@@ -55,16 +59,22 @@ object ScopeAccessProcessor : Processor<ScopeAccess> {
         }
     }
 
-    private tailrec fun accessField(type: TypeDeclaration,
-                                    outer: OuterClassField,
-                                    part: ScopeAccess,
-                                    old: CodeInstruction = Access.THIS,
-                                    data: TypedData): FieldAccess =
-            if (outer.field.type.`is`(part.type)) {
-                accessField(type, old, outer.field.type, outer.field.name)
-            } else {
-                accessField(TYPE_DECLARATION.require(data.parent!!), OUTER_TYPE_FIELD.require(data.parent!!), part,
-                        accessField(type, old, outer.field.type, outer.field.name),
-                        data.parent!!)
-            }
+    private tailrec fun accessField(
+        type: TypeDeclaration,
+        outer: OuterClassField,
+        part: ScopeAccess,
+        old: CodeInstruction = Access.THIS,
+        data: TypedData
+    ): FieldAccess =
+        if (outer.field.type.`is`(part.type)) {
+            accessField(type, old, outer.field.type, outer.field.name)
+        } else {
+            accessField(
+                TYPE_DECLARATION.require(data.parent!!),
+                OUTER_TYPE_FIELD.require(data.parent!!),
+                part,
+                accessField(type, old, outer.field.type, outer.field.name),
+                data.parent!!
+            )
+        }
 }

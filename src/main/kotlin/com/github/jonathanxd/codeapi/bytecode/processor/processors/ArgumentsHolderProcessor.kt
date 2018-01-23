@@ -1,9 +1,9 @@
 /*
- *      CodeAPI-BytecodeWriter - Framework to generate Java code and Bytecode code. <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      CodeAPI-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2017 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/ & https://github.com/TheRealBuggy/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -36,15 +36,19 @@ import com.github.jonathanxd.codeapi.bytecode.util.InsnUtil
 import com.github.jonathanxd.codeapi.factory.cast
 import com.github.jonathanxd.codeapi.processor.Processor
 import com.github.jonathanxd.codeapi.processor.ProcessorManager
-import com.github.jonathanxd.codeapi.util.codeType
-import com.github.jonathanxd.codeapi.util.isPrimitive
-import com.github.jonathanxd.codeapi.util.typeOrNull
+import com.github.jonathanxd.codeapi.type.codeType
+import com.github.jonathanxd.codeapi.type.isPrimitive
+import com.github.jonathanxd.codeapi.typeOrNull
 import com.github.jonathanxd.iutils.data.TypedData
-import com.github.jonathanxd.jwiutils.kt.require
+import com.github.jonathanxd.iutils.kt.require
 
 object ArgumentsHolderProcessor : Processor<ArgumentsHolder> {
 
-    override fun process(part: ArgumentsHolder, data: TypedData, processorManager: ProcessorManager<*>) {
+    override fun process(
+        part: ArgumentsHolder,
+        data: TypedData,
+        processorManager: ProcessorManager<*>
+    ) {
         // MUST be retrieved here to avoid the data to be removed too late
         val isInInvokeDynamic = IN_INVOKE_DYNAMIC.getOrNull(data) != null
 
