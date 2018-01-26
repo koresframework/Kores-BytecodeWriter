@@ -1,4 +1,4 @@
-[submodule "CodeAPI"]
-	path = CodeAPI
-	url = https://github.com/JonathanxD/CodeAPI.git
+[submodule "Kores"]
+	path = Kores
+	url = https://github.com/JonathanxD/Kores.git
 	branch = version/4.0.0
