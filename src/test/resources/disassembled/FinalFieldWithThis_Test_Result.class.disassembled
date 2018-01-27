@@ -1,14 +1,14 @@
-md5: a4665e5786badfc6c572a34bfe4d520d
+md5: 74d30cc4c3f0865886342238f0e12d38
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: Test.cai
 
-public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox {
+public class finalfieldwiththis.Test extends com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox {
 
     !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox testField
+    private final com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox testField
 
     !access: ACC_PUBLIC (1)
     public void <init>() {
@@ -18,15 +18,15 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.codeapi.test.
        LINE 2 -> Label_0
         aload 0
         aconst_null
-        invokespecial com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
+        invokespecial com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
         aload 0
       Label_1:
        LINE 1 -> Label_1
-        new com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox
+        new com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox
         dup
         aload 0
-        invokespecial com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
-        putfield finalfieldwiththis.Test.testField (type: com.github.jonathanxd.codeapi.test.asm.FinalFieldWithThis$TestBox)
+        invokespecial com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
+        putfield finalfieldwiththis.Test.testField (type: com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox)
         return
       Label_2:
       LocalVariables {

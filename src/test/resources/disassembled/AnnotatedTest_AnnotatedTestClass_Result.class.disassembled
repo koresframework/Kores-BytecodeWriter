@@ -1,15 +1,15 @@
-md5: 40a16df7c2abd13ef42d6931efb7b898
+md5: da0cb4f44961e6fe76db1a7dbfcf2dde
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: AnnotatedTestClass.cai
 
-@com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.C})
+@com.github.jonathanxd.kores.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.C})
 public class test.AnnotatedTestClass extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    @com.github.jonathanxd.codeapi.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.codeapi.test.AnnotatedTest_$MyEnum.A})
+    @com.github.jonathanxd.kores.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.A})
     public static java.lang.String field
 
     !access: ACC_PUBLIC, ACC_STATIC (9)

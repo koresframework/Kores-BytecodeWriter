@@ -1,11 +1,11 @@
-md5: 7998251d79f7355e344106402c491eba
+md5: fdfac3b0262ce0dca73af82ee2806886
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: BridgeMethodTest3.cai
 
-public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.codeapi.test.asm.BaseGInteger {
+public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BaseGInteger {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
     public java.lang.Number getValue() {

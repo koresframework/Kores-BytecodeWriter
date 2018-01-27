@@ -1,11 +1,11 @@
-md5: 0e49bfa0ff8095ec6bd51fb643a18a5c
+md5: 389ee1daf6667f8a276712f4690f944c
 
 version: Java 8 (52)
 access: ACC_PUBLIC, ACC_ABSTRACT (17441)
 
 source: MyEnum.cai
 
-public abstract class com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.codeapi.test.EnumTest_$MyItf {
+public abstract class com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.kores.test.EnumTest_$MyItf {
 
     !access: PACKAGE_PRIVATE (16392)
      com.MyEnum.A$Inner -> com.MyEnum$A$Inner

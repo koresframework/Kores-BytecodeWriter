@@ -1,11 +1,11 @@
-md5: de668b897ace752fa189398e1381c31a
+md5: 08f3357ed6e654d519a28ff86c55be40
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: CommonGen_Generated.cai
 
-public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java.lang.Object {
+public class com.github.jonathanxd.kores.test.CommonGen_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
     public void <init>() {
@@ -105,7 +105,7 @@ public class com.github.jonathanxd.codeapi.test.CommonGen_Generated extends java
         index: 3, name: array3, start: Label_6, end: Label_8, type: java.lang.Object[], signature: null
         index: 2, name: array2, start: Label_4, end: Label_8, type: java.lang.String[], signature: null
         index: 1, name: array, start: Label_2, end: Label_8, type: java.lang.String[][], signature: null
-        index: 0, name: this, start: Label_0, end: Label_8, type: com.github.jonathanxd.codeapi.test.CommonGen_Generated, signature: null
+        index: 0, name: this, start: Label_0, end: Label_8, type: com.github.jonathanxd.kores.test.CommonGen_Generated, signature: null
       }
     }
     

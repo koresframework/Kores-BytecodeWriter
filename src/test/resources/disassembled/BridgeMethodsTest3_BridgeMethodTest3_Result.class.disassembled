@@ -1,11 +1,11 @@
-md5: 13b514a7c7700aa0000ec60005b3ae02
+md5: 000d67e98595809b735d7d9ea586590b
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: BridgeMethodTest3.cai
 
-public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.codeapi.test.asm.BridgeMethodsTest3$StringTransform {
+public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BridgeMethodsTest3$StringTransform {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
     !parameter[name: i, access:  (0)]

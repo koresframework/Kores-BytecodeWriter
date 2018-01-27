@@ -1,11 +1,11 @@
-md5: 629858cf606e2389d1e6a31eab878e5d
+md5: e4a5e189d1447f1714c0143a4d488b8b
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: PrimitiveCast_Generated.cai
 
-public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated extends java.lang.Object {
+public class com.github.jonathanxd.kores.test.asm.PrimitiveCast_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !parameter[name: string, access:  (0)]
@@ -84,7 +84,7 @@ public class com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated exte
         return
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: com.github.jonathanxd.codeapi.test.asm.PrimitiveCast_Generated, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.github.jonathanxd.kores.test.asm.PrimitiveCast_Generated, signature: null
       }
     }
     

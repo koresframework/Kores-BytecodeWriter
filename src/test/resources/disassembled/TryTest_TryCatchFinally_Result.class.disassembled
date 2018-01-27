@@ -1,4 +1,4 @@
-md5: 0d61a5827c2a712c132a83240d0c7466
+md5: a508ae373c3c7bbf3c5fed325ea3e4b2
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -17,7 +17,7 @@ public class test.TryCatchFinally extends java.lang.Object {
       Label_1:
        LINE 1 -> Label_1
        LINE 2 -> Label_1
-        invokestatic com.github.jonathanxd.codeapi.test.TryTest_.boom()void (ownerIsInterface: false)
+        invokestatic com.github.jonathanxd.kores.test.TryTest_.boom()void (ownerIsInterface: false)
       Label_2:
         return
       Label_3:
@@ -29,7 +29,7 @@ public class test.TryCatchFinally extends java.lang.Object {
         invokevirtual java.lang.Exception.printStackTrace()void (ownerIsInterface: false)
       Label_5:
        LINE 4 -> Label_5
-        invokestatic com.github.jonathanxd.codeapi.test.asm.TryTest.x()java.lang.String (ownerIsInterface: false)
+        invokestatic com.github.jonathanxd.kores.test.asm.TryTest.x()java.lang.String (ownerIsInterface: false)
         pop
       Label_6:
         return

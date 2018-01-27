@@ -1,4 +1,4 @@
-md5: 83d202610fc785222f6f2b4239dade08
+md5: bf19944dd9533962405c06f0c110ea9d
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -17,7 +17,7 @@ public class test.DupTest_getNotNull extends java.lang.Object {
       Label_1:
        LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        invokestatic com.github.jonathanxd.codeapi.test.asm.DupTest.getNotNull()java.lang.String (ownerIsInterface: false)
+        invokestatic com.github.jonathanxd.kores.test.asm.DupTest.getNotNull()java.lang.String (ownerIsInterface: false)
         dup
         ifnull Label_2
         goto Label_3

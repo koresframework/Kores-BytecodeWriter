@@ -5,7 +5,7 @@ access: ACC_PUBLIC (33)
 
 source: bridgeBugTest.cai
 
-public class com.bridgeBugTest extends java.lang.Object implements com.github.jonathanxd.codeapi.test.asm.BridgeMethodsBugTest$X {
+public class com.bridgeBugTest extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BridgeMethodsBugTest$X {
 
     !access: ACC_PUBLIC (1)
     !signature: <T:Ljava/lang/Object;>(Ljava/lang/Class<TT;>;)TT;

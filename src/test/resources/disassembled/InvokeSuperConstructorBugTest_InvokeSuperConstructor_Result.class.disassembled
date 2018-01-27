@@ -1,11 +1,11 @@
-md5: 76a8da1c8d5c83930ca2930051f17747
+md5: de3a37da995aedd4cb0d5e1023075209
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: InvokeSuperConstructor.cai
 
-public class com.InvokeSuperConstructor extends com.github.jonathanxd.codeapi.test.asm.InvokeSuperConstructorBugTest$ClassWithConstructor {
+public class com.InvokeSuperConstructor extends com.github.jonathanxd.kores.test.asm.InvokeSuperConstructorBugTest$ClassWithConstructor {
 
     !access: ACC_PUBLIC (1)
     public void <init>() {
@@ -15,7 +15,7 @@ public class com.InvokeSuperConstructor extends com.github.jonathanxd.codeapi.te
        LINE 1 -> Label_0
         aload 0
         ldc "Hello"              // type: java.lang.String
-        invokespecial com.github.jonathanxd.codeapi.test.asm.InvokeSuperConstructorBugTest$ClassWithConstructor.<init>(java.lang.String)void (ownerIsInterface: false)
+        invokespecial com.github.jonathanxd.kores.test.asm.InvokeSuperConstructorBugTest$ClassWithConstructor.<init>(java.lang.String)void (ownerIsInterface: false)
         return
       Label_1:
       LocalVariables {

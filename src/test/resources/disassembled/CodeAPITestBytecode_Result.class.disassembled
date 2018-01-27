@@ -1,4 +1,4 @@
-md5: 4623988626a174ba12a547e36c52af31
+md5: 854930ee4bda7ddc49fa4d72c6b14391
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,14 +13,14 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
       desc: (Ljava/lang/Object;)V 
       maxStack: 3, maxLocals: 4 
       Label_0:
-        new com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode
+        new com.github.jonathanxd.kores.test.asm.CodeAPITestBytecode
         dup
-        invokespecial com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode.<init>()void (ownerIsInterface: false)
+        invokespecial com.github.jonathanxd.kores.test.asm.CodeAPITestBytecode.<init>()void (ownerIsInterface: false)
       Label_1:
         astore 1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         aload 1
-        getfield com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode.b (type: java.lang.String)
+        getfield com.github.jonathanxd.kores.test.asm.CodeAPITestBytecode.b (type: java.lang.String)
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
         aload 0
@@ -29,7 +29,7 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         aload 0
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_3:
-       FRAME[type: F_APPEND, locals: 1, local: {Reference[com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode]}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 1, local: {Reference[com.github.jonathanxd.kores.test.asm.CodeAPITestBytecode]}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
       Label_4:
         astore 2
@@ -91,7 +91,7 @@ public class github.com.CodeAPITestBytecode extends java.lang.Object {
         index: 2, name: ref, start: Label_4, end: Label_5, type: java.lang.Object, signature: null
         index: 2, name: thr, start: Label_5, end: Label_7, type: java.lang.Throwable, signature: null
         index: 2, name: tlr, start: Label_5, end: Label_10, type: java.lang.Throwable, signature: null
-        index: 1, name: test, start: Label_1, end: Label_13, type: com.github.jonathanxd.codeapi.test.asm.CodeAPITestBytecode, signature: null
+        index: 1, name: test, start: Label_1, end: Label_13, type: com.github.jonathanxd.kores.test.asm.CodeAPITestBytecode, signature: null
         index: 0, name: msg, start: Label_0, end: Label_13, type: java.lang.Object, signature: null
       }
     }

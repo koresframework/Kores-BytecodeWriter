@@ -1,4 +1,4 @@
-md5: 5bffbfab606d8965f3194a7fd95307dc
+md5: 2ee23452accb4fcc3566442e489118af
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -9,25 +9,25 @@ public class com.FakeElvisTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
     !parameter[name: a, access:  (0)]
-    public com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass test(java.lang.String) {
-      desc: (Ljava/lang/String;)Lcom/github/jonathanxd/codeapi/test/FakeElvisTest_$TestClass; 
+    public com.github.jonathanxd.kores.test.FakeElvisTest_$TestClass test(java.lang.String) {
+      desc: (Ljava/lang/String;)Lcom/github/jonathanxd/kores/test/FakeElvisTest_$TestClass; 
       maxStack: 3, maxLocals: 2 
       Label_0:
        LINE 1 -> Label_0
-        new com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass
+        new com.github.jonathanxd.kores.test.FakeElvisTest_$TestClass
         dup
         aload 1
         ifnonnull Label_1
-        invokestatic com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.noti()void (ownerIsInterface: false)
+        invokestatic com.github.jonathanxd.kores.test.FakeElvisTest_$TestClass.noti()void (ownerIsInterface: false)
         ldc ""              // type: java.lang.String
         goto Label_2
       Label_1:
        FRAME[type: F_FULL, locals: 2, local: {Reference[com.FakeElvisTest], Reference[java.lang.String]}, stacks: 2, stack: {Label[Label_0], Label[Label_0]}]
-        invokestatic com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.noti2()void (ownerIsInterface: false)
+        invokestatic com.github.jonathanxd.kores.test.FakeElvisTest_$TestClass.noti2()void (ownerIsInterface: false)
         aload 1
       Label_2:
        FRAME[type: F_FULL, locals: 2, local: {Reference[com.FakeElvisTest], Reference[java.lang.String]}, stacks: 3, stack: {Label[Label_0], Label[Label_0], Reference[java.lang.String]}]
-        invokespecial com.github.jonathanxd.codeapi.test.FakeElvisTest_$TestClass.<init>(java.lang.String)void (ownerIsInterface: false)
+        invokespecial com.github.jonathanxd.kores.test.FakeElvisTest_$TestClass.<init>(java.lang.String)void (ownerIsInterface: false)
         areturn
       Label_3:
       LocalVariables {

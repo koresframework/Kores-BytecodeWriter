@@ -1,11 +1,11 @@
-md5: b10a5bf041522c289e138487de6bc1c0
+md5: 74e5c0849d15ff078c3d256d128f3654
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: BridgeMethodTest2.cai
 
-public class com.BridgeMethodTest2 extends java.lang.Object implements com.github.jonathanxd.codeapi.test.asm.BaseString {
+public class com.BridgeMethodTest2 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BaseString {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
     public java.lang.Object getValue() {
