@@ -30,7 +30,7 @@ dependencies {
     runtime "com.github.JonathanxD.Kores:Kores:4.0.0.31-beta"
     compile 'com.github.JonathanxD:BytecodeDisassembler:2.1.0'
     compile "org.ow2.asm:asm:6.0"
-    compile "org .ow2.asm:asm-analysis:6.0"
+    compile "org.ow2.asm:asm-analysis:6.0"
     compile "org.ow2.asm:asm-tree:6.0"
     compile "org.ow2.asm:asm-util:6.0"
 
