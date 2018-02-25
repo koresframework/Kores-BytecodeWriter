@@ -177,7 +177,7 @@ object EnumUtil {
                     .body(
                         Instructions.fromPart(
                             returnValue(
-                                Types.ENUM, cast(
+                                enumDeclaration, cast(
                                     Types.ENUM, enumDeclaration,
                                     Types.ENUM.invokeStatic(
                                         "valueOf", typeSpec(

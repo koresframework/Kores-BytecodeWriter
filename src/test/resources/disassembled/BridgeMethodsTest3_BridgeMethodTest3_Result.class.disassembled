@@ -1,4 +1,4 @@
-md5: 251a297e836bad6347c5b1ab0e642a7e
+md5: 000d67e98595809b735d7d9ea586590b
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,7 +8,6 @@ source: BridgeMethodTest3.cai
 public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BridgeMethodsTest3$StringTransform {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
-    !signature: (TF;)TT;
     !parameter[name: i, access:  (0)]
     public java.lang.Object transform(java.lang.Object) {
       desc: (Ljava/lang/Object;)Ljava/lang/Object; 
