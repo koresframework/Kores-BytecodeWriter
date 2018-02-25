@@ -52,8 +52,8 @@ import org.objectweb.asm.util.CheckClassAdapter
 class BytecodeGenerator @JvmOverloads constructor(
     val sourceFile: (Named) -> String = {
         when (it) {
-            is TypeDeclaration -> "${Util.getOwner(it).simpleName}.cai"
-            is ModuleDeclaration -> "module-info.cai" // Maybe module-info_${it.name}.cai ?
+            is TypeDeclaration -> "${Util.getOwner(it).simpleName}.kores"
+            is ModuleDeclaration -> "module-info.kores" // Maybe module-info_${it.name}.kores ?
             else -> it.name
         }
     }

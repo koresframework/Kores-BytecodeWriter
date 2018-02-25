@@ -1,4 +1,4 @@
-md5: fdfac3b0262ce0dca73af82ee2806886
+md5: 0159f56641bddd6eebc0673a20d4dd28
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -23,6 +23,7 @@ public class com.BridgeMethodTest3 extends java.lang.Object implements com.githu
     }
     
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
+    !signature: ()TT;
     public java.lang.Object getValue() {
       desc: ()Ljava/lang/Object; 
       maxStack: 1, maxLocals: 1 

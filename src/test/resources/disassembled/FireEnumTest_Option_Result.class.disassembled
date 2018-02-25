@@ -1,0 +1,138 @@
+md5: 7c308e35557796d039ae299b837c624d
+
+version: Java 8 (52)
+access: ACC_PUBLIC (16417)
+
+source: Option.cai
+
+public class Option extends java.lang.Enum {
+
+    !access: ACC_PUBLIC (9)
+    public Option.Some -> Some
+    !access: ACC_PUBLIC (9)
+    public Option.None -> None
+
+    !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
+    public static final None None
+    !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
+    !signature: LSome<LNone;>;
+    public static final Some Some
+    !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC (4122)
+    private static final Option[] $VALUES
+
+    !access: PACKAGE_PRIVATE (0)
+    !parameter[name: name, access:  (0)]
+    !parameter[name: ordinal, access:  (0)]
+     void <init>(java.lang.String, int) {
+      desc: (Ljava/lang/String;I)V 
+      maxStack: 3, maxLocals: 3 
+      Label_0:
+       LINE 14 -> Label_0
+        aload 0
+        aload 1
+        iload 2
+        invokespecial java.lang.Enum.<init>(java.lang.String, int)void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 2, name: ordinal, start: Label_0, end: Label_1, type: int, signature: null
+        index: 1, name: name, start: Label_0, end: Label_1, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: Option, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC, ACC_STATIC (9)
+    !signature: <T:Ljava/lang/Object;>(TT;)LSome<TT;>;
+    !parameter[name: value, access:  (0)]
+    public static Some some(java.lang.Object) {
+      desc: (Ljava/lang/Object;)LSome; 
+      maxStack: 3, maxLocals: 1 
+      Label_0:
+       LINE 1 -> Label_0
+        new Some
+        dup
+        aload 0
+        invokespecial Some.<init>(java.lang.Object)void (ownerIsInterface: false)
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: value, start: Label_0, end: Label_1, type: java.lang.Object, signature: TT;
+      }
+    }
+    
+    !access: ACC_PUBLIC, ACC_STATIC (9)
+    public static None none() {
+      desc: ()LNone; 
+      maxStack: 1, maxLocals: 0 
+      Label_0:
+       LINE 2 -> Label_0
+        getstatic Option.None (type: None)
+        areturn
+    }
+    
+    !access: ACC_PUBLIC, ACC_STATIC (9)
+    public static Option[] values() {
+      desc: ()[LOption; 
+      maxStack: 1, maxLocals: 0 
+      Label_0:
+       LINE 3 -> Label_0
+        getstatic Option.$VALUES (type: Option[])
+        invokevirtual Option[].clone()java.lang.Object (ownerIsInterface: false)
+        checkcast Option[]
+        areturn
+    }
+    
+    !access: ACC_PUBLIC, ACC_STATIC (9)
+    !parameter[name: name, access:  (0)]
+    public static Option valueOf(java.lang.String) {
+      desc: (Ljava/lang/String;)LOption; 
+      maxStack: 2, maxLocals: 1 
+      Label_0:
+       LINE 4 -> Label_0
+        ldc LOption;              // type: java.lang.Class
+        aload 0
+        invokestatic java.lang.Enum.valueOf(java.lang.Class, java.lang.String)java.lang.Enum (ownerIsInterface: false)
+        checkcast Option
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: name, start: Label_0, end: Label_1, type: java.lang.String, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 4, maxLocals: 0 
+      Label_0:
+       LINE 11 -> Label_0
+        new None
+        dup
+        invokespecial None.<init>()void (ownerIsInterface: false)
+        putstatic Option.None (type: None)
+      Label_1:
+       LINE 12 -> Label_1
+        new Some
+        dup
+        getstatic Option.None (type: None)
+        invokespecial Some.<init>(java.lang.Object)void (ownerIsInterface: false)
+        putstatic Option.Some (type: Some)
+      Label_2:
+       LINE 13 -> Label_2
+        iconst_2
+        anewarray Option
+        dup
+        iconst_0
+        getstatic Option.Some (type: Some)
+        checkcast Option
+        aastore
+        dup
+        iconst_1
+        getstatic Option.None (type: None)
+        checkcast Option
+        aastore
+        putstatic Option.$VALUES (type: Option[])
+        return
+    }
+    
+}

@@ -42,6 +42,8 @@ import com.github.jonathanxd.kores.type.`is`
 import com.github.jonathanxd.kores.type.javaSpecName
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.require
+import com.github.jonathanxd.kores.factory.cast
+import com.github.jonathanxd.kores.typeOrNull
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -85,9 +87,15 @@ object ReturnProcessor : Processor<Return> {
         val safeValue = value.safeForComparison
 
         if (safeValue != Void && safeValue != KoresNothing) {
+            value.typeOrNull?.let { origin ->
+                if (!origin.`is`(toRetType))
+                    value = cast(origin, toRetType, value)
+            }
+
             IN_EXPRESSION.incrementInContext(data) {
                 processorManager.process(value::class.java, value, data)
             }
+
         }
 
         var opcode = Opcodes.RETURN
