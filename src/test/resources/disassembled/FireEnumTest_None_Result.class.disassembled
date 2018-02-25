@@ -1,14 +1,14 @@
-md5: cc5fc3d82e062f9462b7140c6cb83032
+md5: 5e40b9aecf80ea2682b8d610ee878f15
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: None.cai
 
-public class None extends Option {
+public class com.Option$None extends com.Option {
 
     !access: ACC_PUBLIC (9)
-    public Option.None -> None
+    public com.Option.None -> com.Option$None
 
     !access: PACKAGE_PRIVATE (0)
      void <init>() {
@@ -19,11 +19,11 @@ public class None extends Option {
         aload 0
         ldc "None"              // type: java.lang.String
         iconst_1
-        invokespecial Option.<init>(java.lang.String, int)void (ownerIsInterface: false)
+        invokespecial com.Option.<init>(java.lang.String, int)void (ownerIsInterface: false)
         return
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: None, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.Option$None, signature: null
       }
     }
     

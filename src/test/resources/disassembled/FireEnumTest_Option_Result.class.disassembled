@@ -1,24 +1,24 @@
-md5: 7c308e35557796d039ae299b837c624d
+md5: b9900ba50d238ee4cf9374ee0ee0d733
 
 version: Java 8 (52)
 access: ACC_PUBLIC (16417)
 
 source: Option.cai
 
-public class Option extends java.lang.Enum {
+public class com.Option extends java.lang.Enum {
 
     !access: ACC_PUBLIC (9)
-    public Option.Some -> Some
+    public com.Option.Some -> com.Option$Some
     !access: ACC_PUBLIC (9)
-    public Option.None -> None
+    public com.Option.None -> com.Option$None
 
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
-    public static final None None
+    public static final com.Option$None None
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
-    !signature: LSome<LNone;>;
-    public static final Some Some
+    !signature: Lcom/Option$Some<Lcom/Option$None;>;
+    public static final com.Option$Some Some
     !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC (4122)
-    private static final Option[] $VALUES
+    private static final com.Option[] $VALUES
 
     !access: PACKAGE_PRIVATE (0)
     !parameter[name: name, access:  (0)]
@@ -37,22 +37,22 @@ public class Option extends java.lang.Enum {
       LocalVariables {
         index: 2, name: ordinal, start: Label_0, end: Label_1, type: int, signature: null
         index: 1, name: name, start: Label_0, end: Label_1, type: java.lang.String, signature: null
-        index: 0, name: this, start: Label_0, end: Label_1, type: Option, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.Option, signature: null
       }
     }
     
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    !signature: <T:Ljava/lang/Object;>(TT;)LSome<TT;>;
+    !signature: <T:Ljava/lang/Object;>(TT;)Lcom/Option$Some<TT;>;
     !parameter[name: value, access:  (0)]
-    public static Some some(java.lang.Object) {
-      desc: (Ljava/lang/Object;)LSome; 
+    public static com.Option$Some some(java.lang.Object) {
+      desc: (Ljava/lang/Object;)Lcom/Option$Some; 
       maxStack: 3, maxLocals: 1 
       Label_0:
        LINE 1 -> Label_0
-        new Some
+        new com.Option$Some
         dup
         aload 0
-        invokespecial Some.<init>(java.lang.Object)void (ownerIsInterface: false)
+        invokespecial com.Option$Some.<init>(java.lang.Object)void (ownerIsInterface: false)
         areturn
       Label_1:
       LocalVariables {
@@ -61,38 +61,38 @@ public class Option extends java.lang.Enum {
     }
     
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    public static None none() {
-      desc: ()LNone; 
+    public static com.Option$None none() {
+      desc: ()Lcom/Option$None; 
       maxStack: 1, maxLocals: 0 
       Label_0:
        LINE 2 -> Label_0
-        getstatic Option.None (type: None)
+        getstatic com.Option.None (type: com.Option$None)
         areturn
     }
     
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    public static Option[] values() {
-      desc: ()[LOption; 
+    public static com.Option[] values() {
+      desc: ()[Lcom/Option; 
       maxStack: 1, maxLocals: 0 
       Label_0:
        LINE 3 -> Label_0
-        getstatic Option.$VALUES (type: Option[])
-        invokevirtual Option[].clone()java.lang.Object (ownerIsInterface: false)
-        checkcast Option[]
+        getstatic com.Option.$VALUES (type: com.Option[])
+        invokevirtual com.Option[].clone()java.lang.Object (ownerIsInterface: false)
+        checkcast com.Option[]
         areturn
     }
     
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !parameter[name: name, access:  (0)]
-    public static Option valueOf(java.lang.String) {
-      desc: (Ljava/lang/String;)LOption; 
+    public static com.Option valueOf(java.lang.String) {
+      desc: (Ljava/lang/String;)Lcom/Option; 
       maxStack: 2, maxLocals: 1 
       Label_0:
        LINE 4 -> Label_0
-        ldc LOption;              // type: java.lang.Class
+        ldc Lcom/Option;              // type: java.lang.Class
         aload 0
         invokestatic java.lang.Enum.valueOf(java.lang.Class, java.lang.String)java.lang.Enum (ownerIsInterface: false)
-        checkcast Option
+        checkcast com.Option
         areturn
       Label_1:
       LocalVariables {
@@ -106,32 +106,32 @@ public class Option extends java.lang.Enum {
       maxStack: 4, maxLocals: 0 
       Label_0:
        LINE 11 -> Label_0
-        new None
+        new com.Option$None
         dup
-        invokespecial None.<init>()void (ownerIsInterface: false)
-        putstatic Option.None (type: None)
+        invokespecial com.Option$None.<init>()void (ownerIsInterface: false)
+        putstatic com.Option.None (type: com.Option$None)
       Label_1:
        LINE 12 -> Label_1
-        new Some
+        new com.Option$Some
         dup
-        getstatic Option.None (type: None)
-        invokespecial Some.<init>(java.lang.Object)void (ownerIsInterface: false)
-        putstatic Option.Some (type: Some)
+        getstatic com.Option.None (type: com.Option$None)
+        invokespecial com.Option$Some.<init>(java.lang.Object)void (ownerIsInterface: false)
+        putstatic com.Option.Some (type: com.Option$Some)
       Label_2:
        LINE 13 -> Label_2
         iconst_2
-        anewarray Option
+        anewarray com.Option
         dup
         iconst_0
-        getstatic Option.Some (type: Some)
-        checkcast Option
+        getstatic com.Option.Some (type: com.Option$Some)
+        checkcast com.Option
         aastore
         dup
         iconst_1
-        getstatic Option.None (type: None)
-        checkcast Option
+        getstatic com.Option.None (type: com.Option$None)
+        checkcast com.Option
         aastore
-        putstatic Option.$VALUES (type: Option[])
+        putstatic com.Option.$VALUES (type: com.Option[])
         return
     }
     

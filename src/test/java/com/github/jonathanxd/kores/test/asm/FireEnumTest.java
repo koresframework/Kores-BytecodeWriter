@@ -65,7 +65,7 @@ public class FireEnumTest {
     @SuppressWarnings("unchecked")
     @Test
     public void test() {
-        TypeRef eType = new TypeRef("Option");
+        TypeRef eType = new TypeRef("com.Option");
         TypeRef someType = new TypeRef(eType, "Some");
         TypeRef noneType = new TypeRef(eType, "None");
         Generic someOfT = Generic.type(someType).of("T");
@@ -73,7 +73,7 @@ public class FireEnumTest {
 
         TypeDeclaration $ = ClassDeclaration.Builder.builder()
                 .modifiers(SetsKt.setOf(KoresModifier.PUBLIC, KoresModifier.ENUM))
-                .qualifiedName("Option")
+                .qualifiedName("com.Option")
                 .genericSignature(GenericSignature.create(typeT))
                 .superClass(Generic.type(Enum.class).of(eType))
                 .innerTypes(

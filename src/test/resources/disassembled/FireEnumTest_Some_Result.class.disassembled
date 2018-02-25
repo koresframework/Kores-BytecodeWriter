@@ -1,14 +1,14 @@
-md5: 89934a4d4a0b02c3bced7c60e49ab883
+md5: 200905c613713f4f1c119fae47f70072
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: Some.cai
 
-public class Some extends Option {
+public class com.Option$Some extends com.Option {
 
     !access: ACC_PUBLIC (9)
-    public Option.Some -> Some
+    public com.Option.Some -> com.Option$Some
 
     !access: ACC_PRIVATE, ACC_FINAL (18)
     !signature: TT;
@@ -25,17 +25,17 @@ public class Some extends Option {
         aload 0
         ldc "Some"              // type: java.lang.String
         iconst_0
-        invokespecial Option.<init>(java.lang.String, int)void (ownerIsInterface: false)
+        invokespecial com.Option.<init>(java.lang.String, int)void (ownerIsInterface: false)
       Label_1:
        LINE 9 -> Label_1
         aload 0
         aload 1
-        putfield Some.value (type: java.lang.Object)
+        putfield com.Option$Some.value (type: java.lang.Object)
         return
       Label_2:
       LocalVariables {
         index: 1, name: value, start: Label_0, end: Label_2, type: java.lang.Object, signature: TT;
-        index: 0, name: this, start: Label_0, end: Label_2, type: Some, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: com.Option$Some, signature: null
       }
     }
     
@@ -47,11 +47,11 @@ public class Some extends Option {
       Label_0:
        LINE 5 -> Label_0
         aload 0
-        getfield Some.value (type: java.lang.Object)
+        getfield com.Option$Some.value (type: java.lang.Object)
         areturn
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: Some, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.Option$Some, signature: null
       }
     }
     
@@ -68,7 +68,7 @@ public class Some extends Option {
         ldc "("              // type: java.lang.String
         invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
         aload 0
-        getfield Some.value (type: java.lang.Object)
+        getfield com.Option$Some.value (type: java.lang.Object)
         invokestatic java.util.Objects.toString(java.lang.Object)java.lang.String (ownerIsInterface: false)
         invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
         ldc ")"              // type: java.lang.String
@@ -77,7 +77,7 @@ public class Some extends Option {
         areturn
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: Some, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.Option$Some, signature: null
       }
     }
     
