@@ -36,6 +36,8 @@ import com.github.jonathanxd.kores.bytecode.BytecodeClass;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
@@ -83,31 +85,33 @@ public final class ResultSaver {
             return;
 
         try {
-            String path = "src/test/resources/";
+            Path path = Paths.get("src", "test", "resources");
+
+            if (!Files.exists(path))
+                Files.createDirectories(path);
 
             String simpleName = ofClass.getSimpleName() + (tag != null ? "_" + tag : "") + "_Result.class";
 
-            File file = new File(path + simpleName);
+            Path file = path.resolve(simpleName);
 
-            Files.deleteIfExists(file.toPath());
+            Files.deleteIfExists(file);
 
-            Files.write(file.toPath(), result, StandardOpenOption.CREATE);
+            Files.write(file, result, StandardOpenOption.CREATE);
 
-            String savedPath = path + "/disassembled/" + simpleName + ".disassembled";
+            Path disassemblePath = path.resolve("disassembled");
+            Path savedPath = disassemblePath.resolve(simpleName + ".disassembled");
 
-            File pathDisassembled = new File(savedPath);
+            if (!Files.exists(disassemblePath))
+                Files.createDirectories(disassemblePath);
 
-            if (pathDisassembled.getParentFile() != null && !pathDisassembled.getParentFile().exists())
-                pathDisassembled.getParentFile().mkdirs();
-
-            Files.deleteIfExists(pathDisassembled.toPath());
+            Files.deleteIfExists(savedPath);
 
             try {
-                String disassemble = Disassembler.disassemble(file.toPath(), false, true);
+                String disassemble = Disassembler.disassemble(file, false, true);
 
-                Files.write(pathDisassembled.toPath(), disassemble.getBytes(Charset.forName("UTF-8")), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+                Files.write(savedPath, disassemble.getBytes(Charset.forName("UTF-8")), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 
-                Process start = new ProcessBuilder("git", "add", savedPath)
+                Process start = new ProcessBuilder("git", "add", savedPath.toAbsolutePath().toString())
                         .redirectOutput(ProcessBuilder.Redirect.INHERIT)
                         .redirectError(ProcessBuilder.Redirect.INHERIT)
                         .redirectErrorStream(true)
