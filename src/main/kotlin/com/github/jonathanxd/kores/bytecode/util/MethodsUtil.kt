@@ -39,7 +39,9 @@ import com.github.jonathanxd.kores.common.MethodTypeSpec
 import com.github.jonathanxd.kores.generic.GenericSignature
 import com.github.jonathanxd.kores.type.`is`
 import com.github.jonathanxd.kores.type.concreteType
+import com.github.jonathanxd.kores.type.isAssignableFrom
 import com.github.jonathanxd.kores.type.koresType
+import com.github.jonathanxd.kores.util.bothMatches
 import com.github.jonathanxd.kores.util.genericSignature
 import java.lang.reflect.Method
 import java.lang.reflect.Type
@@ -131,6 +133,17 @@ fun MethodTypeSpec.isConcreteEq(other: MethodTypeSpec) =
             && this.typeSpec.returnType.concreteType.`is`(other.typeSpec.returnType.concreteType)
             && this.typeSpec.parameterTypes.map { it.concreteType }.`is`(other.typeSpec.parameterTypes.map { it.concreteType })
 
+
+fun MethodTypeSpec.isAssignableFrom(other: MethodTypeSpec) =
+    this.methodName == other.methodName
+            && (this.typeSpec.returnType.isAssignableFrom(other.typeSpec.returnType))
+            && this.typeSpec.parameterTypes.bothMatches(other.typeSpec.parameterTypes) { f, s ->
+        f.isAssignableFrom(
+            s
+        )
+    }
+
+
 fun MethodDeclarationBase.getMethodSpecSign(type: Type): MethodTypeSpecSign =
     MethodTypeSpecSign(
         this.genericSignature,
@@ -158,3 +171,14 @@ fun MethodDeclarationBase.getMethodSpec(typeDeclaration: TypeDeclaration): Metho
         TypeSpec(this.returnType, this.parameters.map { it.type })
     )
 
+fun MethodDeclarationBase.getMethodSpec(type: Type): MethodTypeSpec = MethodTypeSpec(
+    type,
+    this.name,
+    TypeSpec(this.returnType, this.parameters.map { it.type })
+)
+
+fun Method.getMethodSpec(type: Type): MethodTypeSpec = MethodTypeSpec(
+    type,
+    this.name,
+    TypeSpec(this.returnType, this.parameters.map { it.type })
+)
