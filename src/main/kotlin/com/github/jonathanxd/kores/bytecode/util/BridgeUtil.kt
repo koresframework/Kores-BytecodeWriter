@@ -55,24 +55,22 @@ import java.util.*
 object BridgeUtil {
 
     fun genBridgeMethods(typeDeclaration: TypeDeclaration): Set<MethodDeclaration> =
-        typeDeclaration.allMethods().let { allMethods ->
-            typeDeclaration.methods.filterNot { it.modifiers.contains(KoresModifier.BRIDGE) }
-                .flatMap { BridgeUtil.genBridgeMethod(typeDeclaration, it) }
-                .filter { bridge ->
-                    allMethods.none {
-                        it.spec.methodName == bridge.name && it.spec.typeSpec.isConreteEq(
-                            bridge.typeSpec
-                        )
-                    }
+        typeDeclaration.methods.filterNot { it.modifiers.contains(KoresModifier.BRIDGE) }
+            .flatMap { BridgeUtil.genBridgeMethod(typeDeclaration, it) }
+            .filter { bridge ->
+                typeDeclaration.methods.none {
+                    it.name == bridge.name && it.typeSpec.isConreteEq(
+                        bridge.typeSpec
+                    )
                 }
-                .distinctBy {
-                    Spec(
-                        it.name,
-                        it.returnType.concreteType,
-                        it.parameters.map { it.type.concreteType })
-                }
-                .toSet()
-        }
+            }
+            .distinctBy {
+                Spec(
+                    it.name,
+                    it.returnType.concreteType,
+                    it.parameters.map { it.type.concreteType })
+            }
+            .toSet()
 
     private data class Spec(val name: String, val rtype: Type, val ptypes: List<Type>)
 
