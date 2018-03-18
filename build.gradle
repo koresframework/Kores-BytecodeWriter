@@ -17,7 +17,7 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '4.0.0.31-beta-bytecode'
+version '4.0.0.32-beta-bytecode'
 
 apply from: project(":Kores").file("gradle/common.gradle")
 
@@ -27,7 +27,7 @@ dependencies {
     // with runtime dependency pointing to Kores published version
     //compile project(":Kores")
     compileOnly project(":Kores")
-    runtime "com.github.JonathanxD.Kores:Kores:4.0.0.31-beta"
+    runtime "com.github.JonathanxD.Kores:Kores:4.0.0.38-beta"
     compile 'com.github.JonathanxD:BytecodeDisassembler:2.1.0'
     compile "org.ow2.asm:asm:6.0"
     compile "org.ow2.asm:asm-analysis:6.0"

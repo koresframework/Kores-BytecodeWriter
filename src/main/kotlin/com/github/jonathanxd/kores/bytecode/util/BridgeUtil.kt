@@ -27,6 +27,7 @@
  */
 package com.github.jonathanxd.kores.bytecode.util
 
+import com.github.jonathanxd.iutils.kt.rightOrFail
 import com.github.jonathanxd.kores.base.*
 import com.github.jonathanxd.kores.common.MethodTypeSpec
 import com.github.jonathanxd.kores.generic.GenericSignature
@@ -35,7 +36,6 @@ import com.github.jonathanxd.kores.util.findType
 import com.github.jonathanxd.kores.util.genericSignature
 import com.github.jonathanxd.kores.util.inferType
 import com.github.jonathanxd.kores.util.toTypeVars
-import com.github.jonathanxd.iutils.kt.rightOrFail
 import java.lang.reflect.Method
 import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
@@ -101,7 +101,10 @@ object BridgeUtil {
         val methodSpec = methodDeclaration.getMethodSpec(typeDeclaration)
 
         return BridgeUtil.find(typeDeclaration, methodSpec).filterNot {
-            it.compareTo(methodSpec) == 0
+            it.methodName == methodSpec.methodName
+                    && it.typeSpec.returnType.concreteType.`is`(methodSpec.typeSpec.returnType.concreteType)
+                    && it.typeSpec.parameterTypes.map { it.concreteType }
+                .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
         }.toSet()
     }
 
@@ -179,7 +182,7 @@ object BridgeUtil {
         val otherRType = methodSpec.typeSpec.returnType
         val otherParams = methodSpec.typeSpec.parameterTypes.map { it.concreteType }
 
-        val filter: (MethodTypeSpec) -> Boolean = f@ {
+        val filter: (MethodTypeSpec) -> Boolean = f@{
 
             val itRType = it.typeSpec.returnType.concreteType
             val itParams = it.typeSpec.parameterTypes.map { it.concreteType }
@@ -197,8 +200,8 @@ object BridgeUtil {
             val paramAssign = itParams.mapIndexed { index, koresType ->
                 koresType.bindedDefaultResolver.isAssignableFrom(otherParams[index])
             }.all {
-                    it.rightOr(true)
-                }
+                it.rightOr(true)
+            }
 
             val isParamEq = otherParams.size == itParams.size
                     && (otherParams.`is`(itParams)

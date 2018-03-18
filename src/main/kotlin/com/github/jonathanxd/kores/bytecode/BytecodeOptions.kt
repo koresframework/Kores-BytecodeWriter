@@ -97,11 +97,11 @@ val VALIDATE_SUPER = Option(true)
  * The generation of bridge methods is very limited, the [Bridge Generator][com.github.jonathanxd.kores.bytecode.util.BridgeUtil]
  * will inspect super-classes (and super-interfaces) and find the overridden method.
  * The [Bridge Generator][com.github.jonathanxd.kores.bytecode.util.BridgeUtil] will only inspect
- * [Java type][Class] and [CodeAPI Type][com.github.jonathanxd.kores.base.TypeDeclaration].
+ * [Java type][Class] and [Kores Type][com.github.jonathanxd.kores.base.TypeDeclaration].
  * If the super-class and/or super-interfaces is of another type, [Bridge Generator][com.github.jonathanxd.kores.bytecode.util.BridgeUtil]
  * will ignore and the bridge method will not be generated.
  *
- * You could also bridge methods manually with [com.github.jonathanxd.kores.CodeAPI.bridgeMethod].
+ * You could also bridge methods manually with [com.github.jonathanxd.kores.factory.bridgeMethod].
  */
 @JvmField
 val GENERATE_BRIDGE_METHODS = Option(false)
