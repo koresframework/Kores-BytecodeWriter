@@ -1,5 +1,5 @@
 /*
- *      Kores-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      Kores-BytecodeWriter - Translates Kores Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
@@ -86,7 +86,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
                 val none =
                     (typeDeclaration.value.methods + METHOD_DECLARATIONS.require(data)).none {
-                        it.getMethodSpec(typeDeclaration.value).compareTo(methodSpec) == 0
+                        it.getMethodSpec(typeDeclaration.value).isConcreteEq(methodSpec)
                     }
 
                 if (none) {

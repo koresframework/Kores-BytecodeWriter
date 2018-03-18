@@ -1,5 +1,5 @@
 /*
- *      Kores-BytecodeWriter - Translates CodeAPI Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
+ *      Kores-BytecodeWriter - Translates Kores Structure to JVM Bytecode <https://github.com/JonathanxD/CodeAPI-BytecodeWriter>
  *
  *         The MIT License (MIT)
  *
@@ -32,10 +32,7 @@ import com.github.jonathanxd.kores.base.*
 import com.github.jonathanxd.kores.common.MethodTypeSpec
 import com.github.jonathanxd.kores.generic.GenericSignature
 import com.github.jonathanxd.kores.type.*
-import com.github.jonathanxd.kores.util.findType
-import com.github.jonathanxd.kores.util.genericSignature
-import com.github.jonathanxd.kores.util.inferType
-import com.github.jonathanxd.kores.util.toTypeVars
+import com.github.jonathanxd.kores.util.*
 import java.lang.reflect.Method
 import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
@@ -49,21 +46,22 @@ import java.util.*
  * The bridge method resolution is a expensive task,
  * in some cases, optimized codes will be used, but in others, methods of a type is resolved with
  * [KoresTypeResolver.resolveMethods], and the performance depends on how it is implemented,
- * for CodeAPI types, a whole copy of original [TypeDeclaration] is returned, and this is very expensive from
+ * for Kores types, a whole copy of original [TypeDeclaration] is returned, and this is very expensive from
  * performance perspective, the same applies for Java [classes][Class], but for both, a specialized
  * code is used to get methods, which is not expensive as much as the resolution.
  */
 object BridgeUtil {
 
-    fun genBridgeMethods(typeDeclaration: TypeDeclaration): Set<MethodDeclaration> =
-        typeDeclaration.methods.filterNot { it.modifiers.contains(KoresModifier.BRIDGE) }
-            .flatMap { BridgeUtil.genBridgeMethod(typeDeclaration, it) }
+    fun genBridgeMethods(typeDeclaration: TypeDeclaration): Set<MethodDeclaration> {
+        val allMethods = typeDeclaration.allMethodsWithType()
+
+        return typeDeclaration.methods.filterNot { it.modifiers.contains(KoresModifier.BRIDGE) }
+            .flatMap { BridgeUtil.genBridgeMethod(typeDeclaration, it, allMethods) }
             .filter { bridge ->
                 typeDeclaration.methods.none {
                     val itSpec = it.getMethodSpec(typeDeclaration)
                     val bridgeSpec = bridge.getMethodSpec(typeDeclaration)
-                    itSpec.methodName == bridgeSpec.methodName
-                            && itSpec.typeSpec.isConreteEq(bridgeSpec.typeSpec)
+                    itSpec.isConcreteEq(bridgeSpec)
                 }
             }
             .distinctBy {
@@ -73,111 +71,83 @@ object BridgeUtil {
                     it.parameters.map { it.type.concreteType })
             }
             .toSet()
+    }
 
-    private data class Spec(val name: String, val rtype: Type, val ptypes: List<Type>)
+    private data class Spec(val name: String, val rtype: Type, val ptypes: List<Type>) {
+        override fun hashCode(): Int =
+                Objects.hash(this.name, this.rtype.hash(), this.ptypes.map { it.hash() })
+
+        override fun equals(other: Any?): Boolean =
+                other is Spec && other.name == this.name
+                        && other.rtype.`is`(this.rtype)
+                        && other.ptypes.bothMatches(this.ptypes) { a, b -> a.`is`(b) }
+    }
 
     fun genBridgeMethod(
         typeDeclaration: TypeDeclaration,
-        methodDeclaration: MethodDeclarationBase
+        current: MethodDeclarationBase,
+        allMethods: List<Pair<Type, List<MethodTypeSpecSign>>> = typeDeclaration.allMethodsWithType()
     ): Set<MethodDeclaration> {
-        val bridgeMethod = BridgeUtil.findMethodToBridge(typeDeclaration, methodDeclaration)
+        val bridgeMethod = BridgeUtil.findMethodToBridge(typeDeclaration, current, allMethods)
 
         return bridgeMethod
             .map {
                 com.github.jonathanxd.kores.factory.bridgeMethod(
                     typeDeclaration,
-                    methodDeclaration,
+                    current,
                     it
                 )
             }
             .toSet()
     }
 
-    fun findMethodToBridge(
+    private fun findMethodToBridge(
         typeDeclaration: TypeDeclaration,
-        methodDeclaration: MethodDeclarationBase
+        methodDeclaration: MethodDeclarationBase,
+        allMethods: List<Pair<Type, List<MethodTypeSpecSign>>>
     ): Set<MethodTypeSpec> {
-
         val methodSpec = methodDeclaration.getMethodSpec(typeDeclaration)
 
-        return BridgeUtil.find(typeDeclaration, methodSpec).filterNot {
-            it.methodName == methodSpec.methodName
-                    && it.typeSpec.returnType.concreteType.`is`(methodSpec.typeSpec.returnType.concreteType)
-                    && it.typeSpec.parameterTypes.map { it.concreteType }
-                .`is`(methodSpec.typeSpec.parameterTypes.map { it.concreteType })
+        return BridgeUtil.find(typeDeclaration, methodSpec, allMethods).filterNot {
+            methodSpec.isConcreteEq(it)
         }.toSet()
     }
 
     private fun find(
         typeDeclaration: TypeDeclaration,
-        methodSpec: MethodTypeSpec
+        methodSpec: MethodTypeSpec,
+        allMethods: List<Pair<Type, List<MethodTypeSpecSign>>>
     ): Set<MethodTypeSpec> {
         if (typeDeclaration !is SuperClassHolder && typeDeclaration !is ImplementationHolder)
             return emptySet()
 
-        val types = mutableSetOf<Type>()
-
-        if (typeDeclaration is SuperClassHolder) {
-
-            val superTypeOpt = typeDeclaration.superClass
-
-            getTypes(superTypeOpt, types)
-        }
-
-        if (typeDeclaration is ImplementationHolder) {
-
-            typeDeclaration.implementations.stream()
-                .forEach { koresType -> getTypes(koresType, types) }
-
-        }
-
-        return types
-            .flatMap { BridgeUtil.findIn(it, methodSpec) }
+        return allMethods
+            .flatMap { (type, methods) -> BridgeUtil.findIn(type, methodSpec, methods) }
             .toSet()
     }
 
-    private fun getTypes(type: Type, types: MutableSet<Type>) {
-        types.add(type)
-
-        val resolver = type.koresType.bindedDefaultResolver
-
-        resolver.getSuperclass().ifRight {
-            it?.let {
-                types.add(it)
-                getTypes(it, types)
-            }
-        }
-
-        resolver.getInterfaces().ifRight {
-            it?.forEach {
-                types.add(it)
-                getTypes(it, types)
-            }
-        }
-
-    }
-
-    private fun findIn(type: Type, methodSpec: MethodTypeSpec): Set<MethodTypeSpec> {
+    private fun findIn(type: Type,
+                       methodSpec: MethodTypeSpec,
+                       allMethods: List<MethodTypeSpecSign>): Set<MethodTypeSpec> {
 
         val generic = type as? GenericType ?: type.toGeneric
 
         val koresType = type.concreteType
         val bridges = mutableSetOf<MethodTypeSpec>()
 
-        BridgeUtil.findInOverride(koresType, generic, methodSpec).let {
+        BridgeUtil.findInOverride(methodSpec, allMethods).let {
             bridges += it
         }
 
-        BridgeUtil.findIn(koresType, generic, methodSpec)?.let {
+        BridgeUtil.findInUnknown(koresType, generic, methodSpec, allMethods)?.let {
             bridges += it
         }
         return bridges
     }
 
     private fun findInOverride(
-        theType: Type,
-        generic: GenericType,
-        methodSpec: MethodTypeSpec
+        methodSpec: MethodTypeSpec,
+        allMethods: List<MethodTypeSpecSign>
     ): List<MethodTypeSpec> {
         val otherRType = methodSpec.typeSpec.returnType
         val otherParams = methodSpec.typeSpec.parameterTypes.map { it.concreteType }
@@ -210,42 +180,26 @@ object BridgeUtil {
             rTypeEq && isParamEq
         }
 
-        val type = theType.concreteType
-
-        val resolved = type.defaultResolver.resolve(type).rightOr(null)
-
-        return when (resolved) {
-            is Class<*> -> resolved.methods.map { it.getMethodSpec(theType) }.filter(filter)
-            is TypeDeclaration -> resolved.methods.map { it.getMethodSpec(theType) }.filter(filter)
-            else -> theType.defaultResolver.resolveMethods(theType).mapRight {
-                it.map { it.getMethodSpec(theType) }.filter(filter)
-            }.rightOrFail
-        }
+        return allMethods.map { it.spec }.filter(filter)
     }
 
     private fun findIn(
         theClass: TypeDeclaration,
         generic: GenericType,
-        methodSpec: MethodTypeSpec
+        methodSpec: MethodTypeSpec,
+        allMethods: List<MethodTypeSpecSign>
     ): MethodTypeSpec? {
         val genericSignature = theClass.genericSignature
 
         val typeParameters = toTypeVars(genericSignature)
 
-        for (method in theClass.methods) {
+        for (method in allMethods) {
 
-            if (methodSpec.methodName != method.name)
+            if (methodSpec.methodName != method.spec.methodName)
                 continue
 
-            val parameterTypes = method.parameters.map { it.type }
-
-            val spec = MethodTypeSpec(
-                theClass, method.name,
-                TypeSpec(method.returnType, parameterTypes)
-            )
-
-            if (methodSpec.compareTo(spec) == 0) {
-                return spec // No problem here, CodeAPI will not duplicate methods, it will only avoid the type inference (slow part of the bridge method inference)
+            if (methodSpec.isConcreteEq(method.spec)) {
+                return method.spec // No problem here, Kores will not duplicate methods, it will only avoid the type inference (slow part of the bridge method inference)
             }
 
             val methodSignature = method.genericSignature
@@ -253,19 +207,15 @@ object BridgeUtil {
             val methodParameters = toTypeVars(methodSignature)
 
             val inferredReturnType =
-                method.returnType.inferType(typeParameters, methodParameters, generic)
+                method.spec.typeSpec.returnType.inferType(typeParameters, methodParameters, generic)
 
             val inferredParametersTypes =
-                parameterTypes.map { it.inferType(methodParameters, typeParameters, generic) }
+                method.spec.typeSpec.parameterTypes.map { it.inferType(methodParameters, typeParameters, generic) }
 
-            val methodTypeSpec = MethodTypeSpec(
-                theClass,
-                method.name,
-                TypeSpec(inferredReturnType, inferredParametersTypes)
-            )
+            val methodTypeSpec = method.spec.copy(typeSpec = TypeSpec(inferredReturnType, inferredParametersTypes))
 
             if (methodTypeSpec.compareTo(methodSpec) == 0) {
-                return fixGenerics(spec, genericSignature, null, method)
+                return fixGenerics(method.spec, genericSignature, null, method)
             }
         }
 
@@ -275,26 +225,20 @@ object BridgeUtil {
     private fun findIn(
         theClass: Class<*>,
         generic: GenericType,
-        methodSpec: MethodTypeSpec
+        methodSpec: MethodTypeSpec,
+        allMethods: List<MethodTypeSpecSign>
     ): MethodTypeSpec? {
         val genericSignature = theClass.genericSignature
 
         val typeParameters = toTypeVars(genericSignature)
 
-        for (method in theClass.methods) {
+        for (method in allMethods) {
 
-            if (methodSpec.methodName != method.name)
+            if (methodSpec.methodName != method.spec.methodName)
                 continue
 
-            val parameterTypes = method.parameters.map { it.type }
-
-            val spec = MethodTypeSpec(
-                theClass, method.name,
-                TypeSpec(method.returnType, parameterTypes)
-            )
-
-            if (methodSpec.compareTo(spec) == 0) {
-                return spec // No problem here, CodeAPI will not duplicate methods, it will only avoid the type inference (slow part of the bridge method inference)
+            if (methodSpec.isConcreteEq(method.spec)) {
+                return method.spec // No problem here, Kores will not duplicate methods, it will only avoid the type inference (slow part of the bridge method inference)
             }
 
             val methodSignature = method.genericSignature
@@ -302,29 +246,26 @@ object BridgeUtil {
             val methodParameters = toTypeVars(methodSignature)
 
             val inferredReturnType =
-                method.returnType.inferType(typeParameters, methodParameters, generic)
+                method.spec.typeSpec.returnType.inferType(typeParameters, methodParameters, generic)
 
             val inferredParametersTypes =
-                parameterTypes.map { it.inferType(methodParameters, typeParameters, generic) }
+                method.spec.typeSpec.parameterTypes.map { it.inferType(methodParameters, typeParameters, generic) }
 
-            val methodTypeSpec = MethodTypeSpec(
-                theClass,
-                method.name,
-                TypeSpec(inferredReturnType, inferredParametersTypes)
-            )
+            val methodTypeSpec = method.spec.copy(typeSpec = TypeSpec(inferredReturnType, inferredParametersTypes))
 
             if (methodTypeSpec.compareTo(methodSpec) == 0) {
-                return fixGenerics(spec, genericSignature, null, method)
+                return fixGenerics(method.spec, genericSignature, null, method)
             }
         }
 
         return null
     }
 
-    private fun findIn(
+    private fun findInUnknown(
         theType: Type,
         generic: GenericType,
-        methodSpec: MethodTypeSpec
+        methodSpec: MethodTypeSpec,
+        allMethods: List<MethodTypeSpecSign>
     ): MethodTypeSpec? {
 
         val type = theType.concreteType
@@ -332,12 +273,13 @@ object BridgeUtil {
         val resolved = type.defaultResolver.resolve(type).rightOr(null)
 
         return when (resolved) {
-            is Class<*> -> findIn(resolved, generic, methodSpec)
-            is TypeDeclaration -> findIn(resolved, generic, methodSpec)
+            is Class<*> -> findIn(resolved, generic, methodSpec, allMethods)
+            is TypeDeclaration -> findIn(resolved, generic, methodSpec, allMethods)
             else -> findIn(
                 theType.defaultResolver.resolveTypeDeclaration(theType).rightOrFail,
                 generic,
-                methodSpec
+                methodSpec,
+                allMethods
             )
         }
     }
@@ -393,25 +335,5 @@ object BridgeUtil {
         )
     }
 
-    private fun find(name: String, typeVariables: Array<TypeVariable<*>>): TypeVariable<*>? =
-        typeVariables.firstOrNull { it.name == name }
 }
 
-fun MethodDeclarationBase.getMethodSpec(typeDeclaration: TypeDeclaration): MethodTypeSpec =
-    MethodTypeSpec(
-        typeDeclaration,
-        this.name,
-        TypeSpec(this.returnType, this.parameters.map { it.type })
-    )
-
-fun MethodDeclarationBase.getMethodSpec(type: Type): MethodTypeSpec = MethodTypeSpec(
-    type,
-    this.name,
-    TypeSpec(this.returnType, this.parameters.map { it.type })
-)
-
-fun Method.getMethodSpec(type: Type): MethodTypeSpec = MethodTypeSpec(
-    type,
-    this.name,
-    TypeSpec(this.returnType, this.parameters.map { it.type })
-)
