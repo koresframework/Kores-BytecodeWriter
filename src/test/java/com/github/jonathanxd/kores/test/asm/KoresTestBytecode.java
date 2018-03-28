@@ -65,7 +65,7 @@ import java.util.List;
 import kotlin.collections.CollectionsKt;
 
 @SuppressWarnings("Duplicates")
-public class CodeAPITestBytecode {
+public class KoresTestBytecode {
 
     public final String b = "9";
 
@@ -115,7 +115,7 @@ public class CodeAPITestBytecode {
                 .body(methodSource)
                 .build();
 
-        LoadedKoresType<CodeAPITestBytecode> javaType = KoresTypes.getKoresType(CodeAPITestBytecode.class);
+        LoadedKoresType<KoresTestBytecode> javaType = KoresTypes.getKoresType(KoresTestBytecode.class);
 
         methodSource.add(VariableFactory.variable(javaType, "test", InvocationFactory.invokeConstructor(javaType)));
         methodSource.add(Predefined.invokePrintln(

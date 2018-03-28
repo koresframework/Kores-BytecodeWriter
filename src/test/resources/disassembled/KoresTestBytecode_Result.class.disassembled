@@ -1,0 +1,120 @@
+md5: b469f081803cf6d2de8ef4a3ab23d0cb
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: KoresTestBytecode.cai
+
+public class github.com.KoresTestBytecode extends java.lang.Object {
+
+    !access: ACC_PUBLIC, ACC_STATIC (9)
+    !parameter[name: msg, access:  (0)]
+    public static void println(java.lang.Object) {
+      desc: (Ljava/lang/Object;)V 
+      maxStack: 3, maxLocals: 4 
+      Label_0:
+        new com.github.jonathanxd.kores.test.asm.KoresTestBytecode
+        dup
+        invokespecial com.github.jonathanxd.kores.test.asm.KoresTestBytecode.<init>()void (ownerIsInterface: false)
+      Label_1:
+        astore 1
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 1
+        getfield com.github.jonathanxd.kores.test.asm.KoresTestBytecode.b (type: java.lang.String)
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_2:
+        aload 0
+        ifnull Label_3
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 0
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_3:
+       FRAME[type: F_APPEND, locals: 1, local: {Reference[com.github.jonathanxd.kores.test.asm.KoresTestBytecode]}, stacks: 0, stack: {}]
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+      Label_4:
+        astore 2
+        new java.lang.IllegalStateException
+        dup
+        ldc "Error"              // type: java.lang.String
+        invokespecial java.lang.IllegalStateException.<init>(java.lang.String)void (ownerIsInterface: false)
+        athrow
+      Label_5:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.RuntimeException]}]
+        astore 2
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Rethrow from var 'thr'!"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        aload 2
+        invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
+      Label_6:
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Finally!"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_7:
+        return
+      Label_8:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Exception]}]
+        astore 2
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Rethrow from var 'tlr'!"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        aload 2
+        invokevirtual java.lang.Throwable.printStackTrace()void (ownerIsInterface: false)
+      Label_9:
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Finally!"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_10:
+        return
+      Label_11:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+        astore 3
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Finally!"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+        aload 3
+        athrow
+      Label_12:
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+        athrow
+      Label_13:
+      TryCatchBlocks {
+        start: Label_2, end: Label_5, handler: Label_5, exception: java.lang.IllegalArgumentException
+        start: Label_2, end: Label_5, handler: Label_5, exception: java.lang.IllegalStateException
+        start: Label_2, end: Label_5, handler: Label_8, exception: java.io.IOException
+        start: Label_2, end: Label_5, handler: Label_8, exception: java.lang.ClassNotFoundException
+        start: Label_2, end: Label_5, handler: Label_11, exception: null
+        start: Label_5, end: Label_6, handler: Label_11, exception: null
+        start: Label_8, end: Label_9, handler: Label_11, exception: null
+      }
+      LocalVariables {
+        index: 2, name: ref, start: Label_4, end: Label_5, type: java.lang.Object, signature: null
+        index: 2, name: thr, start: Label_5, end: Label_7, type: java.lang.Throwable, signature: null
+        index: 2, name: tlr, start: Label_5, end: Label_10, type: java.lang.Throwable, signature: null
+        index: 1, name: test, start: Label_1, end: Label_13, type: com.github.jonathanxd.kores.test.asm.KoresTestBytecode, signature: null
+        index: 0, name: msg, start: Label_0, end: Label_13, type: java.lang.Object, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: github.com.KoresTestBytecode, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

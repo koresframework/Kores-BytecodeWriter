@@ -47,7 +47,7 @@ import static com.github.jonathanxd.kores.base.KoresModifier.PUBLIC;
 import static com.github.jonathanxd.kores.base.KoresModifier.STATIC;
 
 @SuppressWarnings("Duplicates")
-public class CodeAPITest_API {
+public class KoresTest_API {
 
     @Test
     public void codeAPITest() {

@@ -30,9 +30,9 @@ package com.github.jonathanxd.kores.test.asm;
 import com.github.jonathanxd.kores.base.TypeDeclaration;
 import com.github.jonathanxd.kores.test.BitwiseIfTest_;
 import com.github.jonathanxd.iutils.annotation.Named;
-import com.github.jonathanxd.iutils.reflection.Invokables;
-import com.github.jonathanxd.iutils.reflection.Link;
-import com.github.jonathanxd.iutils.reflection.Links;
+import com.github.jonathanxd.iutils.link.Invokables;
+import com.github.jonathanxd.iutils.link.Link;
+import com.github.jonathanxd.iutils.link.Links;
 
 import org.junit.Test;
 
