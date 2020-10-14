@@ -72,6 +72,13 @@ public class RecursiveGenericTypeTest {
         GenericType recursive =
                 Generic.type("M").extends$(Generic.type(Map.class).of(Generic.type("E"), Generic.type("M")));
 
+        decl.getFields().add(PartFactory.fieldDec()
+                .modifiers(KoresModifier.PRIVATE, KoresModifier.STATIC, KoresModifier.FINAL)
+                .type(recursive.getBounds()[0].getType())
+                .name("f2")
+                .value(Literals.NULL)
+                .build());
+
         decl.getConstructors().add(PartFactory.constructorDec()
                 .modifiers(KoresModifier.PUBLIC)
                 .parameters(
