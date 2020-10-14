@@ -42,6 +42,7 @@ import com.github.jonathanxd.kores.type.GenericType
 import com.github.jonathanxd.kores.util.descriptor
 import com.github.jonathanxd.kores.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.kores.util.descriptorDiscardBound
 
 object FieldDeclarationProcessor : Processor<FieldDeclaration> {
 
@@ -60,7 +61,7 @@ object FieldDeclarationProcessor : Processor<FieldDeclaration> {
             else part.modifiers
 
         val access = ModifierUtil.modifiersToAsm(modifiers)
-        val signature = (part.type as? GenericType)?.descriptor
+        val signature = (part.type as? GenericType)?.descriptorDiscardBound
         val constValue =
             if (modifiers.contains(KoresModifier.STATIC)) part.value.asmConstValue
             else null
