@@ -1,0 +1,46 @@
+md5: ab980a7d6f732cb52ebcbe6dcaaf5c1f
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: LineTest.cai
+
+public class test.LineTest extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 4 -> Label_1
+       LINE 5 -> Label_1
+        bipush 9
+        iconst_5
+        if_icmpge Label_2
+        ldc "9 < 5"              // type: java.lang.String
+        goto Label_3
+      Label_2:
+       FRAME[type: F_FULL, locals: 1, local: {Reference[test.LineTest]}, stacks: 0, stack: {}]
+        ldc "9 >= 5"              // type: java.lang.String
+      Label_3:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.String]}]
+        astore 1
+        return
+      Label_4:
+      LocalVariables {
+        index: 1, name: b, start: Label_3, end: Label_4, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_4, type: test.LineTest, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

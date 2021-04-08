@@ -1,11 +1,11 @@
-md5: 66f2d6aed66973f410efc9e75ddb1117
+md5: e10fc2dcfed1803e94853e33e845ce08
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: CodeAPITest_API_Generated.cai
 
-public class com.github.jonathanxd.codeapi.test.asm.CodeAPITest_API_Generated extends java.lang.Object {
+public class com.github.jonathanxd.kores.test.asm.CodeAPITest_API_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !parameter[name: string, access:  (0)]
@@ -33,7 +33,7 @@ public class com.github.jonathanxd.codeapi.test.asm.CodeAPITest_API_Generated ex
         return
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: com.github.jonathanxd.codeapi.test.asm.CodeAPITest_API_Generated, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.github.jonathanxd.kores.test.asm.CodeAPITest_API_Generated, signature: null
       }
     }
     

@@ -1,4 +1,4 @@
-md5: f7dcb191cea983c58c6aa79461b3ec94
+md5: 3f1dde173e87dca940ae84d769d9892a
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -8,68 +8,61 @@ source: ForEach.cai
 public class com.ForEach extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    public static java.lang.String stra
+    public static java.lang.String stra = XA
 
     !access: ACC_PUBLIC (1)
     !parameter[name: strArray, access:  (0)]
     public void <init>(java.lang.String[]) {
       desc: ([Ljava/lang/String;)V 
-      maxStack: 2, maxLocals: 5 
+      maxStack: 2, maxLocals: 6 
       Label_0:
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
-       LINE 4 -> Label_1
+       LINE 1 -> Label_1
         getstatic com.ForEach.stra (type: java.lang.String)
       Label_2:
         astore 2
       Label_3:
-       LINE 5 -> Label_3
-       LINE 6 -> Label_3
+       LINE 2 -> Label_3
+        aload 1
+        astore 3
         iconst_0
-        istore 3
+        istore 4
       Label_4:
-       FRAME[type: F_FULL, locals: 4, local: {com.ForEach, java.lang.String[], java.lang.String, integer}, stacks: 0, stack: {}]
-        iload 3
-        aload 1
+       FRAME[type: F_FULL, locals: 5, local: {Reference[com.ForEach], Reference[java.lang.String[]], Reference[java.lang.String], Reference[java.lang.String[]], Primitive[integer]}, stacks: 0, stack: {}]
+        iload 4
+        aload 3
         arraylength
-        if_icmpge Label_9
-      Label_5:
-       LINE 7 -> Label_5
-        aload 1
-        iload 3
+        if_icmpge Label_7
+        aload 3
+        iload 4
         aaload
+      Label_5:
+        astore 5
       Label_6:
-        astore 4
-      Label_7:
-       LINE 8 -> Label_7
+       LINE 3 -> Label_6
         getstatic java.lang.System.out (type: java.io.PrintStream)
-        aload 4
+        aload 5
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
-      Label_8:
-       LINE 9 -> Label_8
-        iinc 3 1
+        iinc 4 1
         goto Label_4
-      Label_9:
+      Label_7:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         return
-      Label_10:
+      Label_8:
       LocalVariables {
-        index: 4, name: str, start: Label_6, end: Label_9, type: java.lang.String, signature: null
-        index: 2, name: v, start: Label_2, end: Label_10, type: java.lang.String, signature: null
-        index: 1, name: strArray, start: Label_0, end: Label_10, type: java.lang.String[], signature: null
-        index: 0, name: this, start: Label_0, end: Label_10, type: com.ForEach, signature: null
+        index: 5, name: str, start: Label_5, end: Label_7, type: java.lang.String, signature: null
+        index: 2, name: v, start: Label_2, end: Label_8, type: java.lang.String, signature: null
+        index: 1, name: strArray, start: Label_0, end: Label_8, type: java.lang.String[], signature: null
+        index: 0, name: this, start: Label_0, end: Label_8, type: com.ForEach, signature: null
       }
     }
     
     !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {
       desc: ()V 
-      maxStack: 1, maxLocals: 0 
-      Label_0:
-       LINE 10 -> Label_0
-        ldc "XA"              // type: java.lang.String
-        putstatic com.ForEach.stra (type: java.lang.String)
+      maxStack: 0, maxLocals: 0 
         return
     }
     

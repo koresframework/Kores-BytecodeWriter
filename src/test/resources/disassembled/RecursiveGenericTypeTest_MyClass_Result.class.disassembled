@@ -1,0 +1,51 @@
+md5: 8b3ae4657f30416da10d1187c6eafd1d
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: MyClass.cai
+
+public class com.MyClass extends java.lang.Object {
+
+    !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL (26)
+    private static final java.lang.String f1 = Test
+    !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL (26)
+    !signature: TLjava/util/Map;
+    private static final java.util.Map f2
+
+    !access: ACC_PUBLIC (1)
+    !signature: (Ljava/lang/reflect/Type;TE;TM;)V
+    !parameter[name: type, access:  (0)]
+    !parameter[name: x, access:  (0)]
+    !parameter[name: test, access:  (0)]
+    public void <init>(java.lang.reflect.Type, java.lang.Object, java.util.Map) {
+      desc: (Ljava/lang/reflect/Type;Ljava/lang/Object;Ljava/util/Map;)V 
+      maxStack: 1, maxLocals: 4 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 2 -> Label_1
+        getstatic com.MyClass.f1 (type: java.lang.String)
+        return
+      Label_2:
+      LocalVariables {
+        index: 3, name: test, start: Label_0, end: Label_2, type: java.util.Map, signature: M<Ljava/util/Map<TE;TM;>;>;
+        index: 2, name: x, start: Label_0, end: Label_2, type: java.lang.Object, signature: TE;
+        index: 1, name: type, start: Label_0, end: Label_2, type: java.lang.reflect.Type, signature: null
+        index: 0, name: this, start: Label_0, end: Label_2, type: com.MyClass, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 0 
+      Label_0:
+       LINE 1 -> Label_0
+        aconst_null
+        putstatic com.MyClass.f2 (type: java.util.Map)
+        return
+    }
+    
+}

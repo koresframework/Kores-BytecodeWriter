@@ -1,4 +1,4 @@
-md5: 5d44001af80190e5523f04a5202e6022
+md5: e39e2ca8550df660913a6d225332b656
 
 version: Java 8 (52)
 access: ACC_PUBLIC, ACC_ABSTRACT (1537)
@@ -14,11 +14,21 @@ public abstract class test.Impl extends java.lang.Object {
       maxStack: 0, maxLocals: 0 
     }
     
-    !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
+    !access: ACC_PUBLIC (1)
     !parameter[name: num, access:  (0)]
-    public abstract int getI(int) {
+    public int getI(int) {
       desc: (I)I 
-      maxStack: 0, maxLocals: 0 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        iload 1
+        bipush 9
+        imul
+        ireturn
+      Label_1:
+      LocalVariables {
+        index: 1, name: num, start: Label_0, end: Label_1, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.Impl, signature: null
+      }
     }
     
     !access: PACKAGE_PRIVATE, ACC_STATIC (8)

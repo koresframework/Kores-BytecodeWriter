@@ -1,4 +1,4 @@
-md5: 3d478d1f9698be3410367220f21d60e2
+md5: 98e49ee93f7d4e60091c0adc50fcfaf5
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -16,17 +16,29 @@ public class com.Generic extends java.lang.Object implements java.util.List {
     !parameter[name: val, access:  (0)]
     public static void test(java.util.List) {
       desc: (Ljava/util/List;)V 
-      maxStack: 1, maxLocals: 2 
+      maxStack: 1, maxLocals: 4 
       Label_0:
-       LINE 4 -> Label_0
+       LINE 1 -> Label_0
         aconst_null
       Label_1:
         astore 1
-        return
       Label_2:
+       LINE 2 -> Label_2
+        aconst_null
+      Label_3:
+        astore 2
+      Label_4:
+       LINE 3 -> Label_4
+        aconst_null
+      Label_5:
+        astore 3
+        return
+      Label_6:
       LocalVariables {
-        index: 1, name: fieldi, start: Label_1, end: Label_2, type: java.lang.Object, signature: TT;
-        index: 0, name: val, start: Label_0, end: Label_2, type: java.lang.Object, signature: TT;
+        index: 3, name: field3, start: Label_5, end: Label_6, type: java.util.List, signature: Ljava/util/List<Ljava/lang/String;>;
+        index: 2, name: field2, start: Label_3, end: Label_6, type: java.lang.Object, signature: Ljava/lang/Object;
+        index: 1, name: fieldi, start: Label_1, end: Label_6, type: java.lang.Object, signature: TT;
+        index: 0, name: val, start: Label_0, end: Label_6, type: java.lang.Object, signature: TT;
       }
     }
     

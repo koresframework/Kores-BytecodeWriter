@@ -1,0 +1,56 @@
+md5: a508ae373c3c7bbf3c5fed325ea3e4b2
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: TryCatchFinally.cai
+
+public class test.TryCatchFinally extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 1 -> Label_1
+       LINE 2 -> Label_1
+        invokestatic com.github.jonathanxd.kores.test.TryTest_.boom()void (ownerIsInterface: false)
+      Label_2:
+        return
+      Label_3:
+       FRAME[type: F_FULL, locals: 1, local: {Reference[test.TryCatchFinally]}, stacks: 1, stack: {Reference[java.lang.Exception]}]
+        astore 1
+      Label_4:
+       LINE 3 -> Label_4
+        aload 1
+        invokevirtual java.lang.Exception.printStackTrace()void (ownerIsInterface: false)
+      Label_5:
+       LINE 4 -> Label_5
+        invokestatic com.github.jonathanxd.kores.test.asm.TryTest.x()java.lang.String (ownerIsInterface: false)
+        pop
+      Label_6:
+        return
+      Label_7:
+       FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+        athrow
+      Label_8:
+      TryCatchBlocks {
+        start: Label_1, end: Label_2, handler: Label_3, exception: java.lang.Exception
+      }
+      LocalVariables {
+        index: 1, name: e, start: Label_3, end: Label_6, type: java.lang.Exception, signature: null
+        index: 0, name: this, start: Label_0, end: Label_8, type: test.TryCatchFinally, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

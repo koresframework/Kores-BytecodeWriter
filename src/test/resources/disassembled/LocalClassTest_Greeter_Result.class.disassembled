@@ -1,24 +1,47 @@
-md5: 9cdab3aa6f921749a2c41c4f88cb689e
+md5: 7c73c64ab0e880932accbe08fab02473
 
 version: Java 8 (52)
-access: PACKAGE_PRIVATE (32)
+access: ACC_PUBLIC (33)
 
-source: LocalClass.cai
+source: Greeter.cai
 
- class test.LocalClass$Greeter extends java.lang.Object {
+outerClass: test.LocalClass
+outerMethod: <init>
+outerMethodDesc: ()void
 
-    !access: PACKAGE_PRIVATE (0)
-     test.LocalClass.Greeter -> test.LocalClass$Greeter
+public class test.LocalClass$Greeter extends java.lang.Object {
 
-    !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final test.LocalClass localClass$outer1
+    !access: ACC_PUBLIC (1)
+    public test.LocalClass.Greeter -> test.LocalClass$Greeter
 
+    !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
+    protected final test.LocalClass outer$
+
+    !access: ACC_PUBLIC (1)
+    !parameter[name: outer$, access:  (0)]
+    public void <init>(test.LocalClass) {
+      desc: (Ltest/LocalClass;)V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        aload 0
+        aload 1
+        putfield test.LocalClass$Greeter.outer$ (type: test.LocalClass)
+        return
+      Label_1:
+      LocalVariables {
+        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.LocalClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.LocalClass$Greeter, signature: null
+      }
+    }
+    
     !access: ACC_PUBLIC (1)
     public void greet() {
       desc: ()V 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 5 -> Label_0
+       LINE 2 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Hello"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
@@ -26,28 +49,6 @@ source: LocalClass.cai
       Label_1:
       LocalVariables {
         index: 0, name: this, start: Label_0, end: Label_1, type: test.LocalClass$Greeter, signature: null
-      }
-    }
-    
-    !access: ACC_PUBLIC (1)
-    !parameter[name: localClass$outer1, access:  (0)]
-    public void <init>(test.LocalClass) {
-      desc: (Ltest/LocalClass;)V 
-      maxStack: 2, maxLocals: 2 
-      Label_0:
-        aload 0
-        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
-      Label_1:
-       LINE 6 -> Label_1
-       LINE 7 -> Label_1
-        aload 0
-        aload 1
-        putfield test.LocalClass$Greeter.localClass$outer1 (type: test.LocalClass)
-        return
-      Label_2:
-      LocalVariables {
-        index: 1, name: localClass$outer1, start: Label_0, end: Label_2, type: test.LocalClass, signature: null
-        index: 0, name: this, start: Label_0, end: Label_2, type: test.LocalClass$Greeter, signature: null
       }
     }
     

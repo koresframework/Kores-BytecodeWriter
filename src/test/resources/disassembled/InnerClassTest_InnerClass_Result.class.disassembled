@@ -1,4 +1,4 @@
-md5: 7e37eddad9da1c7cdb27ea923cb109a7
+md5: 384a944816d8affc34b7ad7e1d37bcb7
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -10,8 +10,8 @@ public class test.InnerClass extends java.lang.Object {
     !access: ACC_PUBLIC (1)
     public test.InnerClass.Inner -> test.InnerClass$Inner
 
-    !access: ACC_PRIVATE (2)
-    private java.lang.String field
+    !access: ACC_PROTECTED (4)
+    protected java.lang.String field
 
     !access: ACC_PUBLIC (1)
     public void <init>() {
@@ -29,7 +29,8 @@ public class test.InnerClass extends java.lang.Object {
         dup
         aload 0
         invokespecial test.InnerClass$Inner.<init>(test.InnerClass)void (ownerIsInterface: false)
-        invokevirtual test.InnerClass$Inner.invoke$000()java.lang.String (ownerIsInterface: false)
+        invokevirtual test.InnerClass$Inner.call()java.lang.String (ownerIsInterface: false)
+        pop
         return
       Label_2:
       LocalVariables {
@@ -37,9 +38,9 @@ public class test.InnerClass extends java.lang.Object {
       }
     }
     
-    !access: ACC_PRIVATE (2)
+    !access: ACC_PROTECTED (4)
     !parameter[name: str, access:  (0)]
-    private void <init>(java.lang.String) {
+    protected void <init>(java.lang.String) {
       desc: (Ljava/lang/String;)V 
       maxStack: 2, maxLocals: 2 
       Label_0:
@@ -66,7 +67,7 @@ public class test.InnerClass extends java.lang.Object {
       desc: ()V 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 8 -> Label_0
+       LINE 1 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "A"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
@@ -82,41 +83,6 @@ public class test.InnerClass extends java.lang.Object {
       desc: ()V 
       maxStack: 0, maxLocals: 0 
         return
-    }
-    
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-     java.lang.String invoke$000() {
-      desc: ()Ljava/lang/String; 
-      maxStack: 1, maxLocals: 1 
-      Label_0:
-       LINE 9 -> Label_0
-        aload 0
-        getfield test.InnerClass.field (type: java.lang.String)
-        areturn
-      Label_1:
-      LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
-      }
-    }
-    
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-    !parameter[name: str, access:  (0)]
-    !parameter[name: $inner, access:  (0)]
-     void <init>(java.lang.String, test.InnerClass$Inner) {
-      desc: (Ljava/lang/String;Ltest/InnerClass$Inner;)V 
-      maxStack: 2, maxLocals: 3 
-      Label_0:
-       LINE 10 -> Label_0
-        aload 0
-        aload 1
-        invokespecial test.InnerClass.<init>(java.lang.String)void (ownerIsInterface: false)
-        return
-      Label_1:
-      LocalVariables {
-        index: 2, name: $inner, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
-        index: 1, name: str, start: Label_0, end: Label_1, type: java.lang.String, signature: null
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
-      }
     }
     
 }

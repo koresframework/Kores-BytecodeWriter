@@ -1,0 +1,50 @@
+md5: 1dd327f8e79e78d509394ce8f91fc2f4
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: Inner.cai
+
+public class test.InnerClass$Inner extends java.lang.Object {
+
+    !access: ACC_PUBLIC (9)
+    public test.InnerClass.Inner -> test.InnerClass$Inner
+    !access: ACC_PUBLIC (1)
+    public test.InnerClass$Inner.Inner2 -> test.InnerClass$Inner$Inner2
+
+    !access: ACC_PROTECTED (4)
+    protected java.lang.String call() {
+      desc: ()Ljava/lang/String; 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+       LINE 2 -> Label_0
+        ldc "A"              // type: java.lang.String
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

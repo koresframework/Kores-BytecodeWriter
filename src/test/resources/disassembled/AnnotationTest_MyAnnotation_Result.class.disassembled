@@ -1,12 +1,19 @@
-md5: 8c2a7dd680237c5303ba8477dd1ebabf
+md5: de940ea183a95b5f607a8a97f4672aa0
 
 version: Java 8 (52)
-access: ACC_PUBLIC, ACC_ABSTRACT (9729)
+access: ACC_PUBLIC, ACC_ABSTRACT (1537)
 
 source: MyAnnotation.cai
 
-public abstract class com.MyAnnotation extends java.lang.Object implements java.lang.annotation.Annotation {
+public abstract class com.MyAnnotation extends java.lang.Object {
 
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
     !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     public abstract java.lang.String value() {
       desc: ()Ljava/lang/String; 
@@ -32,13 +39,6 @@ public abstract class com.MyAnnotation extends java.lang.Object implements java.
     public abstract int[] ns() {
       desc: ()[I 
       maxStack: 0, maxLocals: 0 
-    }
-    
-    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
-    static void <clinit>() {
-      desc: ()V 
-      maxStack: 0, maxLocals: 0 
-        return
     }
     
 }

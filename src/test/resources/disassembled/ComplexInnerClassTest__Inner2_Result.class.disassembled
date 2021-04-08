@@ -1,0 +1,106 @@
+md5: 93eae1f245fd0c4cf5d236345278abe5
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: Inner2.cai
+
+public class test.InnerClass$Inner$Inner2 extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    public test.InnerClass$Inner.Inner2 -> test.InnerClass$Inner$Inner2
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4104)
+     test.InnerClass$Inner$Inner2.$ -> test.InnerClass$Inner$Inner2$$
+
+    !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
+    protected final test.InnerClass$Inner outer$
+
+    !access: ACC_PRIVATE (2)
+    !parameter[name: outer$, access:  (0)]
+    private void <init>(test.InnerClass$Inner) {
+      desc: (Ltest/InnerClass$Inner;)V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        aload 0
+        aload 1
+        putfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
+        return
+      Label_1:
+      LocalVariables {
+        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2, signature: null
+      }
+    }
+    
+    !access: ACC_PRIVATE (2)
+    private java.lang.String call2() {
+      desc: ()Ljava/lang/String; 
+      maxStack: 2, maxLocals: 1 
+      Label_0:
+       LINE 6 -> Label_0
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 0
+        getfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
+        getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
+        invokestatic test.InnerClass.accessor$(test.InnerClass)java.lang.String (ownerIsInterface: false)
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_1:
+       LINE 7 -> Label_1
+        aload 0
+        getfield test.InnerClass$Inner$Inner2.outer$ (type: test.InnerClass$Inner)
+        getfield test.InnerClass$Inner.outer$ (type: test.InnerClass)
+        invokevirtual test.InnerClass.mm()void (ownerIsInterface: false)
+      Label_2:
+       LINE 8 -> Label_2
+        ldc "A"              // type: java.lang.String
+        areturn
+      Label_3:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_3, type: test.InnerClass$Inner$Inner2, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
+    !parameter[name: outer$, access:  (0)]
+    !parameter[name: access$, access:  (0)]
+     void <init>(test.InnerClass$Inner, test.InnerClass$Inner$Inner2$$) {
+      desc: (Ltest/InnerClass$Inner;Ltest/InnerClass$Inner$Inner2$$;)V 
+      maxStack: 2, maxLocals: 3 
+      Label_0:
+        aload 0
+        aload 1
+        invokespecial test.InnerClass$Inner$Inner2.<init>(test.InnerClass$Inner)void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 2, name: access$, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2$$, signature: null
+        index: 1, name: outer$, start: Label_0, end: Label_1, type: test.InnerClass$Inner, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC, ACC_SYNTHETIC (4104)
+    !parameter[name: this, access:  (0)]
+    static java.lang.String accessor$(test.InnerClass$Inner$Inner2) {
+      desc: (Ltest/InnerClass$Inner$Inner2;)Ljava/lang/String; 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokevirtual test.InnerClass$Inner$Inner2.call2()java.lang.String (ownerIsInterface: false)
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass$Inner$Inner2, signature: null
+      }
+    }
+    
+}

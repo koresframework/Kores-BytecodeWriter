@@ -1,4 +1,4 @@
-md5: 20a98651055276c1b2a49da63e458597
+md5: 6ba989cd414aaa53233aa5311d76b4cf
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -16,7 +16,7 @@ public class com.OperateTest extends java.lang.Object {
         aload 0
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
-       LINE 3 -> Label_1
+       LINE 1 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         iload 1
@@ -28,14 +28,14 @@ public class com.OperateTest extends java.lang.Object {
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_2:
-       LINE 4 -> Label_2
+       LINE 2 -> Label_2
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         ineg
         invokestatic java.lang.String.valueOf(int)java.lang.String (ownerIsInterface: false)
         invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
       Label_3:
-       LINE 5 -> Label_3
+       LINE 3 -> Label_3
         getstatic java.lang.System.out (type: java.io.PrintStream)
         bipush 9
         bipush 10

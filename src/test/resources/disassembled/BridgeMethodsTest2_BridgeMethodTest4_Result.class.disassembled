@@ -1,0 +1,78 @@
+md5: 1e2d69ded382880d3c4d6e5254f88e49
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: BridgeMethodTest4.cai
+
+public class com.BridgeMethodTest4 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BaseGIntegerG {
+
+    !access: ACC_PUBLIC, ACC_BRIDGE (65)
+    public java.lang.Number getValue() {
+      desc: ()Ljava/lang/Number; 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokevirtual com.BridgeMethodTest4.getValue()java.lang.Integer (ownerIsInterface: false)
+        checkcast java.lang.Number
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.BridgeMethodTest4, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC, ACC_BRIDGE (65)
+    public java.lang.Object getValue() {
+      desc: ()Ljava/lang/Object; 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokevirtual com.BridgeMethodTest4.getValue()java.lang.Integer (ownerIsInterface: false)
+        checkcast java.lang.Object
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.BridgeMethodTest4, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public java.lang.Integer getValue() {
+      desc: ()Ljava/lang/Integer; 
+      maxStack: 3, maxLocals: 1 
+      Label_0:
+       LINE 1 -> Label_0
+        new java.lang.Integer
+        dup
+        bipush 14
+        invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.BridgeMethodTest4, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.BridgeMethodTest4, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

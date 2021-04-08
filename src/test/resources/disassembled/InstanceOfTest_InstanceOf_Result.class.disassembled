@@ -1,4 +1,4 @@
-md5: 1d4114601872d9f933578baeaa8468ec
+md5: 8cc599bbb2ca18f3293a5a8c031b2cba
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -13,18 +13,18 @@ public class test.InstanceOf extends java.lang.Object {
       desc: (Ljava/lang/Object;)V 
       maxStack: 3, maxLocals: 5 
       Label_0:
-       LINE 3 -> Label_0
+       LINE 1 -> Label_0
         aload 0
         instanceof java.lang.String
         ifeq Label_2
       Label_1:
-       LINE 8 -> Label_1
+       LINE 2 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Object is String!"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
         goto Label_3
       Label_2:
-       LINE 9 -> Label_2
+       LINE 3 -> Label_2
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "Object is not String!"              // type: java.lang.String
@@ -39,51 +39,45 @@ public class test.InstanceOf extends java.lang.Object {
       Label_5:
        LINE 5 -> Label_5
         iload 1
-        ifne Label_7
-      Label_6:
-       LINE 10 -> Label_6
+        ifne Label_6
         iconst_1
-        goto Label_8
-      Label_7:
-       LINE 11 -> Label_7
-       FRAME[type: F_APPEND, locals: 1, local: {integer}, stacks: 0, stack: {}]
+        goto Label_7
+      Label_6:
+       FRAME[type: F_APPEND, locals: 1, local: {Primitive[integer]}, stacks: 0, stack: {}]
         iconst_0
-      Label_8:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {integer}]
+      Label_7:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         istore 2
-      Label_9:
-       LINE 6 -> Label_9
+      Label_8:
+       LINE 6 -> Label_8
         new java.lang.Integer
         dup
         bipush 9
         invokespecial java.lang.Integer.<init>(int)void (ownerIsInterface: false)
-      Label_10:
+      Label_9:
         astore 3
-      Label_11:
-       LINE 7 -> Label_11
+      Label_10:
+       LINE 7 -> Label_10
         aload 3
         invokevirtual java.lang.Integer.intValue()int (ownerIsInterface: false)
         bipush 9
-        if_icmpne Label_13
-      Label_12:
-       LINE 12 -> Label_12
+        if_icmpne Label_11
         iconst_1
-        goto Label_14
-      Label_13:
-       LINE 13 -> Label_13
-       FRAME[type: F_APPEND, locals: 2, local: {integer, java.lang.Integer}, stacks: 0, stack: {}]
+        goto Label_12
+      Label_11:
+       FRAME[type: F_APPEND, locals: 2, local: {Primitive[integer], Reference[java.lang.Integer]}, stacks: 0, stack: {}]
         iconst_0
-      Label_14:
-       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {integer}]
+      Label_12:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Primitive[integer]}]
         istore 4
         return
-      Label_15:
+      Label_13:
       LocalVariables {
-        index: 4, name: b9, start: Label_14, end: Label_15, type: boolean, signature: null
-        index: 3, name: ab, start: Label_10, end: Label_15, type: java.lang.Integer, signature: null
-        index: 2, name: b2, start: Label_8, end: Label_15, type: boolean, signature: null
-        index: 1, name: b, start: Label_4, end: Label_15, type: boolean, signature: null
-        index: 0, name: param, start: Label_0, end: Label_15, type: java.lang.Object, signature: null
+        index: 4, name: b9, start: Label_12, end: Label_13, type: boolean, signature: null
+        index: 3, name: ab, start: Label_9, end: Label_13, type: java.lang.Integer, signature: null
+        index: 2, name: b2, start: Label_7, end: Label_13, type: boolean, signature: null
+        index: 1, name: b, start: Label_4, end: Label_13, type: boolean, signature: null
+        index: 0, name: param, start: Label_0, end: Label_13, type: java.lang.Object, signature: null
       }
     }
     

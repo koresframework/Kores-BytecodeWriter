@@ -1,0 +1,91 @@
+md5: 200905c613713f4f1c119fae47f70072
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: Some.cai
+
+public class com.Option$Some extends com.Option {
+
+    !access: ACC_PUBLIC (9)
+    public com.Option.Some -> com.Option$Some
+
+    !access: ACC_PRIVATE, ACC_FINAL (18)
+    !signature: TT;
+    private final java.lang.Object value
+
+    !access: PACKAGE_PRIVATE (0)
+    !signature: (TT;)V
+    !parameter[name: value, access:  (0)]
+     void <init>(java.lang.Object) {
+      desc: (Ljava/lang/Object;)V 
+      maxStack: 3, maxLocals: 2 
+      Label_0:
+       LINE 8 -> Label_0
+        aload 0
+        ldc "Some"              // type: java.lang.String
+        iconst_0
+        invokespecial com.Option.<init>(java.lang.String, int)void (ownerIsInterface: false)
+      Label_1:
+       LINE 9 -> Label_1
+        aload 0
+        aload 1
+        putfield com.Option$Some.value (type: java.lang.Object)
+        return
+      Label_2:
+      LocalVariables {
+        index: 1, name: value, start: Label_0, end: Label_2, type: java.lang.Object, signature: TT;
+        index: 0, name: this, start: Label_0, end: Label_2, type: com.Option$Some, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    !signature: ()TT;
+    public java.lang.Object getValue() {
+      desc: ()Ljava/lang/Object; 
+      maxStack: 1, maxLocals: 1 
+      Label_0:
+       LINE 5 -> Label_0
+        aload 0
+        getfield com.Option$Some.value (type: java.lang.Object)
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.Option$Some, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    public java.lang.String toString() {
+      desc: ()Ljava/lang/String; 
+      maxStack: 3, maxLocals: 1 
+      Label_0:
+       LINE 6 -> Label_0
+        new java.lang.StringBuilder
+        dup
+        ldc "Some"              // type: java.lang.String
+        invokespecial java.lang.StringBuilder.<init>(java.lang.String)void (ownerIsInterface: false)
+        ldc "("              // type: java.lang.String
+        invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
+        aload 0
+        getfield com.Option$Some.value (type: java.lang.Object)
+        invokestatic java.util.Objects.toString(java.lang.Object)java.lang.String (ownerIsInterface: false)
+        invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
+        ldc ")"              // type: java.lang.String
+        invokevirtual java.lang.StringBuilder.append(java.lang.String)java.lang.StringBuilder (ownerIsInterface: false)
+        invokevirtual java.lang.Object.toString()java.lang.String (ownerIsInterface: false)
+        areturn
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.Option$Some, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

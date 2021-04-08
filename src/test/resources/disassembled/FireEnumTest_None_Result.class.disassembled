@@ -1,0 +1,37 @@
+md5: 5e40b9aecf80ea2682b8d610ee878f15
+
+version: Java 8 (52)
+access: ACC_PUBLIC (33)
+
+source: None.cai
+
+public class com.Option$None extends com.Option {
+
+    !access: ACC_PUBLIC (9)
+    public com.Option.None -> com.Option$None
+
+    !access: PACKAGE_PRIVATE (0)
+     void <init>() {
+      desc: ()V 
+      maxStack: 3, maxLocals: 1 
+      Label_0:
+       LINE 10 -> Label_0
+        aload 0
+        ldc "None"              // type: java.lang.String
+        iconst_1
+        invokespecial com.Option.<init>(java.lang.String, int)void (ownerIsInterface: false)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.Option$None, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

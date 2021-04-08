@@ -1,16 +1,16 @@
-md5: 992825c7c3c6d394e731e925e5da3749
+md5: 8c076acd4082177f7c1a0a0eb1cebdbd
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
 
 source: ArrayParameterTest_Generated.cai
 
-public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated extends java.lang.Object {
+public class com.github.jonathanxd.kores.test.asm.ArrayParameterTest_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
     !parameter[name: par, access:  (0)]
-    public void <init>(com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[]) {
-      desc: ([Lcom/github/jonathanxd/codeapi/test/asm/ArrayParameterTest$Text;)V 
+    public void <init>(com.github.jonathanxd.kores.test.asm.ArrayParameterTest$Text[]) {
+      desc: ([Lcom/github/jonathanxd/kores/test/asm/ArrayParameterTest$Text;)V 
       maxStack: 1, maxLocals: 4 
       Label_0:
         aload 0
@@ -20,16 +20,16 @@ public class com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated
       Label_1:
         astore 2
         aload 2
-        checkcast com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[]
+        checkcast com.github.jonathanxd.kores.test.asm.ArrayParameterTest$Text[]
       Label_2:
         astore 3
         return
       Label_3:
       LocalVariables {
-        index: 3, name: lt, start: Label_2, end: Label_3, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
+        index: 3, name: lt, start: Label_2, end: Label_3, type: com.github.jonathanxd.kores.test.asm.ArrayParameterTest$Text[], signature: null
         index: 2, name: cf, start: Label_1, end: Label_3, type: java.lang.Object, signature: null
-        index: 1, name: par, start: Label_0, end: Label_3, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest$Text[], signature: null
-        index: 0, name: this, start: Label_0, end: Label_3, type: com.github.jonathanxd.codeapi.test.asm.ArrayParameterTest_Generated, signature: null
+        index: 1, name: par, start: Label_0, end: Label_3, type: com.github.jonathanxd.kores.test.asm.ArrayParameterTest$Text[], signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: com.github.jonathanxd.kores.test.asm.ArrayParameterTest_Generated, signature: null
       }
     }
     

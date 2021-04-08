@@ -1,11 +1,11 @@
-md5: e7e7d3bc585944bce827ac83b20c89fa
+md5: 389ee1daf6667f8a276712f4690f944c
 
 version: Java 8 (52)
 access: ACC_PUBLIC, ACC_ABSTRACT (17441)
 
 source: MyEnum.cai
 
-public abstract class com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.codeapi.test.EnumTest_$MyItf {
+public abstract class com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.kores.test.EnumTest_$MyItf {
 
     !access: PACKAGE_PRIVATE (16392)
      com.MyEnum.A$Inner -> com.MyEnum$A$Inner
@@ -20,13 +20,12 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     private static final com.MyEnum[] $VALUES
 
     !access: ACC_PROTECTED, ACC_SYNTHETIC (4100)
-    !parameter[name: name, access:  (0)]
-    !parameter[name: ordinal, access:  (0)]
+    !parameter[name: $name, access:  (0)]
+    !parameter[name: $ordinal, access:  (0)]
     protected void <init>(java.lang.String, int) {
       desc: (Ljava/lang/String;I)V 
       maxStack: 3, maxLocals: 3 
       Label_0:
-       LINE 8 -> Label_0
         aload 0
         aload 1
         iload 2
@@ -34,8 +33,8 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
         return
       Label_1:
       LocalVariables {
-        index: 2, name: ordinal, start: Label_0, end: Label_1, type: int, signature: null
-        index: 1, name: name, start: Label_0, end: Label_1, type: java.lang.String, signature: null
+        index: 2, name: $ordinal, start: Label_0, end: Label_1, type: int, signature: null
+        index: 1, name: $name, start: Label_0, end: Label_1, type: java.lang.String, signature: null
         index: 0, name: this, start: Label_0, end: Label_1, type: com.MyEnum, signature: null
       }
     }
@@ -44,8 +43,6 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     public static com.MyEnum[] values() {
       desc: ()[Lcom/MyEnum; 
       maxStack: 1, maxLocals: 0 
-      Label_0:
-       LINE 9 -> Label_0
         getstatic com.MyEnum.$VALUES (type: com.MyEnum[])
         invokevirtual com.MyEnum[].clone()java.lang.Object (ownerIsInterface: false)
         checkcast com.MyEnum[]
@@ -58,7 +55,6 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
       desc: (Ljava/lang/String;)Lcom/MyEnum; 
       maxStack: 2, maxLocals: 1 
       Label_0:
-       LINE 10 -> Label_0
         ldc Lcom/MyEnum;              // type: java.lang.Class
         aload 0
         invokestatic java.lang.Enum.valueOf(java.lang.Class, java.lang.String)java.lang.Enum (ownerIsInterface: false)
@@ -74,24 +70,18 @@ public abstract class com.MyEnum extends java.lang.Enum implements com.github.jo
     static void <clinit>() {
       desc: ()V 
       maxStack: 4, maxLocals: 0 
-      Label_0:
-       LINE 11 -> Label_0
         new com.MyEnum$A$Inner
         dup
         ldc "A"              // type: java.lang.String
         iconst_0
         invokespecial com.MyEnum$A$Inner.<init>(java.lang.String, int)void (ownerIsInterface: false)
         putstatic com.MyEnum.A (type: com.MyEnum)
-      Label_1:
-       LINE 12 -> Label_1
         new com.MyEnum$B$Inner
         dup
         ldc "B"              // type: java.lang.String
         iconst_1
         invokespecial com.MyEnum$B$Inner.<init>(java.lang.String, int)void (ownerIsInterface: false)
         putstatic com.MyEnum.B (type: com.MyEnum)
-      Label_2:
-       LINE 13 -> Label_2
         iconst_2
         anewarray com.MyEnum
         dup
