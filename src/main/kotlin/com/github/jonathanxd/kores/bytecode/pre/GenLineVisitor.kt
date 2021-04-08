@@ -124,7 +124,7 @@ object GenLineVisitor {
                 .declaration(visit(insn.declaration, data))
                 .build()
         }
-        is BodyHolder -> createLineAndTransform(insn, data) {
+        is BodyHolder -> createLineAndTransform<Instruction>(insn, data) {
             (it as BodyHolder).builder()
                 .body(visit(insn.body, data))
                 .build() as Instruction
