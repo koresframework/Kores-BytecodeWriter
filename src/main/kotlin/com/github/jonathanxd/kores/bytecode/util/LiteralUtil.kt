@@ -32,6 +32,7 @@ import com.github.jonathanxd.kores.common.Stack
 import com.github.jonathanxd.kores.literal.Literal
 import com.github.jonathanxd.kores.literal.Literals
 import com.github.jonathanxd.kores.type.KoresType
+import com.github.jonathanxd.kores.type.`is`
 import com.github.jonathanxd.kores.util.typeDesc
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
@@ -40,7 +41,7 @@ import org.objectweb.asm.Type
 object LiteralUtil {
 
     fun visitLiteral(num: Literal, mv: MethodVisitor) {
-        val name = num.name
+        val value = num.value
 
         if (num == Stack)
             return
@@ -59,31 +60,31 @@ object LiteralUtil {
 
         } else if (num.type.`is`(Types.STRING)) {
 
-            mv.visitLdcInsn(name.substring(1, name.length - 1))
+            mv.visitLdcInsn((value as String).substring(1, value.length - 1))
 
         } else if (num.type.`is`(Types.INT) && num !is Literals.ByteLiteral) {
 
-            InsnUtil.visitInt(Integer.parseInt(name), mv)
+            InsnUtil.visitInt(value as Int, mv)
 
         } else if (num.type.`is`(Types.LONG)) {
 
-            InsnUtil.visitLong(java.lang.Long.parseLong(name), mv)
+            InsnUtil.visitLong(value as Long, mv)
 
         } else if (num.type.`is`(Types.DOUBLE)) {
 
-            InsnUtil.visitDouble(java.lang.Double.parseDouble(name), mv)
+            InsnUtil.visitDouble(value as Double, mv)
 
         } else if (num is Literals.ByteLiteral) {
 
-            mv.visitIntInsn(Opcodes.BIPUSH, java.lang.Byte.parseByte(name).toInt())
+            mv.visitIntInsn(Opcodes.BIPUSH, (value as Byte).toInt())
 
         } else if (num.type.`is`(Types.CHAR)) {
 
-            mv.visitIntInsn(Opcodes.BIPUSH, name[0].toInt())
+            mv.visitIntInsn(Opcodes.BIPUSH, (value as Char).code)
 
         } else if (num.type.`is`(Types.FLOAT)) {
 
-            InsnUtil.visitFloat(java.lang.Float.parseFloat(name), mv)
+            InsnUtil.visitFloat(value as Float, mv)
 
         } else if (num.type.`is`(Types.KORES_TYPE)) {
 

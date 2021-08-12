@@ -36,6 +36,7 @@ import com.github.jonathanxd.kores.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.kores.literal.Literal
 import com.github.jonathanxd.kores.operator.Operators
 import com.github.jonathanxd.kores.type.`is`
+import com.github.jonathanxd.kores.type.javaSpecName
 import org.objectweb.asm.Label
 
 object VariableOperateProcessor {

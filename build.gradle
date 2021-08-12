@@ -12,12 +12,13 @@ buildscript {
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:$license_version"
         classpath "com.github.jengelman.gradle.plugins:shadow:$shadow_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     }
 
 }
 
 group 'com.github.jonathanxd'
-version '4.0.1.bytecode.1'
+version '4.0.4.bytecode.1'
 
 apply from: project(":Kores").file("gradle/common.gradle")
 
@@ -27,7 +28,7 @@ dependencies {
     // with runtime dependency pointing to Kores published version
     //compile project(":Kores")
     compileOnly project(":Kores")
-    runtime "com.github.JonathanxD.Kores:Kores:4.0.1.base"
+    runtime "com.github.JonathanxD.Kores:Kores:4.0.4.base"
     compile 'com.github.JonathanxD:BytecodeDisassembler:2.1.1'
     compile "org.ow2.asm:asm:6.0"
     compile "org.ow2.asm:asm-analysis:6.0"

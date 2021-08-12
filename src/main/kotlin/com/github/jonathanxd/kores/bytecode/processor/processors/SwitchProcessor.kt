@@ -213,16 +213,16 @@ object SwitchProcessor : Processor<SwitchStatement> {
         caseList
             .filterNot(Case::isDefault)
             .map { it.value.safeForComparison as Literals.IntLiteral }
-            .map { it.name.toLong() }
-            .min() ?: 0L
+            .map { it.int.toLong() }
+            .minOrNull() ?: 0L
 
 
     private fun getMax(caseList: List<Case>): Long =
         caseList
             .filterNot(Case::isDefault)
             .map { it.value.safeForComparison as Literals.IntLiteral }
-            .map { it.name.toLong() }
-            .max() ?: 0L
+            .map { it.int.toLong() }
+            .maxOrNull() ?: 0L
 
     private fun getCasesToFill(caseList: List<Case>): Long {
         val min = this.getMin(caseList)
