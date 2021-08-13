@@ -17,10 +17,38 @@ buildscript {
 
 }
 
-group 'com.github.jonathanxd'
-version '4.1.2.bytecode.2'
+group 'com.github.koresframework'
+version '4.1.9.bytecode'
 
 apply from: project(":Kores").file("gradle/common.gradle")
+
+def GITHUB_USERNAME = project.findProperty("USERNAME") ?: System.getenv("USERNAME")
+def GITHUB_PAT = project.findProperty("TOKEN") ?: System.getenv("TOKEN")
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://maven.pkg.github.com/jonathanxd/jwiutils"
+        credentials {
+            username = GITHUB_USERNAME
+            password = GITHUB_PAT
+        }
+    }
+    maven {
+        url "https://maven.pkg.github.com/jonathanxd/bytecodedisassembler"
+        credentials {
+            username = GITHUB_USERNAME
+            password = GITHUB_PAT
+        }
+    }
+    maven {
+        url "https://maven.pkg.github.com/koresframework/kores"
+        credentials {
+            username = GITHUB_USERNAME
+            password = GITHUB_PAT
+        }
+    }
+}
 
 dependencies {
     // Developer note: Indev, we use this statement to compile and test BytecodeWriter.
@@ -28,14 +56,14 @@ dependencies {
     // with runtime dependency pointing to Kores published version
     //compile project(":Kores")
     compileOnly project(":Kores")
-    runtimeOnly "com.github.koresframework.Kores:Kores:4.1.2.base"
-    implementation 'com.github.JonathanxD:BytecodeDisassembler:2.3.0'
+    runtimeOnly "com.github.koresframework:kores:4.1.9.base"
+    implementation 'com.github.jonathanxd:bytecode-disassembler:2.4.1'
     implementation "org.ow2.asm:asm:9.2"
     implementation "org.ow2.asm:asm-analysis:9.2"
     implementation "org.ow2.asm:asm-tree:9.2"
     implementation "org.ow2.asm:asm-util:9.2"
 
-    testImplementation "com.github.JonathanxD.JwIUtils:links:$iutils_version"
+    testImplementation "com.github.jonathanxd:links:$iutils_version"
     testImplementation project(":Kores")
     testImplementation project(path: ':Kores', configuration: 'tests')
 }
@@ -50,5 +78,30 @@ shadowJar {
         include(dependency("org.ow2.asm:asm-all"))
         include(dependency("com.github.JonathanxD:BytecodeDisassembler"))
         include(dependency("com.github.JonathanxD:JwIUtils"))
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "Local"
+            // change to point to your repo, e.g. http://my.org/repo
+            url = "$buildDir/repo"
+        }
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/koresframework/kores-bytecodewriter"
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            artifactId 'kores-bytecodewriter'
+
+            artifact sourcesJar
+        }
     }
 }
