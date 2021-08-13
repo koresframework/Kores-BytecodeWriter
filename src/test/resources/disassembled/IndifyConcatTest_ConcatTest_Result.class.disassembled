@@ -1,0 +1,63 @@
+md5: 9663cda8719df1d99a2a5a1a735c1995
+
+version: Java 16 (60)
+access: ACC_PUBLIC (33)
+
+source: ConcatTest.cai
+
+!signature: null
+!extends: java/lang/Object
+!implements: []
+public class com.ConcatTest extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    !parameter[name: av, access:  (0)]
+    public void <init>(java.lang.String) {
+      desc: (Ljava/lang/String;)V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 1 -> Label_1
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        aload 1
+        invokedynamic makeConcatWithConstants(java.lang.String)java.lang.String [
+          // Bootstrap method
+          java.lang.invoke.StringConcatFactory.makeConcatWithConstants(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.String, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+            // Arguments
+            "Hello \u0001 :D"
+          ]
+        ]
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_2:
+       LINE 2 -> Label_2
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc ""              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_3:
+       LINE 3 -> Label_3
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "A"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+      Label_4:
+       LINE 4 -> Label_4
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "AB"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.String)void (ownerIsInterface: false)
+        return
+      Label_5:
+      LocalVariables {
+        index: 1, name: av, start: Label_0, end: Label_5, type: java.lang.String, signature: null
+        index: 0, name: this, start: Label_0, end: Label_5, type: com.ConcatTest, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

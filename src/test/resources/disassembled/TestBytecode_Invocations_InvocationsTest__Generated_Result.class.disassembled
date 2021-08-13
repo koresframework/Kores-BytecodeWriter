@@ -1,10 +1,13 @@
-md5: 2a2f53edf5edda0561215eac2e244353
+md5: 3119fdc5b35aa46dfe5add99e9977c87
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: InvocationsTest__Generated.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class fullName.InvocationsTest__Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_FINAL (17)

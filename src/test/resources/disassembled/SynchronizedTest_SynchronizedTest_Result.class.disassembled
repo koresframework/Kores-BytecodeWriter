@@ -1,10 +1,13 @@
-md5: 6a6793e4a0e4c3b43df47f10ccd1c421
+md5: 877a29985855bdaee3f6c76e95c81ef3
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: SynchronizedTest.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class test.SynchronizedTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

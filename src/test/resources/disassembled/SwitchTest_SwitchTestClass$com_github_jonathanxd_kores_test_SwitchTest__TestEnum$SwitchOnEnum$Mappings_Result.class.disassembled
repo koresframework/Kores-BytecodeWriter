@@ -1,14 +1,20 @@
-md5: 7ba05125450076eebcfa010eef87212b
+md5: f2e5741cb0b75a3499f31f18faff8e10
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
 
 source: SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.cai
 
- class com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings extends java.lang.Object {
+!signature: null
+!extends: java/lang/Object
+!implements: []
+!NestHost: com/SwitchTestClass
+class com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings extends java.lang.Object {
 
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-     com.SwitchTestClass.com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
+    inner {
+        !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
+         com.SwitchTestClass.com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
+    }
 
     !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
     protected final com.SwitchTestClass outer$

@@ -1,14 +1,20 @@
-md5: bd980bfd60b4cf0cc8fb8ae666677daf
+md5: 5ec342a18dad8b3fa303ae4e2239599d
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: Inner.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
+!NestHost: test/InnerClass
 public class test.InnerClass$Inner extends java.lang.Object {
 
-    !access: ACC_PUBLIC (1)
-    public test.InnerClass.Inner -> test.InnerClass$Inner
+    inner {
+        !access: ACC_PUBLIC (1)
+        public test.InnerClass.Inner -> test.InnerClass$Inner
+    }
 
     !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
     protected final test.InnerClass outer$

@@ -1,10 +1,13 @@
-md5: de3a37da995aedd4cb0d5e1023075209
+md5: 87eb53ea152be420537d97a768867b48
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: InvokeSuperConstructor.cai
 
+!signature: null
+!extends: com/github/jonathanxd/kores/test/asm/InvokeSuperConstructorBugTest$ClassWithConstructor
+!implements: []
 public class com.InvokeSuperConstructor extends com.github.jonathanxd.kores.test.asm.InvokeSuperConstructorBugTest$ClassWithConstructor {
 
     !access: ACC_PUBLIC (1)

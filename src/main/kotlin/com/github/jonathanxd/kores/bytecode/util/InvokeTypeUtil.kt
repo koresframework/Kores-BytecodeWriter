@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -27,6 +27,8 @@
  */
 package com.github.jonathanxd.kores.bytecode.util
 
+import com.github.jonathanxd.kores.base.DynamicInvokeType
+import com.github.jonathanxd.kores.base.FieldAccessKind
 import com.github.jonathanxd.kores.base.InvokeType
 import com.github.jonathanxd.kores.base.InvokeType.*
 import org.objectweb.asm.Opcodes.*
@@ -66,6 +68,39 @@ object InvokeTypeUtil {
     }
 
     /**
+     * Convert [InvokeType] to asm dynamic invocation opcode.
+     *
+     * @param invokeType Type to convert
+     * @return asm opcode corresponding to `invokeType` (dynamic).
+     */
+    fun toAsm_H(invokeType: DynamicInvokeType): Int {
+        return when (invokeType) {
+            DynamicInvokeType.INVOKE_INTERFACE -> H_INVOKEINTERFACE
+            DynamicInvokeType.INVOKE_SPECIAL -> H_INVOKESPECIAL
+            DynamicInvokeType.INVOKE_VIRTUAL -> H_INVOKEVIRTUAL
+            DynamicInvokeType.INVOKE_STATIC -> H_INVOKESTATIC
+            DynamicInvokeType.NEW_INVOKE_SPECIAL -> H_NEWINVOKESPECIAL
+            else -> throw RuntimeException("Cannot determine opcode of '$invokeType'")
+        }
+    }
+
+    /**
+     * Convert [InvokeType] to asm dynamic invocation opcode.
+     *
+     * @param invokeType Type to convert
+     * @return asm opcode corresponding to `invokeType` (dynamic).
+     */
+    fun toAsm_H(invokeType: FieldAccessKind): Int {
+        return when (invokeType) {
+            FieldAccessKind.GET_FIELD -> H_GETFIELD
+            FieldAccessKind.PUT_FIELD -> H_PUTFIELD
+            FieldAccessKind.GET_STATIC -> H_GETSTATIC
+            FieldAccessKind.PUT_STATIC -> H_PUTSTATIC
+            else -> throw RuntimeException("Cannot determine opcode of '$invokeType'")
+        }
+    }
+
+    /**
      * Convert asm invocation opcode to [InvokeType].
      *
      * @param opcode Opcode to convert
@@ -93,6 +128,23 @@ object InvokeTypeUtil {
             H_INVOKESPECIAL -> return INVOKE_SPECIAL
             H_INVOKEVIRTUAL -> return INVOKE_VIRTUAL
             H_INVOKESTATIC -> return INVOKE_STATIC
+            else -> throw RuntimeException("Cannot determine InvokeType of opcode '$opcode'")
+        }
+    }
+
+    /**
+     * Convert asm [dynamic] invocation opcode to [InvokeType].
+     *
+     * @param opcode Opcode to convert
+     * @return asm flag corresponding to `invokeType` (dynamic).
+     */
+    fun fromAsmIndy(opcode: Int): DynamicInvokeType {
+        when (opcode) {
+            H_INVOKEINTERFACE -> return DynamicInvokeType.INVOKE_INTERFACE
+            H_INVOKESPECIAL -> return DynamicInvokeType.INVOKE_SPECIAL
+            H_INVOKEVIRTUAL -> return DynamicInvokeType.INVOKE_VIRTUAL
+            H_INVOKESTATIC -> return DynamicInvokeType.INVOKE_STATIC
+            H_NEWINVOKESPECIAL -> return DynamicInvokeType.NEW_INVOKE_SPECIAL
             else -> throw RuntimeException("Cannot determine InvokeType of opcode '$opcode'")
         }
     }

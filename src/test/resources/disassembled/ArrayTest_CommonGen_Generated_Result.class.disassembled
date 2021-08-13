@@ -1,10 +1,13 @@
-md5: 08f3357ed6e654d519a28ff86c55be40
+md5: b131de14f9a6c8eae1e610f2c23714bc
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: CommonGen_Generated.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.github.jonathanxd.kores.test.CommonGen_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

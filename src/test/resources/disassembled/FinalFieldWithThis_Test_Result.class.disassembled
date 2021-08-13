@@ -1,10 +1,13 @@
-md5: 74d30cc4c3f0865886342238f0e12d38
+md5: a4b60d351943583968ae9d472f7ee847
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: Test.cai
 
+!signature: null
+!extends: com/github/jonathanxd/kores/test/asm/FinalFieldWithThis$TestBox
+!implements: []
 public class finalfieldwiththis.Test extends com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox {
 
     !access: ACC_PRIVATE, ACC_FINAL (18)

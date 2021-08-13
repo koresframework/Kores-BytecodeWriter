@@ -1,21 +1,28 @@
-md5: b9900ba50d238ee4cf9374ee0ee0d733
+md5: 1e3caaf5d552027aa6a101f1b70e626d
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (16417)
 
 source: Option.cai
 
-public class com.Option extends java.lang.Enum {
+!signature: <T:Ljava/lang/Object;>Ljava/lang/Enum<Lcom/Option;>;
+!extends: java/lang/Enum
+!implements: []
+!NestMember: com/Option$Some
+!NestMember: com/Option$None
+public enum com.Option extends java.lang.Enum {
 
-    !access: ACC_PUBLIC (9)
-    public com.Option.Some -> com.Option$Some
-    !access: ACC_PUBLIC (9)
-    public com.Option.None -> com.Option$None
+    inner {
+        !access: ACC_PUBLIC (9)
+        public com.Option.Some -> com.Option$Some
+        !access: ACC_PUBLIC (9)
+        public com.Option.None -> com.Option$None
+    }
 
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
     public static final com.Option$None None
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
-    !signature: Lcom/Option$Some<Lcom/Option$None;>;
+    !signature: Lcom/Option$Some;
     public static final com.Option$Some Some
     !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC (4122)
     private static final com.Option[] $VALUES
@@ -42,7 +49,7 @@ public class com.Option extends java.lang.Enum {
     }
     
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    !signature: <T:Ljava/lang/Object;>(TT;)Lcom/Option$Some<TT;>;
+    !signature: <T:Ljava/lang/Object;>(TT;)Lcom/Option$Some;
     !parameter[name: value, access:  (0)]
     public static com.Option$Some some(java.lang.Object) {
       desc: (Ljava/lang/Object;)Lcom/Option$Some; 

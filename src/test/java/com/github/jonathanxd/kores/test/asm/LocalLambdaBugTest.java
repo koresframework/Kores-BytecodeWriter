@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -37,6 +37,7 @@ import com.github.jonathanxd.kores.base.MethodDeclaration;
 import com.github.jonathanxd.kores.base.TypeDeclaration;
 import com.github.jonathanxd.kores.base.TypeSpec;
 import com.github.jonathanxd.kores.bytecode.BytecodeClass;
+import com.github.jonathanxd.kores.bytecode.BytecodeOptions;
 import com.github.jonathanxd.kores.bytecode.classloader.CodeClassLoader;
 import com.github.jonathanxd.kores.bytecode.exception.ClassCheckException;
 import com.github.jonathanxd.kores.bytecode.processor.BytecodeGenerator;
@@ -131,6 +132,7 @@ public class LocalLambdaBugTest {
                 .build();
         //@Named("Instance") Class<?> define = CommonBytecodeTest.test(this.getClass(), decl, t -> t, v -> v, g -> {});
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
+        bytecodeGenerator.getOptions().set(BytecodeOptions.INDIFY_STRING_CONCAT, false);
 
         List<? extends BytecodeClass> gen;
         try {

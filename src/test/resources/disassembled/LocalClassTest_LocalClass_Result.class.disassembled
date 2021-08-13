@@ -1,14 +1,20 @@
-md5: f266bfe1b3dcd279219e7c9c839e1519
+md5: 3f1027dd5c788e38ffdf7335966d190b
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: LocalClass.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
+!NestMember: test/LocalClass$Greeter
 public class test.LocalClass extends java.lang.Object {
 
-    !access: ACC_PUBLIC (1)
-    public test.LocalClass.Greeter -> test.LocalClass$Greeter
+    inner {
+        !access: ACC_PUBLIC (1)
+        public test.LocalClass.Greeter -> test.LocalClass$Greeter
+    }
 
     !access: ACC_PUBLIC (1)
     public void <init>() {

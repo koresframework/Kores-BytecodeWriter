@@ -1,10 +1,13 @@
-md5: 3f1dde173e87dca940ae84d769d9892a
+md5: c3e3dfa75123418fbf5a8dcc33d9ab92
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: ForEach.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.ForEach extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)

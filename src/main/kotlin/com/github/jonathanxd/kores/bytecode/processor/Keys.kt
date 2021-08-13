@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -31,7 +31,6 @@ import com.github.jonathanxd.kores.KoresElement
 import com.github.jonathanxd.kores.Instruction
 import com.github.jonathanxd.kores.Instructions
 import com.github.jonathanxd.kores.base.*
-import com.github.jonathanxd.kores.bytecode.BytecodeClass
 import com.github.jonathanxd.kores.bytecode.common.Flow
 import com.github.jonathanxd.kores.bytecode.common.MethodVisitorHelper
 import com.github.jonathanxd.kores.bytecode.common.Timed
@@ -41,6 +40,7 @@ import com.github.jonathanxd.kores.factory.invoke
 import com.github.jonathanxd.kores.processor.ProcessorManager
 import com.github.jonathanxd.iutils.`object`.TypedKey
 import com.github.jonathanxd.iutils.data.TypedData
+import com.github.jonathanxd.iutils.kt.containsKey
 import com.github.jonathanxd.iutils.kt.require
 import com.github.jonathanxd.iutils.kt.typedKeyOf
 import org.objectweb.asm.ClassVisitor
@@ -50,7 +50,7 @@ import java.time.Instant
 /**
  * Version of Java class to generate
  *
- * CodeAPI always generates latest version
+ * Kores always generates the latest version
  *
  * This can be changed via [version][CLASS_VERSION] key.
  *
@@ -58,12 +58,28 @@ import java.time.Instant
  * the generated class may or may not be compatible in a version lower than the version
  * that CodeAPI was designed to generate.
  */
-const val VERSION = 52
+const val VERSION = 60
 
 /**
  * Indexes known inner classes to avoid name conflicts.
  */
 val INNER_CLASSES = typedKeyOf<MutableList<TypeDeclaration>>("INNER_CLASSES")
+
+/**
+ * The NestHost as specified in [JEP 181](https://openjdk.java.net/jeps/181).
+ */
+val NEST_HOST = typedKeyOf<TypeDeclaration>("NEST_HOST")
+
+fun TypedData.findNestHost(): TypeDeclaration? {
+    var data: TypedData? = this
+    while (data != null) {
+        if (data.containsKey(NEST_HOST))
+            return NEST_HOST.require(data)
+        data = data.parent
+    }
+
+    return null
+}
 
 /**
  * Stores whether this is an expression or not. Used to generate `pop` instructions after unused values.
@@ -98,6 +114,33 @@ data class CLine(val line: Int, val label: Label)
 val BYTECODE_CLASS_LIST = typedKeyOf<MutableList<com.github.jonathanxd.kores.bytecode.BytecodeClass>>("BYTECODE_CLASS_LIST")
 
 val CLASS_VERSION = typedKeyOf<Int>("CLASS_VERSION")
+
+val INDIFY_STRING_CONCATENATION = typedKeyOf<Boolean>("INDIFY_STRING_CONCATENATION")
+
+fun TypedData.findClassVersion(): Int {
+    var data: TypedData? = this
+    while (data != null) {
+        if (data.containsKey(CLASS_VERSION))
+            return CLASS_VERSION.require(data)
+
+        data = data.parent
+    }
+
+    return VERSION
+}
+
+fun TypedData.indifyEnabled(): Boolean {
+    var data: TypedData? = this
+    while (data != null) {
+        if (data.containsKey(INDIFY_STRING_CONCATENATION))
+            return INDIFY_STRING_CONCATENATION.require(data)
+
+        data = data.parent
+    }
+
+    return false
+}
+
 
 val OUTER_DESC = typedKeyOf<String>("OUTER_METHOD_DESC")
 

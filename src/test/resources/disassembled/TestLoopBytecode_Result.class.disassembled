@@ -1,10 +1,13 @@
-md5: e5b5b7364f7df274ede692cb721ca2a4
+md5: 1ecce2499606b1bd3fbba5549b180af9
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: TestLoopBytecode.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class fullName.TestLoopBytecode extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

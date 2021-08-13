@@ -1,10 +1,13 @@
-md5: 8cc599bbb2ca18f3293a5a8c031b2cba
+md5: 091c228cba8de910e9e54736ed8ee783
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: InstanceOf.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class test.InstanceOf extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)

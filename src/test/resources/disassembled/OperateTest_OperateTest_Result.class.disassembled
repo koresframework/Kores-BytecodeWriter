@@ -1,10 +1,13 @@
-md5: 6ba989cd414aaa53233aa5311d76b4cf
+md5: 976911999ff6bee7420eeb3dea5e08cf
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: OperateTest.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.OperateTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

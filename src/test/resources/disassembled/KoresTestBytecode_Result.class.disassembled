@@ -1,10 +1,13 @@
-md5: b469f081803cf6d2de8ef4a3ab23d0cb
+md5: 6d93800b5509acb415498979a300b1de
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: KoresTestBytecode.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class github.com.KoresTestBytecode extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)

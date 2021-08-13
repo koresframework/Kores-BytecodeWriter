@@ -1,10 +1,13 @@
-md5: df675641dea70e041b6aa270cfd7874c
+md5: 799cdd7a00692949597e9862391334bc
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: LocalsReuse.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class codeapi.LocalsReuse extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

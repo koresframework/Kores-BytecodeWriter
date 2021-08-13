@@ -18,7 +18,7 @@ buildscript {
 }
 
 group 'com.github.jonathanxd'
-version '4.0.4.bytecode.1'
+version '4.1.1.bytecode.1'
 
 apply from: project(":Kores").file("gradle/common.gradle")
 
@@ -28,16 +28,16 @@ dependencies {
     // with runtime dependency pointing to Kores published version
     //compile project(":Kores")
     compileOnly project(":Kores")
-    runtime "com.github.JonathanxD.Kores:Kores:4.0.4.base"
-    compile 'com.github.JonathanxD:BytecodeDisassembler:2.1.1'
-    compile "org.ow2.asm:asm:6.0"
-    compile "org.ow2.asm:asm-analysis:6.0"
-    compile "org.ow2.asm:asm-tree:6.0"
-    compile "org.ow2.asm:asm-util:6.0"
+    runtimeOnly "com.github.koresframework.Kores:Kores:4.1.1.base"
+    implementation 'com.github.JonathanxD:BytecodeDisassembler:2.3.0'
+    implementation "org.ow2.asm:asm:9.2"
+    implementation "org.ow2.asm:asm-analysis:9.2"
+    implementation "org.ow2.asm:asm-tree:9.2"
+    implementation "org.ow2.asm:asm-util:9.2"
 
-    testCompile "com.github.JonathanxD.JwIUtils:links:$iutils_version"
-    testCompile project(":Kores")
-    testCompile project(path: ':Kores', configuration: 'tests')
+    testImplementation "com.github.JonathanxD.JwIUtils:links:$iutils_version"
+    testImplementation project(":Kores")
+    testImplementation project(path: ':Kores', configuration: 'tests')
 }
 
 tasks.dokkaGfm.configure {

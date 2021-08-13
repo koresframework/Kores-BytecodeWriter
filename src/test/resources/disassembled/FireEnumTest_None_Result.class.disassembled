@@ -1,14 +1,20 @@
-md5: 5e40b9aecf80ea2682b8d610ee878f15
+md5: 9409b7661d6e48d13d9e7235a2a6ab29
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: None.cai
 
+!signature: null
+!extends: com/Option
+!implements: []
+!NestHost: com/Option
 public class com.Option$None extends com.Option {
 
-    !access: ACC_PUBLIC (9)
-    public com.Option.None -> com.Option$None
+    inner {
+        !access: ACC_PUBLIC (9)
+        public com.Option.None -> com.Option$None
+    }
 
     !access: PACKAGE_PRIVATE (0)
      void <init>() {

@@ -1,10 +1,13 @@
-md5: 2ee23452accb4fcc3566442e489118af
+md5: 26c7b9b5956eef006d900eafec212cfd
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: FakeElvisTest.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.FakeElvisTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

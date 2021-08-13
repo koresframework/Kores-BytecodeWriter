@@ -1,10 +1,13 @@
-md5: 8437a952966ab090f684f25c78a940f6
+md5: b5469b30bd694ba90412d12b20c6631c
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: MethodFragment.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.MethodFragment extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

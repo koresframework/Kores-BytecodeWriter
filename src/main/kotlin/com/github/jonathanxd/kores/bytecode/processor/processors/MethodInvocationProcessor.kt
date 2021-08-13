@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -28,10 +28,6 @@
 package com.github.jonathanxd.kores.bytecode.processor.processors
 
 import com.github.jonathanxd.kores.base.*
-import com.github.jonathanxd.kores.bytecode.GENERATE_SYNTHETIC_ACCESS
-import com.github.jonathanxd.kores.bytecode.processor.IN_EXPRESSION
-import com.github.jonathanxd.kores.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.kores.bytecode.processor.incrementInContext
 import com.github.jonathanxd.kores.bytecode.util.InvokeTypeUtil
 import com.github.jonathanxd.kores.factory.invokeConstructor
 import com.github.jonathanxd.kores.processor.Processor
@@ -42,6 +38,9 @@ import com.github.jonathanxd.kores.type.internalName
 import com.github.jonathanxd.kores.type.isInterface
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.require
+import com.github.jonathanxd.kores.bytecode.isSyntheticAccess
+import com.github.jonathanxd.kores.bytecode.nestAccessGenerationMode
+import com.github.jonathanxd.kores.bytecode.processor.*
 import com.github.jonathanxd.kores.type.KoresType
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Type
@@ -82,7 +81,9 @@ object MethodInvocationProcessor : Processor<MethodInvocation> {
         // Synthetic accessor redirection
         var syntheticPart = part
 
-        if (processorManager.options[GENERATE_SYNTHETIC_ACCESS]) {
+        val version = data.findClassVersion()
+
+        if (processorManager.options.nestAccessGenerationMode(version).isSyntheticAccess()) {
             val access = accessMemberOfType(localization, newPart, data)
 
             // RETURN AT END OF IF

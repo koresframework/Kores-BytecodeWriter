@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -48,6 +48,18 @@ public class CommonBytecodeTest {
         return CommonBytecodeTest.test(testClass, mainClass, UnaryOperator.identity());
     }
 
+    public static @Named("Instance") Object testWithOptions(Class<?> testClass,
+                                                            TypeDeclaration mainClass,
+                                                            Consumer<BytecodeGenerator> bytecodeProcessorConsumer) {
+        return CommonBytecodeTest.test(testClass, mainClass, UnaryOperator.identity(), aClass -> {
+            try {
+                return aClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw RethrowException.rethrow(e);
+            }
+        }, bytecodeProcessorConsumer);
+    }
+
     public static @Named("Instance") Object test(Class<?> testClass, ClassDeclaration mainClass) {
         return CommonBytecodeTest.test(testClass, (TypeDeclaration) mainClass, UnaryOperator.identity());
     }
@@ -86,6 +98,7 @@ public class CommonBytecodeTest {
         BytecodeGenerator bytecodeGenerator = new BytecodeGenerator();
 
         bytecodeGenerator.getOptions().set(BytecodeOptions.VISIT_LINES, VisitLineType.GEN_LINE_INSTRUCTION);
+        bytecodeGenerator.getOptions().set(BytecodeOptions.INDIFY_STRING_CONCAT, false);
         bytecodeProcessorConsumer.accept(bytecodeGenerator);
         BCLoader bcLoader = new BCLoader();
 

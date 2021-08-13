@@ -1,10 +1,13 @@
-md5: 1e2d69ded382880d3c4d6e5254f88e49
+md5: 5344e17067429a1b1ca7a1fb08e9e16c
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: BridgeMethodTest4.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: [com/github/jonathanxd/kores/test/asm/BaseGIntegerG]
 public class com.BridgeMethodTest4 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BaseGIntegerG {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)

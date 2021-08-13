@@ -1,14 +1,20 @@
-md5: 200905c613713f4f1c119fae47f70072
+md5: a6f3f9a648edc0ae5a5b0a93076b84c6
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: Some.cai
 
+!signature: <T:Ljava/lang/Object;>Lcom/Option<TT;>;
+!extends: com/Option
+!implements: []
+!NestHost: com/Option
 public class com.Option$Some extends com.Option {
 
-    !access: ACC_PUBLIC (9)
-    public com.Option.Some -> com.Option$Some
+    inner {
+        !access: ACC_PUBLIC (9)
+        public com.Option.Some -> com.Option$Some
+    }
 
     !access: ACC_PRIVATE, ACC_FINAL (18)
     !signature: TT;

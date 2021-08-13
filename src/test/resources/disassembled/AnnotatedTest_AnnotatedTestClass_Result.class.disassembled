@@ -1,10 +1,13 @@
-md5: da0cb4f44961e6fe76db1a7dbfcf2dde
+md5: 61fb5469cdfe0c9aaa128f601eafcba1
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: AnnotatedTestClass.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 @com.github.jonathanxd.kores.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.C})
 public class test.AnnotatedTestClass extends java.lang.Object {
 

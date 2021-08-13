@@ -1,10 +1,13 @@
-md5: c40928ac3f1e12afd6ba29080b9ccd1d
+md5: cbab5e0af98210f44eeb2039a5ac81fa
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: KoresTest_API_Generated.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.github.jonathanxd.kores.test.asm.KoresTest_API_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)

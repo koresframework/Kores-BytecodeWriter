@@ -1,16 +1,19 @@
-md5: 8b3ae4657f30416da10d1187c6eafd1d
+md5: fda731fa9599440f87879e0bd1dc820f
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: MyClass.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.MyClass extends java.lang.Object {
 
     !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL (26)
     private static final java.lang.String f1 = Test
     !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL (26)
-    !signature: TLjava/util/Map;
+    !signature: Ljava/util/Map;
     private static final java.util.Map f2
 
     !access: ACC_PUBLIC (1)

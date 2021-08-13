@@ -1,10 +1,13 @@
-md5: 98e49ee93f7d4e60091c0adc50fcfaf5
+md5: caf33a01d17f8234f2559a38a92a55b8
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: Generic.cai
 
+!signature: <T::Ljava/util/List<TT;>;>Ljava/lang/Object;Ljava/util/List<TT;>;
+!extends: java/lang/Object
+!implements: [java/util/List]
 public class com.Generic extends java.lang.Object implements java.util.List {
 
     !access: ACC_PUBLIC (1)

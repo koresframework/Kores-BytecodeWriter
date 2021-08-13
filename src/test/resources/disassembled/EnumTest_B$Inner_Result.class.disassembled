@@ -1,14 +1,20 @@
-md5: 94efb94db44c199b28418e1cb3a6d9a8
+md5: 265b04d522517e6c15804ce1a426daf4
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: PACKAGE_PRIVATE (16416)
 
 source: MyEnum.cai
 
- class com.MyEnum$B$Inner extends com.MyEnum {
+!signature: null
+!extends: com/MyEnum
+!implements: []
+!NestHost: com/MyEnum
+enum com.MyEnum$B$Inner extends com.MyEnum {
 
-    !access: PACKAGE_PRIVATE (16392)
-     com.MyEnum.B$Inner -> com.MyEnum$B$Inner
+    inner {
+        !access: PACKAGE_PRIVATE (16392)
+         com.MyEnum.B$Inner -> com.MyEnum$B$Inner
+    }
 
     !access: ACC_PROTECTED (4)
     !parameter[name: $name, access:  (0)]

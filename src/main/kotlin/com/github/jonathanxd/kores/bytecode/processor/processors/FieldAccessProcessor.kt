@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,10 +29,6 @@ package com.github.jonathanxd.kores.bytecode.processor.processors
 
 import com.github.jonathanxd.kores.base.Access
 import com.github.jonathanxd.kores.base.FieldAccess
-import com.github.jonathanxd.kores.bytecode.GENERATE_SYNTHETIC_ACCESS
-import com.github.jonathanxd.kores.bytecode.processor.IN_EXPRESSION
-import com.github.jonathanxd.kores.bytecode.processor.METHOD_VISITOR
-import com.github.jonathanxd.kores.bytecode.processor.incrementInContext
 import com.github.jonathanxd.kores.processor.Processor
 import com.github.jonathanxd.kores.processor.ProcessorManager
 import com.github.jonathanxd.kores.safeForComparison
@@ -40,6 +36,9 @@ import com.github.jonathanxd.kores.type.KoresType
 import com.github.jonathanxd.kores.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.require
+import com.github.jonathanxd.kores.bytecode.isSyntheticAccess
+import com.github.jonathanxd.kores.bytecode.nestAccessGenerationMode
+import com.github.jonathanxd.kores.bytecode.processor.*
 import org.objectweb.asm.Opcodes
 
 object FieldAccessProcessor : Processor<FieldAccess> {
@@ -55,9 +54,10 @@ object FieldAccessProcessor : Processor<FieldAccess> {
 
         val at = part.target
         val safeAt = at.safeForComparison
+        val version = data.findClassVersion()
 
         val access =
-            if (processorManager.options[GENERATE_SYNTHETIC_ACCESS]) accessMemberOfType(
+            if (processorManager.options.nestAccessGenerationMode(version).isSyntheticAccess()) accessMemberOfType(
                 localization,
                 part,
                 data

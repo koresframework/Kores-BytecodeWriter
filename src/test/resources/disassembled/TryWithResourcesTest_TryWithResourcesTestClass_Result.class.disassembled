@@ -1,10 +1,13 @@
-md5: 57eb98df37e39bdaaa4deaa970d11a68
+md5: b730bb229ff0c3bc5739a4ff0b1d6b0b
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: TryWithResourcesTestClass.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class test.TryWithResourcesTestClass extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

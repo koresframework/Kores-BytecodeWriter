@@ -1,10 +1,13 @@
-md5: 8c076acd4082177f7c1a0a0eb1cebdbd
+md5: 604f9ada59ee74126eda0b5d20f7801a
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: ArrayParameterTest_Generated.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.github.jonathanxd.kores.test.asm.ArrayParameterTest_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

@@ -1,10 +1,13 @@
-md5: 382e2263206f587199453dbadf314d7a
+md5: fe9d4b2d26048497afb43e1beac24564
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: TestFeatures_.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class fullName.TestFeatures_ extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_FINAL (17)

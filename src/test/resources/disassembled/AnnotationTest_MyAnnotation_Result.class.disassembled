@@ -1,11 +1,14 @@
-md5: de940ea183a95b5f607a8a97f4672aa0
+md5: a592ab0cb4bd4e56d72355b89e9340ac
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC, ACC_ABSTRACT (1537)
 
 source: MyAnnotation.cai
 
-public abstract class com.MyAnnotation extends java.lang.Object {
+!signature: null
+!extends: java/lang/Object
+!implements: []
+public interface com.MyAnnotation extends java.lang.Object {
 
     !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {

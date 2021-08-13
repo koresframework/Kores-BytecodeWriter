@@ -1,10 +1,13 @@
-md5: bb695122512cc60372f930716a293c40
+md5: 2843ab40817cfa2e46c7ecd035ce3b54
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: ComplexIf4.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class test.ComplexIf4 extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

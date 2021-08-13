@@ -1,11 +1,14 @@
-md5: ee252e16481472e822838a6c99c02c2a
+md5: 600eefcab49ef1a2a8a84db1b75316e8
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC, ACC_ABSTRACT (1537)
 
 source: clv.cai
 
-public abstract class clv extends java.lang.Object implements java.util.ArrayList {
+!signature: Ljava/lang/Object;Ljava/util/ArrayList<Ljava/lang/String;>;
+!extends: java/lang/Object
+!implements: [java/util/ArrayList]
+public interface clv extends java.lang.Object implements java.util.ArrayList {
 
     !access: PACKAGE_PRIVATE, ACC_STATIC (8)
     static void <clinit>() {

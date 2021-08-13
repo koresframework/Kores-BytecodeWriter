@@ -1,10 +1,13 @@
-md5: 000d67e98595809b735d7d9ea586590b
+md5: 0262021cfa06cbccd40096a2b972c937
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: BridgeMethodTest3.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: [com/github/jonathanxd/kores/test/asm/BridgeMethodsTest3$StringTransform]
 public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BridgeMethodsTest3$StringTransform {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)

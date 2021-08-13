@@ -1,14 +1,21 @@
-md5: a11f4dd83cb31e3e90d7d2dac1088d21
+md5: 442804787e6ca7e8fd4defc285d9140e
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: InnerClass.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
+!NestMember: test/InnerClass$Inner
+!NestMember: test/InnerClass$Inner$Inner2
 public class test.InnerClass extends java.lang.Object {
 
-    !access: ACC_PUBLIC (1)
-    public test.InnerClass.Inner -> test.InnerClass$Inner
+    inner {
+        !access: ACC_PUBLIC (1)
+        public test.InnerClass.Inner -> test.InnerClass$Inner
+    }
 
     !access: ACC_PRIVATE (2)
     private java.lang.String field
@@ -83,21 +90,6 @@ public class test.InnerClass extends java.lang.Object {
       desc: ()V 
       maxStack: 0, maxLocals: 0 
         return
-    }
-    
-    !access: PACKAGE_PRIVATE, ACC_STATIC, ACC_SYNTHETIC (4104)
-    !parameter[name: this, access:  (0)]
-    static java.lang.String accessor$(test.InnerClass) {
-      desc: (Ltest/InnerClass;)Ljava/lang/String; 
-      maxStack: 1, maxLocals: 1 
-      Label_0:
-        aload 0
-        getfield test.InnerClass.field (type: java.lang.String)
-        areturn
-      Label_1:
-      LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: test.InnerClass, signature: null
-      }
     }
     
 }

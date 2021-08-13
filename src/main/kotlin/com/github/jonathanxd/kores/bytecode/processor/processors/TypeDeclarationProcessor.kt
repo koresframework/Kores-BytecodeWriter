@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -30,6 +30,12 @@ package com.github.jonathanxd.kores.bytecode.processor.processors
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.add
 import com.github.jonathanxd.kores.base.*
+import com.github.jonathanxd.kores.bytecode.FORCE_INDIFY_STRING_CONCAT
+import com.github.jonathanxd.kores.bytecode.INDIFY_STRING_CONCAT
+import com.github.jonathanxd.kores.bytecode.doc.Doc
+import com.github.jonathanxd.kores.bytecode.doc.NestLogic
+import com.github.jonathanxd.kores.bytecode.isToGenerateNests
+import com.github.jonathanxd.kores.bytecode.nestAccessGenerationMode
 import com.github.jonathanxd.kores.bytecode.processor.*
 import com.github.jonathanxd.kores.bytecode.util.AnnotationVisitorCapable
 import com.github.jonathanxd.kores.bytecode.util.ModifierUtil
@@ -174,6 +180,14 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
 
         val version = CLASS_VERSION.getOrSet(data, VERSION)
 
+        if (processorManager.options[FORCE_INDIFY_STRING_CONCAT] == true) {
+            INDIFY_STRING_CONCATENATION.set(data, true)
+        } else if (version < 9) {
+            INDIFY_STRING_CONCATENATION.set(data, false)
+        } else {
+            INDIFY_STRING_CONCATENATION.set(data, processorManager.options[INDIFY_STRING_CONCAT])
+        }
+
         val name = localPart.internalName
         val implementations: List<KoresType> =
             (localPart as? ImplementationHolder)?.let { it.implementations.map { it.koresType } }
@@ -214,13 +228,36 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
             implementations.map { it.internalName }.toTypedArray()
         )
 
-        cw.visitSource(SOURCE_FILE_FUNCTION.getOrSet(data, {
+        // Nest Logic - Start
+        // How does it work?
+        // Read [NestLogic]
+        if (processorManager.options.nestAccessGenerationMode(version).isToGenerateNests()) {
+            NestLogic
+            if (outerType != null) {
+                val host = data.findNestHost() ?: outerType
+                cw.visitNestHost(host.internalName)
+            } else {
+                //val inner = localPart.innerTypes
+                val inner = INNER_CLASSES.getOrElse(data, mutableListOf())
+
+                if (inner.isNotEmpty()) {
+                    inner.forEach { iii ->
+                        cw.visitNestMember(iii.internalName)
+                    }
+
+                    NEST_HOST.set(data, localPart)
+                }
+            }
+        }
+        // Nest Logic - End
+
+        cw.visitSource(SOURCE_FILE_FUNCTION.getOrSet(data) {
             when (it) {
                 is TypeDeclaration -> "${Util.getOwner(it).simpleName}.cai"
                 is ModuleDeclaration -> "module-info.cai" // Maybe module-info_${it.name}.cai ?
                 else -> it.name
             }
-        })(localPart), null)
+        }(localPart), null)
         // ***************************************************************************************** //
 
         ANNOTATION_VISITOR_CAPABLE.set(

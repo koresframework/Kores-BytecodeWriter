@@ -1,10 +1,13 @@
-md5: 22920a18ab6c1bd7db3f8ec15644d93b
+md5: 1f5fd9aa06263c74364c097761e9b1ab
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: ConcatTest.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.ConcatTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

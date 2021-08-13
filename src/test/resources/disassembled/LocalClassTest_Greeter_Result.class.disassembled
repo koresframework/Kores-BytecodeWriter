@@ -1,6 +1,6 @@
-md5: 7c73c64ab0e880932accbe08fab02473
+md5: 5fce0f18906969fdfa90a2aecad687b2
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: Greeter.cai
@@ -9,10 +9,16 @@ outerClass: test.LocalClass
 outerMethod: <init>
 outerMethodDesc: ()void
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
+!NestHost: test/LocalClass
 public class test.LocalClass$Greeter extends java.lang.Object {
 
-    !access: ACC_PUBLIC (1)
-    public test.LocalClass.Greeter -> test.LocalClass$Greeter
+    inner {
+        !access: ACC_PUBLIC (1)
+        public test.LocalClass.Greeter -> test.LocalClass$Greeter
+    }
 
     !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
     protected final test.LocalClass outer$

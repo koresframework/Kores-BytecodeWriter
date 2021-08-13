@@ -1,10 +1,13 @@
-md5: f5742f1f56f583cabee4fb51ea933dd3
+md5: fd37780b8a616972b5c22e7f50784040
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: SimpleTest2_bytecode.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class me.jonathanscripter.codeapi.test.SimpleTest2_bytecode extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_FINAL (17)

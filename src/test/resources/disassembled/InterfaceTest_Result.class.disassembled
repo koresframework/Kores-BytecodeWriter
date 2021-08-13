@@ -1,11 +1,14 @@
-md5: e39e2ca8550df660913a6d225332b656
+md5: 6041377c70318dbd5f6588ff0deaf5e2
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC, ACC_ABSTRACT (1537)
 
 source: Impl.cai
 
-public abstract class test.Impl extends java.lang.Object {
+!signature: null
+!extends: java/lang/Object
+!implements: []
+public interface test.Impl extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     !parameter[name: string, access:  (0)]

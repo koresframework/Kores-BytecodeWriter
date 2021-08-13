@@ -1,11 +1,14 @@
-md5: fef62662b75e01011010d26952252306
+md5: 2f3b8c9721345426140de3b8c819bbc9
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC, ACC_ABSTRACT (1537)
 
 source: AB.cai
 
-public abstract class com.AB extends java.lang.Object {
+!signature: <T::Ljava/lang/Iterable<*>;>Ljava/lang/Object;
+!extends: java/lang/Object
+!implements: []
+public interface com.AB extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_ABSTRACT (1025)
     !signature: (TT;)V

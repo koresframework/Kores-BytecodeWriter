@@ -1,10 +1,13 @@
-md5: 1902429bacefe229619b0cc326da1a4f
+md5: b3afa2cc0f1e9f0d01f10b0610b01fcd
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: MyClass.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.MyClass extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

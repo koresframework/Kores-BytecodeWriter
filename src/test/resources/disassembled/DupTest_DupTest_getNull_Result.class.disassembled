@@ -1,10 +1,13 @@
-md5: 7301591898010d309e3b87b632691e22
+md5: 2f2893a456e37ff7d68caeb8d5bec405
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: DupTest_getNull.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class test.DupTest_getNull extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

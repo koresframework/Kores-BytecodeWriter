@@ -1,10 +1,13 @@
-md5: a508ae373c3c7bbf3c5fed325ea3e4b2
+md5: 38ec002ecca92ee907942a24c54c389f
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: TryCatchFinally.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class test.TryCatchFinally extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

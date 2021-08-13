@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -35,6 +35,9 @@ import com.github.jonathanxd.kores.bytecode.post.GotoOptimizer
 import com.github.jonathanxd.kores.bytecode.post.MethodProcessor
 import com.github.jonathanxd.kores.bytecode.pre.GenLineVisitor
 import com.github.jonathanxd.iutils.option.Option
+import com.github.jonathanxd.iutils.option.Options
+import com.github.jonathanxd.kores.bytecode.doc.NestLogic
+import com.github.jonathanxd.kores.bytecode.doc.IndyConcatLogic
 
 /**
  * Calls [org.objectweb.asm.util.CheckClassAdapter] to check generated class.
@@ -114,6 +117,194 @@ val GENERATE_BRIDGE_METHODS = Option(false)
  */
 @JvmField
 val GENERATE_SYNTHETIC_ACCESS = Option(true)
+
+/**
+ * Automatically generate synthetic accessors for private members in private inner classes.
+ * Synthetic accessors will be only generated for private members which are accessed.
+ *
+ * An anonymous synthetic class may be generated for private constructors.
+ *
+ * @since 4.0.5.bytecode.5
+ */
+@JvmField
+val FORCE_GENERATE_SYNTHETIC_ACCESS = Option(false)
+
+/**
+ * When enabled, generate nests declarations as specified in [JEP 181](https://openjdk.java.net/jeps/181),
+ * enabling this automatically disables [GENERATE_SYNTHETIC_ACCESS].
+ *
+ * To have both enabled, use [FORCE_GENERATE_SYNTHETIC_ACCESS]. This is not recommended since
+ * [Nest-Based Access Control](https://openjdk.java.net/jeps/181) introduces JVM-Level access control
+ * and removes the need of having bridge methods to access inner classes private members.
+ *
+ * @since 4.0.5.bytecode.5
+ */
+@JvmField
+val GENERATE_NESTS = Option(true)
+
+/**
+ * Force generate [Nests](https://openjdk.java.net/jeps/181) even when emitting bytecode for Java 10 (54) or earlier.
+ *
+ * Note that forcing to generate Nests may result in two scenarios:
+ *
+ * - Generate Nests info but invoke with **synthetic accessors** when [FORCE_GENERATE_SYNTHETIC_ACCESS] is set.
+ * - Generate Nests info and access members directly. JVM may not accept this kind of access when running under Java 10 or earlier.
+ *
+ * Read more at [GENERATE_NESTS].
+ */
+@JvmField
+val FORCE_GENERATE_NESTS = Option(true)
+
+/**
+ * Uses `invokedynamic` instruction for string concatenation instead of [StringBuilder].
+ *
+ * This option is automatically disabled when emitting bytecode for Java 8 or earlier, to force use [FORCE_INDIFY_STRING_CONCAT].
+ *
+ * Read more at [IndyConcatLogic]
+ */
+@JvmField
+val INDIFY_STRING_CONCAT = Option(true)
+
+/**
+ * Force the use of `invokedynamic` instruction for string concatenation instead of [StringBuilder].
+ *
+ * This applies even if the target bytecode version is lower or equal to 52 (Java 8), so the concatenation will
+ * only work when running under Java 9 or newer.
+ *
+ * Read [INDIFY_STRING_CONCAT] for more information.
+ */
+@JvmField
+val FORCE_INDIFY_STRING_CONCAT = Option(false)
+
+/**
+ * Specifies the strategy to use to generate `invokedynamic` string concatenation, as specified in
+ * [java.lang.invoke.StringConcatFactory.makeConcatWithConstants].
+ *
+ * Read more at [IndyConcatLogic].
+ */
+@JvmField
+val INDY_CONCAT_STRATEGY = Option(IndyConcatStrategy.INTERPOLATE)
+
+enum class IndyConcatStrategy {
+    /**
+     * Indify using interpolation, the produced `invokedynamic` instruction interpolates the constants in the
+     * [recipe][java.lang.invoke.StringConcatFactory.makeConcatWithConstants] argument.
+     *
+     * For example, the following concatenation scenario:
+     *
+     * ```kotlin
+     * fun concat(a: String, b: String) =
+     *   a + "<:>" + b
+     * ```
+     *
+     * Is translated into the following recipe:
+     * ```
+     * aload 0 // Load a
+     * aload 1 // Load b
+     * makeConcatWithConstants<invokedynamic>("\u0001<:>\u0001")
+     * ```
+     *
+     */
+    INTERPOLATE,
+
+    /**
+     * Indify providing constants to the [bootstrap method constants parameter][java.lang.invoke.StringConcatFactory.makeConcatWithConstants].
+     * This results in an interpolation using `\u0001` for arguments in the stack and `\u0002` for constants in the **ConstantPool**.
+     *
+     * For example, the following concatenation scenario:
+     *
+     * ```kotlin
+     * fun concat(a: String, b: String) =
+     *   a + "<:>" + b
+     * ```
+     *
+     * Is translated into the following recipe:
+     * ```
+     * aload 0 // Load a
+     * aload 1 // Load b
+     *
+     * makeConcatWithConstants<invokedynamic>("\u0001\u0002\u0001", "<:>")
+     * ```
+     *
+     * With `<:>` provided as an argument to the [bootstrap method constants parameter][java.lang.invoke.StringConcatFactory.makeConcatWithConstants].
+     */
+    CONSTANT,
+
+    /**
+     * Indify using only arguments in the stack. Constant values are pushed to the stack using `ldc` instruction.
+     *
+     * For example, the following concatenation scenario:
+     *
+     * ```kotlin
+     * fun concat(a: String, b: String) =
+     *   a + "<:>" + b
+     * ```
+     *
+     * Is translated into the following recipe:
+     * ```
+     * aload 0 // Load a
+     * ldc "<:>"
+     * aload 1 // Load b
+     * makeConcatWithConstants<invokedynamic>("\u0001\u0001\u0001")
+     * ```
+     */
+    LDC
+}
+
+/**
+ * Read more in [NestLogic]
+ */
+fun Options.nestAccessGenerationMode(version: Int) =
+    when {
+        this[FORCE_GENERATE_SYNTHETIC_ACCESS] == true && this[GENERATE_NESTS] == true && version >= 55 -> NestAccessGenerationMode.MIXED
+        this[FORCE_GENERATE_SYNTHETIC_ACCESS] == true && this[FORCE_GENERATE_NESTS] == true -> NestAccessGenerationMode.MIXED
+        this[FORCE_GENERATE_NESTS] == true -> NestAccessGenerationMode.NEST_BASED
+        this[GENERATE_NESTS] == true && version >= 55 -> NestAccessGenerationMode.NEST_BASED
+        this[GENERATE_SYNTHETIC_ACCESS] == true -> NestAccessGenerationMode.SYNTHETIC_ONLY
+        else -> NestAccessGenerationMode.DISABLED
+    }
+
+/**
+ * Read more in [NestLogic]
+ */
+enum class NestAccessGenerationMode {
+    /**
+     * Synthetic and Bridge based inner class private member access.
+     */
+	SYNTHETIC_ONLY,
+
+    /**
+     * Nest-based inner class private member access, as specified in [JEP 181](https://openjdk.java.net/jeps/181).
+     */
+    NEST_BASED,
+
+    /**
+     * Mixed, generate NestHost and NestMember declarations, as specified in [JEP 181](https://openjdk.java.net/jeps/181),
+     * but use **Synthetic Bridge Methods** for access instead of direct access.
+     *
+     * Not recommended since [Nest-Based Access Control](https://openjdk.java.net/jeps/181) allows direct access to private
+     * members without **bridge methods**. This should only be used in **very very very** specific cases.
+     */
+    MIXED,
+
+    /**
+     * Totally disabled. This may cause **class load-time** and/or **runtime exceptions** in most JVM Implementations
+     * since classes are not allowed to access private members.
+     */
+    DISABLED
+}
+
+/**
+ * Read more in [NestLogic]
+ */
+fun NestAccessGenerationMode.isSyntheticAccess() =
+    this == NestAccessGenerationMode.SYNTHETIC_ONLY || this == NestAccessGenerationMode.MIXED
+
+/**
+ * Read more in [NestLogic]
+ */
+fun NestAccessGenerationMode.isToGenerateNests() =
+    this == NestAccessGenerationMode.MIXED || this == NestAccessGenerationMode.NEST_BASED
 
 enum class VisitLineType {
     /**

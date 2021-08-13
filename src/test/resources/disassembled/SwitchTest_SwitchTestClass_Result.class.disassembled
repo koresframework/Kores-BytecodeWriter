@@ -1,14 +1,19 @@
-md5: 89df9da7bd5fe71c3d2350713f27d591
+md5: 0ce6ac0c27c53392b49bdc48961d9876
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: SwitchTestClass.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class com.SwitchTestClass extends java.lang.Object {
 
-    !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-     com.SwitchTestClass.com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
+    inner {
+        !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
+         com.SwitchTestClass.com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
+    }
 
     !access: ACC_PUBLIC (1)
     !parameter[name: number, access:  (0)]

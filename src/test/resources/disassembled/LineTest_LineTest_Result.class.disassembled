@@ -1,10 +1,13 @@
-md5: ab980a7d6f732cb52ebcbe6dcaaf5c1f
+md5: 6fd8ea1cd21a7867465559ee2154e0cf
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: LineTest.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class test.LineTest extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)

@@ -1,10 +1,13 @@
-md5: fb84d869d35669927269bd0e35d077e1
+md5: 548b1fae17f85d8ea7525de047939ddc
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: bridgeTest.cai
 
+!signature: Ljava/lang/Object;Lcom/AB<Ljava/util/List;>;
+!extends: java/lang/Object
+!implements: [com/AB]
 public class com.bridgeTest extends java.lang.Object implements com.AB {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
@@ -27,7 +30,7 @@ public class com.bridgeTest extends java.lang.Object implements com.AB {
     }
     
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
-    !signature: (Ljava/lang/Iterable<*>;)V
+    !signature: (Ljava/lang/Iterable;)V
     !parameter[name: iter, access:  (0)]
     public void iterate(java.lang.Iterable) {
       desc: (Ljava/lang/Iterable;)V 

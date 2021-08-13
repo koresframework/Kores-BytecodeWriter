@@ -1,10 +1,13 @@
-md5: 18604a468cb181d3962eb6a68e5e26df
+md5: 9cc9b8e16de214260ee66719de6d620c
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: Impl.cai
 
+!signature: null
+!extends: com/github/jonathanxd/kores/test/asm/InvCall$My
+!implements: []
 public class test.Impl extends com.github.jonathanxd.kores.test.asm.InvCall$My {
 
     !access: ACC_PUBLIC (1)

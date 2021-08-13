@@ -1,16 +1,23 @@
-md5: 389ee1daf6667f8a276712f4690f944c
+md5: 7d84f6e1a39b80c5b38afc229edbee88
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC, ACC_ABSTRACT (17441)
 
 source: MyEnum.cai
 
-public abstract class com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.kores.test.EnumTest_$MyItf {
+!signature: Ljava/lang/Enum<Lcom/MyEnum;>;
+!extends: java/lang/Enum
+!implements: [com/github/jonathanxd/kores/test/EnumTest_$MyItf]
+!NestMember: com/MyEnum$A$Inner
+!NestMember: com/MyEnum$B$Inner
+public abstract enum com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.kores.test.EnumTest_$MyItf {
 
-    !access: PACKAGE_PRIVATE (16392)
-     com.MyEnum.A$Inner -> com.MyEnum$A$Inner
-    !access: PACKAGE_PRIVATE (16392)
-     com.MyEnum.B$Inner -> com.MyEnum$B$Inner
+    inner {
+        !access: PACKAGE_PRIVATE (16392)
+         com.MyEnum.A$Inner -> com.MyEnum$A$Inner
+        !access: PACKAGE_PRIVATE (16392)
+         com.MyEnum.B$Inner -> com.MyEnum$B$Inner
+    }
 
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
     public static final com.MyEnum A

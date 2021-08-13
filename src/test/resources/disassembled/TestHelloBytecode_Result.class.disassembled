@@ -1,10 +1,13 @@
-md5: 47d8c3cb8760132e19f12ea81ece1684
+md5: bbd5a58c960e9889f3b4f1775a10bd1f
 
-version: Java 8 (52)
+version: Java 16 (60)
 access: ACC_PUBLIC (33)
 
 source: TestHelloBytecode.cai
 
+!signature: null
+!extends: java/lang/Object
+!implements: []
 public class fullName.TestHelloBytecode extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (25)

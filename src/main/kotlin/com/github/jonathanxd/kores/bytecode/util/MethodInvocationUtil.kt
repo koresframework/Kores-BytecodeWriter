@@ -3,7 +3,7 @@
  *
  *         The MIT License (MIT)
  *
- *      Copyright (c) 2018 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
+ *      Copyright (c) 2021 TheRealBuggy/JonathanxD (https://github.com/JonathanxD/) <jonathan.scripter@programmer.net>
  *      Copyright (c) contributors
  *
  *
@@ -29,9 +29,6 @@ package com.github.jonathanxd.kores.bytecode.util
 
 import com.github.jonathanxd.kores.base.*
 import com.github.jonathanxd.kores.bytecode.processor.processors.Util
-import com.github.jonathanxd.kores.common.DynamicMethodSpec
-import com.github.jonathanxd.kores.common.MethodInvokeSpec
-import com.github.jonathanxd.kores.common.MethodTypeSpec
 import com.github.jonathanxd.kores.type.KoresType
 import com.github.jonathanxd.kores.type.internalName
 import com.github.jonathanxd.kores.type.javaSpecName
@@ -41,10 +38,9 @@ import com.github.jonathanxd.kores.util.toTypeSpec
 import com.github.jonathanxd.kores.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.description.DescriptionUtil
-import org.objectweb.asm.Handle
-import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Opcodes
-import org.objectweb.asm.Type
+import com.github.jonathanxd.kores.common.*
+import com.github.jonathanxd.kores.type.isInterface
+import org.objectweb.asm.*
 import java.util.*
 
 object MethodInvocationUtil {
@@ -117,43 +113,82 @@ object MethodInvocationUtil {
     }
 
     fun toAsmArguments(bootstrap: InvokeDynamicBase, data: TypedData): Array<Any> {
+        return toAsmArguments(bootstrap.bootstrapArgs, data)
+    }
 
-        val asmArgs = Array(bootstrap.bootstrapArgs.size) { i ->
-            val arg = bootstrap.bootstrapArgs[i]
-            val converted: Any
+    fun toAsmArguments(bootstrapArgs: List<Any>, data: TypedData): Array<Any> {
 
-            if (arg is String || arg is Int || arg is Long || arg is Float || arg is Double) {
-                converted = arg
-            } else if (arg is KoresType) {
-                converted = Type.getType(Util.resolveType(arg, data).javaSpecName)
-            } else if (arg is MethodInvokeSpec) {
+        val asmArgs = Array(bootstrapArgs.size) { i ->
+            val arg = bootstrapArgs[i]
 
-                val typeSpec = arg.methodTypeSpec
+            when (arg) {
+                is String, is Int, is Long, is Float, is Double -> {
+                    arg
+                }
+                is ReflectType -> {
+                    Type.getType(Util.resolveType(arg, data).javaSpecName)
+                }
+                is MethodInvokeSpec -> {
 
-                converted = Handle(
-                    InvokeTypeUtil.toAsm_H(arg.invokeType),
-                    Util.resolveType(typeSpec.localization, data).internalName,
-                    typeSpec.methodName,
-                    Util.resolveType(typeSpec.typeSpec, data).typeDesc,
-                    arg.invokeType == InvokeType.INVOKE_INTERFACE
-                )
-            } else if (arg is TypeSpec) {
+                    val typeSpec = arg.methodTypeSpec
 
-                val toAsm = Util.resolveType(arg, data).typeDesc
+                    Handle(
+                        InvokeTypeUtil.toAsm_H(arg.invokeType),
+                        Util.resolveType(typeSpec.localization, data).internalName,
+                        typeSpec.methodName,
+                        Util.resolveType(typeSpec.typeSpec, data).typeDesc,
+                        arg.invokeType == InvokeType.INVOKE_INTERFACE || typeSpec.localization.isInterface
+                    )
+                }
+                is FieldAccessHandleSpec -> {
 
-                converted = Type.getMethodType(toAsm)
-            } else {
-                throw IllegalArgumentException(
-                    "Illegal argument at index '" + i + "' of arguments list [" +
-                            bootstrap.bootstrapArgs + "], element type unsupported! Read the documentation."
-                )
+                    val fieldTypeSpec = arg.fieldTypeSpec
+
+                    Handle(
+                        InvokeTypeUtil.toAsm_H(arg.accessKind),
+                        Util.resolveType(fieldTypeSpec.localization, data).internalName,
+                        fieldTypeSpec.fieldName,
+                        Util.resolveType(fieldTypeSpec.fieldType, data).typeDesc,
+                        fieldTypeSpec.localization.isInterface
+                    )
+                }
+                is MethodInvokeHandleSpec -> {
+                    arg.toHandle(data)
+                }
+                is DynamicConstantSpec -> {
+                    ConstantDynamic(
+                        arg.constantName,
+                        Util.resolveType(arg.type, data).typeDesc,
+                        arg.bootstrapMethod.toHandle(data),
+                        *toAsmArguments(arg.bootstrapArgs, data)
+                    )
+                }
+                is TypeSpec -> {
+
+                    val toAsm = Util.resolveType(arg, data).typeDesc
+
+                    Type.getMethodType(toAsm)
+                }
+                else -> {
+                    throw IllegalArgumentException(
+                        "Illegal argument at index '$i' of arguments list [$bootstrapArgs], element type unsupported! Read the documentation."
+                    )
+                }
             }
 
-            converted
         }
 
         return asmArgs
     }
+
+    fun MethodInvokeHandleSpec.toHandle(data: TypedData): Handle =
+        Handle(
+            InvokeTypeUtil.toAsm_H(this.invokeType),
+            Util.resolveType(this.methodTypeSpec.localization, data).internalName,
+            this.methodTypeSpec.methodName,
+            Util.resolveType(this.methodTypeSpec.typeSpec, data).typeDesc,
+            this.methodTypeSpec.localization.isInterface
+        )
 
     fun toHandle(bootstrap: InvokeDynamicBase, data: TypedData): Handle {
         val bootstrapMethodSpec = bootstrap.bootstrap
@@ -168,19 +203,19 @@ object MethodInvocationUtil {
             bsmLocalization.internalName,
             methodName,
             Util.resolveType(bootstrapMethodSpec.methodTypeSpec.typeSpec, data).typeDesc,
-            btpInvokeType.isInterface()
+            bsmLocalization.isInterface
         )
     }
 
-    fun specFromHandle(handle: Handle, typeResolver: TypeResolver): MethodInvokeSpec {
-        val invokeType = InvokeTypeUtil.fromAsm_H(handle.tag)
+    fun specFromHandle(handle: Handle, typeResolver: TypeResolver): MethodInvokeHandleSpec {
+        val invokeType = InvokeTypeUtil.fromAsmIndy(handle.tag)
 
         val owner = typeResolver.resolveUnknown(handle.owner)
         val desc = owner.javaSpecName + ":" + handle.name + handle.desc
 
         val description = DescriptionUtil.parseDescription(desc)
 
-        return MethodInvokeSpec(
+        return MethodInvokeHandleSpec(
             invokeType,
             MethodTypeSpec(
                 owner,
@@ -238,7 +273,7 @@ object MethodInvocationUtil {
             } else if (asmArg is Handle) {
                 codeAPIArgsList.add(MethodInvocationUtil.specFromHandle(asmArg, typeResolver))
             } else {
-                throw IllegalArgumentException("Unsupported ASM BSM Argument: " + asmArg)
+                throw IllegalArgumentException("Unsupported ASM BSM Argument: $asmArg")
             }
         }
 
