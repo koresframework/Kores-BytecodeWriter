@@ -18,9 +18,12 @@ buildscript {
 }
 
 group 'com.github.koresframework'
-version '4.1.9.bytecode.1'
+version '4.1.10.bytecode.1'
 
 apply from: project(":Kores").file("gradle/common.gradle")
+
+// Publish
+apply plugin: 'maven-publish'
 
 def GITHUB_USERNAME = project.findProperty("USERNAME") ?: System.getenv("USERNAME")
 def GITHUB_PAT = project.findProperty("TOKEN") ?: System.getenv("TOKEN")
@@ -72,6 +75,14 @@ tasks.dokkaGfm.configure {
     enabled = false
 }
 
+allprojects {
+    tasks.whenTaskAdded { task ->
+        if (task.name.contains("dokkaGfm")) {
+            task.enabled = false
+        }
+    }
+}
+
 shadowJar {
     dependencies {
         include(project(":Kores"))
@@ -97,9 +108,11 @@ publishing {
             }
         }
     }
+
     publications {
         maven(MavenPublication) {
             artifactId 'kores-bytecodewriter'
+            from components.kotlin
 
             artifact sourcesJar
         }
