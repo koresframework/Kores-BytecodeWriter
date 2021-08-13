@@ -271,7 +271,7 @@ enum class NestAccessGenerationMode {
     /**
      * Synthetic and Bridge based inner class private member access.
      */
-	SYNTHETIC_ONLY,
+    SYNTHETIC_ONLY,
 
     /**
      * Nest-based inner class private member access, as specified in [JEP 181](https://openjdk.java.net/jeps/181).
