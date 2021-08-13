@@ -48,7 +48,7 @@ public final class ResultSaver {
     static {
         String prop = System.getProperty("env");
 
-        IS_GRADLE_ENVIRONMENT = prop != null && prop.equals("gradle");
+        IS_GRADLE_ENVIRONMENT = false;//prop != null && prop.equals("gradle");
 
         if (IS_GRADLE_ENVIRONMENT) {
             System.out.println("Gradle environment property defined!");

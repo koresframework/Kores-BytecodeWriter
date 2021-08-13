@@ -1,0 +1,84 @@
+md5: cd94923f3c6132676467a3e29004220b
+
+version: Java 16 (60)
+access: ACC_PUBLIC (33)
+
+source: IndyTest_Generated.cai
+
+!signature: null
+!extends: java/lang/Object
+!implements: []
+public class fullName.IndyTest_Generated extends java.lang.Object {
+
+    !access: ACC_PUBLIC, ACC_FINAL (17)
+    public final java.lang.String FIELD
+    !access: ACC_PUBLIC, ACC_FINAL (17)
+    public final int n
+
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 2, maxLocals: 1 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        aload 0
+        ldc "AVD"              // type: java.lang.String
+        putfield fullName.IndyTest_Generated.FIELD (type: java.lang.String)
+        aload 0
+        bipush 15
+        putfield fullName.IndyTest_Generated.n (type: int)
+        return
+      Label_1:
+      LocalVariables {
+        index: 0, name: this, start: Label_0, end: Label_1, type: fullName.IndyTest_Generated, signature: null
+      }
+    }
+    
+    !access: ACC_PUBLIC (1)
+    !parameter[name: x, access:  (0)]
+    public java.lang.String check(int) {
+      desc: (I)Ljava/lang/String; 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+       LINE 1 -> Label_0
+        getstatic java.lang.System.out (type: java.io.PrintStream)
+        ldc "Invoke Dynamic Bootstrap ->"              // type: java.lang.String
+        invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
+      Label_1:
+       LINE 2 -> Label_1
+        ldc "World"              // type: java.lang.String
+        invokedynamic helloWorld(java.lang.String)java.lang.String [
+          // Bootstrap method
+          com.github.jonathanxd.kores.test.asm.IndyTest.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+            // Arguments
+            some : Ljava/lang/String; com/github/jonathanxd/kores/test/asm/IndyTest.constantBootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/String; (6) [value]
+          ]
+        ]
+        pop
+      Label_2:
+       LINE 3 -> Label_2
+        ldc "World"              // type: java.lang.String
+        invokedynamic helloWorld(java.lang.String)java.lang.String [
+          // Bootstrap method
+          com.github.jonathanxd.kores.test.asm.IndyTest.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+            // Arguments
+            some : Ljava/lang/String; com/github/jonathanxd/kores/test/asm/IndyTest.constantBootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/String; (6) [value]
+          ]
+        ]
+        areturn
+      Label_3:
+      LocalVariables {
+        index: 1, name: x, start: Label_0, end: Label_3, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: fullName.IndyTest_Generated, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}
