@@ -45,9 +45,19 @@ repositories {
             password = GITHUB_PAT
         }
     }
+    maven {
+        url "https://maven.pkg.github.com/koresframework/kores-bytecodewriter"
+        credentials {
+            username = GITHUB_USERNAME
+            password = GITHUB_PAT
+        }
+    }
 }
 
 dependencies {
-    implementation "com.github.koresframework:kores-bytecodewriter:4.1.9.bytecode" // Replace 4.1.9.bytecode with the preferred version
+    implementation("com.github.koresframework:kores:4.1.9.base") // Replace 4.1.9.base with the preferred version
+    implementation("com.github.koresframework:kores-bytecodewriter:4.1.10.bytecode.4") // Replace 4.1.10.bytecode.4 with the preferred version
 }
 ```
+
+This is only needed because **GitHub** still not support unauthenticated artifact access.
