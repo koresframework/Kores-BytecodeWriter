@@ -55,8 +55,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.koresframework:kores:4.1.9.base") // Replace 4.1.9.base with the preferred version
-    implementation("com.github.koresframework:kores-bytecodewriter:4.1.10.bytecode.4") // Replace 4.1.10.bytecode.4 with the preferred version
+    implementation("com.koresframework:kores:4.2.1.base") // Replace the version with the latest or a preferred one
+    implementation("com.koresframework:kores-bytecodewriter:4.2.1.bytecode") // Replace the version with the latest or a preferred one
 }
 ```
 
