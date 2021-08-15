@@ -1,4 +1,4 @@
-md5: fda731fa9599440f87879e0bd1dc820f
+md5: 69a5410fffbc379703de568852f6b9db
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -17,7 +17,7 @@ public class com.MyClass extends java.lang.Object {
     private static final java.util.Map f2
 
     !access: ACC_PUBLIC (1)
-    !signature: (Ljava/lang/reflect/Type;TE;TM;)V
+    !signature: (Ljava/lang/reflect/Type;TE;M<Ljava/util/Map<TE;TM;>;>;)V
     !parameter[name: type, access:  (0)]
     !parameter[name: x, access:  (0)]
     !parameter[name: test, access:  (0)]

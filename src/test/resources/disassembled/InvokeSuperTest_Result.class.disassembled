@@ -1,4 +1,4 @@
-md5: 1e6a9a9338bd3ace2bd1c76b49d9bc5b
+md5: 0998e1a784da55edaac5589e7ff0466e
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -6,9 +6,9 @@ access: ACC_PUBLIC (33)
 source: Impl.cai
 
 !signature: null
-!extends: com/github/jonathanxd/kores/test/asm/InvokeSuperTest$My
+!extends: com/koresframework/kores/test/asm/InvokeSuperTest$My
 !implements: []
-public class test.Impl extends com.github.jonathanxd.kores.test.asm.InvokeSuperTest$My {
+public class test.Impl extends com.koresframework.kores.test.asm.InvokeSuperTest$My {
 
     !access: ACC_PUBLIC (1)
     public void <init>() {
@@ -20,7 +20,7 @@ public class test.Impl extends com.github.jonathanxd.kores.test.asm.InvokeSuperT
         astore 1
         aload 0
         aload 1
-        invokespecial com.github.jonathanxd.kores.test.asm.InvokeSuperTest$My.<init>(java.lang.String)void (ownerIsInterface: false)
+        invokespecial com.koresframework.kores.test.asm.InvokeSuperTest$My.<init>(java.lang.String)void (ownerIsInterface: false)
         return
       Label_2:
       LocalVariables {

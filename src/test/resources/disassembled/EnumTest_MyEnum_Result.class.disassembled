@@ -1,4 +1,4 @@
-md5: 7d84f6e1a39b80c5b38afc229edbee88
+md5: b08b819d9d47d10750c737c0b301be11
 
 version: Java 16 (60)
 access: ACC_PUBLIC, ACC_ABSTRACT (17441)
@@ -7,10 +7,10 @@ source: MyEnum.cai
 
 !signature: Ljava/lang/Enum<Lcom/MyEnum;>;
 !extends: java/lang/Enum
-!implements: [com/github/jonathanxd/kores/test/EnumTest_$MyItf]
+!implements: [com/koresframework/kores/test/EnumTest_$MyItf]
 !NestMember: com/MyEnum$A$Inner
 !NestMember: com/MyEnum$B$Inner
-public abstract enum com.MyEnum extends java.lang.Enum implements com.github.jonathanxd.kores.test.EnumTest_$MyItf {
+public abstract enum com.MyEnum extends java.lang.Enum implements com.koresframework.kores.test.EnumTest_$MyItf {
 
     inner {
         !access: PACKAGE_PRIVATE (16392)

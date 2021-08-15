@@ -1,4 +1,4 @@
-md5: 7fd8edc31c0d308825ca6d3eb72315fc
+md5: 94cb5e9f62a00c3ecd304c29f022192c
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -11,7 +11,7 @@ source: ForEach.cai
 public class com.ForEach extends java.lang.Object {
 
     !access: ACC_PUBLIC (1)
-    !signature: (Ljava/util/List;)V
+    !signature: (Ljava/util/List<Ljava/lang/String;>;)V
     !parameter[name: strList, access:  (0)]
     public void <init>(java.util.List) {
       desc: (Ljava/util/List;)V 

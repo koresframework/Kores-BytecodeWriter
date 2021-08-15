@@ -1,4 +1,4 @@
-md5: cbab5e0af98210f44eeb2039a5ac81fa
+md5: 174e21ce6289a9a1b3f2b7ef7602480d
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -8,7 +8,7 @@ source: KoresTest_API_Generated.cai
 !signature: null
 !extends: java/lang/Object
 !implements: []
-public class com.github.jonathanxd.kores.test.asm.KoresTest_API_Generated extends java.lang.Object {
+public class com.koresframework.kores.test.asm.KoresTest_API_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !parameter[name: string, access:  (0)]
@@ -36,7 +36,7 @@ public class com.github.jonathanxd.kores.test.asm.KoresTest_API_Generated extend
         return
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: com.github.jonathanxd.kores.test.asm.KoresTest_API_Generated, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.koresframework.kores.test.asm.KoresTest_API_Generated, signature: null
       }
     }
     

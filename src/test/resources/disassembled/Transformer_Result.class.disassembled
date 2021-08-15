@@ -1,4 +1,4 @@
-md5: 59ac21757ae831934cd6c1659ddcc84f
+md5: bfdab39bf0007061b9c89e54e04d920f
 
 version: Java 8 (52)
 access: ACC_PUBLIC (33)
@@ -96,7 +96,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
        LINE 8 -> Label_0
         ldc "xy"              // type: java.lang.String
         ldc "yz"              // type: java.lang.String
-        invokestatic com.github.jonathanxd.kores.test.InvocationsTest_.bmp(java.lang.String, java.lang.String)void (ownerIsInterface: false)
+        invokestatic com.koresframework.kores.test.InvocationsTest_.bmp(java.lang.String, java.lang.String)void (ownerIsInterface: false)
       Label_1:
        LINE 9 -> Label_1
         getstatic java.lang.System.out (type: java.io.PrintStream)
@@ -104,15 +104,15 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_2:
        LINE 10 -> Label_2
-        new com.github.jonathanxd.kores.test.WorldGreeter
+        new com.koresframework.kores.test.WorldGreeter
         dup
-        invokespecial com.github.jonathanxd.kores.test.WorldGreeter.<init>()void (ownerIsInterface: false)
+        invokespecial com.koresframework.kores.test.WorldGreeter.<init>()void (ownerIsInterface: false)
       Label_3:
         astore 2
       Label_4:
        LINE 11 -> Label_4
         aload 2
-        invokeinterface com.github.jonathanxd.kores.test.Greeter.hello()java.lang.String (ownerIsInterface: true)
+        invokeinterface com.koresframework.kores.test.Greeter.hello()java.lang.String (ownerIsInterface: true)
       Label_5:
         astore 3
       Label_6:
@@ -153,12 +153,12 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
       Label_12:
        LINE 17 -> Label_12
         aload 2
-        invokedynamic get(com.github.jonathanxd.kores.test.Greeter)java.util.function.Supplier [
+        invokedynamic get(com.koresframework.kores.test.Greeter)java.util.function.Supplier [
           // Bootstrap method
           java.lang.invoke.LambdaMetafactory.metafactory(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.invoke.MethodType, java.lang.invoke.MethodHandle, java.lang.invoke.MethodType)java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
             // Arguments
             ()Ljava/lang/Object;
-            com.github.jonathanxd.kores.test.Greeter.hello()java.lang.String (tag: h_invokeinterface, itf: true)
+            com.koresframework.kores.test.Greeter.hello()java.lang.String (tag: h_invokeinterface, itf: true)
             ()Ljava/lang/String;
           ]
         ]
@@ -191,7 +191,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         ldc "World"              // type: java.lang.String
         invokedynamic helloWorld(java.lang.String)void [
           // Bootstrap method
-          com.github.jonathanxd.kores.test.InvocationsTest_.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+          com.koresframework.kores.test.InvocationsTest_.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
           ]
         ]
       Label_20:
@@ -209,7 +209,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         if_icmpne Label_23
       Label_22:
        LINE 28 -> Label_22
-       FRAME[type: F_FULL, locals: 7, local: {Reference[fullName.InvocationsTest__Generated], Primitive[integer], Reference[com.github.jonathanxd.kores.test.WorldGreeter], Reference[java.lang.String], Reference[java.util.function.Supplier], Reference[java.util.function.Supplier], Reference[java.lang.String]}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 7, local: {Reference[fullName.InvocationsTest__Generated], Primitive[integer], Reference[com.koresframework.kores.test.WorldGreeter], Reference[java.lang.String], Reference[java.util.function.Supplier], Reference[java.util.function.Supplier], Reference[java.lang.String]}, stacks: 0, stack: {}]
         iconst_0
         ireturn
       Label_23:
@@ -232,7 +232,7 @@ public class fullName.InvocationsTest__Generated extends java.lang.Object {
         index: 5, name: supplier, start: Label_13, end: Label_25, type: java.util.function.Supplier, signature: null
         index: 4, name: supplier2, start: Label_10, end: Label_25, type: java.util.function.Supplier, signature: null
         index: 3, name: greetingVar, start: Label_5, end: Label_25, type: java.lang.String, signature: null
-        index: 2, name: greeter, start: Label_3, end: Label_25, type: com.github.jonathanxd.kores.test.Greeter, signature: null
+        index: 2, name: greeter, start: Label_3, end: Label_25, type: com.koresframework.kores.test.Greeter, signature: null
         index: 1, name: x, start: Label_0, end: Label_25, type: int, signature: null
         index: 0, name: this, start: Label_0, end: Label_25, type: fullName.InvocationsTest__Generated, signature: null
       }

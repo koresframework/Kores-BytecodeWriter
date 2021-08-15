@@ -5,7 +5,7 @@ access: ACC_PUBLIC (33)
 
 source: CodeAPITest_API_Generated.cai
 
-public class com.github.jonathanxd.kores.test.asm.CodeAPITest_API_Generated extends java.lang.Object {
+public class com.koresframework.kores.test.asm.CodeAPITest_API_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !parameter[name: string, access:  (0)]
@@ -33,7 +33,7 @@ public class com.github.jonathanxd.kores.test.asm.CodeAPITest_API_Generated exte
         return
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: com.github.jonathanxd.kores.test.asm.CodeAPITest_API_Generated, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.koresframework.kores.test.asm.CodeAPITest_API_Generated, signature: null
       }
     }
     

@@ -1,4 +1,4 @@
-md5: 0ce6ac0c27c53392b49bdc48961d9876
+md5: 47c84c962f327b6cc8b68e5bc4762832
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -12,7 +12,7 @@ public class com.SwitchTestClass extends java.lang.Object {
 
     inner {
         !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-         com.SwitchTestClass.com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
+         com.SwitchTestClass.com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
     }
 
     !access: ACC_PUBLIC (1)
@@ -21,8 +21,8 @@ public class com.SwitchTestClass extends java.lang.Object {
     !parameter[name: testEnum, access:  (0)]
     !parameter[name: str, access:  (0)]
     !parameter[name: o, access:  (0)]
-    public void <init>(int, int, com.github.jonathanxd.kores.test.SwitchTest_$TestEnum, java.lang.String, java.lang.Object) {
-      desc: (IILcom/github/jonathanxd/kores/test/SwitchTest_$TestEnum;Ljava/lang/String;Ljava/lang/Object;)V 
+    public void <init>(int, int, com.koresframework.kores.test.SwitchTest_$TestEnum, java.lang.String, java.lang.Object) {
+      desc: (IILcom/koresframework/kores/test/SwitchTest_$TestEnum;Ljava/lang/String;Ljava/lang/Object;)V 
       maxStack: 2, maxLocals: 6 
       Label_0:
         aload 0
@@ -40,7 +40,7 @@ public class com.SwitchTestClass extends java.lang.Object {
         }
       Label_2:
        LINE 2 -> Label_2
-       FRAME[type: F_FULL, locals: 6, local: {Reference[com.SwitchTestClass], Primitive[integer], Primitive[integer], Reference[com.github.jonathanxd.kores.test.SwitchTest_$TestEnum], Reference[java.lang.String], Reference[java.lang.Object]}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 6, local: {Reference[com.SwitchTestClass], Primitive[integer], Primitive[integer], Reference[com.koresframework.kores.test.SwitchTest_$TestEnum], Reference[java.lang.String], Reference[java.lang.Object]}, stacks: 0, stack: {}]
         getstatic java.lang.System.out (type: java.io.PrintStream)
         ldc "1"              // type: java.lang.String
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
@@ -114,7 +114,7 @@ public class com.SwitchTestClass extends java.lang.Object {
       Label_16:
        LINE 16 -> Label_16
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
-        getstatic com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
+        getstatic com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
         aload 3
         invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
         iaload
@@ -208,7 +208,7 @@ public class com.SwitchTestClass extends java.lang.Object {
       LocalVariables {
         index: 5, name: o, start: Label_0, end: Label_32, type: java.lang.Object, signature: null
         index: 4, name: str, start: Label_0, end: Label_32, type: java.lang.String, signature: null
-        index: 3, name: testEnum, start: Label_0, end: Label_32, type: com.github.jonathanxd.kores.test.SwitchTest_$TestEnum, signature: null
+        index: 3, name: testEnum, start: Label_0, end: Label_32, type: com.koresframework.kores.test.SwitchTest_$TestEnum, signature: null
         index: 2, name: number2, start: Label_0, end: Label_32, type: int, signature: null
         index: 1, name: number, start: Label_0, end: Label_32, type: int, signature: null
         index: 0, name: this, start: Label_0, end: Label_32, type: com.SwitchTestClass, signature: null

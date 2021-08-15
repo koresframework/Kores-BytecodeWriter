@@ -1,4 +1,4 @@
-md5: 61fb5469cdfe0c9aaa128f601eafcba1
+md5: e6a028d8e9bb9fda2b4450dad3739782
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -8,11 +8,11 @@ source: AnnotatedTestClass.cai
 !signature: null
 !extends: java/lang/Object
 !implements: []
-@com.github.jonathanxd.kores.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.A, com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.B, com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.C})
+@com.koresframework.kores.test.AnnotatedTest_$Simple(value = {com.koresframework.kores.test.AnnotatedTest_$MyEnum.A, com.koresframework.kores.test.AnnotatedTest_$MyEnum.B, com.koresframework.kores.test.AnnotatedTest_$MyEnum.C})
 public class test.AnnotatedTestClass extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    @com.github.jonathanxd.kores.test.AnnotatedTest_$Simple(value = {com.github.jonathanxd.kores.test.AnnotatedTest_$MyEnum.A})
+    @com.koresframework.kores.test.AnnotatedTest_$Simple(value = {com.koresframework.kores.test.AnnotatedTest_$MyEnum.A})
     public static java.lang.String field
 
     !access: ACC_PUBLIC, ACC_STATIC (9)

@@ -1,4 +1,4 @@
-md5: cd94923f3c6132676467a3e29004220b
+md5: 37e5ffe09ed6cae08690bbba4a449943
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -50,9 +50,9 @@ public class fullName.IndyTest_Generated extends java.lang.Object {
         ldc "World"              // type: java.lang.String
         invokedynamic helloWorld(java.lang.String)java.lang.String [
           // Bootstrap method
-          com.github.jonathanxd.kores.test.asm.IndyTest.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+          com.koresframework.kores.test.asm.IndyTest.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
             // Arguments
-            some : Ljava/lang/String; com/github/jonathanxd/kores/test/asm/IndyTest.constantBootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/String; (6) [value]
+            some : Ljava/lang/String; com/koresframework/kores/test/asm/IndyTest.constantBootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/String; (6) [value]
           ]
         ]
         pop
@@ -61,9 +61,9 @@ public class fullName.IndyTest_Generated extends java.lang.Object {
         ldc "World"              // type: java.lang.String
         invokedynamic helloWorld(java.lang.String)java.lang.String [
           // Bootstrap method
-          com.github.jonathanxd.kores.test.asm.IndyTest.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
+          com.koresframework.kores.test.asm.IndyTest.myBootstrap(java.lang.invoke.MethodHandles$Lookup, java.lang.String, java.lang.invoke.MethodType, java.lang.Object[])java.lang.invoke.CallSite (tag: h_invokestatic, itf: false) [
             // Arguments
-            some : Ljava/lang/String; com/github/jonathanxd/kores/test/asm/IndyTest.constantBootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/String; (6) [value]
+            some : Ljava/lang/String; com/koresframework/kores/test/asm/IndyTest.constantBootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/String; (6) [value]
           ]
         ]
         areturn

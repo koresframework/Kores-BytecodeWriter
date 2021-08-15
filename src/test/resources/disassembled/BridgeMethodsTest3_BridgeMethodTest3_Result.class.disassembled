@@ -1,4 +1,4 @@
-md5: 0262021cfa06cbccd40096a2b972c937
+md5: a08cf60130d8a35b5443b3bc34f92db7
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -7,8 +7,8 @@ source: BridgeMethodTest3.cai
 
 !signature: null
 !extends: java/lang/Object
-!implements: [com/github/jonathanxd/kores/test/asm/BridgeMethodsTest3$StringTransform]
-public class com.BridgeMethodTest3 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BridgeMethodsTest3$StringTransform {
+!implements: [com/koresframework/kores/test/asm/BridgeMethodsTest3$StringTransform]
+public class com.BridgeMethodTest3 extends java.lang.Object implements com.koresframework.kores.test.asm.BridgeMethodsTest3$StringTransform {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
     !parameter[name: i, access:  (0)]

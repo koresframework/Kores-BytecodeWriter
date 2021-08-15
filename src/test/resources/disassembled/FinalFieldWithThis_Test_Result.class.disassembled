@@ -1,4 +1,4 @@
-md5: a4b60d351943583968ae9d472f7ee847
+md5: 20cdc41ee8103027b1d95069912d442b
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -6,12 +6,12 @@ access: ACC_PUBLIC (33)
 source: Test.cai
 
 !signature: null
-!extends: com/github/jonathanxd/kores/test/asm/FinalFieldWithThis$TestBox
+!extends: com/koresframework/kores/test/asm/FinalFieldWithThis$TestBox
 !implements: []
-public class finalfieldwiththis.Test extends com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox {
+public class finalfieldwiththis.Test extends com.koresframework.kores.test.asm.FinalFieldWithThis$TestBox {
 
     !access: ACC_PRIVATE, ACC_FINAL (18)
-    private final com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox testField
+    private final com.koresframework.kores.test.asm.FinalFieldWithThis$TestBox testField
 
     !access: ACC_PUBLIC (1)
     public void <init>() {
@@ -21,15 +21,15 @@ public class finalfieldwiththis.Test extends com.github.jonathanxd.kores.test.as
        LINE 2 -> Label_0
         aload 0
         aconst_null
-        invokespecial com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
+        invokespecial com.koresframework.kores.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
         aload 0
       Label_1:
        LINE 1 -> Label_1
-        new com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox
+        new com.koresframework.kores.test.asm.FinalFieldWithThis$TestBox
         dup
         aload 0
-        invokespecial com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
-        putfield finalfieldwiththis.Test.testField (type: com.github.jonathanxd.kores.test.asm.FinalFieldWithThis$TestBox)
+        invokespecial com.koresframework.kores.test.asm.FinalFieldWithThis$TestBox.<init>(java.lang.Object)void (ownerIsInterface: false)
+        putfield finalfieldwiththis.Test.testField (type: com.koresframework.kores.test.asm.FinalFieldWithThis$TestBox)
         return
       Label_2:
       LocalVariables {

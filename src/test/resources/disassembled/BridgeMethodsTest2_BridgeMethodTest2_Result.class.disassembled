@@ -1,4 +1,4 @@
-md5: e82f0f85ba96ccb86956bdccf46449b2
+md5: 12a6760b87f336080e01842dd36a1354
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -7,8 +7,8 @@ source: BridgeMethodTest2.cai
 
 !signature: null
 !extends: java/lang/Object
-!implements: [com/github/jonathanxd/kores/test/asm/BaseString]
-public class com.BridgeMethodTest2 extends java.lang.Object implements com.github.jonathanxd.kores.test.asm.BaseString {
+!implements: [com/koresframework/kores/test/asm/BaseString]
+public class com.BridgeMethodTest2 extends java.lang.Object implements com.koresframework.kores.test.asm.BaseString {
 
     !access: ACC_PUBLIC, ACC_BRIDGE (65)
     public java.lang.Object getValue() {

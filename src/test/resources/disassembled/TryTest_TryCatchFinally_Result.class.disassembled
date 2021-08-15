@@ -1,4 +1,4 @@
-md5: 38ec002ecca92ee907942a24c54c389f
+md5: 6f5e39d802128470ea5e0eebc2eda8db
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -20,7 +20,7 @@ public class test.TryCatchFinally extends java.lang.Object {
       Label_1:
        LINE 1 -> Label_1
        LINE 2 -> Label_1
-        invokestatic com.github.jonathanxd.kores.test.TryTest_.boom()void (ownerIsInterface: false)
+        invokestatic com.koresframework.kores.test.TryTest_.boom()void (ownerIsInterface: false)
       Label_2:
         return
       Label_3:
@@ -32,7 +32,7 @@ public class test.TryCatchFinally extends java.lang.Object {
         invokevirtual java.lang.Exception.printStackTrace()void (ownerIsInterface: false)
       Label_5:
        LINE 4 -> Label_5
-        invokestatic com.github.jonathanxd.kores.test.asm.TryTest.x()java.lang.String (ownerIsInterface: false)
+        invokestatic com.koresframework.kores.test.asm.TryTest.x()java.lang.String (ownerIsInterface: false)
         pop
       Label_6:
         return

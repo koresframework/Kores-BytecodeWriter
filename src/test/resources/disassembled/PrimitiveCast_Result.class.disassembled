@@ -1,4 +1,4 @@
-md5: c9e913301f8468d261ef32d6d37ebdee
+md5: d5cfae24a0eb2db88920bf21faf22a7f
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -8,7 +8,7 @@ source: PrimitiveCast_Generated.cai
 !signature: null
 !extends: java/lang/Object
 !implements: []
-public class com.github.jonathanxd.kores.test.asm.PrimitiveCast_Generated extends java.lang.Object {
+public class com.koresframework.kores.test.asm.PrimitiveCast_Generated extends java.lang.Object {
 
     !access: ACC_PUBLIC, ACC_STATIC (9)
     !parameter[name: string, access:  (0)]
@@ -87,7 +87,7 @@ public class com.github.jonathanxd.kores.test.asm.PrimitiveCast_Generated extend
         return
       Label_1:
       LocalVariables {
-        index: 0, name: this, start: Label_0, end: Label_1, type: com.github.jonathanxd.kores.test.asm.PrimitiveCast_Generated, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.koresframework.kores.test.asm.PrimitiveCast_Generated, signature: null
       }
     }
     

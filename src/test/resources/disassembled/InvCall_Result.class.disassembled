@@ -1,4 +1,4 @@
-md5: 9cc9b8e16de214260ee66719de6d620c
+md5: 7866f5d67a4959a2762566b2b25d1b54
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -6,9 +6,9 @@ access: ACC_PUBLIC (33)
 source: Impl.cai
 
 !signature: null
-!extends: com/github/jonathanxd/kores/test/asm/InvCall$My
+!extends: com/koresframework/kores/test/asm/InvCall$My
 !implements: []
-public class test.Impl extends com.github.jonathanxd.kores.test.asm.InvCall$My {
+public class test.Impl extends com.koresframework.kores.test.asm.InvCall$My {
 
     !access: ACC_PUBLIC (1)
     public void <init>() {
@@ -20,7 +20,7 @@ public class test.Impl extends com.github.jonathanxd.kores.test.asm.InvCall$My {
         astore 1
         aload 0
         aload 1
-        invokespecial com.github.jonathanxd.kores.test.asm.InvCall$My.<init>(java.lang.String)void (ownerIsInterface: false)
+        invokespecial com.koresframework.kores.test.asm.InvCall$My.<init>(java.lang.String)void (ownerIsInterface: false)
         return
       Label_2:
       LocalVariables {

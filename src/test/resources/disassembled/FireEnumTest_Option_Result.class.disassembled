@@ -1,4 +1,4 @@
-md5: 1e3caaf5d552027aa6a101f1b70e626d
+md5: 72518da16055084f424bb20301dd677f
 
 version: Java 16 (60)
 access: ACC_PUBLIC (16417)
@@ -49,7 +49,7 @@ public enum com.Option extends java.lang.Enum {
     }
     
     !access: ACC_PUBLIC, ACC_STATIC (9)
-    !signature: <T:Ljava/lang/Object;>(TT;)Lcom/Option$Some;
+    !signature: <T:Ljava/lang/Object;>(TT;)Lcom/Option$Some<TT;>;
     !parameter[name: value, access:  (0)]
     public static com.Option$Some some(java.lang.Object) {
       desc: (Ljava/lang/Object;)Lcom/Option$Some; 

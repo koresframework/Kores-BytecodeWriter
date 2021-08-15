@@ -44,13 +44,13 @@ class com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$
     static void <clinit>() {
       desc: ()V 
       maxStack: 3, maxLocals: 1 
-        invokestatic com.github.jonathanxd.kores.test.SwitchTest_$TestEnum.values()com.github.jonathanxd.kores.test.SwitchTest_$TestEnum[] (ownerIsInterface: false)
+        invokestatic com.koresframework.kores.test.SwitchTest_$TestEnum.values()com.koresframework.kores.test.SwitchTest_$TestEnum[] (ownerIsInterface: false)
         arraylength
         newarray 10
         putstatic com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
       Label_0:
         getstatic com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
-        getstatic com.github.jonathanxd.kores.test.SwitchTest_$TestEnum.A (type: com.github.jonathanxd.kores.test.SwitchTest_$TestEnum)
+        getstatic com.koresframework.kores.test.SwitchTest_$TestEnum.A (type: com.koresframework.kores.test.SwitchTest_$TestEnum)
         invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
         iconst_1
         iastore
@@ -63,7 +63,7 @@ class com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$
       Label_3:
        FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
         getstatic com.SwitchTestClass$com_github_jonathanxd_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
-        getstatic com.github.jonathanxd.kores.test.SwitchTest_$TestEnum.B (type: com.github.jonathanxd.kores.test.SwitchTest_$TestEnum)
+        getstatic com.koresframework.kores.test.SwitchTest_$TestEnum.B (type: com.koresframework.kores.test.SwitchTest_$TestEnum)
         invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
         iconst_2
         iastore

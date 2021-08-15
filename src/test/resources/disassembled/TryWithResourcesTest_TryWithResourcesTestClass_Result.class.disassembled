@@ -1,4 +1,4 @@
-md5: b730bb229ff0c3bc5739a4ff0b1d6b0b
+md5: 72de52af6a47e2741e010a326eee1742
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -19,9 +19,9 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
         invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
       Label_1:
        LINE 1 -> Label_1
-        new com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm
+        new com.koresframework.kores.test.TryWithResourcesTest_$Trm
         dup
-        invokespecial com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm.<init>()void (ownerIsInterface: false)
+        invokespecial com.koresframework.kores.test.TryWithResourcesTest_$Trm.<init>()void (ownerIsInterface: false)
       Label_2:
         astore 1
         aconst_null
@@ -30,7 +30,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
       Label_4:
        LINE 2 -> Label_4
         aload 1
-        invokevirtual com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm.read()void (ownerIsInterface: false)
+        invokevirtual com.koresframework.kores.test.TryWithResourcesTest_$Trm.read()void (ownerIsInterface: false)
       Label_5:
         aload 1
         ifnull Label_22
@@ -42,7 +42,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
       Label_7:
         return
       Label_8:
-       FRAME[type: F_FULL, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+       FRAME[type: F_FULL, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.koresframework.kores.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         astore 3
         aload 2
         aload 3
@@ -53,7 +53,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
        FRAME[type: F_FULL, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         athrow
       Label_11:
-       FRAME[type: F_APPEND, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 0, stack: {}]
+       FRAME[type: F_APPEND, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.koresframework.kores.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 0, stack: {}]
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
       Label_12:
@@ -66,7 +66,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
         aload 3
         athrow
       Label_14:
-       FRAME[type: F_FULL, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm], Reference[java.lang.Throwable]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+       FRAME[type: F_FULL, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.koresframework.kores.test.TryWithResourcesTest_$Trm], Reference[java.lang.Throwable]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         astore 4
         aload 1
         ifnull Label_21
@@ -78,7 +78,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
       Label_16:
         goto Label_21
       Label_17:
-       FRAME[type: F_FULL, locals: 5, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm], Reference[java.lang.Throwable], Primitive[top], Reference[java.lang.Throwable]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+       FRAME[type: F_FULL, locals: 5, local: {Reference[test.TryWithResourcesTestClass], Reference[com.koresframework.kores.test.TryWithResourcesTest_$Trm], Reference[java.lang.Throwable], Primitive[top], Reference[java.lang.Throwable]}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
         astore 5
         aload 2
         aload 5
@@ -91,7 +91,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
         nop
         athrow
       Label_20:
-       FRAME[type: F_FULL, locals: 5, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm], Reference[java.lang.Throwable], Primitive[top], Reference[java.lang.Throwable]}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 5, local: {Reference[test.TryWithResourcesTestClass], Reference[com.koresframework.kores.test.TryWithResourcesTest_$Trm], Reference[java.lang.Throwable], Primitive[top], Reference[java.lang.Throwable]}, stacks: 0, stack: {}]
         aload 1
         invokeinterface java.lang.AutoCloseable.close()void (ownerIsInterface: true)
       Label_21:
@@ -99,7 +99,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
         aload 4
         athrow
       Label_22:
-       FRAME[type: F_FULL, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 0, stack: {}]
+       FRAME[type: F_FULL, locals: 3, local: {Reference[test.TryWithResourcesTestClass], Reference[com.koresframework.kores.test.TryWithResourcesTest_$Trm], Primitive[null]}, stacks: 0, stack: {}]
         return
       Label_23:
       TryCatchBlocks {
@@ -116,7 +116,7 @@ public class test.TryWithResourcesTestClass extends java.lang.Object {
         index: 3, name: $catch_2_, start: Label_8, end: Label_9, type: java.lang.Throwable, signature: null
         index: 3, name: $catch_, start: Label_13, end: Label_14, type: java.lang.Throwable, signature: null
         index: 2, name: $throwable_, start: Label_3, end: Label_23, type: java.lang.Throwable, signature: null
-        index: 1, name: trm, start: Label_2, end: Label_23, type: com.github.jonathanxd.kores.test.TryWithResourcesTest_$Trm, signature: null
+        index: 1, name: trm, start: Label_2, end: Label_23, type: com.koresframework.kores.test.TryWithResourcesTest_$Trm, signature: null
         index: 0, name: this, start: Label_0, end: Label_23, type: test.TryWithResourcesTestClass, signature: null
       }
     }
