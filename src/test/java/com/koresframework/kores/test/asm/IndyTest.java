@@ -226,6 +226,8 @@ public class IndyTest {
                 Collections.singletonList("value")
         );
 
+        methodSource.add(VariableFactory.variable(Types.STRING, "a", Literals.DYNAMIC_CONSTANT(someConst)));
+
         InvokeDynamic bootstrapInvocation = DynamicInvocationFactory.invokeDynamic(
                 new MethodInvokeSpec(InvokeType.INVOKE_STATIC, BOOTSTRAP_SPEC),
                 new DynamicMethodSpec("helloWorld", Factories.typeSpec(Types.STRING, Types.STRING),

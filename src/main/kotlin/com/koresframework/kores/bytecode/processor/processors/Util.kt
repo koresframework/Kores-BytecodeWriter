@@ -35,14 +35,14 @@ import com.koresframework.kores.bytecode.processor.*
 import com.koresframework.kores.bytecode.util.ReflectType
 import com.koresframework.kores.bytecode.util.allInnerTypes
 import com.koresframework.kores.bytecode.util.allTypes
-import com.koresframework.kores.common.getNewName
-import com.koresframework.kores.common.getNewNameBasedOnNameList
 import com.koresframework.kores.factory.*
 import com.koresframework.kores.type.*
 import com.koresframework.kores.util.conversion.access
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.add
 import com.github.jonathanxd.iutils.kt.require
+import com.koresframework.kores.common.*
+import com.koresframework.kores.util.typeDesc
 import java.lang.reflect.Type
 
 object Util {
@@ -50,6 +50,13 @@ object Util {
     fun resolveType(spec: TypeSpec, data: TypedData): TypeSpec =
         spec.copy(returnType = resolveType(spec.returnType, data),
             parameterTypes = spec.parameterTypes.map { resolveType(it, data) })
+
+    fun resolveTypeDesc(desc: DynamicDescriptor, data: TypedData): String =
+        when (desc) {
+            is DynamicMethodSpec -> resolveType(desc.typeSpec, data).typeDesc
+            is DynamicTypeSpec -> resolveType(desc.type, data).typeDesc
+        }
+
 
     fun resolveType(koresType: ReflectType, data: TypedData): KoresType {
 

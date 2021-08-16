@@ -242,7 +242,7 @@ object ConcatProcessor : Processor<Concat> {
                     )
                 )
                 .bootstrapArgs(bootstrapArgs)
-                .dynamicMethod(
+                .dynamicDescriptor(
                     DynamicMethodSpec(
                         "makeConcatWithConstants",
                         TypeSpec(typeOf<String>(), types),

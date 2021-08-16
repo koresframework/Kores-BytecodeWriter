@@ -27,6 +27,7 @@
  */
 package com.koresframework.kores.bytecode.util
 
+import com.github.jonathanxd.iutils.data.TypedData
 import com.koresframework.kores.Types
 import com.koresframework.kores.common.Stack
 import com.koresframework.kores.literal.Literal
@@ -40,7 +41,7 @@ import org.objectweb.asm.Type
 
 object LiteralUtil {
 
-    fun visitLiteral(num: Literal, mv: MethodVisitor) {
+    fun visitLiteral(num: Literal, mv: MethodVisitor, data: TypedData) {
         val value = num.value
 
         if (num == Stack)
@@ -58,6 +59,12 @@ object LiteralUtil {
 
             mv.visitInsn(Opcodes.ICONST_0)
 
+        } else if (num is Literals.DynamicConstantLiteral) {
+            val constantDynamic = MethodInvocationUtil.run {
+                num.spec.toConstantDynamic(data)
+            }
+
+            mv.visitLdcInsn(constantDynamic)
         } else if (num.type.`is`(Types.STRING)) {
 
             mv.visitLdcInsn((value as String).substring(1, value.length - 1))
@@ -92,7 +99,7 @@ object LiteralUtil {
 
             if (type.isPrimitive) {
                 val wrapperType = type.wrapperType
-                        ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version.")
+                    ?: throw IllegalArgumentException("Primitive type '$type' has no wrapper version.")
 
                 val wrapperTypeSpec = wrapperType.internalName
                 val classType = Types.CLASS.typeDesc

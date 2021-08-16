@@ -40,7 +40,7 @@ import org.objectweb.asm.Opcodes
 object LiteralProcessor : Processor<Literal> {
 
     override fun process(part: Literal, data: TypedData, processorManager: ProcessorManager<*>) {
-        LiteralUtil.visitLiteral(part, METHOD_VISITOR.require(data).methodVisitor)
+        LiteralUtil.visitLiteral(part, METHOD_VISITOR.require(data).methodVisitor, data)
 
         if (IN_EXPRESSION.require(data) == 0) {
             METHOD_VISITOR.require(data).methodVisitor.visitInsn(Opcodes.POP)

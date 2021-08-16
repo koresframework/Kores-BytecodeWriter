@@ -29,7 +29,6 @@ package com.koresframework.kores.bytecode.util
 
 import com.koresframework.kores.base.*
 import com.koresframework.kores.bytecode.processor.processors.Util
-import com.koresframework.kores.type.KoresType
 import com.koresframework.kores.type.internalName
 import com.koresframework.kores.type.javaSpecName
 import com.koresframework.kores.util.TypeResolver
@@ -38,6 +37,7 @@ import com.koresframework.kores.util.toTypeSpec
 import com.koresframework.kores.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.description.DescriptionUtil
+import com.koresframework.kores.bytecode.util.MethodInvocationUtil.toHandle
 import com.koresframework.kores.common.*
 import com.koresframework.kores.type.isInterface
 import org.objectweb.asm.*
@@ -98,7 +98,7 @@ object MethodInvocationUtil {
 
     fun visitBootstrapInvocation(
         bootstrap: InvokeDynamicBase,
-        spec: DynamicMethodSpec,
+        spec: DynamicDescriptor,
         data: TypedData,
         mv: MethodVisitor
     ) {
@@ -106,7 +106,7 @@ object MethodInvocationUtil {
 
         mv.visitInvokeDynamicInsn(
             spec.name,
-            Util.resolveType(spec.typeSpec, data).typeDesc,
+            Util.resolveTypeDesc(spec, data),
             handle,
             *MethodInvocationUtil.toAsmArguments(bootstrap, data)
         )
@@ -156,12 +156,7 @@ object MethodInvocationUtil {
                     arg.toHandle(data)
                 }
                 is DynamicConstantSpec -> {
-                    ConstantDynamic(
-                        arg.constantName,
-                        Util.resolveType(arg.type, data).typeDesc,
-                        arg.bootstrapMethod.toHandle(data),
-                        *toAsmArguments(arg.bootstrapArgs, data)
-                    )
+                    arg.toConstantDynamic(data)
                 }
                 is TypeSpec -> {
 
@@ -180,6 +175,14 @@ object MethodInvocationUtil {
 
         return asmArgs
     }
+
+    fun DynamicConstantSpec.toConstantDynamic(data: TypedData): ConstantDynamic =
+        ConstantDynamic(
+            this.constantName,
+            Util.resolveType(this.type, data).typeDesc,
+            this.bootstrapMethod.toHandle(data),
+            *toAsmArguments(this.bootstrapArgs, data)
+        )
 
     fun MethodInvokeHandleSpec.toHandle(data: TypedData): Handle =
         Handle(
@@ -238,7 +241,7 @@ object MethodInvocationUtil {
 
         return InvokeDynamic(
             bootstrap = methodInvokeSpec,
-            dynamicMethod = dynamicMethod,
+            dynamicDescriptor = dynamicMethod,
             bootstrapArgs = MethodInvocationUtil.bsmArgsFromAsm(args, typeResolver)
         )
     }

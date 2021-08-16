@@ -50,11 +50,13 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
 
         val mvHelper = METHOD_VISITOR.require(data)
 
-        val dynamicMethod = part.dynamicMethod
+        val dynamicDescriptor = part.dynamicDescriptor
 
-        processorManager.process(ArgumentsHolder::class.java, part.dynamicMethod, data)
+        if (dynamicDescriptor is ArgumentsHolder) {
+            processorManager.process(ArgumentsHolder::class.java, dynamicDescriptor, data)
+        }
 
-        val specification = dynamicMethod
+        val specification = dynamicDescriptor
 
         if (part is InvokeDynamicBase.LambdaMethodRefBase) {
             if (part is InvokeDynamicBase.LambdaLocalCodeBase) {
@@ -70,7 +72,7 @@ object InvokeDynamicProcessor : Processor<InvokeDynamicBase> {
             mvHelper.methodVisitor
         )
 
-        if (!part.dynamicMethod.typeSpec.returnType.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
+        if (!part.type.`is`(Void.TYPE) && IN_EXPRESSION.require(data) == 0) {
             mvHelper.methodVisitor.visitInsn(Opcodes.POP)
         }
     }

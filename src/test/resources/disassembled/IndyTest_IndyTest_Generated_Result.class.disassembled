@@ -1,4 +1,4 @@
-md5: 37e5ffe09ed6cae08690bbba4a449943
+md5: 9bf625c763e5cbee0e733ae2b5527e09
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -39,7 +39,7 @@ public class fullName.IndyTest_Generated extends java.lang.Object {
     !parameter[name: x, access:  (0)]
     public java.lang.String check(int) {
       desc: (I)Ljava/lang/String; 
-      maxStack: 2, maxLocals: 2 
+      maxStack: 2, maxLocals: 3 
       Label_0:
        LINE 1 -> Label_0
         getstatic java.lang.System.out (type: java.io.PrintStream)
@@ -47,6 +47,11 @@ public class fullName.IndyTest_Generated extends java.lang.Object {
         invokevirtual java.io.PrintStream.println(java.lang.Object)void (ownerIsInterface: false)
       Label_1:
        LINE 2 -> Label_1
+        ldc some : Ljava/lang/String; com/koresframework/kores/test/asm/IndyTest.constantBootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/String; (6) [value]              // type: org.objectweb.asm.ConstantDynamic
+      Label_2:
+        astore 2
+      Label_3:
+       LINE 3 -> Label_3
         ldc "World"              // type: java.lang.String
         invokedynamic helloWorld(java.lang.String)java.lang.String [
           // Bootstrap method
@@ -56,8 +61,8 @@ public class fullName.IndyTest_Generated extends java.lang.Object {
           ]
         ]
         pop
-      Label_2:
-       LINE 3 -> Label_2
+      Label_4:
+       LINE 4 -> Label_4
         ldc "World"              // type: java.lang.String
         invokedynamic helloWorld(java.lang.String)java.lang.String [
           // Bootstrap method
@@ -67,10 +72,11 @@ public class fullName.IndyTest_Generated extends java.lang.Object {
           ]
         ]
         areturn
-      Label_3:
+      Label_5:
       LocalVariables {
-        index: 1, name: x, start: Label_0, end: Label_3, type: int, signature: null
-        index: 0, name: this, start: Label_0, end: Label_3, type: fullName.IndyTest_Generated, signature: null
+        index: 2, name: a, start: Label_2, end: Label_5, type: java.lang.String, signature: null
+        index: 1, name: x, start: Label_0, end: Label_5, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_5, type: fullName.IndyTest_Generated, signature: null
       }
     }
     
