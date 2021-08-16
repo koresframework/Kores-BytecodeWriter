@@ -1,5 +1,5 @@
 buildscript {
-    apply from: project(":Kores").file('gradle/versions.gradle')
+    apply from: file('commons/versions.gradle')
 
     repositories {
         mavenCentral()
@@ -18,9 +18,9 @@ buildscript {
 }
 
 group 'com.koresframework'
-version '4.2.3.bytecode.1'
+version '4.2.4.bytecode'
 
-apply from: project(":Kores").file("gradle/common.gradle")
+apply from: file("commons/common.gradle")
 
 // Publish
 apply plugin: 'maven-publish'
@@ -42,12 +42,7 @@ repositories {
 }
 
 dependencies {
-    // Developer note: Indev, we use this statement to compile and test BytecodeWriter.
-    // When releasing a version of project, with git tag, we comment this statement and use compileOnly
-    // with runtime dependency pointing to Kores published version
-    //compile project(":Kores")
-    compileOnly project(":Kores")
-    runtimeOnly "com.koresframework:kores:4.2.3.base"
+    implementation "com.koresframework:kores:4.2.4.base"
     implementation 'com.github.jonathanxd:bytecode-disassembler:2.4.1'
     implementation "org.ow2.asm:asm:9.2"
     implementation "org.ow2.asm:asm-analysis:9.2"
@@ -55,8 +50,7 @@ dependencies {
     implementation "org.ow2.asm:asm-util:9.2"
 
     testImplementation "com.github.jonathanxd:links:$iutils_version"
-    testImplementation project(":Kores")
-    testImplementation project(path: ':Kores', configuration: 'tests')
+    testImplementation "com.koresframework:kores-test:4.2.4.base"
 }
 
 tasks.dokkaGfm.configure {
@@ -73,10 +67,10 @@ allprojects {
 
 shadowJar {
     dependencies {
-        include(project(":Kores"))
         include(dependency("org.ow2.asm:asm-all"))
-        include(dependency("com.github.JonathanxD:BytecodeDisassembler"))
-        include(dependency("com.github.JonathanxD:JwIUtils"))
+        include(dependency("com.koresframework:kores:4.2.4.base"))
+        include(dependency("com.github.jonathanxd:bytecode-disassembler"))
+        include(dependency("com.github.jonathanxd:jwiutils"))
     }
 }
 
