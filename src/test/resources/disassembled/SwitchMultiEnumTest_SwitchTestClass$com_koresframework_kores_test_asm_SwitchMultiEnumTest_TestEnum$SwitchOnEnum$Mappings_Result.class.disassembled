@@ -1,0 +1,85 @@
+md5: 2c96b46d584bb34da08e465c5fe10779
+
+version: Java 16 (60)
+access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
+
+source: SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings.cai
+
+!signature: null
+!extends: java/lang/Object
+!implements: []
+!NestHost: com/SwitchTestClass
+class com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings extends java.lang.Object {
+
+    inner {
+        !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
+         com.SwitchTestClass.com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings
+    }
+
+    !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)
+    protected final com.SwitchTestClass outer$
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static int[] ENUM_MAP
+
+    !access: PACKAGE_PRIVATE (0)
+    !parameter[name: outer$, access:  (0)]
+     void <init>(com.SwitchTestClass) {
+      desc: (Lcom/SwitchTestClass;)V 
+      maxStack: 2, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+        aload 0
+        aload 1
+        putfield com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings.outer$ (type: com.SwitchTestClass)
+        return
+      Label_1:
+      LocalVariables {
+        index: 1, name: outer$, start: Label_0, end: Label_1, type: com.SwitchTestClass, signature: null
+        index: 0, name: this, start: Label_0, end: Label_1, type: com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 3, maxLocals: 1 
+        invokestatic com.koresframework.kores.test.asm.SwitchMultiEnumTest$TestEnum.values()com.koresframework.kores.test.asm.SwitchMultiEnumTest$TestEnum[] (ownerIsInterface: false)
+        arraylength
+        newarray 10
+        putstatic com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
+      Label_0:
+        getstatic com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
+        getstatic com.koresframework.kores.test.asm.SwitchMultiEnumTest$TestEnum.A (type: com.koresframework.kores.test.asm.SwitchMultiEnumTest$TestEnum)
+        invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
+        iconst_1
+        iastore
+      Label_1:
+        goto Label_3
+      Label_2:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.NoSuchFieldError]}]
+        astore 0
+        goto Label_3
+      Label_3:
+       FRAME[type: F_SAME, locals: 0, local: {}, stacks: 0, stack: {}]
+        getstatic com.SwitchTestClass$com_koresframework_kores_test_asm_SwitchMultiEnumTest_TestEnum$SwitchOnEnum$Mappings.ENUM_MAP (type: int[])
+        getstatic com.koresframework.kores.test.asm.SwitchMultiEnumTest$TestEnum.B (type: com.koresframework.kores.test.asm.SwitchMultiEnumTest$TestEnum)
+        invokevirtual java.lang.Enum.ordinal()int (ownerIsInterface: false)
+        iconst_2
+        iastore
+      Label_4:
+        return
+      Label_5:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.NoSuchFieldError]}]
+        astore 0
+        return
+      Label_6:
+       FRAME[type: F_SAME1, locals: 0, local: {}, stacks: 1, stack: {Reference[java.lang.Throwable]}]
+        athrow
+      TryCatchBlocks {
+        start: Label_0, end: Label_1, handler: Label_2, exception: java.lang.NoSuchFieldError
+        start: Label_3, end: Label_4, handler: Label_5, exception: java.lang.NoSuchFieldError
+      }
+    }
+    
+}

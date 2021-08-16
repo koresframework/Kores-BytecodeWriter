@@ -1,4 +1,4 @@
 [submodule "Kores"]
 	path = Kores
-	url = https://github.com/koresframework/Kores.git
+	url = https://gitlab.com/Kores/Kores.git
 	branch = master

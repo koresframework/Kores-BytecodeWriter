@@ -18,38 +18,26 @@ buildscript {
 }
 
 group 'com.koresframework'
-version '4.2.2.bytecode'
+version '4.2.3.bytecode'
 
 apply from: project(":Kores").file("gradle/common.gradle")
 
 // Publish
 apply plugin: 'maven-publish'
 
-def GITHUB_USERNAME = project.findProperty("USERNAME") ?: System.getenv("USERNAME")
-def GITHUB_PAT = project.findProperty("TOKEN") ?: System.getenv("TOKEN")
-
 repositories {
     mavenCentral()
+    // JwIUtils
     maven {
-        url "https://maven.pkg.github.com/jonathanxd/jwiutils"
-        credentials {
-            username = GITHUB_USERNAME
-            password = GITHUB_PAT
-        }
+        url "https://gitlab.com/api/v4/projects/28895078/packages/maven"
     }
+    // BytecodeDisassembler
     maven {
-        url "https://maven.pkg.github.com/jonathanxd/bytecodedisassembler"
-        credentials {
-            username = GITHUB_USERNAME
-            password = GITHUB_PAT
-        }
+        url 'https://gitlab.com/api/v4/projects/28905629/packages/maven'
     }
+    // Kores
     maven {
-        url "https://maven.pkg.github.com/koresframework/kores"
-        credentials {
-            username = GITHUB_USERNAME
-            password = GITHUB_PAT
-        }
+        url 'https://gitlab.com/api/v4/projects/28894889/packages/maven'
     }
 }
 
@@ -59,7 +47,7 @@ dependencies {
     // with runtime dependency pointing to Kores published version
     //compile project(":Kores")
     compileOnly project(":Kores")
-    runtimeOnly "com.koresframework:kores:4.2.2.base"
+    runtimeOnly "com.koresframework:kores:4.2.3.base"
     implementation 'com.github.jonathanxd:bytecode-disassembler:2.4.1'
     implementation "org.ow2.asm:asm:9.2"
     implementation "org.ow2.asm:asm-analysis:9.2"
@@ -105,6 +93,23 @@ publishing {
             credentials {
                 username = System.getenv("USERNAME")
                 password = System.getenv("TOKEN")
+            }
+        }
+        maven {
+            name = "GitLab"
+            url "https://gitlab.com/api/v4/projects/28905266/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                def ciToken = System.getenv("CI_JOB_TOKEN")
+                if (ciToken != null && !ciToken.isEmpty()) {
+                    name = "Job-Token"
+                    value = System.getenv("CI_JOB_TOKEN")
+                } else {
+                    name = "Private-Token"
+                    value = project.findProperty("GITLAB_TOKEN") ?: System.getenv("GITLAB_TOKEN")
+                }
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
             }
         }
     }
