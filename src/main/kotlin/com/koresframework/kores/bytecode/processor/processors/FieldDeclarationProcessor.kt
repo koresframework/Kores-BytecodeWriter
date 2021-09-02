@@ -39,10 +39,8 @@ import com.koresframework.kores.bytecode.util.asmConstValue
 import com.koresframework.kores.processor.Processor
 import com.koresframework.kores.processor.ProcessorManager
 import com.koresframework.kores.type.GenericType
-import com.koresframework.kores.util.descriptor
-import com.koresframework.kores.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
-import com.koresframework.kores.util.descriptorDiscardBound
+import com.koresframework.kores.util.*
 
 object FieldDeclarationProcessor : Processor<FieldDeclaration> {
 
@@ -61,7 +59,7 @@ object FieldDeclarationProcessor : Processor<FieldDeclaration> {
             else part.modifiers
 
         val access = ModifierUtil.modifiersToAsm(modifiers)
-        val signature = (part.type as? GenericType)?.descriptorDiscardBound
+        val signature = (part.type as? GenericType)?.descriptorForSignatures
         val constValue =
             if (modifiers.contains(KoresModifier.STATIC)) part.value.asmConstValue
             else null

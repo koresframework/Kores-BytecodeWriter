@@ -18,7 +18,7 @@ buildscript {
 }
 
 group 'com.koresframework'
-version '4.2.4.bytecode'
+version '4.2.8.bytecode'
 
 apply from: file("commons/common.gradle")
 
@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.koresframework:kores:4.2.4.base"
+    implementation "com.koresframework:kores:4.2.8.base"
     implementation 'com.github.jonathanxd:bytecode-disassembler:2.4.1'
     implementation "org.ow2.asm:asm:9.2"
     implementation "org.ow2.asm:asm-analysis:9.2"

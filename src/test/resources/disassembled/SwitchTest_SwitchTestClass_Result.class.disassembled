@@ -1,4 +1,4 @@
-md5: 47c84c962f327b6cc8b68e5bc4762832
+md5: 2284cc1b2536830a94b79a1e88137786
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -12,7 +12,7 @@ public class com.SwitchTestClass extends java.lang.Object {
 
     inner {
         !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-         com.SwitchTestClass.com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
+         com.SwitchTestClass.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
     }
 
     !access: ACC_PUBLIC (1)

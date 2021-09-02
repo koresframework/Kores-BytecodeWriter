@@ -110,6 +110,8 @@ public class CommonBytecodeTest {
             bytecodeClasses = bytecodeGenerator.process(mainClass);
         } catch (ClassCheckException e) {
             bytecodeClasses = e.getBytecodeClasses();
+            e.printStackTrace();
+            throw e;
         }
 
         Class<?> first = null;

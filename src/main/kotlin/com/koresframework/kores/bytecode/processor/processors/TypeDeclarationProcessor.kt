@@ -322,7 +322,7 @@ object TypeDeclarationProcessor : Processor<TypeDeclaration> {
         classVisitor: ClassVisitor,
         outerClassName: String?
     ) {
-        val name = if (innerType !is AnonymousClass) innerType.specifiedName else null
+        val name = if (innerType !is AnonymousClass) innerType.simpleName else null
         val outerName = if (name != null) outerClassName else null
         val modifiers = ModifierUtil.innerModifiersToAsm(innerType)
         classVisitor.visitInnerClass(innerType.internalName, outerName, name, modifiers)

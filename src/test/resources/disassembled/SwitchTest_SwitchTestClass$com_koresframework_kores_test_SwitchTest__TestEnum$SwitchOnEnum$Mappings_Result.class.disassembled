@@ -1,4 +1,4 @@
-md5: a6f8bdfc2c889dceb2fe48a0b1a1f3ad
+md5: 2ae91811f1d87e993c1ee51ee7bce4ec
 
 version: Java 16 (60)
 access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4128)
@@ -13,7 +13,7 @@ class com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$Swi
 
     inner {
         !access: PACKAGE_PRIVATE, ACC_SYNTHETIC (4096)
-         com.SwitchTestClass.com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
+         com.SwitchTestClass.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings -> com.SwitchTestClass$com_koresframework_kores_test_SwitchTest__TestEnum$SwitchOnEnum$Mappings
     }
 
     !access: ACC_PROTECTED, ACC_FINAL, ACC_SYNTHETIC (4116)

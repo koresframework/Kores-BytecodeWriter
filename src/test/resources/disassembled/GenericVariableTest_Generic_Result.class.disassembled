@@ -1,0 +1,40 @@
+md5: 07678229df862d63a69fa545fd204a25
+
+version: Java 16 (60)
+access: ACC_PUBLIC (33)
+
+source: Generic.cai
+
+!signature: null
+!extends: java/lang/Object
+!implements: []
+public class com.Generic extends java.lang.Object {
+
+    !access: ACC_PUBLIC (1)
+    public void <init>() {
+      desc: ()V 
+      maxStack: 1, maxLocals: 2 
+      Label_0:
+        aload 0
+        invokespecial java.lang.Object.<init>()void (ownerIsInterface: false)
+      Label_1:
+       LINE 1 -> Label_1
+        bipush 9
+      Label_2:
+        istore 1
+        return
+      Label_3:
+      LocalVariables {
+        index: 1, name: hell, start: Label_2, end: Label_3, type: int, signature: null
+        index: 0, name: this, start: Label_0, end: Label_3, type: com.Generic, signature: null
+      }
+    }
+    
+    !access: PACKAGE_PRIVATE, ACC_STATIC (8)
+    static void <clinit>() {
+      desc: ()V 
+      maxStack: 0, maxLocals: 0 
+        return
+    }
+    
+}

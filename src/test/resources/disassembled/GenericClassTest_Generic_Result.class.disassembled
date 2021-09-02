@@ -1,4 +1,4 @@
-md5: caf33a01d17f8234f2559a38a92a55b8
+md5: ead0467f529db00cee2126cf14cbb068
 
 version: Java 16 (60)
 access: ACC_PUBLIC (33)
@@ -39,7 +39,7 @@ public class com.Generic extends java.lang.Object implements java.util.List {
       Label_6:
       LocalVariables {
         index: 3, name: field3, start: Label_5, end: Label_6, type: java.util.List, signature: Ljava/util/List<Ljava/lang/String;>;
-        index: 2, name: field2, start: Label_3, end: Label_6, type: java.lang.Object, signature: Ljava/lang/Object;
+        index: 2, name: field2, start: Label_3, end: Label_6, type: java.lang.Object, signature: null
         index: 1, name: fieldi, start: Label_1, end: Label_6, type: java.lang.Object, signature: TT;
         index: 0, name: val, start: Label_0, end: Label_6, type: java.lang.Object, signature: TT;
       }

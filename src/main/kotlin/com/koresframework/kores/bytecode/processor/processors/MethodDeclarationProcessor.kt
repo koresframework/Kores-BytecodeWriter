@@ -42,13 +42,13 @@ import com.koresframework.kores.processor.Processor
 import com.koresframework.kores.processor.ProcessorManager
 import com.koresframework.kores.safeForComparison
 import com.koresframework.kores.type.internalName
-import com.koresframework.kores.util.methodGenericSignature
 import com.koresframework.kores.util.parametersAndReturnToInferredDesc
 import com.koresframework.kores.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.add
 import com.github.jonathanxd.iutils.kt.inContext
 import com.github.jonathanxd.iutils.kt.require
+import com.koresframework.kores.util.methodClassfileGenericSignature
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
@@ -116,7 +116,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
 
         val asmModifiers = ModifierUtil.modifiersToAsm(modifiers)
 
-        val signature = part.methodGenericSignature()
+        val signature = part.methodClassfileGenericSignature()
 
         val desc =
             parametersAndReturnToInferredDesc(typeDeclaration, part, parameters, part.returnType)

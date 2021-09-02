@@ -31,6 +31,7 @@ import com.koresframework.kores.type.GenericType
 import com.koresframework.kores.util.descriptor
 import com.koresframework.kores.util.typeDesc
 import com.github.jonathanxd.iutils.map.ListHashMap
+import com.koresframework.kores.util.descriptorForSignatures
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import java.lang.reflect.Type
@@ -236,8 +237,9 @@ class MethodVisitorHelper constructor(
 
                 var signature: String? = null
 
-                if (variable.type is GenericType) {
-                    signature = variable.type.descriptor
+                val variableType = variable.type
+                if (variableType is GenericType && (variableType.bounds.isNotEmpty() || !variableType.isType)) {
+                    signature = variableType.descriptorForSignatures
                 }
 
                 methodVisitor.visitLocalVariable(

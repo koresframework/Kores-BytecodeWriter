@@ -1,4 +1,4 @@
-md5: 72518da16055084f424bb20301dd677f
+md5: db6ce0b3e5921c4b71ef401579047749
 
 version: Java 16 (60)
 access: ACC_PUBLIC (16417)
@@ -22,7 +22,7 @@ public enum com.Option extends java.lang.Enum {
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
     public static final com.Option$None None
     !access: ACC_PUBLIC, ACC_STATIC, ACC_FINAL (16409)
-    !signature: Lcom/Option$Some;
+    !signature: Lcom/Option$Some<Lcom/Option$None;>;
     public static final com.Option$Some Some
     !access: ACC_PRIVATE, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC (4122)
     private static final com.Option[] $VALUES
