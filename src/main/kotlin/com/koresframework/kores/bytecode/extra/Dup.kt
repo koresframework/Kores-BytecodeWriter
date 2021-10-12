@@ -30,6 +30,8 @@ package com.koresframework.kores.bytecode.extra
 import com.koresframework.kores.Instruction
 import com.koresframework.kores.KoresPart
 import com.koresframework.kores.base.Typed
+import com.koresframework.kores.data.KoresData
+import com.koresframework.kores.dataFrom
 import com.koresframework.kores.typeOrNull
 import java.lang.reflect.Type
 
@@ -37,6 +39,7 @@ import java.lang.reflect.Type
  * CodeAPI-BytecodeWriter Dup part. This part will dup result of [part].
  */
 data class Dup(val part: KoresPart, override val type: Type) : Typed, Instruction {
+    override val data: KoresData = KoresData()
 
     constructor(part: Typed) : this(part, part.type)
 
@@ -47,11 +50,12 @@ data class Dup(val part: KoresPart, override val type: Type) : Typed, Instructio
     class Builder() : Typed.Builder<Dup, Builder> {
 
         lateinit var part: KoresPart
-        lateinit var type: Type
+        override var data: KoresData = KoresData()
+        override lateinit var type: Type
 
         constructor(defaults: Dup) : this() {
             this.part = defaults.part
-            this.type = defaults.type
+            from(defaults)
         }
 
         fun part(value: KoresPart): Builder {
@@ -59,12 +63,7 @@ data class Dup(val part: KoresPart, override val type: Type) : Typed, Instructio
             return this
         }
 
-        override fun type(value: Type): Builder {
-            this.type = value
-            return this
-        }
-
-        override fun build(): Dup = Dup(this.part, this.type)
+        override fun buildBasic(): Dup = Dup(this.part, this.type)
 
         companion object {
             @JvmStatic

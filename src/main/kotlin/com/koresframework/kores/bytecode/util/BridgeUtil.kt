@@ -59,7 +59,7 @@ object BridgeUtil {
             }
             .filter { bridge ->
                 typeDeclaration.methods.none {
-                    it.name == bridge.name && it.typeSpec.isConreteEq(
+                    it.name == bridge.name && it.typeSpec.isConcreteEq(
                         bridge.typeSpec
                     )
                 }

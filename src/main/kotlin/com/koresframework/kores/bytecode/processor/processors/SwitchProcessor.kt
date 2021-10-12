@@ -51,6 +51,7 @@ import com.koresframework.kores.type.primitiveType
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.add
 import com.github.jonathanxd.iutils.kt.require
+import com.koresframework.kores.data.KoresData
 import org.objectweb.asm.Label
 
 object SwitchProcessor : Processor<SwitchStatement> {
@@ -301,7 +302,9 @@ object SwitchProcessor : Processor<SwitchStatement> {
     }
 
 
-    object SwitchMarker : Instruction
+    object SwitchMarker : Instruction {
+        override val data: KoresData = KoresData()
+    }
 
     object SwitchMarkerProcessor : Processor<SwitchMarker> {
         override fun process(

@@ -28,10 +28,13 @@
 package com.koresframework.kores.bytecode.extra
 
 import com.koresframework.kores.Instruction
+import com.koresframework.kores.data.KoresData
 
 /**
  * CodeAPI-BytecodeWriter Pop part. This part will pop the stack value.
  *
  * This class is commonly used in else statements to clear value created by [Dup] instruction. See the 'DupTest' test class.
  */
-object Pop : Instruction
+object Pop : Instruction {
+    override val data: KoresData = KoresData()
+}

@@ -29,6 +29,7 @@ package com.koresframework.kores.bytecode.processor.processors
 
 import com.github.jonathanxd.iutils.data.TypedData
 import com.koresframework.kores.Instruction
+import com.koresframework.kores.data.KoresData
 import com.koresframework.kores.processor.Processor
 import com.koresframework.kores.processor.ProcessorManager
 
@@ -39,6 +40,7 @@ interface InstructionCodePart : Instruction {
     companion object {
         inline fun create(crossinline func: (value: Any, data: TypedData, processorManager: ProcessorManager<*>) -> Unit): InstructionCodePart {
             return object : InstructionCodePart {
+                override val data: KoresData = KoresData()
                 override fun apply(
                     value: Any,
                     data: TypedData,

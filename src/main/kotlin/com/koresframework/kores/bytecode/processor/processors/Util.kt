@@ -175,12 +175,12 @@ fun accessMemberOfType(memberOwner: Type, accessor: Accessor, data: TypedData): 
                 } else if (accessor is MethodInvocation) {
                     val method = target.methods.firstOrNull {
                         it.name == accessor.spec.methodName
-                                && it.typeSpec.isConreteEq(accessor.spec.typeSpec)
+                                && it.typeSpec.isConcreteEq(accessor.spec.typeSpec)
                     }
 
                     val ctr = getConstructors(target).firstOrNull {
                         it.name == accessor.spec.methodName
-                                && it.typeSpec.isConreteEq(accessor.spec.typeSpec)
+                                && it.typeSpec.isConcreteEq(accessor.spec.typeSpec)
                     }
 
                     if (method != null && method.modifiers.contains(KoresModifier.PRIVATE))
