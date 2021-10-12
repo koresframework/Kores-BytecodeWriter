@@ -193,12 +193,13 @@ object BridgeUtil {
             val rTypeEq = itRType.`is`(otherRType)
                     || itRType.bindedDefaultResolver.isAssignableFrom(otherRType)
                 .rightOr(true)
+                    || otherRType.bindedDefaultResolver.isAssignableFrom(itRType)
+                .rightOr(true)
 
             val paramAssign = itParams.mapIndexed { index, koresType ->
-                koresType.bindedDefaultResolver.isAssignableFrom(otherParams[index])
-            }.all {
-                it.rightOr(true)
-            }
+                koresType.bindedDefaultResolver.isAssignableFrom(otherParams[index]).rightOr(true)
+                        || otherParams[index].bindedDefaultResolver.isAssignableFrom(koresType).rightOr(true)
+            }.all { it }
 
             val isParamEq = otherParams.size == itParams.size
                     && (otherParams.`is`(itParams)
