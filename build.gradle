@@ -18,7 +18,7 @@ buildscript {
 }
 
 group 'com.koresframework'
-version '4.2.12.bytecode'
+version '4.2.16.bytecode'
 
 apply from: file("commons/common.gradle")
 
