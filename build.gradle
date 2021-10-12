@@ -18,7 +18,7 @@ buildscript {
 }
 
 group 'com.koresframework'
-version '4.2.10.bytecode'
+version '4.2.11.bytecode'
 
 apply from: file("commons/common.gradle")
 
@@ -92,6 +92,23 @@ publishing {
         maven {
             name = "GitLab"
             url "https://gitlab.com/api/v4/projects/28905266/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                def ciToken = System.getenv("CI_JOB_TOKEN")
+                if (ciToken != null && !ciToken.isEmpty()) {
+                    name = "Job-Token"
+                    value = System.getenv("CI_JOB_TOKEN")
+                } else {
+                    name = "Private-Token"
+                    value = project.findProperty("GITLAB_TOKEN") ?: System.getenv("GITLAB_TOKEN")
+                }
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+        maven {
+            name = "GitLabJgang"
+            url "https://gitlab.com/api/v4/projects/30392813/packages/maven"
             credentials(HttpHeaderCredentials) {
                 def ciToken = System.getenv("CI_JOB_TOKEN")
                 if (ciToken != null && !ciToken.isEmpty()) {
