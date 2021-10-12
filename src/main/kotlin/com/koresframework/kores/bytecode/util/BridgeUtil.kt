@@ -32,10 +32,7 @@ import com.koresframework.kores.base.*
 import com.koresframework.kores.common.MethodTypeSpec
 import com.koresframework.kores.generic.GenericSignature
 import com.koresframework.kores.type.*
-import com.koresframework.kores.util.findType
-import com.koresframework.kores.util.genericSignature
-import com.koresframework.kores.util.inferType
-import com.koresframework.kores.util.toTypeVars
+import com.koresframework.kores.util.*
 import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
 import java.util.*
@@ -56,7 +53,10 @@ object BridgeUtil {
 
     fun genBridgeMethods(typeDeclaration: TypeDeclaration): Set<MethodDeclaration> =
         typeDeclaration.methods.filterNot { it.modifiers.contains(KoresModifier.BRIDGE) }
-            .flatMap { BridgeUtil.genBridgeMethod(typeDeclaration, it) }
+            .flatMap {
+                val infer = inferParametersAndReturn(lazy { typeDeclaration }, it, it.parameters, it.returnType)
+                BridgeUtil.genBridgeMethod(typeDeclaration, it, infer)
+            }
             .filter { bridge ->
                 typeDeclaration.methods.none {
                     it.name == bridge.name && it.typeSpec.isConreteEq(
@@ -74,6 +74,14 @@ object BridgeUtil {
 
     private data class Spec(val name: String, val rtype: Type, val ptypes: List<Type>)
 
+    @Deprecated(message = "This has trouble while trying to generate bridge methods for methods with generic signature that get inferred at generation-time, " +
+            "because it introduces duplicated bridge methods. This happens because it is unable to predict that the same method will exist before hand," +
+            " as it does not have the inferred type information.",
+        replaceWith = ReplaceWith(
+            "genBridgeMethod(typeDeclaration, methodDeclaration, inferParametersAndReturn(lazyOf(typeDeclaration), methodDeclaration, methodDeclaration.parameters, methodDeclaration.returnType))",
+            imports = ["com.koresframework.kores.util.GenericTypeUtil.inferParametersAndReturn"]
+        )
+    )
     fun genBridgeMethod(
         typeDeclaration: TypeDeclaration,
         methodDeclaration: MethodDeclarationBase
@@ -90,6 +98,35 @@ object BridgeUtil {
             }
             .toSet()
     }
+
+
+    fun genBridgeMethod(
+        typeDeclaration: TypeDeclaration,
+        methodDeclaration: MethodDeclarationBase,
+        inferredTypeSpec: TypeSpec
+    ): Set<MethodDeclaration> {
+        val methodDeclaration = methodDeclaration.builder()
+            .parameters(
+                methodDeclaration.parameters.mapIndexed { index, koresParameter ->
+                    koresParameter.builder().type(inferredTypeSpec.parameterTypes[index]).build()
+                }
+            )
+            .returnType(inferredTypeSpec.returnType)
+            .build()
+
+        val bridgeMethod = BridgeUtil.findMethodToBridge(typeDeclaration, methodDeclaration)
+
+        return bridgeMethod
+            .map {
+                com.koresframework.kores.factory.bridgeMethod(
+                    typeDeclaration,
+                    methodDeclaration,
+                    it
+                )
+            }
+            .toSet()
+    }
+
 
     fun findMethodToBridge(
         typeDeclaration: TypeDeclaration,

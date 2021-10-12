@@ -42,13 +42,11 @@ import com.koresframework.kores.processor.Processor
 import com.koresframework.kores.processor.ProcessorManager
 import com.koresframework.kores.safeForComparison
 import com.koresframework.kores.type.internalName
-import com.koresframework.kores.util.parametersAndReturnToInferredDesc
-import com.koresframework.kores.util.typeDesc
 import com.github.jonathanxd.iutils.data.TypedData
 import com.github.jonathanxd.iutils.kt.add
 import com.github.jonathanxd.iutils.kt.inContext
 import com.github.jonathanxd.iutils.kt.require
-import com.koresframework.kores.util.methodClassfileGenericSignature
+import com.koresframework.kores.util.*
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes
 
@@ -78,8 +76,12 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
             TYPE_DECLARATION.require(data)
         }
 
+        val parameters = part.parameters
+
+        val infer = inferParametersAndReturn(typeDeclaration, part, parameters, part.returnType)
+
         if (!part.modifiers.contains(KoresModifier.BRIDGE) && genBridge) {
-            val bridgeOpt = BridgeUtil.genBridgeMethod(typeDeclaration.value, part)
+            val bridgeOpt = BridgeUtil.genBridgeMethod(typeDeclaration.value, part, infer)
 
             bridgeOpt.forEach { bridgeMethod ->
                 val methodSpec = bridgeMethod.getMethodSpec(typeDeclaration.value)
@@ -110,8 +112,6 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
             modifiers.add(KoresModifier.ABSTRACT)
         }
 
-        val parameters = part.parameters
-
         val isAbstract = modifiers.contains(KoresModifier.ABSTRACT)
 
         val asmModifiers = ModifierUtil.modifiersToAsm(modifiers)
@@ -119,7 +119,7 @@ object MethodDeclarationProcessor : Processor<MethodDeclarationBase> {
         val signature = part.methodClassfileGenericSignature()
 
         val desc =
-            parametersAndReturnToInferredDesc(typeDeclaration, part, parameters, part.returnType)
+            parametersTypeAndReturnToDesc(infer.parameterTypes, infer.returnType)
 
         val throws =
             if (part.throwsClause.isEmpty()) null else part.throwsClause.map { it.internalName }.toTypedArray()
